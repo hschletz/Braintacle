@@ -109,7 +109,7 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
                 $this->_currentClient = $this->_clientManager->getClient($request->getQuery('id'));
             } catch (\RuntimeException $e) {
                 // Client does not exist - may happen when URL has become stale.
-                $this->flashMessenger()->addErrorMessage('The requested client does not exist.');
+                $this->flashMessenger()->addErrorMessage($this->_('The requested client does not exist.'));
                 return $this->redirectToRoute('client', 'index');
             }
         }
@@ -393,7 +393,7 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
             if ($form->isValid()) {
                 $data = $form->getData();
                 $this->_currentClient->setCustomFields($data['Fields']);
-                $this->flashMessenger()->addSuccessMessage('The information was successfully updated.');
+                $this->flashMessenger()->addSuccessMessage($this->_('The information was successfully updated.'));
                 return $this->redirectToRoute(
                     'client',
                     'customfields',
@@ -526,11 +526,11 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
                         (bool) $this->params()->fromPost('DeleteInterfaces')
                     );
                     $this->flashMessenger()->addSuccessMessage(
-                        array($this->_("Client '%s' was successfully deleted.") => $name)
+                        sprintf($this->_("Client '%s' was successfully deleted."), $name)
                     );
                 } catch (\RuntimeException $e) {
                     $this->flashMessenger()->addErrorMessage(
-                        array($this->_("Client '%s' could not be deleted.") => $name)
+                        sprintf($this->_("Client '%s' could not be deleted."), $name)
                     );
                 }
                 return $this->redirectToRoute('client', 'index');

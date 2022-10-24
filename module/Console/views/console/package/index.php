@@ -25,14 +25,12 @@ $flashMessenger = $this->flashMessenger();
 $name = $flashMessenger->getMessagesFromNamespace('packageName');
 $currentPackage = @$name[0];
 
-// Error messages are not translated. FormatMessages helper is not affected.
-$flashMessenger->setTranslator(null);
 print $flashMessenger->render('error');
 
 $successMessages = $flashMessenger->getSuccessMessages();
 if ($successMessages) {
     print $this->htmlList(
-        $this->formatMessages($successMessages),
+        $successMessages,
         false,
         array('class' => 'success'),
         false

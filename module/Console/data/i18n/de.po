@@ -72,8 +72,13 @@ msgstr "Die angeforderte Gruppe existiert nicht."
 
 #: Controller/PackageController.php
 #, php-format
-msgid "Package '%s' was successfully changed to '%s'."
-msgstr "Paket '%s' wurde erfolgreich zu '%s' geändert."
+msgid "Error changing Package '%1$s' to '%2$s': %3$s"
+msgstr "Fehler beim Ändern von Paket '%1$s' zu '%2$s': %3$s"
+
+#: Controller/PackageController.php
+#, php-format
+msgid "Package '%1$s' was successfully changed to '%2$s'."
+msgstr "Paket '%1$s' wurde erfolgreich zu '%2$s' geändert."
 
 #: Controller/PackageController.php
 #, php-format
@@ -156,8 +161,7 @@ msgid "Group"
 msgstr "Gruppe"
 
 #: Form/AddToGroup.php Form/ManageRegistryValues.php Form/Package/Build.php
-#: Form/Search.php Form/Subnet.php View/Helper/Form/ShowDuplicates.php
-#: View/Helper/Form/Software.php views/console/client/display.php
+#: Form/Search.php Form/Subnet.php views/console/client/display.php
 #: views/console/client/index.php views/console/client/misc.php
 #: views/console/client/network.php views/console/client/packages.php
 #: views/console/client/printers.php views/console/client/software.php
@@ -660,9 +664,8 @@ msgstr "XML-Daten validieren"
 msgid "Product key (if different)"
 msgstr "Lizenzschlüssel (falls verschieden)"
 
-#: Form/Search.php View/Helper/Form/ShowDuplicates.php
-#: views/console/client/general.php views/console/client/index.php
-#: views/console/duplicates/index.php
+#: Form/Search.php views/console/client/general.php
+#: views/console/client/index.php views/console/duplicates/index.php
 msgid "Asset tag"
 msgstr "Asset tag"
 
@@ -732,8 +735,8 @@ msgstr "IP-Adresse"
 msgid "Invert results"
 msgstr "Ergebnisse invertieren"
 
-#: Form/Search.php View/Helper/Form/ShowDuplicates.php
-#: views/console/client/general.php views/console/client/index.php
+#: Form/Search.php views/console/client/general.php
+#: views/console/client/index.php
 msgid "Last contact"
 msgstr "Letzter Kontakt"
 
@@ -742,9 +745,9 @@ msgstr "Letzter Kontakt"
 msgid "Last inventory"
 msgstr "Letzte Inventarisierung"
 
-#: Form/Search.php View/Helper/Form/ShowDuplicates.php
-#: views/console/client/index.php views/console/client/network.php
-#: views/console/network/edit.php views/console/network/showidentified.php
+#: Form/Search.php views/console/client/index.php
+#: views/console/client/network.php views/console/network/edit.php
+#: views/console/network/showidentified.php
 #: views/console/network/showunknown.php
 msgid "MAC address"
 msgstr "MAC-Adresse"
@@ -848,10 +851,10 @@ msgstr "Suchen"
 msgid "Search for"
 msgstr "Suche nach"
 
-#: Form/Search.php View/Helper/Form/ShowDuplicates.php
-#: views/console/client/display.php views/console/client/general.php
-#: views/console/client/index.php views/console/client/storage.php
-#: views/console/client/system.php views/console/duplicates/index.php
+#: Form/Search.php views/console/client/display.php
+#: views/console/client/general.php views/console/client/index.php
+#: views/console/client/storage.php views/console/client/system.php
+#: views/console/duplicates/index.php
 msgid "Serial number"
 msgstr "Seriennummer"
 
@@ -1146,10 +1149,6 @@ msgstr "Befehlszeile"
 #: View/Helper/Form/Package/Build.php
 msgid "Target path"
 msgstr "Zielpfad"
-
-#: View/Helper/Form/Software.php views/console/network/index.php
-msgid "Count"
-msgstr "Anzahl"
 
 #: views/console/accounts/add.php
 msgid "Create new account"
@@ -1683,6 +1682,10 @@ msgstr "Hersteller"
 #: views/console/network/index.php
 msgid "Address"
 msgstr "Adresse"
+
+#: views/console/network/index.php
+msgid "Count"
+msgstr "Anzahl"
 
 #: views/console/network/index.php
 msgid "Identified network devices"

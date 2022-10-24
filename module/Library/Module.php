@@ -46,14 +46,12 @@ class Module implements Feature\ConfigProviderInterface
         return array(
             'controller_plugins' => array(
                 'aliases' => array(
-                    '_' => 'Library\Mvc\Controller\Plugin\TranslationHelper',
                     'RedirectToRoute' => 'Library\Mvc\Controller\Plugin\RedirectToRoute',
                     'redirectToRoute' => 'Library\Mvc\Controller\Plugin\RedirectToRoute',
                     'UrlFromRoute' => 'Library\Mvc\Controller\Plugin\UrlFromRoute',
                     'urlFromRoute' => 'Library\Mvc\Controller\Plugin\UrlFromRoute',
                 ),
                 'factories' => array(
-                    'Library\Mvc\Controller\Plugin\TranslationHelper' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     RedirectToRoute::class => RedirectToRouteFactory::class,
                     UrlFromRoute::class => UrlFromRouteFactory::class,
                 )

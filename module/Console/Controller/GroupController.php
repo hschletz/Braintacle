@@ -100,7 +100,7 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
                 );
             } catch (\RuntimeException $e) {
                 // Group does not exist - may happen when URL has become stale.
-                $this->flashMessenger()->addErrorMessage('The requested group does not exist.');
+                $this->flashMessenger()->addErrorMessage($this->_('The requested group does not exist.'));
                 return $this->redirectToRoute('group', 'index');
             }
         }
@@ -325,11 +325,11 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
                 try {
                     $this->_groupManager->deleteGroup($this->_currentGroup);
                     $this->flashMessenger()->addSuccessMessage(
-                        array($this->_('Group \'%s\' was successfully deleted.') => $name)
+                        sprintf($this->_("Group '%s' was successfully deleted."), $name)
                     );
                 } catch (\Model\Group\RuntimeException $e) {
                     $this->flashMessenger()->addErrorMessage(
-                        array($this->_('Group \'%s\' could not be deleted. Try again later.') => $name)
+                        sprintf($this->_("Group '%s' could not be deleted. Try again later."), $name)
                     );
                 }
                 return $this->redirectToRoute('group', 'index');

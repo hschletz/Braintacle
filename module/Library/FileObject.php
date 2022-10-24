@@ -269,25 +269,4 @@ class FileObject extends \SplFileInfo implements \Iterator
             return $content;
         }
     }
-
-    /**
-     * Reads entire file into an array
-     *
-     * This is a wrapper for \file() which throws an exception when an error is
-     * encountered.
-     *
-     * @param string $filename Name of the file to read
-     * @param integer $flags Flags for \file()
-     * @return string[] File content
-     * @throws \RuntimeException if an error occurs during reading.
-     */
-    public static function fileGetContentsAsArray($filename, $flags = 0)
-    {
-        $content = @file($filename, $flags);
-        if ($content === false) {
-            throw new \RuntimeException("Error reading from file $filename");
-        } else {
-            return $content;
-        }
-    }
 }

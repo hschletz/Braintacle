@@ -21,9 +21,15 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Gettext\Generator\PoGenerator;
+use Gettext\Scanner\PhpScanner;
+use Gettext\Translation;
+use Gettext\Translations;
 use Latte\Engine;
 use Latte\Token;
 use Library\Application;
+use Library\FileObject;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 // Run this script to extract new strings from all PHP source files to .pot
@@ -33,123 +39,58 @@ use Symfony\Component\Filesystem\Path;
 error_reporting(-1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../module/Library/FileObject.php';
 
 // Module configuration
 //
 // The "translationPath" element must be present for each module. If the
 // "subdirs" element is present, message strings are extracted from these
-// subdirectories. The "keywords" element lists function names that are used as
-// xgettext's --keyword option. The "_" function is always evaluated and not
-// explicitly listed.
+// subdirectories. The "keywords" element lists function names whose first
+// argument is to be extracted.
 $modules = array(
     'Console' => array(
         'subdirs' => array('Controller', 'Form', 'Navigation', 'View/Helper', 'views'),
-        'keywords' => array('translate', 'setLabel', 'setMessage', 'addSuccessMessage', 'addErrorMessage'),
+        'keywords' => ['_', 'translate', 'setLabel', 'setMessage'],
         'translationPath' => 'data/i18n',
     ),
     'Library' => array(
+        'keywords' => ['_'],
         'translationPath' => 'data/i18n',
     ),
 );
 
-$template = <<<EOT
-# Translation file for %s module
-#
-# Copyright (C) 2011-2022 Holger Schletz <holger.schletz@web.de>
-#
-# This program is free software; you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation; either version 2 of the License, or (at your option)
-# any later version.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
-#
-# You should have received a copy of the GNU General Public License along with
-# this program; if not, write to the Free Software Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-#
-msgid ""
-msgstr ""
-"Content-Type: text/plain; charset=UTF-8\\n"
-
-%s\n
-EOT;
-
 foreach ($modules as $module => $config) {
-    // Use DIRECTORY_SEPARATOR for paths that are used as shell arguments
-    $modulePath = \Library\Application::getPath("module/$module");
-    $translationPath = \Library\Application::getPath("module/$module/$config[translationPath]");
-    $potFileName = \Library\Application::getPath("module/$module/$config[translationPath]/$module.pot");
-    if (isset($config['subdirs'])) {
-        // STAGE 1: Let xgettext extract all strings from module to $newPot
-        print "Extracting strings fron $module module...";
-        $cmd = [
-            'xgettext',
-            '--directory=' . $modulePath,
-            '--output=-',
-            '--language=PHP',
-            '--omit-header',
-            '--sort-by-file',
-            '--add-location=file',
-        ];
-        foreach ($config['keywords'] as $keyword) {
-            $cmd[] = "--keyword=$keyword";
-        }
-        foreach ($config['subdirs'] as $subdir) {
-            foreach (
-                new \RecursiveIteratorIterator(
-                    new \RecursiveDirectoryIterator(
-                        "$modulePath/$subdir",
-                        \RecursiveDirectoryIterator::CURRENT_AS_SELF
-                    )
-                ) as $file
-            ) {
-                $file = $file->getSubPathName();
-                if (substr($file, -4) == '.php') {
-                    $cmd[] = $subdir . DIRECTORY_SEPARATOR . $file;
-                }
-            }
-        }
-        $process = new \Symfony\Component\Process\Process($cmd);
-        if ($process->run()) {
-            printf("ERROR: xgettext returned with error code %d.\n", $process->getExitCode());
-            print "Command line was:\n\n";
-            print $process->getCommandLine();
-            print "\n\n";
-            exit(1);
-        }
-        $newPot = explode("\n", trim($process->getOutput()));
-        print " done.\n";
+    $modulePath = Application::getPath("module/$module");
+    $translationPath = Application::getPath("module/$module/$config[translationPath]");
+    $potFileName = Application::getPath("module/$module/$config[translationPath]/$module.pot");
 
+    if (isset($config['subdirs'])) {
+        // STAGE 1: extract all strings from module
+        print "Extracting strings fron $module module...";
+
+        $translations = Translations::create();
+        $translations->setDescription("Translation file for $module module");
+        $translations->getHeaders()->set('Content-Type', 'text/plain; charset=UTF-8');
+        $translations = $translations->mergeWith(
+            parsePhpFiles($modulePath, $config['subdirs'], $config['keywords'])
+        );
         if ($module == 'Console') {
-            // Append messages from templates.
-            $newPot = array_merge($newPot, parseTemplates());
+            $translations = $translations->mergeWith(parseTemplates());
         }
+
+        $generator = new PoGenerator();
+        $newPot = $generator->generateString($translations);
+
+        print " done.\n";
 
         if (in_array('--force', $_SERVER['argv'])) {
             $update = true;
         } else {
-            // Read existing POT file into $oldPot
-            $oldPot = \Library\FileObject::fileGetContentsAsArray($potFileName, FILE_IGNORE_NEW_LINES);
-            // Skip to first message string (strip header and first empty line)
-            $startPos = array_search('', $oldPot, true);
-            if ($startPos === false) {
-                print "WARNING: File $potFileName as unexpected content. Skipping.\n";
-                continue;
-            }
-            $oldPot = array_slice($oldPot, $startPos + 1);
+            $oldPot = FileObject::fileGetContents($potFileName);
             $update = ($newPot != $oldPot);
         }
         if ($update) {
-            $fileSystem = new Symfony\Component\Filesystem\Filesystem();
-            $fileSystem->dumpFile(
-                $potFileName,
-                sprintf($template, $module, implode("\n", $newPot))
-            );
+            $fileSystem = new Filesystem();
+            $fileSystem->dumpFile($potFileName, $newPot);
             print "Changes written to $potFileName.\n";
         } else {
             print "No changes detected for $potFileName.\n";
@@ -181,9 +122,85 @@ foreach ($modules as $module => $config) {
 }
 
 /**
+ * Extract strings from all PHP scripts in given directories.
+ */
+function parsePhpFiles(string $baseDir, array $subDirs, array $keywords): Translations
+{
+    $functions = [];
+    foreach ($keywords as $keyword) {
+        $functions[$keyword] = 'gettext';
+    }
+    $translations = Translations::create();
+
+    chdir($baseDir);
+    $files = [];
+    foreach ($subDirs as $subDir) {
+        $directoryIterator = new RecursiveDirectoryIterator(
+            $subDir,
+            RecursiveDirectoryIterator::CURRENT_AS_PATHNAME
+        );
+        $iterator = new RecursiveIteratorIterator($directoryIterator);
+        foreach ($iterator as $file) {
+            if (substr($file, -4) == '.php') {
+                $files[] = $file;
+            }
+        }
+    }
+    sort($files);
+    foreach ($files as $file) {
+        $fileTranslations = parsePhpFile($file, $functions);
+        $translations = $translations->mergeWith($fileTranslations);
+    }
+    return $translations;
+}
+
+/**
+ * Extract strings from a PHP script.
+ */
+function parsePhpFile(string $file, array $functions): Translations
+{
+    $scanner = new PhpScanner(Translations::create());
+    $scanner->setFunctions($functions);
+    $scanner->ignoreInvalidFunctions(); // Required for function calls with non-literal arguments
+    $scanner->scanFile($file);
+
+    $translations = Translations::create();
+    /** @var Translation */
+    foreach ($scanner->getTranslations()[''] as $scannedTranslation) {
+        // Remove line numbers which would generate too much noise. Because they
+        // cannot be removed from a Translation object, all relevant data is
+        // copied to a new instance.
+        $translation = Translation::create(null, $scannedTranslation->getOriginal());
+        $translation->getReferences()->add($file);
+
+        // Some strings are misdetected as format strings, like validation
+        // message templates with placeholders (%placeholder%). Try to use
+        // the string as a format string and remove the flag on error.
+        $flags = $scannedTranslation->getFlags();
+        if ($flags->has('php-format')) {
+            $template = $scannedTranslation->getOriginal();
+            // Generate array with enough elements (1) which will be valid
+            // arguments for %d and %s. Simply counting does not account for
+            // escaped %%, but that's not a problem for now.
+            $numPlaceholders = substr_count($template, '%');
+            $args = array_fill(0, $numPlaceholders, 1);
+            try {
+                vsprintf($template, $args);
+            } catch (ValueError) {
+                $flags->delete('php-format');
+            }
+            $translation->getFlags()->add(...$flags->toArray());
+        }
+
+        $translations->add($translation);
+    }
+    return $translations;
+}
+
+/**
  * Parse all Latte templates.
  */
-function parseTemplates(): array
+function parseTemplates(): Translations
 {
     $templatePath = Application::getPath('templates');
 
@@ -203,26 +220,24 @@ function parseTemplates(): array
     ksort($templates);
 
     // Append extracted strings from each template.
-    $messages = [];
+    $translations = Translations::create();
     foreach ($templates as $file => $path) {
-        $header = ['', '#: ' . $file];
-        $messages = array_merge($messages, parseTemplate($path, $header));
+        $translations = $translations->mergeWith(parseTemplate($path, $file));
     }
-
-    return $messages;
+    return $translations;
 }
 
 /**
  * Parse single Latte template.
  */
-function parseTemplate(string $file, array $header): array
+function parseTemplate(string $file, string $relativePath): Translations
 {
     $template = file_get_contents($file);
     if ($template === false) {
         throw new RuntimeException('Error reading ' . $file);
     }
 
-    $result = [];
+    $translations = Translations::create();
 
     // Invoke Latte parser, assuming HTML content.
     $engine = new Engine();
@@ -242,14 +257,12 @@ function parseTemplate(string $file, array $header): array
             continue;
         }
 
-        $entry = $header;
-        $entry[] = 'msgid "' . str_replace('"', '\"', $message) . '"';
-        $entry[] = 'msgstr ""';
-
-        $result = array_merge($result, $entry);
+        $translation = Translation::create(null, $message);
+        $translation->getReferences()->add($relativePath);
+        $translations->add($translation);
     }
 
-    return $result;
+    return $translations;
 }
 
 /**

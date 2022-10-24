@@ -109,7 +109,7 @@ class PackageController extends \Laminas\Mvc\Controller\AbstractActionController
                 try {
                     $this->_packageManager->buildPackage($data, true);
                     $flashMessenger->addSuccessMessage(
-                        array($this->_('Package \'%s\' was successfully created.') => $data['Name'])
+                        sprintf($this->_("Package '%s' was successfully created."), $data['Name'])
                     );
                     $flashMessenger->addMessage($data['Name'], 'packageName');
                 } catch (\Model\Package\RuntimeException $e) {
@@ -154,7 +154,7 @@ class PackageController extends \Laminas\Mvc\Controller\AbstractActionController
                 try {
                     $this->_packageManager->deletePackage($name);
                     $flashMessenger->addSuccessMessage(
-                        array($this->_('Package \'%s\' was successfully deleted.') => $name)
+                        sprintf($this->_("Package '%s' was successfully deleted."), $name)
                     );
                 } catch (\Model\Package\RuntimeException $e) {
                     $flashMessenger->addErrorMessage($e->getMessage());
@@ -201,16 +201,22 @@ class PackageController extends \Laminas\Mvc\Controller\AbstractActionController
                         $data['Deploy']['Error'],
                         $data['Deploy']['Groups']
                     );
-                    $names = array($oldName, $data['Name']);
                     $this->flashMessenger()->addSuccessMessage(
-                        array(
-                            $this->_('Package \'%s\' was successfully changed to \'%s\'.') => $names
+                        sprintf(
+                            $this->_('Package \'%1$s\' was successfully changed to \'%2$s\'.'),
+                            $oldName,
+                            $data['Name']
                         )
                     );
                     $this->flashMessenger()->addMessage($data['Name'], 'packageName');
                 } catch (\Model\Package\RuntimeException $e) {
                     $this->flashMessenger()->addErrorMessage(
-                        "Error changing Package '$oldName' to '$data[Name]': " . $e->getMessage()
+                        sprintf(
+                            $this->_('Error changing Package \'%1$s\' to \'%2$s\': %3$s'),
+                            $oldName,
+                            $data['Name'],
+                            $e->getMessage()
+                        )
                     );
                 }
                 return $this->redirectToRoute('package', 'index');

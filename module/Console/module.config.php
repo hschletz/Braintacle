@@ -20,6 +20,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Console\Mvc\Controller\Plugin\Service\TranslateFactory;
+use Console\Mvc\Controller\Plugin\Translate;
 use Console\Service\TemplateRendererFactory;
 use Console\Template\TemplateRenderer;
 use Console\View\Helper\ConsoleScript;
@@ -34,18 +36,22 @@ use Laminas\ServiceManager\Factory\InvokableFactory;
 return array(
     'controller_plugins' => array(
         'aliases' => array(
+            '_' => Translate::class,
             'GetOrder' => 'Console\Mvc\Controller\Plugin\GetOrder',
             'getOrder' => 'Console\Mvc\Controller\Plugin\GetOrder',
             'PrintForm' => 'Console\Mvc\Controller\Plugin\PrintForm',
             'printForm' => 'Console\Mvc\Controller\Plugin\PrintForm',
             'SetActiveMenu' => 'Console\Mvc\Controller\Plugin\SetActiveMenu',
             'setActiveMenu' => 'Console\Mvc\Controller\Plugin\SetActiveMenu',
+            'Translate' => Translate::class,
+            'translate' => Translate::class,
         ),
         'factories' => array(
             'Console\Mvc\Controller\Plugin\GetOrder' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\Mvc\Controller\Plugin\SetActiveMenu' =>
                 'Console\Mvc\Controller\Plugin\Service\SetActiveMenuFactory',
             'Console\Mvc\Controller\Plugin\PrintForm' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+            Translate::class => TranslateFactory::class,
         ),
     ),
     'controllers' => array(
@@ -138,7 +144,6 @@ return array(
             'consoleScript' => ConsoleScript::class,
             'consoleUrl' => 'Console\View\Helper\ConsoleUrl',
             'filterDescription' => 'Console\View\Helper\FilterDescription',
-            'formatMessages' => 'Console\View\Helper\FormatMessages',
             'groupHeader' => GroupHeader::class,
             'table' => 'Console\View\Helper\Table',
             'consoleForm' => 'Console\View\Helper\Form\Form',
@@ -156,7 +161,6 @@ return array(
             ConsoleScript::class => InvokableFactory::class,
             'Console\View\Helper\ConsoleUrl' => 'Console\View\Helper\Service\ConsoleUrlFactory',
             'Console\View\Helper\FilterDescription' => 'Console\View\Helper\Service\FilterDescriptionFactory',
-            'Console\View\Helper\FormatMessages' => 'Console\View\Helper\Service\FormatMessagesFactory',
             GroupHeader::class => GroupHeaderFactory::class,
             'Console\View\Helper\Table' => 'Console\View\Helper\Service\TableFactory',
             AddToGroup::class => InvokableFactory::class,

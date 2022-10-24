@@ -57,8 +57,8 @@ abstract class AbstractNavigationFactory extends \Laminas\Navigation\Service\Def
      *
      * This is a dummy method that can be called by _getConfig() to mark label
      * strings translatable. It does not do anything (it returns the string
-     * unchanged), but using it allows xgettext to detect and extract
-     * translatable strings.
+     * unchanged), but using it allows detection and extraction of translatable
+     * strings.
      *
      * @param string $string Translatable string
      * @return string same as $string

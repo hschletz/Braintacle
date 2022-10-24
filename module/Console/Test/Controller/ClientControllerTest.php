@@ -155,7 +155,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/client/general/?id=42');
         $this->assertRedirectTo('/console/client/index/');
         $this->assertContains(
-            'The requested client does not exist.',
+            'Der angeforderte Client existiert nicht.',
             $this->getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
         );
     }
@@ -819,8 +819,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                            array('getMessagesFromNamespace', array('error')),
                            array('getMessagesFromNamespace', array('success'))
                        )->willReturnOnConsecutiveCalls(
-                           array('error'),
-                           array(array('success %d' => 42))
+                           ['error'],
+                           ['success']
                        );
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
@@ -828,7 +828,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->disableTranslator();
         $this->dispatch('/console/client/index/');
         $this->assertXpathQuery('//ul[@class="error"]/li[text()="error"]');
-        $this->assertXpathQuery('//ul[@class="success"]/li[text()="success 42"]');
+        $this->assertXpathQuery('//ul[@class="success"]/li[text()="success"]');
     }
 
     public function testGeneralActionDefault()
@@ -2338,7 +2338,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/client/customfields/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/customfields/?id=1');
         $this->assertContains(
-            'The information was successfully updated.',
+            'Die Informationen wurden aktualisiert.',
             $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
     }
@@ -2744,8 +2744,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/client/delete/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/index/');
         $flashMessenger = $this->getControllerPlugin('FlashMessenger');
-        $this->assertContains(
-            array("Client '%s' was successfully deleted." => 'name'),
+        $this->assertEquals(
+            ["Client 'name' wurde erfolgreich gelöscht."],
             $flashMessenger->getCurrentSuccessMessages()
         );
         $this->assertEmpty($flashMessenger->getCurrentErrorMessages());
@@ -2773,8 +2773,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/client/index/');
         $flashMessenger = $this->getControllerPlugin('FlashMessenger');
         $this->assertEmpty($flashMessenger->getCurrentSuccessMessages());
-        $this->assertContains(
-            array("Client '%s' could not be deleted." => 'name'),
+        $this->assertEquals(
+            ["Client 'name' konnte nicht gelöscht werden."],
             $flashMessenger->getCurrentErrorMessages()
         );
     }

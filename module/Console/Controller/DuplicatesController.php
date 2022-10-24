@@ -82,7 +82,7 @@ class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionControl
             if ($this->_showDuplicates->isValid()) {
                 $data = $this->_showDuplicates->getData();
                 $this->_duplicates->merge($data['clients'], $data['mergeOptions']);
-                $this->flashMessenger()->addSuccessMessage('The selected clients have been merged.');
+                $this->flashMessenger()->addSuccessMessage($this->_('The selected clients have been merged.'));
                 return $this->redirectToRoute('duplicates', 'index');
             }
         }
@@ -118,7 +118,7 @@ class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionControl
             if ($params->fromPost('yes')) {
                 $this->_duplicates->allow($criteria, $value);
                 $this->flashMessenger()->addSuccessMessage(
-                    array($this->_("'%s' is no longer considered duplicate.") => $value)
+                    sprintf($this->_("'%s' is no longer considered duplicate."), $value)
                 );
                 return $this->redirectToRoute('duplicates', 'index');
             } else {

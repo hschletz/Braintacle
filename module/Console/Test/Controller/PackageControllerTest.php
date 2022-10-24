@@ -119,7 +119,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                                array('getSuccessMessages', array(), array()),
                            )
                        );
-        $flashMessenger->expects($this->once())->method('setTranslator')->with(null);
         $flashMessenger->expects($this->once())->method('render')->with('error')->willReturn('');
         $viewHelperManager->setService('flashMessenger', $flashMessenger);
 
@@ -214,7 +213,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                                array('getSuccessMessages', array(), array('success')),
                            )
                        );
-        $flashMessenger->expects($this->once())->method('setTranslator')->with(null);
         $flashMessenger->expects($this->once())
                        ->method('render')
                        ->with('error')
@@ -275,7 +273,6 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
                                array('getSuccessMessages', array(), array()),
                            )
                        );
-        $flashMessenger->expects($this->once())->method('setTranslator')->with(null);
         $flashMessenger->expects($this->once())->method('render')->with('error')->willReturn('');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
@@ -398,7 +395,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
         $flashMessenger = $this->getControllerPlugin('FlashMessenger');
         $this->assertEquals(
-            array(array('Package \'%s\' was successfully created.' => 'packageName')),
+            ["Paket 'packageName' wurde erfolgreich erstellt."],
             $flashMessenger->getCurrentSuccessMessages()
         );
         $this->assertEquals(
@@ -491,8 +488,8 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/package/index/');
 
         $flashMessenger = $this->getControllerPlugin('FlashMessenger');
-        $this->assertContains(
-            array('Package \'%s\' was successfully deleted.' => 'Name'),
+        $this->assertEquals(
+            ["Paket 'Name' wurde erfolgreich gelöscht."],
             $flashMessenger->getCurrentSuccessMessages()
         );
         $this->assertEquals(
@@ -671,9 +668,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
         $flashMessenger = $this->getControllerPlugin('FlashMessenger');
         $this->assertEquals(
-            array(
-                array("Package '%s' was successfully changed to '%s'." => array('oldName', 'newName'))
-            ),
+            ["Paket 'oldName' wurde erfolgreich zu 'newName' geändert."],
             $flashMessenger->getCurrentSuccessMessages()
         );
         $this->assertEquals(
@@ -753,7 +748,7 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             $flashMessenger->getCurrentSuccessMessages()
         );
         $this->assertEquals(
-            array("Error changing Package 'oldName' to 'newName': error message"),
+            array("Fehler beim Ändern von Paket 'oldName' zu 'newName': error message"),
             $flashMessenger->getCurrentErrorMessages()
         );
         $this->assertEquals(

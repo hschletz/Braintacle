@@ -22,6 +22,8 @@
 
 namespace Console\Test;
 
+use Laminas\Mvc\I18n\Translator;
+
 class LocalizationTest extends \PHPUnit\Framework\TestCase
 {
     protected $serverBackup;
@@ -70,7 +72,7 @@ class LocalizationTest extends \PHPUnit\Framework\TestCase
         \Laminas\Validator\AbstractValidator::setDefaultTranslator(null);
         $serviceManager = $application->getServiceManager();
         $serviceManager->setAllowOverride(true);
-        $serviceManager->setService('MvcTranslator', $translator);
+        $serviceManager->setService(Translator::class, $translator);
         $serviceManager->setService('Library\UserConfig', array());
 
         // Trigger route event which has a handler taking care of the

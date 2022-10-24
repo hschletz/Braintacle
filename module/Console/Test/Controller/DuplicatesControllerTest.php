@@ -103,9 +103,9 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                            array('getMessagesFromNamespace', array('info')),
                            array('getMessagesFromNamespace', array('success'))
                        )->willReturnOnConsecutiveCalls(
-                           array(),
-                           array('At least 2 different clients have to be selected'),
-                           array(array("'%s' is no longer considered duplicate." => 'abc'))
+                           [],
+                           ['info message'],
+                           ["success message"]
                        );
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
@@ -116,11 +116,11 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXpathQueryCount('//ul', 2);
         $this->assertXPathQueryContentContains(
             '//ul[@class="info"]/li',
-            'Es müssen mindestens 2 verschiedene Clients ausgewählt werden'
+            'info message'
         );
         $this->assertXPathQueryContentContains(
             '//ul[@class="success"]/li',
-            "'abc' wird nicht mehr als Duplikat betrachtet."
+            "success message"
         );
     }
 
@@ -209,7 +209,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/duplicates/manage/', 'POST', $params);
         $this->assertRedirectTo('/console/duplicates/index/');
         $this->assertContains(
-            'The selected clients have been merged.',
+            'Die ausgewählten Clients wurden zusammengeführt.',
             $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
     }
@@ -273,8 +273,8 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
                           ->with('Serial', '12345678');
         $this->dispatch('/console/duplicates/allow/?criteria=Serial&value=12345678', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/duplicates/index/');
-        $this->assertContains(
-            array("'%s' is no longer considered duplicate." => '12345678'),
+        $this->assertEquals(
+            ["'12345678' wird nicht mehr als Duplikat betrachtet."],
             $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
     }

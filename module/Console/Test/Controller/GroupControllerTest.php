@@ -101,7 +101,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/group/general/?name=test');
         $this->assertRedirectTo('/console/group/index/');
         $this->assertContains(
-            'The requested group does not exist.',
+            'Die angeforderte Gruppe existiert nicht.',
             $this->getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
         );
     }
@@ -710,7 +710,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $this->dispatch('/console/group/delete/?name=test', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/group/index/');
         $this->assertEquals(
-            array(array('Group \'%s\' was successfully deleted.' => 'test')),
+            ["Gruppe 'test' wurde erfolgreich gelöscht."],
             $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
         $this->assertEquals(
@@ -738,7 +738,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
         $this->assertEquals(
-            array(array('Group \'%s\' could not be deleted. Try again later.' => 'test')),
+            ["Gruppe 'test' konnte nicht gelöscht werden. Bitte erneut versuchen."],
             $this->getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
         );
     }

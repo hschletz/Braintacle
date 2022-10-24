@@ -25,7 +25,7 @@ foreach (array('error', 'info', 'success') as $namespace) {
     $messages = $this->flashMessenger()->getMessagesFromNamespace($namespace);
     if ($messages) {
         print $this->htmlList(
-            $this->formatMessages($messages),
+            $messages,
             false,
             array('class' => $namespace),
             false
