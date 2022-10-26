@@ -22,6 +22,8 @@
 
 namespace Database\Hydrator;
 
+use Model\AbstractModel;
+
 /**
  * Hydrator for software
  *
@@ -50,17 +52,17 @@ class Software implements \Laminas\Hydrator\HydratorInterface
      * @var string[]
      */
     protected $_hydratorMap = [
-        'name' => 'Name',
-        'version' => 'Version',
-        'comment' => 'Comment',
-        'publisher' => 'Publisher',
-        'install_location' => 'InstallLocation',
-        'is_hotfix' => 'IsHotfix',
-        'guid' => 'Guid',
-        'language' => 'Language',
-        'installation_date' => 'InstallationDate',
-        'architecture' => 'Architecture',
-        'size' => 'Size',
+        'name' => 'name',
+        'version' => 'version',
+        'comment' => 'comment',
+        'publisher' => 'publisher',
+        'install_location' => 'installLocation',
+        'is_hotfix' => 'isHotfix',
+        'guid' => 'guid',
+        'language' => 'language',
+        'installation_date' => 'installationDate',
+        'architecture' => 'architecture',
+        'size' => 'size',
     ];
 
     /**
@@ -69,45 +71,44 @@ class Software implements \Laminas\Hydrator\HydratorInterface
      * @var string[]
      */
     protected $_extractorMap = [
-        'Name' => 'name',
-        'Version' => 'version',
-        'Comment' => 'comment',
-        'Publisher' => 'publisher',
-        'InstallLocation' => 'install_location',
-        'IsHotfix' => 'is_hotfix',
-        'Guid' => 'guid',
-        'Language' => 'language',
-        'InstallationDate' => 'installation_date',
-        'Architecture' => 'architecture',
-        'Size' => 'size',
+        'name' => 'name',
+        'version' => 'version',
+        'comment' => 'comment',
+        'publisher' => 'publisher',
+        'installLocation' => 'install_location',
+        'isHotfix' => 'is_hotfix',
+        'guid' => 'guid',
+        'language' => 'language',
+        'installationDate' => 'installation_date',
+        'architecture' => 'architecture',
+        'size' => 'size',
     ];
 
     /** {@inheritdoc} */
     public function hydrate(array $data, $object)
     {
-        $object->exchangeArray(array());
         if ($data['is_windows']) {
-            $object->Name = $this->hydrateValue('Name', $data['name']);
-            $object->Version = $data['version'];
-            $object->Comment = $data['comment'];
-            $object->Publisher = $data['publisher'];
-            $object->InstallLocation = $this->hydrateValue('InstallLocation', $data['install_location']);
-            $object->IsHotfix = $this->hydrateValue('IsHotfix', $data['is_hotfix']);
-            $object->Guid = $data['guid'];
-            $object->Language = $data['language'];
-            $object->InstallationDate = $this->hydrateValue('InstallationDate', $data['installation_date']);
-            $object->Architecture = $this->hydrateValue('Architecture', $data['architecture']);
+            $object->name = $this->hydrateValue('name', $data['name']);
+            $object->version = $data['version'];
+            $object->comment = $data['comment'];
+            $object->publisher = $data['publisher'];
+            $object->installLocation = $this->hydrateValue('installLocation', $data['install_location']);
+            $object->isHotfix = $this->hydrateValue('isHotfix', $data['is_hotfix']);
+            $object->guid = $data['guid'];
+            $object->language = $data['language'];
+            $object->installationDate = $this->hydrateValue('installationDate', $data['installation_date']);
+            $object->architecture = $this->hydrateValue('architecture', $data['architecture']);
         } elseif ($data['is_android']) {
             // No value transformations required
-            $object->Name = $data['name'];
-            $object->Version = $data['version'];
-            $object->Publisher = $data['publisher'];
-            $object->InstallLocation = $data['install_location'];
+            $object->name = $data['name'];
+            $object->version = $data['version'];
+            $object->publisher = $data['publisher'];
+            $object->installLocation = $data['install_location'];
         } else {
-            $object->Name = $data['name']; // No sanitization required
-            $object->Version = $data['version'];
-            $object->Comment = $data['comment'];
-            $object->Size = $data['size'];
+            $object->name = $data['name']; // No sanitization required
+            $object->version = $data['version'];
+            $object->comment = $data['comment'];
+            $object->size = $data['size'];
         }
         return $object;
     }
@@ -115,27 +116,33 @@ class Software implements \Laminas\Hydrator\HydratorInterface
     /** {@inheritdoc} */
     public function extract(object $object): array
     {
-        if (property_exists($object, 'IsHotfix')) {
+        if (
+            $object instanceof AbstractModel && $object->offsetExists('IsHotfix') ||
+            property_exists($object, 'isHotfix')
+        ) {
             // Windows
-            $data = array(
-                'name' => $object->Name,
-                'version' => $object->Version,
-                'comment' => $object->Comment,
-                'publisher' => $object->Publisher,
-                'install_location' => $object->InstallLocation,
-                'is_hotfix' => $this->extractValue('is_hotfix', $object->IsHotfix),
-                'guid' => $object->Guid,
-                'language' => $object->Language,
-                'installation_date' => $this->extractValue('installation_date', $object->InstallationDate),
-                'architecture' => $object->Architecture,
+            $data = [
+                'name' => $object->name,
+                'version' => $object->version,
+                'comment' => $object->comment,
+                'publisher' => $object->publisher,
+                'install_location' => $object->installLocation,
+                'is_hotfix' => $this->extractValue('is_hotfix', $object->isHotfix),
+                'guid' => $object->guid,
+                'language' => $object->language,
+                'installation_date' => $this->extractValue('installation_date', $object->installationDate),
+                'architecture' => $object->architecture,
                 'size' => null,
-            );
-        } elseif (property_exists($object, 'Size')) {
+            ];
+        } elseif (
+            $object instanceof AbstractModel && $object->offsetExists('Size') ||
+            property_exists($object, 'size')
+        ) {
             // UNIX
-            $data = array(
-                'name' => $object->Name,
-                'version' => $object->Version,
-                'comment' => $object->Comment,
+            $data = [
+                'name' => $object->name,
+                'version' => $object->version,
+                'comment' => $object->comment,
                 'publisher' => null,
                 'install_location' => null,
                 'is_hotfix' => null,
@@ -143,23 +150,23 @@ class Software implements \Laminas\Hydrator\HydratorInterface
                 'language' => null,
                 'installation_date' => null,
                 'architecture' => null,
-                'size' => $object->Size,
-            );
+                'size' => $object->size,
+            ];
         } else {
             //Android
-            $data = array(
-                'name' => $object->Name,
-                'version' => $object->Version,
+            $data = [
+                'name' => $object->name,
+                'version' => $object->version,
                 'comment' => null,
-                'publisher' => $object->Publisher,
-                'install_location' => $object->InstallLocation,
+                'publisher' => $object->publisher,
+                'install_location' => $object->installLocation,
                 'is_hotfix' => null,
                 'guid' => null,
                 'language' => null,
                 'installation_date' => null,
                 'architecture' => null,
                 'size' => null,
-            );
+            ];
         }
         return $data;
     }
@@ -189,8 +196,9 @@ class Software implements \Laminas\Hydrator\HydratorInterface
      */
     public function extractName($name)
     {
-        if (isset($this->_extractorMap[$name])) {
-            return $this->_extractorMap[$name];
+        $nameCompat = lcfirst($name); // Legacy uppercase notation. Remove when no longer required.
+        if (isset($this->_extractorMap[$nameCompat])) {
+            return $this->_extractorMap[$nameCompat];
         } else {
             throw new \DomainException('Cannot extract name: ' . $name);
         }
@@ -206,11 +214,11 @@ class Software implements \Laminas\Hydrator\HydratorInterface
     public function hydrateValue($name, $value)
     {
         switch ($name) {
-            case 'Name':
+            case 'name':
                 // One-way correction of characters improperly encoded by old agents
                 $value = $this->_nameFilter->filter($value);
                 break;
-            case 'InstallLocation':
+            case 'installLocation':
                 if ($value == 'N/A') {
                     // One-way removal of pseudo-values
                     $value = null;
@@ -219,14 +227,14 @@ class Software implements \Laminas\Hydrator\HydratorInterface
                     $value = str_replace('/', '\\', $value);
                 }
                 break;
-            case 'IsHotfix':
+            case 'isHotfix':
                 // 0: Windows hotfix, 1: regular software
                 $value = !(bool) $value;
                 break;
-            case 'InstallationDate':
+            case 'installationDate':
                 $value = ($value ? new \DateTime($value) : null);
                 break;
-            case 'Architecture':
+            case 'architecture':
                 // One-way removal of pseudo-values
                 if ($value == '0') {
                     $value = null;
