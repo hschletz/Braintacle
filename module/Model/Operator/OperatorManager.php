@@ -121,7 +121,7 @@ class OperatorManager
         }
 
         // Compose array of columns to set
-        $insert = @$this->_operators->getHydrator()->extract(new \ArrayObject($data));
+        $insert = @$this->_operators->getHydrator()->extract(new Operator($data));
         unset($insert['']); // caused by unrecognized key, ignore
         $insert['passwd'] = $this->_authenticationService->getAdapter()->generateHash($password);
         $insert['password_version'] = \Database\Table\Operators::HASH_DEFAULT;
@@ -139,7 +139,7 @@ class OperatorManager
     public function updateOperator($id, $data, $password)
     {
         // Compose array of columns to set
-        $update = @$this->_operators->getHydrator()->extract(new \ArrayObject($data));
+        $update = @$this->_operators->getHydrator()->extract(new Operator($data));
         unset($update['']); // caused by unrecognized key, ignore
         // Set password if specified
         if ($password) {

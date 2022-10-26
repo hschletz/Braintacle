@@ -22,7 +22,6 @@
 
 namespace Model\Package;
 
-use ArrayObject;
 use Database\Table\Packages;
 use InvalidArgumentException;
 use Library\ArchiveManager;
@@ -163,7 +162,7 @@ class PackageBuilder
      */
     public function writeToDatabase(array $data): void
     {
-        $insert = $this->packagesTable->getHydrator()->extract(new ArrayObject($data));
+        $insert = $this->packagesTable->getHydrator()->extract(new Package($data));
         if (!$insert['osname']) {
             throw new InvalidArgumentException('Invalid platform: ' . $data['Platform']);
         }

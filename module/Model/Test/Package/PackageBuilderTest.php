@@ -22,12 +22,12 @@
 
 namespace Model\Test\Package;
 
-use ArrayObject;
 use Database\Table\Packages;
 use InvalidArgumentException;
 use Laminas\Hydrator\HydratorInterface;
 use Library\ArchiveManager;
 use Mockery;
+use Model\Package\Package;
 use Model\Package\PackageBuilder;
 use Model\Package\PackageManager;
 use Model\Package\RuntimeException;
@@ -331,7 +331,7 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $extractedData = ['osname' => 'unix'];
 
         $hydrator = $this->createMock(HydratorInterface::class);
-        $hydrator->method('extract')->with(new ArrayObject($data))->willReturn($extractedData);
+        $hydrator->method('extract')->with(new Package($data))->willReturn($extractedData);
 
         $packagesTable = $this->createMock(Packages::class);
         $packagesTable->method('getHydrator')->willReturn($hydrator);
@@ -355,7 +355,7 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $extractedData = ['osname' => null];
 
         $hydrator = $this->createMock(HydratorInterface::class);
-        $hydrator->method('extract')->with(new ArrayObject($data))->willReturn($extractedData);
+        $hydrator->method('extract')->with(new Package($data))->willReturn($extractedData);
 
         $packagesTable = $this->createMock(Packages::class);
         $packagesTable->method('getHydrator')->willReturn($hydrator);
