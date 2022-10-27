@@ -202,7 +202,7 @@ class Content extends Element
 
     /**
      * Append section for given item type.
-s     */
+     */
     public function appendItemSections(string $itemType, string $section): void
     {
         $items = $this->client->getItems($itemType, 'id', 'asc');
