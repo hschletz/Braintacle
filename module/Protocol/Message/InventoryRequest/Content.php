@@ -22,11 +22,12 @@
 
 namespace Protocol\Message\InventoryRequest;
 
-use Interop\Container\ContainerInterface;
+use Laminas\Hydrator\HydratorInterface;
 use Model\Client\Client;
 use Model\Client\ItemManager;
 use PhpBench\Dom\Element;
 use Protocol\Hydrator;
+use Psr\Container\ContainerInterface;
 
 /**
  * CONTENT element of an InventoryRequest document
@@ -81,20 +82,12 @@ class Content extends Element
      */
     protected $container;
 
-    /**
-     * Constructor.
-     *
-     * @param ContainerInterface $container
-     */
     public function __construct(ContainerInterface $container)
     {
         parent::__construct('CONTENT');
         $this->container = $container;
     }
 
-    /**
-     * Bind client and append content.
-     */
     public function setClient(Client $client): void
     {
         $this->client = $client;
@@ -131,14 +124,9 @@ class Content extends Element
                 throw new \InvalidArgumentException('Invalid section name: ' . $section);
         }
 
-        $element = $this->appendElement($section);
         $data = $hydrator->extract($this->client);
         ksort($data);
-        foreach ($data as $name => $value) {
-            if ((string) $value != '') {
-                $element->appendElement($name, $value, true);
-            }
-        }
+        $this->appendSection($section, $data);
     }
 
     /**
@@ -148,11 +136,8 @@ class Content extends Element
     {
         $android = $this->client['Android'];
         if ($android) {
-            $element = $this->appendElement('JAVAINFOS');
             $data = $this->container->get('Protocol\Hydrator\AndroidInstallations')->extract($android);
-            foreach ($data as $name => $value) {
-                $element->appendElement($name, $value, true);
-            }
+            $this->appendSection('JAVAINFOS', $data);
         }
     }
 
@@ -166,9 +151,13 @@ class Content extends Element
                 $value = $value->format('Y-m-d');
             }
             if ((string) $value != '') {
-                $element = $this->appendElement('ACCOUNTINFO');
-                $element->appendElement('KEYNAME', $property, true);
-                $element->appendElement('KEYVALUE', $value, true);
+                $this->appendSection(
+                    'ACCOUNTINFO',
+                    [
+                        'KEYNAME' => $property,
+                        'KEYVALUE' => $value,
+                    ]
+                );
             }
         }
     }
@@ -201,19 +190,29 @@ class Content extends Element
     }
 
     /**
-     * Append section for given item type.
+     * Append sections for given item type.
      */
     public function appendItemSections(string $itemType, string $section): void
     {
         $items = $this->client->getItems($itemType, 'id', 'asc');
         $table = $this->container->get(ItemManager::class)->getTableName($itemType);
+        /** @var HydratorInterface */
         $hydrator = $this->container->get("Protocol\\Hydrator\\$table");
+        /** @var object */
         foreach ($items as $item) {
-            $element = $this->appendElement($section);
-            foreach ($hydrator->extract($item) as $key => $value) {
-                if ((string) $value != '') {
-                    $element->appendElement($key, $value, true);
-                }
+            $this->appendSection($section, $hydrator->extract($item));
+        }
+    }
+
+    /**
+     * Append section.
+     */
+    public function appendSection(string $name, array $content): void
+    {
+        $element = $this->appendElement($name);
+        foreach ($content as $key => $value) {
+            if ((string) $value != '') {
+                $element->appendTextNode($key, $value);
             }
         }
     }

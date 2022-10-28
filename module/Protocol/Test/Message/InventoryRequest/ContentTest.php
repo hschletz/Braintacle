@@ -22,7 +22,9 @@
 
 namespace Protocol\Test\Message\InventoryRequest;
 
-use Interop\Container\ContainerInterface;
+use ArrayObject;
+use DateTime;
+use Laminas\Db\ResultSet\ResultSet;
 use Model\Client\AndroidInstallation;
 use Model\Client\Client;
 use Model\Client\ItemManager;
@@ -30,7 +32,11 @@ use Protocol\Hydrator;
 use Protocol\Message\InventoryRequest\Content;
 use Laminas\Hydrator\HydratorInterface;
 use Mockery;
+use Mockery\Mock;
+use PhpBench\Dom\Document;
 use PhpBench\Dom\Element;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Container\ContainerInterface;
 
 class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 {
@@ -89,13 +95,8 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $container = $this->createMock(ContainerInterface::class);
         $container->method('get')->with($hydratorService)->willReturn($hydrator);
 
-        $element = $this->createMock(Element::class);
-        $element->expects($this->exactly(2))
-                ->method('appendElement')
-                ->withConsecutive(['name1', 'value1', true], ['name3', 'value3', true]);
-
         $content = Mockery::mock(Content::class, [$container])->makePartial();
-        $content->shouldReceive('appendElement')->with($section)->andReturn($element);
+        $content->shouldReceive('appendSection')->once()->with($section, $data);
 
         $content->setClient($client);
         $content->appendSystemSection($section);
@@ -126,13 +127,8 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $container = $this->createMock(ContainerInterface::class);
         $container->method('get')->with('Protocol\Hydrator\AndroidInstallations')->willReturn($hydrator);
 
-        $element = $this->createMock(Element::class);
-        $element->expects($this->exactly(2))
-                ->method('appendElement')
-                ->withConsecutive(['name1', 'value1', true], ['name2', 'value2', true]);
-
         $content = Mockery::mock(Content::class, [$container])->makePartial();
-        $content->shouldReceive('appendElement')->with('JAVAINFOS')->andReturn($element);
+        $content->shouldReceive('appendSection')->once()->with('JAVAINFOS', $data);
 
         $content->setClient($client);
         $content->appendOsSpecificSection();
@@ -147,7 +143,7 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $container->expects($this->never())->method('get');
 
         $content = Mockery::mock(Content::class, [$container])->makePartial();
-        $content->shouldNotReceive('appendElement');
+        $content->shouldNotReceive('appendSection');
 
         $content->setClient($client);
         $content->appendOsSpecificSection();
@@ -165,21 +161,19 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $client = $this->createMock(Client::class);
         $client->method('offsetGet')->with('CustomFields')->willReturn($data);
 
-        $element1 = $this->createMock(Element::class);
-        $element1->expects($this->exactly(2))
-                 ->method('appendElement')
-                 ->withConsecutive(['KEYNAME', 'name1', true], ['KEYVALUE', 'value1', true]);
+        /** @var MockObject|Content */
+        $content = $this->createPartialMock(Content::class, ['appendSection']);
+        $content->expects($this->exactly(2))->method('appendSection')->withConsecutive(
+            [
+                'ACCOUNTINFO',
+                ['KEYNAME' => 'name1', 'KEYVALUE' => 'value1'],
+            ],
+            [
+                'ACCOUNTINFO',
+                ['KEYNAME' => 'name4', 'KEYVALUE' => '2020-12-27'],
 
-        $element4 = $this->createMock(Element::class);
-        $element4->expects($this->exactly(2))
-                 ->method('appendElement')
-                 ->withConsecutive(['KEYNAME', 'name4', true], ['KEYVALUE', '2020-12-27', true]);
-
-        $content = $this->createPartialMock(Content::class, ['appendElement']);
-        $content->expects($this->exactly(2))
-                ->method('appendElement')
-                ->with('ACCOUNTINFO')
-                ->willReturnOnConsecutiveCalls($element1, $element4);
+            ]
+        );
 
         $content->setClient($client);
         $content->appendAccountinfoSection();
@@ -257,51 +251,64 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 
     public function testAppendItemSections()
     {
-        $item0 = [
-            'key' => null,
-        ];
-        $item1 = [
-            'key1' => null,
-            'key2' => 'value2',
-            'key3' => '',
-            'key4' => 'value4',
-        ];
+        $itemHydrated1 = new ArrayObject(['keyHydrated1' => 'valueHydrated1']);
+        $itemHydrated2 = new ArrayObject(['keyHydrated2' => 'valueHydrated2']);
+        $itemExtracted1 = ['keyExtracted1' => 'valueExtracted1'];
+        $itemExtracted2 = ['keyExtracted2' => 'valueExtracted2'];
 
-        // Array of hydrated items
-        $items = [(object) $item0, (object) $item1];
-
-        $client = $this->createMock(Client::class);
-        $client->method('getItems')->with('item_type', 'id', 'asc')->willReturn($items);
-
+        /** @var MockObject|ItemManager */
         $itemManager = $this->createMock(ItemManager::class);
-        $itemManager->method('getTableName')->with('item_type')->willReturn('table_name');
+        $itemManager->method('getTableName')->with('type')->willReturn('Table');
 
+        /** @var MockObject|HydratorInterface */
         $hydrator = $this->createMock(HydratorInterface::class);
-        $hydrator->method('extract')
-                 ->withConsecutive([$items[0]], [$items[1]])
-                 ->willReturnOnConsecutiveCalls($item0, $item1);
+        $hydrator->method('extract')->willReturnMap([
+            [$itemHydrated1, $itemExtracted1],
+            [$itemHydrated2, $itemExtracted2],
+        ]);
 
+        /** @var MockObject|ContainerInterface */
         $container = $this->createStub(ContainerInterface::class);
         $container->method('get')->willReturnMap([
             [ItemManager::class, $itemManager],
-            ['Protocol\Hydrator\table_name', $hydrator]
+            ['Protocol\Hydrator\Table', $hydrator],
         ]);
 
-        $element0 = $this->createMock(Element::class);
-        $element0->expects($this->never())->method('appendElement');
+        $items = new ResultSet();
+        $items->initialize([$itemHydrated1, $itemHydrated2]);
 
-        $element1 = $this->createMock(Element::class);
-        $element1->expects($this->exactly(2))
-                 ->method('appendElement')
-                 ->withConsecutive(
-                     ['key2', 'value2', true],
-                     ['key4', 'value4', true]
-                 );
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->method('getItems')->with('type', 'id', 'asc')->willReturn($items);
 
+        /** @var Mock|Content */
         $content = Mockery::mock(Content::class, [$container])->makePartial();
-        $content->shouldReceive('appendElement')->with('section_name')->andReturn($element0, $element1);
+        $content->shouldReceive('appendSection')->once()->with('section', $itemExtracted1);
+        $content->shouldReceive('appendSection')->once()->with('section', $itemExtracted2);
 
         $content->setClient($client);
-        $content->appendItemSections('item_type', 'section_name');
+        $content->appendItemSections('type', 'section');
+    }
+
+    public function testAppendSection()
+    {
+        $items = [
+            'key' => 'value',
+            'ignored1' => '',
+            'ignored2' => null,
+            'entity' => '&',
+        ];
+
+        $content = new Content($this->createStub(ContainerInterface::class));
+        $document = new Document();
+        $document->createRoot('root');
+        $document->appendChild($content);
+
+        $content->appendSection('section', $items);
+
+        $this->assertXmlStringEqualsXmlString(
+            '<CONTENT><section><key>value</key><entity>&amp;</entity></section></CONTENT>',
+            $content->dump()
+        );
     }
 }
