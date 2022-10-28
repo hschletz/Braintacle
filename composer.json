@@ -23,7 +23,7 @@
         "ext-intl": "*",
         "ext-zip": "*",
         "gettext/gettext": "^5.7",
-        "hschletz/nada": "^1.1.4",
+        "hschletz/nada": "^1.2",
         "laminas/laminas-authentication": "^2.5",
         "laminas/laminas-config": "^3.0",
         "laminas/laminas-db": "^2.15",
