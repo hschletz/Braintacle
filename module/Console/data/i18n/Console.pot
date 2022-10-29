@@ -304,13 +304,13 @@ msgstr ""
 
 #: Form/DefineFields.php
 #: Form/NetworkDeviceTypes.php
-#: Navigation/ClientMenuFactory.php
 #: Navigation/GroupMenuFactory.php
 #: View/Helper/Form/ManageRegistryValues.php
 #: views/console/accounts/index.php
 #: views/console/network/showidentified.php
 #: views/console/network/showunknown.php
 #: views/console/package/index.php
+#: Client/Header.latte
 msgid "Delete"
 msgstr ""
 
@@ -495,8 +495,8 @@ msgstr ""
 
 #: Form/Package/Update.php
 #: Form/Preferences/Packages.php
-#: Navigation/ClientMenuFactory.php
 #: Navigation/MainMenuFactory.php
+#: Client/Header.latte
 msgid "Groups"
 msgstr ""
 
@@ -1076,80 +1076,9 @@ msgstr ""
 msgid "all"
 msgstr ""
 
-#: Navigation/ClientMenuFactory.php
 #: Navigation/GroupMenuFactory.php
+#: Client/Header.latte
 msgid "General"
-msgstr ""
-
-#: Navigation/ClientMenuFactory.php
-msgid "Windows"
-msgstr ""
-
-#: Navigation/ClientMenuFactory.php
-#: Navigation/MainMenuFactory.php
-msgid "Network"
-msgstr ""
-
-#: Navigation/ClientMenuFactory.php
-msgid "Storage"
-msgstr ""
-
-#: Navigation/ClientMenuFactory.php
-#: Navigation/MainMenuFactory.php
-msgid "Display"
-msgstr ""
-
-#: Navigation/ClientMenuFactory.php
-msgid "BIOS"
-msgstr ""
-
-#: Navigation/ClientMenuFactory.php
-#: Navigation/MainMenuFactory.php
-msgid "System"
-msgstr ""
-
-#: Navigation/ClientMenuFactory.php
-msgid "Printers"
-msgstr ""
-
-#: Navigation/ClientMenuFactory.php
-#: Navigation/MainMenuFactory.php
-msgid "Software"
-msgstr ""
-
-#: Navigation/ClientMenuFactory.php
-msgid "MS Office"
-msgstr ""
-
-#: Navigation/ClientMenuFactory.php
-msgid "Registry"
-msgstr ""
-
-#: Navigation/ClientMenuFactory.php
-msgid "Virtual machines"
-msgstr ""
-
-#: Navigation/ClientMenuFactory.php
-msgid "Misc"
-msgstr ""
-
-#: Navigation/ClientMenuFactory.php
-msgid "User defined"
-msgstr ""
-
-#: Navigation/ClientMenuFactory.php
-#: Navigation/GroupMenuFactory.php
-#: Navigation/MainMenuFactory.php
-msgid "Packages"
-msgstr ""
-
-#: Navigation/ClientMenuFactory.php
-#: Navigation/GroupMenuFactory.php
-msgid "Configuration"
-msgstr ""
-
-#: Navigation/ClientMenuFactory.php
-msgid "Export"
 msgstr ""
 
 #: Navigation/GroupMenuFactory.php
@@ -1160,12 +1089,33 @@ msgstr ""
 msgid "Excluded"
 msgstr ""
 
+#: Navigation/GroupMenuFactory.php
+#: Navigation/MainMenuFactory.php
+#: Client/Header.latte
+msgid "Packages"
+msgstr ""
+
+#: Navigation/GroupMenuFactory.php
+#: Client/Header.latte
+msgid "Configuration"
+msgstr ""
+
 #: Navigation/MainMenuFactory.php
 msgid "Inventory"
 msgstr ""
 
 #: Navigation/MainMenuFactory.php
 msgid "Clients"
+msgstr ""
+
+#: Navigation/MainMenuFactory.php
+#: Client/Header.latte
+msgid "Software"
+msgstr ""
+
+#: Navigation/MainMenuFactory.php
+#: Client/Header.latte
+msgid "Network"
 msgstr ""
 
 #: Navigation/MainMenuFactory.php
@@ -1185,11 +1135,21 @@ msgid "Preferences"
 msgstr ""
 
 #: Navigation/MainMenuFactory.php
+#: Client/Header.latte
+msgid "Display"
+msgstr ""
+
+#: Navigation/MainMenuFactory.php
 msgid "Raw data"
 msgstr ""
 
 #: Navigation/MainMenuFactory.php
 msgid "Filters"
+msgstr ""
+
+#: Navigation/MainMenuFactory.php
+#: Client/Header.latte
+msgid "System"
 msgstr ""
 
 #: Navigation/MainMenuFactory.php
@@ -1382,11 +1342,6 @@ msgstr ""
 
 #: views/console/client/groups.php
 msgid "Manage memberships"
-msgstr ""
-
-#: views/console/client/header.php
-#, php-format
-msgid "Details for client '%s'"
 msgstr ""
 
 #: views/console/client/import.php
@@ -1883,6 +1838,50 @@ msgstr ""
 
 #: views/layout/layout.php
 msgid "Logout"
+msgstr ""
+
+#: Client/Header.latte
+msgid "Details for client '%s'"
+msgstr ""
+
+#: Client/Header.latte
+msgid "Windows"
+msgstr ""
+
+#: Client/Header.latte
+msgid "Storage"
+msgstr ""
+
+#: Client/Header.latte
+msgid "BIOS"
+msgstr ""
+
+#: Client/Header.latte
+msgid "Printers"
+msgstr ""
+
+#: Client/Header.latte
+msgid "MS Office"
+msgstr ""
+
+#: Client/Header.latte
+msgid "Registry"
+msgstr ""
+
+#: Client/Header.latte
+msgid "Virtual machines"
+msgstr ""
+
+#: Client/Header.latte
+msgid "Misc"
+msgstr ""
+
+#: Client/Header.latte
+msgid "User defined"
+msgstr ""
+
+#: Client/Header.latte
+msgid "Export"
 msgstr ""
 
 #: Group/Header.latte

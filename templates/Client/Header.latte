@@ -1,0 +1,28 @@
+{* Header for Client subpages *}
+<h1>{translate("Details for client '%s'", $client->name)}</h1>
+
+<ul class="navigation navigation_details">
+    {include 'NavigationItem.latte', action: 'general', label: translate('General')}
+    {if $client->windows}
+        {include 'NavigationItem.latte', action: 'windows', label: translate('Windows')}
+    {/if}
+    {include 'NavigationItem.latte', action: 'network', label: translate('Network')}
+    {include 'NavigationItem.latte', action: 'storage', label: translate('Storage')}
+    {include 'NavigationItem.latte', action: 'display', label: translate('Display')}
+    {include 'NavigationItem.latte', action: 'bios', label: translate('BIOS')}
+    {include 'NavigationItem.latte', action: 'system', label: translate('System')}
+    {include 'NavigationItem.latte', action: 'printers', label: translate('Printers')}
+    {include 'NavigationItem.latte', action: 'software', label: translate('Software')}
+    {if $client->windows}
+        {include 'NavigationItem.latte', action: 'msoffice', label: translate('MS Office')}
+        {include 'NavigationItem.latte', action: 'registry', label: translate('Registry')}
+    {/if}
+    {include 'NavigationItem.latte', action: 'virtualmachines', label: translate('Virtual machines')}
+    {include 'NavigationItem.latte', action: 'misc', label: translate('Misc')}
+    {include 'NavigationItem.latte', action: 'customfields', label: translate('User defined')}
+    {include 'NavigationItem.latte', action: 'packages', label: translate('Packages')}
+    {include 'NavigationItem.latte', action: 'groups', label: translate('Groups')}
+    {include 'NavigationItem.latte', action: 'configuration', label: translate('Configuration')}
+    {include 'NavigationItem.latte', action: 'export', label: translate('Export')}
+    {include 'NavigationItem.latte', action: 'delete', label: translate('Delete')}
+</ul>

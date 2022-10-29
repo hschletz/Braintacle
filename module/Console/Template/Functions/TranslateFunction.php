@@ -1,13 +1,13 @@
 <?php
 
-namespace Console\Template;
+namespace Console\Template\Functions;
 
 use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
- * Functions to be made available within templates.
+ * Translate message, optionally replace sprintf() placeholders with extra arguments.
  */
-class TemplateFunctions
+class TranslateFunction
 {
     private TranslatorInterface $translator;
 
@@ -16,10 +16,7 @@ class TemplateFunctions
         $this->translator = $translator;
     }
 
-    /**
-     * Translate message, optionally replace sprintf() placeholders with extra arguments.
-     */
-    public function translate(string $message, ...$args): string
+    public function __invoke(string $message, ...$args): string
     {
         return vsprintf($this->translator->translate($message), $args);
     }

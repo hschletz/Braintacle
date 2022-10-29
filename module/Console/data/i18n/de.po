@@ -29,6 +29,91 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: Client/Header.latte
+msgid "BIOS"
+msgstr "BIOS"
+
+#: Client/Header.latte Navigation/GroupMenuFactory.php
+msgid "Configuration"
+msgstr "Konfiguration"
+
+#: Client/Header.latte Form/DefineFields.php Form/NetworkDeviceTypes.php
+#: Navigation/GroupMenuFactory.php View/Helper/Form/ManageRegistryValues.php
+#: views/console/accounts/index.php views/console/network/showidentified.php
+#: views/console/network/showunknown.php views/console/package/index.php
+msgid "Delete"
+msgstr "Löschen"
+
+#: Client/Header.latte
+msgid "Details for client '%s'"
+msgstr "Einzelheiten für Client '%s'"
+
+#: Client/Header.latte Navigation/MainMenuFactory.php
+msgid "Display"
+msgstr "Anzeige"
+
+#: Client/Header.latte
+msgid "Export"
+msgstr "Exportieren"
+
+#: Client/Header.latte Navigation/GroupMenuFactory.php
+msgid "General"
+msgstr "Allgemein"
+
+#: Client/Header.latte Form/Package/Update.php Form/Preferences/Packages.php
+#: Navigation/MainMenuFactory.php
+msgid "Groups"
+msgstr "Gruppen"
+
+#: Client/Header.latte
+msgid "MS Office"
+msgstr "MS Office"
+
+#: Client/Header.latte
+msgid "Misc"
+msgstr "Verschiedenes"
+
+#: Client/Header.latte Navigation/MainMenuFactory.php
+msgid "Network"
+msgstr "Netzwerk"
+
+#: Client/Header.latte Navigation/GroupMenuFactory.php
+#: Navigation/MainMenuFactory.php
+msgid "Packages"
+msgstr "Pakete"
+
+#: Client/Header.latte
+msgid "Printers"
+msgstr "Drucker"
+
+#: Client/Header.latte
+msgid "Registry"
+msgstr "Registry"
+
+#: Client/Header.latte Navigation/MainMenuFactory.php
+msgid "Software"
+msgstr "Software"
+
+#: Client/Header.latte
+msgid "Storage"
+msgstr "Massenspeicher"
+
+#: Client/Header.latte Navigation/MainMenuFactory.php
+msgid "System"
+msgstr "System"
+
+#: Client/Header.latte
+msgid "User defined"
+msgstr "Benutzerdefiniert"
+
+#: Client/Header.latte
+msgid "Virtual machines"
+msgstr "Virtuelle Maschinen"
+
+#: Client/Header.latte
+msgid "Windows"
+msgstr "Windows"
+
 #: Controller/ClientController.php
 #, php-format
 msgid "Client '%s' could not be deleted."
@@ -266,14 +351,6 @@ msgstr "Kategorie"
 msgid "Date"
 msgstr "Datum"
 
-#: Form/DefineFields.php Form/NetworkDeviceTypes.php
-#: Navigation/ClientMenuFactory.php Navigation/GroupMenuFactory.php
-#: View/Helper/Form/ManageRegistryValues.php views/console/accounts/index.php
-#: views/console/network/showidentified.php
-#: views/console/network/showunknown.php views/console/package/index.php
-msgid "Delete"
-msgstr "Löschen"
-
 #: Form/DefineFields.php
 msgid "Float"
 msgstr "Kommazahl"
@@ -432,11 +509,6 @@ msgstr "Auf Clients installieren, denen das exisierende Paket zugewiesen ist"
 #: views/console/package/index.php
 msgid "Error"
 msgstr "Fehler"
-
-#: Form/Package/Update.php Form/Preferences/Packages.php
-#: Navigation/ClientMenuFactory.php Navigation/MainMenuFactory.php
-msgid "Groups"
-msgstr "Gruppen"
 
 #: Form/Package/Update.php Form/Preferences/Packages.php
 #: views/console/client/packages.php views/console/package/index.php
@@ -980,75 +1052,6 @@ msgstr "für Anzeige ausgewählt"
 msgid "Details for group '%s'"
 msgstr "Einzelheiten für Gruppe '%s'"
 
-#: Navigation/ClientMenuFactory.php
-msgid "BIOS"
-msgstr "BIOS"
-
-#: Navigation/ClientMenuFactory.php Navigation/GroupMenuFactory.php
-msgid "Configuration"
-msgstr "Konfiguration"
-
-#: Navigation/ClientMenuFactory.php Navigation/MainMenuFactory.php
-msgid "Display"
-msgstr "Anzeige"
-
-#: Navigation/ClientMenuFactory.php
-msgid "Export"
-msgstr "Exportieren"
-
-#: Navigation/ClientMenuFactory.php Navigation/GroupMenuFactory.php
-msgid "General"
-msgstr "Allgemein"
-
-#: Navigation/ClientMenuFactory.php
-msgid "MS Office"
-msgstr "MS Office"
-
-#: Navigation/ClientMenuFactory.php
-msgid "Misc"
-msgstr "Verschiedenes"
-
-#: Navigation/ClientMenuFactory.php Navigation/MainMenuFactory.php
-msgid "Network"
-msgstr "Netzwerk"
-
-#: Navigation/ClientMenuFactory.php Navigation/GroupMenuFactory.php
-#: Navigation/MainMenuFactory.php
-msgid "Packages"
-msgstr "Pakete"
-
-#: Navigation/ClientMenuFactory.php
-msgid "Printers"
-msgstr "Drucker"
-
-#: Navigation/ClientMenuFactory.php
-msgid "Registry"
-msgstr "Registry"
-
-#: Navigation/ClientMenuFactory.php Navigation/MainMenuFactory.php
-msgid "Software"
-msgstr "Software"
-
-#: Navigation/ClientMenuFactory.php
-msgid "Storage"
-msgstr "Massenspeicher"
-
-#: Navigation/ClientMenuFactory.php Navigation/MainMenuFactory.php
-msgid "System"
-msgstr "System"
-
-#: Navigation/ClientMenuFactory.php
-msgid "User defined"
-msgstr "Benutzerdefiniert"
-
-#: Navigation/ClientMenuFactory.php
-msgid "Virtual machines"
-msgstr "Virtuelle Maschinen"
-
-#: Navigation/ClientMenuFactory.php
-msgid "Windows"
-msgstr "Windows"
-
 #: Navigation/GroupMenuFactory.php
 msgid "Excluded"
 msgstr "Ausgeschlossen"
@@ -1272,11 +1275,6 @@ msgstr "Mitgliedschaft"
 #: views/console/client/groups.php views/console/group/members.php
 msgid "manual"
 msgstr "manuell"
-
-#: views/console/client/header.php
-#, php-format
-msgid "Details for client '%s'"
-msgstr "Einzelheiten für Client '%s'"
 
 #: views/console/client/import.php
 msgid "Import locally generated inventory data"

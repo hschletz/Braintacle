@@ -3,7 +3,6 @@
 namespace Console\Template;
 
 use ErrorException;
-use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\View\Renderer\RendererInterface;
 use Laminas\View\Resolver\ResolverInterface;
 use Latte\Engine;
@@ -13,8 +12,7 @@ use Library\Application;
 /**
  * Main interface for template rendering.
  *
- * Templates are loaded from the /templates directory. Functions from the
- * TemplateFunctions class are made available within templates.
+ * Templates are loaded from the /templates directory.
  */
 class TemplateRenderer implements RendererInterface
 {
@@ -22,12 +20,9 @@ class TemplateRenderer implements RendererInterface
 
     private Engine $engine;
 
-    public function __construct(Engine $engine, TranslatorInterface $translator)
+    public function __construct(Engine $engine)
     {
-        $templateFunctions = new TemplateFunctions($translator);
-
         $engine->setLoader(new FileLoader(Application::getPath(self::TEMPLATE_PATH)));
-        $engine->addFunction('translate', [$templateFunctions, 'translate']);
 
         $this->engine = $engine;
     }

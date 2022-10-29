@@ -34,6 +34,7 @@ use Laminas\I18n\View\Helper\DateFormat;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 use Library\Form\Element\Submit;
+use Model\Client\Client;
 use Model\Client\ClientManager;
 use Model\Config;
 use Model\Group\GroupManager;
@@ -162,11 +163,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testMenuForWindowsClients()
     {
-        $client = array(
+        $client = new Client([
             'Name' => 'name',
             'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
             'Printer' => array(),
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/printers/?id=1');
@@ -846,7 +848,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                    ->willReturnOnConsecutiveCalls('inventory_date', 'last_contact_date');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('dateFormat', $dateFormat);
 
-        $client = array(
+        $client = new Client([
             'Id' => 1,
             'Name' => 'name',
             'IdString' => 'id_string',
@@ -873,7 +875,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'UserName' => 'user_name',
             'Windows' => null,
             'Uuid' => 'uuid',
-        );
+        ]);
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/general/?id=1');
@@ -1030,10 +1032,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_softwareManager->expects($this->never())->method('setProductKey');
 
-        $client = array(
+        $client = new Client([
             'Name' => 'name',
             'Windows' => $windows,
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/windows/?id=1');
@@ -1080,7 +1083,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $formManager->setAllowOverride(true);
         $formManager->setService('Console\Form\ProductKey', $form);
 
-        $client = array(
+        $client = new Client([
             'Name' => 'name',
             'Windows' => [
                 'Company' => 'company',
@@ -1088,7 +1091,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'ProductId' => 'product_id',
                 'ProductKey' => 'product_key',
             ],
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->_softwareManager->expects($this->never())->method('setProductKey');
@@ -1130,7 +1134,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         // DnsServer and DefaultGateway typically show up both or not at all, so
         // they are not tested separately.
-        $client = array(
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'DnsDomain' => 'dns_domain',
@@ -1138,7 +1142,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'DefaultGateway' => 'default_gateway',
             'NetworkInterface' => array(),
             'Modem' => array(),
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/network/?id=1');
@@ -1155,7 +1160,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testNetworkActionSettingsOnlyWindows()
     {
-        $client = array(
+        $client = new Client([
             'Name' => 'name',
             'Windows' => array('Workgroup' => 'workgroup'),
             'DnsDomain' => null,
@@ -1163,7 +1168,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'DefaultGateway' => null,
             'NetworkInterface' => array(),
             'Modem' => array(),
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/network/?id=1');
@@ -1198,7 +1204,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             $interface + array('IsBlacklisted' => false),
             $interface + array('IsBlacklisted' => true),
         );
-        $client = array(
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'DnsDomain' => null,
@@ -1206,7 +1213,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'DefaultGateway' => null,
             'NetworkInterface' => $interfaces,
             'Modem' => array(),
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/network/?id=1');
@@ -1224,7 +1232,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Type' => 'type',
             'Name' => 'name',
         );
-        $client = array(
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'DnsDomain' => null,
@@ -1232,7 +1241,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'DefaultGateway' => null,
             'NetworkInterface' => array(),
             'Modem' => array($modem),
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
         $this->dispatch('/console/client/network/?id=1');
         $this->assertResponseStatusCode(200);
@@ -1323,13 +1333,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'FreeSpace' => 4000, // ignored
             ),
         );
-        $client = array(
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
             'Android' => null,
             'StorageDevice' => $devices,
             'Filesystem' => $filesystems,
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/storage/?id=1');
@@ -1387,13 +1399,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'FreeSpace' => 4000,
             ),
         );
-        $client = array(
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'Android' => null,
             'StorageDevice' => $devices,
             'Filesystem' => $filesystems,
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/storage/?id=1');
@@ -1424,13 +1438,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'FreeSpace' => 4000,
             ],
         ];
-        $client = [
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'Android' => $this->createMock('Model\Client\AndroidInstallation'),
             'StorageDevice' => $devices,
             'Filesystem' => $filesystems,
-        ];
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/storage/?id=1');
@@ -1455,12 +1471,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'CurrentResolution' => 'resolution2',
             ),
         );
-        $client = array(
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'DisplayController' => $displayControllers,
             'Display' => array(),
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/display/?id=1');
@@ -1480,12 +1498,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Edid' => 'EDID',
             'Type' => 'type',
         );
-        $client = array(
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'DisplayController' => array(),
             'Display' => array($display),
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/display/?id=1');
@@ -1496,13 +1516,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testBiosAction()
     {
-        $client = array(
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'BiosManufacturer' => 'manufacturer',
             'BiosDate' => 'date',
             'BiosVersion' => 'line1;line2',
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/bios/?id=1');
@@ -1521,13 +1542,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Name' => 'name',
             ),
         );
-        $client = array(
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'MemorySlot' => array(),
             'Controller' => $controllers,
             'ExtensionSlot' => array(),
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/system/?id=1');
@@ -1549,13 +1572,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Name' => 'name',
             ),
         );
-        $client = array(
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
             'MemorySlot' => array(),
             'Controller' => $controllers,
             'ExtensionSlot' => array(),
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/system/?id=1');
@@ -1588,13 +1613,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Description' => 'description1',
             ),
         );
-        $client = array(
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'MemorySlot' => $slots,
             'Controller' => array(),
             'ExtensionSlot' => array(),
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/system/?id=1');
@@ -1627,13 +1654,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'SlotId' => '<id>'
             ),
         );
-        $client = array(
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'MemorySlot' => array(),
             'Controller' => array(),
             'ExtensionSlot' => $slots,
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/system/?id=1');
@@ -1655,11 +1684,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Description' => 'description',
             ),
         );
-        $client = array(
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'Printer' => $printers,
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/printers/?id=1');
@@ -2099,13 +2129,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Name' => 'name',
             'Description' => 'description',
         );
-        $client = array(
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'AudioDevice' => array($audiodevice),
             'InputDevice' => array(),
             'Port' => array(),
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/misc/?id=1');
@@ -2142,13 +2174,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Interface' => 'interface1',
             ),
         );
-        $client = array(
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'AudioDevice' => array(),
             'InputDevice' => $inputdevices,
             'Port' => array(),
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/misc/?id=1');
@@ -2168,13 +2202,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Type' => 'manufacturer',
             'Name' => 'name',
         );
-        $client = array(
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
             'AudioDevice' => array(),
             'InputDevice' => array(),
             'Port' => array($port),
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/misc/?id=1');
@@ -2194,13 +2230,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Name' => 'name',
             'Connector' => 'connector',
         );
-        $client = array(
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'AudioDevice' => array(),
             'InputDevice' => array(),
             'Port' => array($port),
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/misc/?id=1');
@@ -2219,11 +2257,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $customFields->expects($this->once())
                      ->method('getArrayCopy')
                      ->will($this->returnValue(array()));
-        $client = array(
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'CustomFields' => $customFields,
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $flashMessenger = $this->createMock(FlashMessenger::class);
@@ -2249,11 +2289,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $customFields->expects($this->once())
                      ->method('getArrayCopy')
                      ->will($this->returnValue($data));
-        $client = array(
+
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null,
             'CustomFields' => $customFields,
-        );
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\CustomFields');
         $form->expects($this->never())
@@ -2283,10 +2325,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Fields' => array('field1' => 'value1', 'field2' => 'value2')
         );
 
-        $client = [
+        $client = new Client([
             'Name' => 'name',
             'Windows' => null
-        ];
+        ]);
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\CustomFields');

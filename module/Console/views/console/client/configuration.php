@@ -20,6 +20,5 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-require 'header.php';
-
+print $this->clientHeader($this->client);
 print $this->consoleFormClientConfig($this->form);

@@ -24,12 +24,14 @@ use Console\Mvc\Controller\Plugin\Service\TranslateFactory;
 use Console\Mvc\Controller\Plugin\Translate;
 use Console\Service\TemplateRendererFactory;
 use Console\Template\TemplateRenderer;
+use Console\View\Helper\ClientHeader;
 use Console\View\Helper\ConsoleScript;
 use Console\View\Helper\Form\AddToGroup;
 use Console\View\Helper\Form\Package\Build;
 use Console\View\Helper\Form\Package\Update;
 use Console\View\Helper\Form\Search;
 use Console\View\Helper\GroupHeader;
+use Console\View\Helper\Service\ClientHeaderFactory;
 use Console\View\Helper\Service\GroupHeaderFactory;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 
@@ -124,7 +126,6 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-            'Console\Navigation\ClientMenu' => 'Console\Navigation\ClientMenuFactory',
             'Console\Navigation\GroupMenu' => 'Console\Navigation\GroupMenuFactory',
             'Console\Navigation\MainMenu' => 'Console\Navigation\MainMenuFactory',
             TemplateRenderer::class => TemplateRendererFactory::class,
@@ -141,6 +142,7 @@ return array(
     ),
     'view_helpers' => array(
         'aliases' => array(
+            'clientHeader' => ClientHeader::class,
             'consoleScript' => ConsoleScript::class,
             'consoleUrl' => 'Console\View\Helper\ConsoleUrl',
             'filterDescription' => 'Console\View\Helper\FilterDescription',
@@ -158,6 +160,7 @@ return array(
             'consoleFormSoftware' => 'Console\View\Helper\Form\Software',
         ),
         'factories' => array(
+            ClientHeader::class => ClientHeaderFactory::class,
             ConsoleScript::class => InvokableFactory::class,
             'Console\View\Helper\ConsoleUrl' => 'Console\View\Helper\Service\ConsoleUrlFactory',
             'Console\View\Helper\FilterDescription' => 'Console\View\Helper\Service\FilterDescriptionFactory',

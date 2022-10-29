@@ -4,9 +4,11 @@ namespace Console\Test\Template;
 
 use Console\Service\TemplateRendererFactory;
 use Console\Template\TemplateRenderer;
+use Console\View\Helper\ConsoleUrl;
 use ErrorException;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\I18n\Translator;
+use Laminas\View\HelperPluginManager;
 use Latte\Engine;
 use Latte\Loaders\FileLoader;
 use Library\Application;
@@ -19,14 +21,33 @@ class TemplateRendererTest extends TestCase
 {
     public function testFactory()
     {
+        /** @var MockObject|TranslatorInterface */
         $translator = $this->createStub(Translator::class);
+        $translator->method('translate')->willReturn('translated');
+
+        /** @var MockObject|ConsoleUrl */
+        $consoleUrl = $this->createMock(ConsoleUrl::class);
+        $consoleUrl->method('__invoke')->willReturn('url');
+
+        /** @var MockObject|HelperPluginManager */
+        $viewHelperManager = $this->createMock(HelperPluginManager::class);
+        $viewHelperManager->method('get')->with(ConsoleUrl::class)->willReturn($consoleUrl);
 
         /** @var MockObject|ContainerInterface */
         $container = $this->createMock(ContainerInterface::class);
-        $container->method('get')->with(Translator::class)->willReturn($translator);
+        $container->method('get')->willReturnMap([
+            [Translator::class, $translator],
+            ['ViewHelperManager', $viewHelperManager],
+        ]);
 
         $factory = new TemplateRendererFactory();
-        $this->assertInstanceOf(TemplateRenderer::class, $factory($container, TemplateRenderer::class));
+        /** @var TemplateRenderer */
+        $templateRenderer = $factory($container, TemplateRenderer::class);
+        $this->assertInstanceOf(TemplateRenderer::class, $templateRenderer);
+
+        $engine = $templateRenderer->getEngine();
+        $this->assertEquals('translated', $engine->invokeFunction('translate', ['message']));
+        $this->assertEquals('url', $engine->invokeFunction('consoleUrl', []));
     }
 
     public function testService()
@@ -54,18 +75,6 @@ class TemplateRendererTest extends TestCase
         $loader = $templateRenderer->getEngine()->getLoader();
         $this->assertInstanceOf(FileLoader::class, $loader);
         $this->assertEquals(Application::getPath('templates'), rtrim($loader->getUniqueId(''), '/'));
-    }
-
-    public function testTranslateFunction()
-    {
-        $engine = new Engine();
-
-        /** @var MockObject|TranslatorInterface */
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator->method('translate')->with('message')->willReturn('translated');
-
-        $templateRenderer = new TemplateRenderer($engine, $translator);
-        $this->assertEquals('translated', $templateRenderer->getEngine()->invokeFunction('translate', ['message']));
     }
 
     public function testRender()
