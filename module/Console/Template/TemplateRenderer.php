@@ -3,6 +3,7 @@
 namespace Console\Template;
 
 use ErrorException;
+use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\RendererInterface;
 use Laminas\View\Resolver\ResolverInterface;
 use Latte\Engine;
@@ -38,6 +39,13 @@ class TemplateRenderer implements RendererInterface
 
     public function render($nameOrModel, $values = null): string
     {
+        if ($nameOrModel instanceof ViewModel) {
+            $template = $nameOrModel->getTemplate();
+            $values = $nameOrModel->getVariables();
+        } else {
+            $template = $nameOrModel;
+        }
+
         // Latte does not catch warnings emitted by template functions. These
         // would show up in template output in unexpected places. Set up an
         // error handler to intercept warnings and convert them into a proper
@@ -64,7 +72,7 @@ class TemplateRenderer implements RendererInterface
         });
 
         try {
-            return $this->getEngine()->renderToString($nameOrModel, $values);
+            return $this->getEngine()->renderToString($template, $values);
         } finally {
             restore_error_handler();
         }

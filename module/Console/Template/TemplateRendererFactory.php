@@ -1,10 +1,9 @@
 <?php
 
-namespace Console\Service;
+namespace Console\Template;
 
 use Console\Template\Functions\ConsoleUrlFunction;
 use Console\Template\Functions\TranslateFunction;
-use Console\Template\TemplateRenderer;
 use Console\View\Helper\ConsoleUrl;
 use Laminas\Mvc\I18n\Translator;
 use Laminas\ServiceManager\Factory\FactoryInterface;

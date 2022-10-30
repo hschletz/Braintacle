@@ -2,13 +2,14 @@
 
 namespace Console\Test\Template;
 
-use Console\Service\TemplateRendererFactory;
 use Console\Template\TemplateRenderer;
+use Console\Template\TemplateRendererFactory;
 use Console\View\Helper\ConsoleUrl;
 use ErrorException;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\I18n\Translator;
 use Laminas\View\HelperPluginManager;
+use Laminas\View\Model\ViewModel;
 use Latte\Engine;
 use Latte\Loaders\FileLoader;
 use Library\Application;
@@ -61,31 +62,43 @@ class TemplateRendererTest extends TestCase
     public function testGetEngine()
     {
         $engine = new Engine();
-        $translator = $this->createStub(TranslatorInterface::class);
-        $templateRenderer = new TemplateRenderer($engine, $translator);
+        $templateRenderer = new TemplateRenderer($engine);
         $this->assertSame($engine, $templateRenderer->getEngine());
     }
 
     public function testLoader()
     {
         $engine = new Engine();
-        $translator = $this->createStub(TranslatorInterface::class);
-        $templateRenderer = new TemplateRenderer($engine, $translator);
+        $templateRenderer = new TemplateRenderer($engine);
 
         $loader = $templateRenderer->getEngine()->getLoader();
         $this->assertInstanceOf(FileLoader::class, $loader);
         $this->assertEquals(Application::getPath('templates'), rtrim($loader->getUniqueId(''), '/'));
     }
 
-    public function testRender()
+    public function testRenderWithName()
     {
         $engine = $this->createMock(Engine::class);
         $engine->method('renderToString')->with('template', ['values'])->willReturn('content');
 
-        $translator = $this->createStub(TranslatorInterface::class);
-
-        $templateRenderer = new TemplateRenderer($engine, $translator);
+        $templateRenderer = new TemplateRenderer($engine);
         $this->assertEquals('content', $templateRenderer->render('template', ['values']));
+
+        $this->expectWarning();
+        $this->expectWarningMessage('handler restored');
+        trigger_error('handler restored', E_USER_WARNING);
+    }
+
+    public function testRenderWithViewModel()
+    {
+        $engine = $this->createMock(Engine::class);
+        $engine->method('renderToString')->with('template', ['values'])->willReturn('content');
+
+        $viewModel = new ViewModel(['values']);
+        $viewModel->setTemplate('template');
+
+        $templateRenderer = new TemplateRenderer($engine);
+        $this->assertEquals('content', $templateRenderer->render($viewModel));
 
         $this->expectWarning();
         $this->expectWarningMessage('handler restored');
@@ -99,9 +112,7 @@ class TemplateRendererTest extends TestCase
             trigger_error('warning', E_USER_WARNING);
         });
 
-        $translator = $this->createStub(TranslatorInterface::class);
-
-        $templateRenderer = new TemplateRenderer($engine, $translator);
+        $templateRenderer = new TemplateRenderer($engine);
         try {
             $templateRenderer->render('template');
         } catch (ErrorException $exception) {
@@ -124,9 +135,7 @@ class TemplateRendererTest extends TestCase
             return 'success';
         });
 
-        $translator = $this->createStub(TranslatorInterface::class);
-
-        $templateRenderer = new TemplateRenderer($engine, $translator);
+        $templateRenderer = new TemplateRenderer($engine);
         $this->assertEquals('success', $templateRenderer->render('template'));
 
         $this->expectWarning();

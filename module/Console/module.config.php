@@ -22,8 +22,10 @@
 
 use Console\Mvc\Controller\Plugin\Service\TranslateFactory;
 use Console\Mvc\Controller\Plugin\Translate;
-use Console\Service\TemplateRendererFactory;
 use Console\Template\TemplateRenderer;
+use Console\Template\TemplateRendererFactory;
+use Console\Template\TemplateStrategy;
+use Console\Template\TemplateStrategyFactory;
 use Console\View\Helper\ClientHeader;
 use Console\View\Helper\ConsoleScript;
 use Console\View\Helper\Form\AddToGroup;
@@ -129,6 +131,7 @@ return array(
             'Console\Navigation\GroupMenu' => 'Console\Navigation\GroupMenuFactory',
             'Console\Navigation\MainMenu' => 'Console\Navigation\MainMenuFactory',
             TemplateRenderer::class => TemplateRendererFactory::class,
+            TemplateStrategy::class => TemplateStrategyFactory::class,
         ),
     ),
     'translator' => array(
