@@ -84,6 +84,10 @@ class Module implements
         /** @var TemplateStrategy */
         $templateStategy = $serviceManager->get(TemplateStrategy::class);
         $templateStategy->attach($view->getEventManager(), 100);
+        $routeMatch = $e->getRouteMatch();
+        if ($routeMatch) {
+            $templateStategy->currentAction = $routeMatch->getParam('action');
+        }
     }
 
     /**

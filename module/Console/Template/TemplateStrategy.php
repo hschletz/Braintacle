@@ -10,11 +10,16 @@ use Laminas\View\ViewEvent;
 /**
  * Template rendering strategy.
  *
- * Attach this strategy to ViewEvent::EVENT_RENDERER. This will cause the
+ * Attach this strategy to the view event manager. This will cause the
  * TemplateRenderer to be invoked for TemplateViewModel instances.
+ *
+ * The public properties need to be populated with values from the current
+ * request. They will be injected as variables into the view model.
  */
 class TemplateStrategy extends AbstractListenerAggregate
 {
+    public string $currentAction;
+
     private TemplateRenderer $templateRenderer;
 
     public function __construct(TemplateRenderer $templateRenderer)
@@ -29,7 +34,9 @@ class TemplateStrategy extends AbstractListenerAggregate
 
     public function selectRenderer(ViewEvent $e): ?TemplateRenderer
     {
-        if ($e->getModel() instanceof TemplateViewModel) {
+        $model = $e->getModel();
+        if ($model instanceof TemplateViewModel) {
+            $model->setVariable('currentAction', $this->currentAction);
             return $this->templateRenderer;
         } else {
             return null;

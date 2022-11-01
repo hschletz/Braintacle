@@ -1,28 +1,34 @@
 {* Header for Client subpages *}
+{define navigationItem, string $action, string $label}
+    <li n:class="$action == $currentAction ? active">
+        <a href="{consoleUrl('client', $action, [], true)}">{$label}</a>
+    </li>
+{/define}
+
 <h1>{translate("Details for client '%s'", $client->name)}</h1>
 
 <ul class="navigation navigation_details">
-    {include 'NavigationItem.latte', action: 'general', label: translate('General')}
+    {include navigationItem, 'general', translate('General')}
     {if $client->windows}
-        {include 'NavigationItem.latte', action: 'windows', label: translate('Windows')}
+        {include navigationItem, 'windows', translate('Windows')}
     {/if}
-    {include 'NavigationItem.latte', action: 'network', label: translate('Network')}
-    {include 'NavigationItem.latte', action: 'storage', label: translate('Storage')}
-    {include 'NavigationItem.latte', action: 'display', label: translate('Display')}
-    {include 'NavigationItem.latte', action: 'bios', label: translate('BIOS')}
-    {include 'NavigationItem.latte', action: 'system', label: translate('System')}
-    {include 'NavigationItem.latte', action: 'printers', label: translate('Printers')}
-    {include 'NavigationItem.latte', action: 'software', label: translate('Software')}
+    {include navigationItem, 'network', translate('Network')}
+    {include navigationItem, 'storage', translate('Storage')}
+    {include navigationItem, 'display', translate('Display')}
+    {include navigationItem, 'bios', translate('BIOS')}
+    {include navigationItem, 'system', translate('System')}
+    {include navigationItem, 'printers', translate('Printers')}
+    {include navigationItem, 'software', translate('Software')}
     {if $client->windows}
-        {include 'NavigationItem.latte', action: 'msoffice', label: translate('MS Office')}
-        {include 'NavigationItem.latte', action: 'registry', label: translate('Registry')}
+        {include navigationItem, 'msoffice', translate('MS Office')}
+        {include navigationItem, 'registry', translate('Registry')}
     {/if}
-    {include 'NavigationItem.latte', action: 'virtualmachines', label: translate('Virtual machines')}
-    {include 'NavigationItem.latte', action: 'misc', label: translate('Misc')}
-    {include 'NavigationItem.latte', action: 'customfields', label: translate('User defined')}
-    {include 'NavigationItem.latte', action: 'packages', label: translate('Packages')}
-    {include 'NavigationItem.latte', action: 'groups', label: translate('Groups')}
-    {include 'NavigationItem.latte', action: 'configuration', label: translate('Configuration')}
-    {include 'NavigationItem.latte', action: 'export', label: translate('Export')}
-    {include 'NavigationItem.latte', action: 'delete', label: translate('Delete')}
+    {include navigationItem, 'virtualmachines', translate('Virtual machines')}
+    {include navigationItem, 'misc', translate('Misc')}
+    {include navigationItem, 'customfields', translate('User defined')}
+    {include navigationItem, 'packages', translate('Packages')}
+    {include navigationItem, 'groups', translate('Groups')}
+    {include navigationItem, 'configuration', translate('Configuration')}
+    {include navigationItem, 'export', translate('Export')}
+    {include navigationItem, 'delete', translate('Delete')}
 </ul>
