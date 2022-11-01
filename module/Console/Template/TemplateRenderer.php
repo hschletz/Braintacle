@@ -7,7 +7,6 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\RendererInterface;
 use Laminas\View\Resolver\ResolverInterface;
 use Latte\Engine;
-use Latte\Loaders\FileLoader;
 use Library\Application;
 
 /**
@@ -23,7 +22,7 @@ class TemplateRenderer implements RendererInterface
 
     public function __construct(Engine $engine)
     {
-        $engine->setLoader(new FileLoader(Application::getPath(self::TEMPLATE_PATH)));
+        $engine->setLoader(new TemplateLoader(Application::getPath(self::TEMPLATE_PATH)));
 
         $this->engine = $engine;
     }
