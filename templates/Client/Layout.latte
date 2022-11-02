@@ -1,2 +1,6 @@
-{include Header.latte}
-{block content}{/block}
+{* Layout for a client subpage. *}
+{layout ../Layout.latte}
+{block mainContent}
+    {include Header.latte}
+    {block clientContent}{/block}
+{/block}

@@ -155,7 +155,6 @@ msgstr ""
 #: views/console/client/network.php
 #: views/console/client/packages.php
 #: views/console/client/printers.php
-#: views/console/client/software.php
 #: views/console/client/system.php
 #: views/console/client/virtualmachines.php
 #: views/console/duplicates/index.php
@@ -166,6 +165,7 @@ msgstr ""
 #: views/console/group/packages.php
 #: views/console/network/index.php
 #: views/console/package/index.php
+#: Client/Software.latte
 msgid "Name"
 msgstr ""
 
@@ -1237,7 +1237,7 @@ msgid "Add user"
 msgstr ""
 
 #: views/console/client/bios.php
-#: views/console/client/software.php
+#: Client/Software.latte
 msgid "Version"
 msgstr ""
 
@@ -1454,7 +1454,7 @@ msgid "Product"
 msgstr ""
 
 #: views/console/client/msoffice.php
-#: views/console/client/software.php
+#: Client/Software.latte
 msgid "Architecture"
 msgstr ""
 
@@ -1565,23 +1565,15 @@ msgstr ""
 msgid "Status of package '%s' will be reset to 'Pending'. Continue?"
 msgstr ""
 
-#: views/console/client/software.php
-msgid "Publisher"
+#: views/console/client/storage.php
+msgid "Product family"
 msgstr ""
 
-#: views/console/client/software.php
-msgid "Location"
-msgstr ""
-
-#: views/console/client/software.php
 #: views/console/client/storage.php
 #: views/console/client/system.php
 #: views/console/package/index.php
+#: Client/Software.latte
 msgid "Size"
-msgstr ""
-
-#: views/console/client/storage.php
-msgid "Product family"
 msgstr ""
 
 #: views/console/client/storage.php
@@ -1882,6 +1874,14 @@ msgstr ""
 
 #: Client/Header.latte
 msgid "Export"
+msgstr ""
+
+#: Client/Software.latte
+msgid "Publisher"
+msgstr ""
+
+#: Client/Software.latte
+msgid "Location"
 msgstr ""
 
 #: Group/Header.latte

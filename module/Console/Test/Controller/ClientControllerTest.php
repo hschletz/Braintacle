@@ -34,8 +34,11 @@ use Laminas\I18n\View\Helper\DateFormat;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 use Library\Form\Element\Submit;
+use Model\Client\AndroidInstallation;
 use Model\Client\Client;
 use Model\Client\ClientManager;
+use Model\Client\Item\Software;
+use Model\Client\WindowsInstallation;
 use Model\Config;
 use Model\Group\GroupManager;
 use Model\Registry\RegistryManager;
@@ -1699,28 +1702,28 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testSoftwareActionWindows()
     {
-        $software1 = array(
+        $software1 = new Software([
             'Name' => 'name1',
             'Comment' => '',
             'Version' => 'version1',
             'Publisher' => 'publisher1',
             'InstallLocation' => 'location1',
             'Architecture' => '32',
-        );
-        $software2 = array(
+        ]);
+        $software2 = new Software([
             'Name' => 'name2',
             'Comment' => '',
             'Version' => 'version2',
             'Publisher' => 'publisher2',
             'InstallLocation' => 'location2',
             'Architecture' => '',
-        );
-        $map = [
-            ['Windows', $this->createMock('Model\Client\WindowsInstallation')],
-            ['Android', null],
-        ];
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
+        ]);
+
+        $windows = $this->createStub(WindowsInstallation::class);
+
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->method('__get')->willReturnMap([['windows', $windows]]);
         $client->expects($this->once())
                ->method('getItems')
                ->with('Software')
@@ -1729,28 +1732,25 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery("//th/a[text()='Version']");
-        $this->assertXpathQuery("//th/a[text()='Herausgeber']");
-        $this->assertXpathQuery("//th/a[text()='Ort']");
-        $this->assertXpathQuery("//th/a[text()='Architektur']");
-        $this->assertNotXpathQuery("//th/a[text()='Größe']");
-        $this->assertXpathQuery("//tr[2]/td[5][text()='\n32 Bit\n']");
-        $this->assertXpathQuery("//tr[3]/td[5][text()='\n\n']");
+        $this->assertXpathQuery("//th/a[normalize-space(text())='Version']");
+        $this->assertXpathQuery("//th/a[normalize-space(text())='Herausgeber']");
+        $this->assertXpathQuery("//th/a[normalize-space(text())='Ort']");
+        $this->assertXpathQuery("//th/a[normalize-space(text())='Architektur']");
+        $this->assertNotXpathQuery("//th/a[normalize-space(text())='Größe']");
+        $this->assertXpathQuery("//tr[2]/td[5][normalize-space(text())='32\xC2\xA0Bit']");
+        $this->assertXpathQuery("//tr[3]/td[5][normalize-space(text())='']");
     }
 
     public function testSoftwareActionUnix()
     {
-        $software1 = array(
+        $software1 = new Software([
             'Name' => 'name1',
             'Version' => 'version1',
             'Size' => 42,
-        );
-        $map = [
-            ['Windows', null],
-            ['Android', null],
-        ];
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
+        ]);
+
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
         $client->expects($this->once())
                ->method('getItems')
                ->with('Software')
@@ -1759,28 +1759,29 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery("//th/a[text()='Version']");
-        $this->assertNotXpathQuery("//th/a[text()='Herausgeber']");
-        $this->assertNotXpathQuery("//th/a[text()='Ort']");
-        $this->assertNotXpathQuery("//th/a[text()='Architektur']");
-        $this->assertXpathQuery("//th/a[text()='Größe']");
-        $this->assertXpathQuery("//tr[2]/td[3][@class='textright'][text()='\n42\xC2\xA0kB\n']");
+        $this->assertXpathQuery("//th/a[normalize-space(text())='Version']");
+        $this->assertNotXpathQuery("//th/a[normalize-space(text())='Herausgeber']");
+        $this->assertNotXpathQuery("//th/a[normalize-space(text())='Ort']");
+        $this->assertNotXpathQuery("//th/a[normalize-space(text())='Architektur']");
+        $this->assertXpathQuery("//th/a[normalize-space(text())='Größe']");
+        $this->assertXpathQuery("//tr[2]/td[3][@class='textright'][normalize-space(text())='42\xC2\xA0kB']");
     }
 
     public function testSoftwareActionAndroid()
     {
-        $software1 = [
+        $software1 = new Software([
             'Name' => 'name1',
             'Version' => 'version1',
             'Publisher' => 'publisher1',
             'InstallLocation' => 'location1',
-        ];
-        $map = [
-            ['Windows', null],
-            ['Android', $this->createMock('Model\Client\AndroidInstallation')],
-        ];
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->willReturnMap($map);
+        ]);
+
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->method('__get')->willReturnMap([
+            ['windows', null],
+            ['android', $this->createStub(AndroidInstallation::class)],
+        ]);
         $client->expects($this->once())
                ->method('getItems')
                ->with('Software')
@@ -1789,32 +1790,30 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery("//th/a[text()='Version']");
-        $this->assertXpathQuery("//th/a[text()='Herausgeber']");
-        $this->assertXpathQuery("//th/a[text()='Ort']");
-        $this->assertNotXpathQuery("//th/a[text()='Architektur']");
-        $this->assertNotXpathQuery("//th/a[text()='Größe']");
+        $this->assertXpathQuery("//th/a[normalize-space(text())='Version']");
+        $this->assertXpathQuery("//th/a[normalize-space(text())='Herausgeber']");
+        $this->assertXpathQuery("//th/a[normalize-space(text())='Ort']");
+        $this->assertNotXpathQuery("//th/a[normalize-space(text())='Architektur']");
+        $this->assertNotXpathQuery("//th/a[normalize-space(text())='Größe']");
     }
 
     public function testSoftwareActionComments()
     {
-        $software1 = array(
+        $software1 = new Software([
             'Name' => 'name1',
             'Comment' => 'comment1',
             'Version' => 'version1',
             'Size' => 0,
-        );
-        $software2 = array(
+        ]);
+        $software2 = new Software([
             'Name' => 'name2',
             'Comment' => '',
             'Version' => 'version2',
             'Size' => 0,
-        );
-        $map = array(
-            array('Windows', null),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
+        ]);
+
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
         $client->expects($this->once())
                ->method('getItems')
                ->with('Software')
@@ -1823,13 +1822,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $this->dispatch('/console/client/software/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery('//tr[2]/td[1]/span[@title="comment1"]');
-        $this->assertNotXpathQuery('//tr[3]/td[1]/span');
+        $this->assertXpathQuery('//tr[2]/td[1][@title="comment1"]');
+        $this->assertNotXpathQuery('//tr[3]/td[1][title]');
     }
 
     public function testSoftwareActionDuplicates()
     {
-        $software1a = array(
+        $software1a = new Software([
             'Name' => 'name',
             'Version' => 'version1',
             'Comment' => '',
@@ -1840,8 +1839,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Language' => '',
             'InstallationDate' => new \DateTime('2015-05-25'),
             'Architecture' => '',
-        );
-        $software2 = array(
+        ]);
+        $software2 = new Software([
             'Name' => 'name',
             'Version' => 'version2',
             'Comment' => '',
@@ -1852,8 +1851,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Language' => '',
             'InstallationDate' => new \DateTime('2015-05-25'),
             'Architecture' => '',
-        );
-        $software1b = array(
+        ]);
+        $software1b = new Software([
             'Name' => 'name',
             'Version' => 'version1',
             'Comment' => '',
@@ -1864,12 +1863,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Language' => '',
             'InstallationDate' => new \DateTime('2015-05-25'),
             'Architecture' => '',
-        );
-        $map = array(
-            array('Windows', $this->createMock('Model\Client\WindowsInstallation')),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
+        ]);
+
+        $windows = $this->createStub(WindowsInstallation::class);
+
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->method('__get')->willReturnMap([['windows', $windows]]);
         $client->expects($this->once())
                ->method('getItems')
                ->with('Software')
@@ -1888,11 +1888,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                       ->method('__get')
                       ->with('displayBlacklistedSoftware')
                       ->willReturn(0);
-        $client = $this->createMock('Model\Client\Client');
+
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
         $client->expects($this->once())
                ->method('getItems')
-               ->with('Software', 'Name', 'asc', array('Software.NotIgnored' => null))
-               ->willReturn(array());
+               ->with('Software', 'name', 'asc', ['Software.NotIgnored' => null])
+               ->willReturn([]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/software/?id=1');
@@ -1905,11 +1908,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                       ->method('__get')
                       ->with('displayBlacklistedSoftware')
                       ->willReturn(1);
-        $client = $this->createMock('Model\Client\Client');
+
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
         $client->expects($this->once())
                ->method('getItems')
-               ->with('Software', 'Name', 'asc', array())
-               ->willReturn(array());
+               ->with('Software', 'name', 'asc', [])
+               ->willReturn([]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/software/?id=1');

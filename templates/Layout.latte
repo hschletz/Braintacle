@@ -1,0 +1,24 @@
+{* Main layout. *}
+
+{* Create hyperlink for sortable table headers. Depends on global variables $order and $direction. *}
+{define sortableHeader, string $key, string $label}
+    {var $arrow = ''}
+    {if $key == $order}
+        {* add arrow indicator to currently sorted column and invert direction for the hyperlink. *}
+        {if $direction == 'asc'}
+            {var $linkDirection = 'desc'}
+            {var $arrow = '&uarr;'}
+        {else}
+            {var $linkDirection = 'asc'}
+            {var $arrow = '&darr;'}
+        {/if}
+    {else}
+        {* use ascending ordering for every other hyperlink. *}
+        {var $linkDirection = 'asc'}
+    {/if}
+    <a href="{consoleUrl(null, null, ['order' => $key, 'direction' => $linkDirection], true)}">
+        {$label}{$arrow|noescape}
+    </a>
+{/define}
+
+{block mainContent}{/block}

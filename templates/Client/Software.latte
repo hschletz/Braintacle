@@ -1,0 +1,39 @@
+{layout 'Layout.latte'}
+{block clientContent}
+
+<table class="alternating">
+    <tr>
+        <th>{include sortableHeader, 'name', translate('Name')}</th>
+        <th>{include sortableHeader, 'version', translate('Version')}</th>
+        {if $client->windows || $client->android}
+            <th>{include sortableHeader, 'publisher', translate('Publisher')}</th>
+            <th>{include sortableHeader, 'installLocation', translate('Location')}</th>
+        {else}
+            <th class="textright">{include sortableHeader, 'size', translate('Size')}</th>
+        {/if}
+        {if $client->windows}
+            <th>{include sortableHeader, 'architecture', translate('Architecture')}</th>
+        {/if}
+    </tr>
+
+    <tr n:foreach="$list as $software">
+        <td n:attr="title: @$software['Comment']">
+            {$software['Name']}
+            <span n:if="$software['count'] > 1" class="duplicate">({$software['count']})</span>
+        </td>
+        <td>{$software['Version']}</td>
+        {if $client->windows || $client->android}
+            <td>{$software['Publisher']}</td>
+            <td>{$software['InstallLocation']}</td>
+        {else}
+            <td class="textright">{$software['Size']|numberFormat:0}&nbsp;kB</td>
+        {/if}
+        {if $client->windows}
+            <td>
+                {if $software['Architecture']}
+                    {$software['Architecture']}&nbsp;Bit
+                {/if}
+            </td>
+        {/if}
+    </tr>
+</table>

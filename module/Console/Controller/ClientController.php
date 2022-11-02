@@ -22,7 +22,9 @@
 
 namespace Console\Controller;
 
+use Console\Template\TemplateViewModel;
 use Console\View\Helper\Form\Search;
+use Model\Client\Item\Software;
 
 /**
  * Controller for all client-related actions.
@@ -324,15 +326,33 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
 
     /**
      * Information about a client's software
-     *
-     * @return array client, order, direction, displayBlacklistedSoftware
      */
-    public function softwareAction()
+    public function softwareAction(): TemplateViewModel
     {
-        $vars = $this->getOrder('Name');
+        $vars = $this->getOrder('name');
         $vars['client'] = $this->_currentClient;
-        $vars['displayBlacklistedSoftware'] = $this->_config->displayBlacklistedSoftware;
-        return $vars;
+
+        $items = $this->_currentClient->getItems(
+            'Software',
+            $vars['order'],
+            $vars['direction'],
+            $this->_config->displayBlacklistedSoftware ? [] : ['Software.NotIgnored' => null]
+        );
+        // Compact list by suppressing duplicate entries, adding the number of instances for each entry.
+        $list = [];
+        /** @var Software */
+        foreach ($items as $item) {
+            $key = json_encode($item);
+            if (isset($list[$key])) {
+                $list[$key]['count']++;
+            } else {
+                $list[$key] = $item->getArrayCopy();
+                $list[$key]['count'] = 1;
+            }
+        }
+        $vars['list'] = $list;
+
+        return new TemplateViewModel('Client/Software.latte', $vars);
     }
 
     /**

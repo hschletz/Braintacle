@@ -114,6 +114,40 @@ msgstr "Virtuelle Maschinen"
 msgid "Windows"
 msgstr "Windows"
 
+#: Client/Software.latte views/console/client/msoffice.php
+msgid "Architecture"
+msgstr "Architektur"
+
+#: Client/Software.latte
+msgid "Location"
+msgstr "Ort"
+
+#: Client/Software.latte Form/AddToGroup.php Form/ManageRegistryValues.php
+#: Form/Package/Build.php Form/Search.php Form/Subnet.php
+#: views/console/client/display.php views/console/client/index.php
+#: views/console/client/misc.php views/console/client/network.php
+#: views/console/client/packages.php views/console/client/printers.php
+#: views/console/client/system.php views/console/client/virtualmachines.php
+#: views/console/duplicates/index.php views/console/group/excluded.php
+#: views/console/group/general.php views/console/group/index.php
+#: views/console/group/members.php views/console/group/packages.php
+#: views/console/network/index.php views/console/package/index.php
+msgid "Name"
+msgstr "Name"
+
+#: Client/Software.latte
+msgid "Publisher"
+msgstr "Herausgeber"
+
+#: Client/Software.latte views/console/client/storage.php
+#: views/console/client/system.php views/console/package/index.php
+msgid "Size"
+msgstr "Größe"
+
+#: Client/Software.latte views/console/client/bios.php
+msgid "Version"
+msgstr "Version"
+
 #: Controller/ClientController.php
 #, php-format
 msgid "Client '%s' could not be deleted."
@@ -244,19 +278,6 @@ msgstr "Suchergebnisse aus einer Gruppe ausschließen."
 #: Form/AddToGroup.php views/console/client/groups.php
 msgid "Group"
 msgstr "Gruppe"
-
-#: Form/AddToGroup.php Form/ManageRegistryValues.php Form/Package/Build.php
-#: Form/Search.php Form/Subnet.php views/console/client/display.php
-#: views/console/client/index.php views/console/client/misc.php
-#: views/console/client/network.php views/console/client/packages.php
-#: views/console/client/printers.php views/console/client/software.php
-#: views/console/client/system.php views/console/client/virtualmachines.php
-#: views/console/duplicates/index.php views/console/group/excluded.php
-#: views/console/group/general.php views/console/group/index.php
-#: views/console/group/members.php views/console/group/packages.php
-#: views/console/network/index.php views/console/package/index.php
-msgid "Name"
-msgstr "Name"
 
 #: Form/AddToGroup.php Form/ClientConfig.php Form/GroupMemberships.php
 #: Form/NetworkDevice.php Form/ProductKey.php Form/Subnet.php
@@ -1176,10 +1197,6 @@ msgstr "Benutzer hinzufügen"
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: views/console/client/bios.php views/console/client/software.php
-msgid "Version"
-msgstr "Version"
-
 #: views/console/client/customfields.php
 msgid "Define fields"
 msgstr "Felder definieren"
@@ -1376,10 +1393,6 @@ msgstr "Zeigegerät"
 msgid "Ports"
 msgstr "Anschlüsse"
 
-#: views/console/client/msoffice.php views/console/client/software.php
-msgid "Architecture"
-msgstr "Architektur"
-
 #: views/console/client/msoffice.php
 msgid "Installed Microsoft Office products"
 msgstr "Installierte Microsoft Office-Produkte"
@@ -1484,19 +1497,6 @@ msgstr "Paket '%s' wird nicht mehr diesem Client zugewiesen sein. Fortfahren?"
 msgid "Status of package '%s' will be reset to 'Pending'. Continue?"
 msgstr ""
 "Der Status des Pakets '%s' wird auf 'Ausstehend' zurückgesetzt. Fortfahren?"
-
-#: views/console/client/software.php
-msgid "Location"
-msgstr "Ort"
-
-#: views/console/client/software.php
-msgid "Publisher"
-msgstr "Herausgeber"
-
-#: views/console/client/software.php views/console/client/storage.php
-#: views/console/client/system.php views/console/package/index.php
-msgid "Size"
-msgstr "Größe"
 
 #: views/console/client/storage.php views/console/group/general.php
 #: views/console/group/index.php
