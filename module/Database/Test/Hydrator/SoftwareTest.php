@@ -24,7 +24,8 @@ namespace Database\Test\Hydrator;
 
 use Database\Hydrator\Software;
 use DateTime;
-use Model\AbstractModel;
+use Laminas\Hydrator\ObjectPropertyHydrator;
+use Model\Client\Item\Software as ItemSoftware;
 use PHPUnit\Framework\MockObject\MockObject;
 use stdClass;
 
@@ -41,8 +42,8 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'isHotfix' => 'IsHotfixHydrated',
             'guid' => 'Guid',
             'language' => 'Language',
-            'installationDate' => 'InstallationDateHydrated',
-            'architecture' => 'ArchitectureHydrated',
+            'installationDate' => new DateTime('2022-11-03'),
+            'architecture' => 64,
         ];
         $extractedWindows = [
             'is_windows' => true,
@@ -63,7 +64,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'name' => 'Name',
             'version' => 'Version',
             'comment' => 'Comment',
-            'size' => 'Size',
+            'size' => 42,
         ];
         $extractedUnix = [
             'is_windows' => false,
@@ -78,7 +79,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'language' => 'ignored',
             'installation_date' => 'ignored',
             'architecture' => 'ignored',
-            'size' => 'Size',
+            'size' => 42,
         ];
 
         $hydratedAndroid = [
@@ -111,7 +112,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
     }
 
     /** @dataProvider hydrateProvider */
-    public function testHydrateWithStdClass($hydrated, $extracted)
+    public function testHydrate($hydrated, $extracted)
     {
         /** @var MockObject|Software */
         $hydrator = $this->createPartialMock(Software::class, ['hydrateValue']);
@@ -119,40 +120,13 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             ['name', 'NameExtracted', 'NameHydrated'],
             ['installLocation', 'InstallLocationExtracted', 'InstallLocationHydrated'],
             ['isHotfix', 'IsHotfixExtracted', 'IsHotfixHydrated'],
-            ['installationDate', 'InstallationDateExtracted', 'InstallationDateHydrated'],
-            ['architecture', 'ArchitectureExtracted', 'ArchitectureHydrated'],
+            ['installationDate', 'InstallationDateExtracted', new DateTime('2022-11-03')],
+            ['architecture', 'ArchitectureExtracted', 64],
         ]);
 
-        $object = new stdClass();
+        $object = new ItemSoftware();
         $this->assertSame($object, $hydrator->hydrate($extracted, $object));
         $this->assertEquals($hydrated, get_object_vars($object));
-    }
-
-    /** @dataProvider hydrateProvider */
-    public function testHydrateWithAbstractModel($hydrated, $extracted)
-    {
-        $object = $this->getMockForAbstractClass(AbstractModel::class);
-        foreach ($hydrated as $key => $value) {
-            $object[ucfirst($key)] = $value;
-        }
-
-        /** @var MockObject|Software */
-        $hydrator = $this->createPartialMock(Software::class, ['hydrateValue']);
-        $hydrator->method('hydrateValue')->willReturnMap([
-            ['name', 'NameExtracted', 'NameHydrated'],
-            ['installLocation', 'InstallLocationExtracted', 'InstallLocationHydrated'],
-            ['isHotfix', 'IsHotfixExtracted', 'IsHotfixHydrated'],
-            ['installationDate', 'InstallationDateExtracted', 'InstallationDateHydrated'],
-            ['architecture', 'ArchitectureExtracted', 'ArchitectureHydrated'],
-        ]);
-
-        $object = $this->getMockForAbstractClass(AbstractModel::class);
-        $this->assertSame($object, $hydrator->hydrate($extracted, $object));
-        $expected = [];
-        foreach ($hydrated as $key => $value) {
-            $expected[ucfirst($key)] = $value;
-        }
-        $this->assertEquals($expected, $object->getArrayCopy());
     }
 
     public function extractProvider()
@@ -163,11 +137,11 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'comment' => 'Comment',
             'publisher' => 'Publisher',
             'installLocation' => 'InstallLocation',
-            'isHotfix' => 'IsHotfixHydrated',
+            'isHotfix' => true,
             'guid' => 'Guid',
             'language' => 'Language',
-            'installationDate' => 'InstallationDateHydrated',
-            'architecture' => 'Architecture',
+            'installationDate' => new DateTime('2022-11-03'),
+            'architecture' => 64,
         ];
         $extractedWindows = [
             'name' => 'Name',
@@ -179,7 +153,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'guid' => 'Guid',
             'language' => 'Language',
             'installation_date' => 'InstallationDateExtracted',
-            'architecture' => 'Architecture',
+            'architecture' => 64,
             'size' => null,
         ];
 
@@ -187,7 +161,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'name' => 'Name',
             'version' => 'Version',
             'comment' => 'Comment',
-            'size' => 'Size',
+            'size' => 42,
         ];
         $extractedUnix = [
             'name' => 'Name',
@@ -200,7 +174,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'language' => null,
             'installation_date' => null,
             'architecture' => null,
-            'size' => 'Size',
+            'size' => 42,
         ];
 
         $hydratedAndroid = [
@@ -231,33 +205,20 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
     }
 
     /** @dataProvider extractProvider */
-    public function testExtractWithStdClass($hydrated, $extracted)
+    public function testExtract($hydrated, $extracted)
     {
         /** @var MockObject|Software */
         $hydrator = $this->createPartialMock(Software::class, ['extractValue']);
-        $hydrator->method('extractValue')->willReturnMap([
-            ['is_hotfix', 'IsHotfixHydrated', 'IsHotfixExtracted'],
-            ['installation_date', 'InstallationDateHydrated', 'InstallationDateExtracted'],
-        ]);
+        $hydrator->method('extractValue')->willReturnCallback(function ($name, $value) {
+            if ($name == 'is_hotfix' && $value === true) {
+                return 'IsHotfixExtracted';
+            }
+            if ($name == 'installation_date' && $value == new DateTime('2022-11-03')) {
+                return 'InstallationDateExtracted';
+            }
+        });
 
-        $object = (object) $hydrated;
-        $this->assertEquals($extracted, $hydrator->extract($object));
-    }
-
-    /** @dataProvider extractProvider */
-    public function testExtractWithAbstractModel($hydrated, $extracted)
-    {
-        /** @var MockObject|Software */
-        $hydrator = $this->createPartialMock(Software::class, ['extractValue']);
-        $hydrator->method('extractValue')->willReturnMap([
-            ['is_hotfix', 'IsHotfixHydrated', 'IsHotfixExtracted'],
-            ['installation_date', 'InstallationDateHydrated', 'InstallationDateExtracted'],
-        ]);
-
-        $object = $this->getMockForAbstractClass(AbstractModel::class);
-        foreach ($hydrated as $key => $value) {
-            $object->$key = $value;
-        }
+        $object = (new ObjectPropertyHydrator())->hydrate($hydrated, new ItemSoftware());
         $this->assertEquals($extracted, $hydrator->extract($object));
     }
 

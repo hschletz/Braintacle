@@ -17,21 +17,21 @@
     </tr>
 
     <tr n:foreach="$list as $software">
-        <td n:attr="title: @$software['Comment']">
-            {$software['Name']}
+        <td n:attr="title: @$software['comment']">
+            {$software['name']}
             <span n:if="$software['count'] > 1" class="duplicate">({$software['count']})</span>
         </td>
-        <td>{$software['Version']}</td>
+        <td>{$software['version']}</td>
         {if $client->windows || $client->android}
-            <td>{$software['Publisher']}</td>
-            <td>{$software['InstallLocation']}</td>
+            <td>{$software['publisher']}</td>
+            <td>{$software['installLocation']}</td>
         {else}
-            <td class="textright">{$software['Size']|numberFormat:0}&nbsp;kB</td>
+            <td class="textright">{$software['size']|numberFormat:0}&nbsp;kB</td>
         {/if}
         {if $client->windows}
             <td>
-                {if $software['Architecture']}
-                    {$software['Architecture']}&nbsp;Bit
+                {if $software['architecture']}
+                    {$software['architecture']}&nbsp;Bit
                 {/if}
             </td>
         {/if}

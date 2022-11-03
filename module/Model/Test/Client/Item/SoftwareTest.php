@@ -22,6 +22,8 @@
 
 namespace Model\Test\Client\Item;
 
+use Model\Client\Item\Software;
+
 class SoftwareTest extends \Model\Test\AbstractTest
 {
     public function getDataSet()
@@ -32,7 +34,6 @@ class SoftwareTest extends \Model\Test\AbstractTest
     public function testObjectProperties()
     {
         $model = $this->getModel();
-        $this->assertInstanceOf('ArrayAccess', $model);
-        $this->assertTrue(method_exists($model, 'exchangeArray'));
+        $this->assertInstanceOf(Software::class, $model);
     }
 }

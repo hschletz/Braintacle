@@ -28,8 +28,10 @@ use Console\Form\Search as SearchForm;
 use Console\Mvc\Controller\Plugin\PrintForm;
 use Console\View\Helper\Form\ClientConfig;
 use Console\View\Helper\Form\Search as SearchHelper;
+use DateTime;
 use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Text;
+use Laminas\Hydrator\ObjectPropertyHydrator;
 use Laminas\I18n\View\Helper\DateFormat;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Laminas\View\Model\ViewModel;
@@ -1702,22 +1704,23 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testSoftwareActionWindows()
     {
-        $software1 = new Software([
-            'Name' => 'name1',
-            'Comment' => '',
-            'Version' => 'version1',
-            'Publisher' => 'publisher1',
-            'InstallLocation' => 'location1',
-            'Architecture' => '32',
-        ]);
-        $software2 = new Software([
-            'Name' => 'name2',
-            'Comment' => '',
-            'Version' => 'version2',
-            'Publisher' => 'publisher2',
-            'InstallLocation' => 'location2',
-            'Architecture' => '',
-        ]);
+        $hydrator = new ObjectPropertyHydrator();
+        $software1 = $hydrator->hydrate([
+            'name' => 'name1',
+            'comment' => '',
+            'version' => 'version1',
+            'publisher' => 'publisher1',
+            'installLocation' => 'location1',
+            'architecture' => 32,
+        ], new Software());
+        $software2 = $hydrator->hydrate([
+            'name' => 'name2',
+            'comment' => '',
+            'version' => 'version2',
+            'publisher' => 'publisher2',
+            'installLocation' => 'location2',
+            'architecture' => null,
+        ], new Software());
 
         $windows = $this->createStub(WindowsInstallation::class);
 
@@ -1743,11 +1746,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testSoftwareActionUnix()
     {
-        $software1 = new Software([
-            'Name' => 'name1',
-            'Version' => 'version1',
-            'Size' => 42,
-        ]);
+        $hydrator = new ObjectPropertyHydrator();
+        $software1 = $hydrator->hydrate([
+            'name' => 'name1',
+            'version' => 'version1',
+            'size' => 42,
+        ], new Software());
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
@@ -1769,12 +1773,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testSoftwareActionAndroid()
     {
-        $software1 = new Software([
-            'Name' => 'name1',
-            'Version' => 'version1',
-            'Publisher' => 'publisher1',
-            'InstallLocation' => 'location1',
-        ]);
+        $hydrator = new ObjectPropertyHydrator();
+        $software1 = $hydrator->hydrate([
+            'name' => 'name1',
+            'version' => 'version1',
+            'publisher' => 'publisher1',
+            'installLocation' => 'location1',
+        ], new Software());
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
@@ -1799,18 +1804,19 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testSoftwareActionComments()
     {
-        $software1 = new Software([
-            'Name' => 'name1',
-            'Comment' => 'comment1',
-            'Version' => 'version1',
-            'Size' => 0,
-        ]);
-        $software2 = new Software([
-            'Name' => 'name2',
-            'Comment' => '',
-            'Version' => 'version2',
-            'Size' => 0,
-        ]);
+        $hydrator = new ObjectPropertyHydrator();
+        $software1 = $hydrator->hydrate([
+            'name' => 'name1',
+            'comment' => 'comment1',
+            'version' => 'version1',
+            'size' => 0,
+        ], new Software());
+        $software2 = $hydrator->hydrate([
+            'name' => 'name2',
+            'comment' => '',
+            'version' => 'version2',
+            'size' => 0,
+        ], new Software());
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
@@ -1828,42 +1834,43 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testSoftwareActionDuplicates()
     {
-        $software1a = new Software([
-            'Name' => 'name',
-            'Version' => 'version1',
-            'Comment' => '',
-            'Publisher' => '',
-            'InstallLocation' => '',
-            'IsHotfix' => '',
-            'Guid' => '',
-            'Language' => '',
-            'InstallationDate' => new \DateTime('2015-05-25'),
-            'Architecture' => '',
-        ]);
-        $software2 = new Software([
-            'Name' => 'name',
-            'Version' => 'version2',
-            'Comment' => '',
-            'Publisher' => '',
-            'InstallLocation' => '',
-            'IsHotfix' => '',
-            'Guid' => '',
-            'Language' => '',
-            'InstallationDate' => new \DateTime('2015-05-25'),
-            'Architecture' => '',
-        ]);
-        $software1b = new Software([
-            'Name' => 'name',
-            'Version' => 'version1',
-            'Comment' => '',
-            'Publisher' => '',
-            'InstallLocation' => '',
-            'IsHotfix' => '',
-            'Guid' => '',
-            'Language' => '',
-            'InstallationDate' => new \DateTime('2015-05-25'),
-            'Architecture' => '',
-        ]);
+        $hydrator = new ObjectPropertyHydrator();
+        $software1a = $hydrator->hydrate([
+            'name' => 'name',
+            'version' => 'version1',
+            'comment' => '',
+            'publisher' => '',
+            'installLocation' => '',
+            'isHotfix' => null,
+            'guid' => '',
+            'language' => '',
+            'installationDate' => new DateTime('2015-05-25'),
+            'architecture' => null,
+        ], new Software());
+        $software2 = $hydrator->hydrate([
+            'name' => 'name',
+            'version' => 'version2',
+            'comment' => '',
+            'publisher' => '',
+            'installLocation' => '',
+            'isHotfix' => null,
+            'guid' => '',
+            'language' => '',
+            'installationDate' => new DateTime('2015-05-25'),
+            'architecture' => null,
+        ], new Software());
+        $software1b = $hydrator->hydrate([
+            'name' => 'name',
+            'version' => 'version1',
+            'comment' => '',
+            'publisher' => '',
+            'installLocation' => '',
+            'isHotfix' => null,
+            'guid' => '',
+            'language' => '',
+            'installationDate' => new DateTime('2015-05-25'),
+            'architecture' => null,
+        ], new Software());
 
         $windows = $this->createStub(WindowsInstallation::class);
 

@@ -116,10 +116,7 @@ class Software implements \Laminas\Hydrator\HydratorInterface
     /** {@inheritdoc} */
     public function extract(object $object): array
     {
-        if (
-            $object instanceof AbstractModel && $object->offsetExists('IsHotfix') ||
-            property_exists($object, 'isHotfix')
-        ) {
+        if (isset($object->isHotfix)) {
             // Windows
             $data = [
                 'name' => $object->name,
@@ -134,10 +131,7 @@ class Software implements \Laminas\Hydrator\HydratorInterface
                 'architecture' => $object->architecture,
                 'size' => null,
             ];
-        } elseif (
-            $object instanceof AbstractModel && $object->offsetExists('Size') ||
-            property_exists($object, 'size')
-        ) {
+        } elseif (isset($object->size)) {
             // UNIX
             $data = [
                 'name' => $object->name,

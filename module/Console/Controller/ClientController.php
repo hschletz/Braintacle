@@ -346,7 +346,7 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
             if (isset($list[$key])) {
                 $list[$key]['count']++;
             } else {
-                $list[$key] = $item->getArrayCopy();
+                $list[$key] = get_object_vars($item);
                 $list[$key]['count'] = 1;
             }
         }

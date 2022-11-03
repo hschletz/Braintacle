@@ -164,26 +164,12 @@ class ItemManagerTest extends \Model\Test\AbstractTest
             array('Sim', null, 'SimSerial', 'desc', array('name1', 'name2'), 'OperatorName'),
             array('Sim', null, null, 'something', array('name1', 'name2'), 'OperatorName'),
             array('sim', array('Client' => 2), null, null, array('name2'), 'OperatorName'),
-            array('Software', null, 'id', 'asc', array('name1', 'name2', 'name3', 'name4', ''), 'Name'),
-            array('Software', null, 'Version', 'desc', array('name4', 'name3', 'name1', 'name2', ''), 'Name'),
-            array('Software', null, null, 'something', array('name1', 'name2', 'name3', 'name4', ''), 'Name'),
-            array('software', array('Client' => 2), null, null, array('name2'), 'Name'),
-            array(
-                'software',
-                array('Software.NotIgnored' => null),
-                null,
-                null,
-                ['name2', 'name3', 'name4', ''],
-                'Name'
-            ),
-            array(
-                'Software',
-                array('Client' => 1, 'Software.NotIgnored' => null),
-                null,
-                null,
-                ['name3', 'name4', ''],
-                'Name'
-            ),
+            ['Software', null, 'id', 'asc', ['name1', 'name2', 'name3', 'name4', ''], 'name'],
+            ['Software', null, 'Version', 'desc', ['name4', 'name3', 'name1', 'name2', ''], 'name'],
+            ['Software', null, null, 'something', ['name1', 'name2', 'name3', 'name4', ''], 'name'],
+            ['software', ['Client' => 2], null, null, ['name2'], 'name'],
+            ['software', ['Software.NotIgnored' => null], null, null, ['name2', 'name3', 'name4', ''], 'name'],
+            ['Software', ['Client' => 1, 'Software.NotIgnored' => null], null, null, ['name3', 'name4', ''], 'name'],
             array('StorageDevice', array('Client' => 1), null, null, array('name1'), 'ProductName'),
             array('StorageDevice', array('Client' => 2), null, null, array('name2'), 'ProductName'),
             array('storagedevice', array('Client' => 5), null, null, array('android_type'), 'Type'),
@@ -207,7 +193,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
 
         $result = array_map(
             function ($element) use ($keyColumn) {
-                return $element[$keyColumn];
+                return $element->$keyColumn;
             },
             $items
         );
