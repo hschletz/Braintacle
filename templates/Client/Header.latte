@@ -1,7 +1,7 @@
 {* Header for Client subpages *}
 {define navigationItem, string $action, string $label}
     <li n:class="$action == $currentAction ? active">
-        <a href="{consoleUrl('client', $action, [], true)}">{$label}</a>
+        <a href="{consoleUrl('client', $action, ['id' => $client->id])}">{$label}</a>
     </li>
 {/define}
 

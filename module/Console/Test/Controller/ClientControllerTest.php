@@ -169,6 +169,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testMenuForWindowsClients()
     {
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
             'Printer' => array(),
@@ -1038,6 +1039,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_softwareManager->expects($this->never())->method('setProductKey');
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => $windows,
         ]);
@@ -1089,6 +1091,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $formManager->setService('Console\Form\ProductKey', $form);
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => [
                 'Company' => 'company',
@@ -1140,6 +1143,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         // DnsServer and DefaultGateway typically show up both or not at all, so
         // they are not tested separately.
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'DnsDomain' => 'dns_domain',
@@ -1166,6 +1170,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testNetworkActionSettingsOnlyWindows()
     {
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => array('Workgroup' => 'workgroup'),
             'DnsDomain' => null,
@@ -1211,6 +1216,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'DnsDomain' => null,
@@ -1239,6 +1245,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'DnsDomain' => null,
@@ -1340,6 +1347,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
             'Android' => null,
@@ -1406,6 +1414,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'Android' => null,
@@ -1445,6 +1454,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         ];
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'Android' => $this->createMock('Model\Client\AndroidInstallation'),
@@ -1478,6 +1488,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'DisplayController' => $displayControllers,
@@ -1497,6 +1508,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testDisplayActionDisplays()
     {
         $display = array(
+            'Id' => 1,
             'Manufacturer' => 'manufacturer',
             'Description' => 'description',
             'Serial' => 'serial',
@@ -1505,6 +1517,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'DisplayController' => array(),
@@ -1522,6 +1535,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testBiosAction()
     {
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'BiosManufacturer' => 'manufacturer',
@@ -1549,6 +1563,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'MemorySlot' => array(),
@@ -1579,6 +1594,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
             'MemorySlot' => array(),
@@ -1620,6 +1636,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'MemorySlot' => $slots,
@@ -1661,6 +1678,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'MemorySlot' => array(),
@@ -1690,6 +1708,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'Printer' => $printers,
@@ -2144,6 +2163,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'AudioDevice' => array($audiodevice),
@@ -2189,6 +2209,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'AudioDevice' => array(),
@@ -2217,6 +2238,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
             'AudioDevice' => array(),
@@ -2245,6 +2267,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'AudioDevice' => array(),
@@ -2272,6 +2295,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                      ->will($this->returnValue(array()));
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'CustomFields' => $customFields,
@@ -2304,6 +2328,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                      ->will($this->returnValue($data));
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null,
             'CustomFields' => $customFields,
@@ -2339,6 +2364,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $client = new Client([
+            'Id' => 1,
             'Name' => 'name',
             'Windows' => null
         ]);
