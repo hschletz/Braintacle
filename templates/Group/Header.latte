@@ -1,2 +1,17 @@
+{* Header for Group subpages *}
+{define navigationItem, string $action, string $label}
+    <li n:class="$action == $currentAction ? active">
+        <a href="{consoleUrl('group', $action, ['name' => $group->name])}">{$label}</a>
+    </li>
+{/define}
+
 <h1>{translate("Details for group '%s'", $group->name)}</h1>
-{$navigation|noescape}
+
+<ul class="navigation navigation_details">
+    {include navigationItem, 'general', translate('General')}
+    {include navigationItem, 'members', translate('Members')}
+    {include navigationItem, 'excluded', translate('Excluded')}
+    {include navigationItem, 'packages', translate('Packages')}
+    {include navigationItem, 'configuration', translate('Configuration')}
+    {include navigationItem, 'delete', translate('Delete')}
+</ul>

@@ -4,8 +4,8 @@ namespace Console\View\Helper\Service;
 
 use Console\Template\TemplateRenderer;
 use Console\View\Helper\GroupHeader;
+use Laminas\Mvc\Application;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Laminas\View\Helper\Navigation;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -15,10 +15,12 @@ class GroupHeaderFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
-        $viewHelperManager = $container->get('ViewHelperManager');
+        /** @var Application */
+        $application = $container->get('Application');
+
         return new GroupHeader(
-            $viewHelperManager->get(Navigation::class),
-            $container->get(TemplateRenderer::class)
+            $container->get(TemplateRenderer::class),
+            $application->getMvcEvent()->getRouteMatch()->getParam('action')
         );
     }
 }

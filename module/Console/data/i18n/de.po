@@ -33,12 +33,12 @@ msgstr ""
 msgid "BIOS"
 msgstr "BIOS"
 
-#: Client/Header.latte Navigation/GroupMenuFactory.php
+#: Client/Header.latte Group/Header.latte
 msgid "Configuration"
 msgstr "Konfiguration"
 
 #: Client/Header.latte Form/DefineFields.php Form/NetworkDeviceTypes.php
-#: Navigation/GroupMenuFactory.php View/Helper/Form/ManageRegistryValues.php
+#: Group/Header.latte View/Helper/Form/ManageRegistryValues.php
 #: views/console/accounts/index.php views/console/network/showidentified.php
 #: views/console/network/showunknown.php views/console/package/index.php
 msgid "Delete"
@@ -56,7 +56,7 @@ msgstr "Anzeige"
 msgid "Export"
 msgstr "Exportieren"
 
-#: Client/Header.latte Navigation/GroupMenuFactory.php
+#: Client/Header.latte Group/Header.latte
 msgid "General"
 msgstr "Allgemein"
 
@@ -77,8 +77,7 @@ msgstr "Verschiedenes"
 msgid "Network"
 msgstr "Netzwerk"
 
-#: Client/Header.latte Navigation/GroupMenuFactory.php
-#: Navigation/MainMenuFactory.php
+#: Client/Header.latte Group/Header.latte Navigation/MainMenuFactory.php
 msgid "Packages"
 msgstr "Pakete"
 
@@ -1073,11 +1072,11 @@ msgstr "für Anzeige ausgewählt"
 msgid "Details for group '%s'"
 msgstr "Einzelheiten für Gruppe '%s'"
 
-#: Navigation/GroupMenuFactory.php
+#: Group/Header.latte
 msgid "Excluded"
 msgstr "Ausgeschlossen"
 
-#: Navigation/GroupMenuFactory.php
+#: Group/Header.latte
 msgid "Members"
 msgstr "Mitglieder"
 

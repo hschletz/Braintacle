@@ -42,7 +42,7 @@ $renderCallbacks = array(
                     'removepackage',
                     array(
                         'package' => $packageName,
-                        'name' => $view->group['Name'],
+                        'name' => $view->group->name,
                     )
                 ),
             ),

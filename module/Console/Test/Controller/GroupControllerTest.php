@@ -197,8 +197,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             ['CreationDate', $creationDate],
             ['DynamicMembersSql', 'groupSql'],
         ]);
-        /** @psalm-suppress UndefinedPropertyAssignment */
-        $group->Name = 'groupName';
+        $group->method('__get')->with('name')->willReturn('test');
 
         $this->_groupManager->expects($this->once())
                             ->method('getGroup')
@@ -240,8 +239,7 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             ['CacheCreationDate', $cacheCreationDate],
             ['CacheExpirationDate', $cacheExpirationDate],
         ]);
-        /** @psalm-suppress UndefinedPropertyAssignment */
-        $group->Name = 'groupName';
+        $group->method('__get')->with('name')->willReturn('test');
 
         $clients = array(
             array(
@@ -339,11 +337,12 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $url = '/console/group/packages/?name=test';
         $packages = array('package1', 'package2');
 
-        $group = $this->createMock('Model\Group\Group');
+        /** @var MockObject|Group */
+        $group = $this->createMock(Group::class);
         $group->expects($this->once())->method('getPackages')->with('asc')->willReturn($packages);
-        $group->method('offsetGet')->with('Name')->willReturn('test');
+        $group->method('__get')->with('name')->willReturn('test');
         $group->expects($this->once())->method('getAssignablePackages')->willReturn(array());
-        $group->Name = 'test';
+        $group->name = 'test';
 
         $this->_groupManager->expects($this->once())
                             ->method('getGroup')

@@ -24,7 +24,6 @@ namespace Console\View\Helper;
 
 use Console\Template\TemplateRenderer;
 use Laminas\View\Helper\AbstractHelper;
-use Laminas\View\Helper\Navigation;
 use Model\Group\Group;
 
 /**
@@ -32,15 +31,13 @@ use Model\Group\Group;
  */
 class GroupHeader extends AbstractHelper
 {
-    private Navigation $navigation;
     private TemplateRenderer $templateRenderer;
+    private string $currentAction;
 
-    public function __construct(
-        Navigation $navigation,
-        TemplateRenderer $templateRenderer
-    ) {
-        $this->navigation = $navigation;
+    public function __construct(TemplateRenderer $templateRenderer, string $currentAction)
+    {
         $this->templateRenderer = $templateRenderer;
+        $this->currentAction = $currentAction;
     }
 
     public function __invoke(Group $group): string
@@ -49,10 +46,7 @@ class GroupHeader extends AbstractHelper
             'Group/Header.latte',
             [
                 'group' => $group,
-                'navigation' => ($this->navigation)('Console\Navigation\GroupMenu')
-                ->menu()
-                ->setUlClass('navigation navigation_details')
-                ->render(),
+                'currentAction' => $this->currentAction,
             ]
         );
     }
