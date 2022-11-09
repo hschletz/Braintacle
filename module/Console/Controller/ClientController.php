@@ -22,7 +22,9 @@
 
 namespace Console\Controller;
 
+use Console\Form\Package\AssignPackagesForm;
 use Console\Template\TemplateViewModel;
+use Console\Validator\CsrfValidator;
 use Console\View\Helper\Form\Search;
 use Model\Client\Item\Software;
 
@@ -73,22 +75,15 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
      */
     protected $_currentClient;
 
-    /**
-     * Constructor
-     *
-     * @param \Model\Client\ClientManager $clientManager
-     * @param \Model\Group\GroupManager $groupManager
-     * @param \Model\Registry\RegistryManager $registryManager
-     * @param \Model\SoftwareManager $softwareManager
-     * @param \Laminas\Form\FormElementManager $formManager
-     * @param \Model\Config $config
-     */
+    private AssignPackagesForm $assignPackagesForm;
+
     public function __construct(
         \Model\Client\ClientManager $clientManager,
         \Model\Group\GroupManager $groupManager,
         \Model\Registry\RegistryManager $registryManager,
         \Model\SoftwareManager $softwareManager,
         \Laminas\Form\FormElementManager $formManager,
+        AssignPackagesForm $assignPackagesForm,
         \Model\Config $config
     ) {
         $this->_clientManager = $clientManager;
@@ -97,6 +92,7 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
         $this->_softwareManager = $softwareManager;
         $this->_formManager = $formManager;
         $this->_config = $config;
+        $this->assignPackagesForm = $assignPackagesForm;
     }
 
     /** {@inheritdoc} */
@@ -431,29 +427,16 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
 
     /**
      * Status and management of assigned packages
-     *
-     * @return array client, order, direction [, form (Console\Form\Package\Assign) if packages are available]
      */
-    public function packagesAction()
+    public function packagesAction(): TemplateViewModel
     {
         $vars = $this->getOrder('PackageName');
         $vars['client'] = $this->_currentClient;
-        // Add package installation form if packages are available
-        $packages = $this->_currentClient->getAssignablePackages();
-        if ($packages) {
-            $form = $this->_formManager->get('Console\Form\Package\Assign');
-            $form->setPackages($packages);
-            $form->setAttribute(
-                'action',
-                $this->urlFromRoute(
-                    'client',
-                    'assignpackage',
-                    array('id' => $this->_currentClient['Id'])
-                )
-            );
-            $vars['form'] = $form;
-        }
-        return $vars;
+        $vars['csrfToken'] = CsrfValidator::getToken();
+        $vars['assignments'] = $this->_currentClient->getPackageAssignments($vars['order'], $vars['direction']);
+        $vars['assignablePackages'] = $this->_currentClient->getAssignablePackages();
+
+        return new TemplateViewModel('Client/Packages.latte', $vars);
     }
 
     /**
@@ -592,28 +575,20 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Assign packages from Console\Form\Package\Assign (POST only)
+     * Assign packages (POST only)
      *
      * @return \Laminas\Http\Response redirect response
      */
     public function assignpackageAction()
     {
         if ($this->getRequest()->isPost()) {
-            $form = $this->_formManager->get('Console\Form\Package\Assign');
-            $form->setData($this->params()->fromPost());
-            if ($form->isValid()) {
-                $data = $form->getData();
-                foreach ($data['Packages'] as $name => $install) {
-                    if ($install) {
-                        $this->_currentClient->assignPackage($name);
-                    }
-                }
-            }
+            $formData = $this->params()->fromPost();
+            $this->assignPackagesForm->process($formData, $this->_currentClient);
         }
         return $this->redirectToRoute(
             'client',
             'packages',
-            array('id' => $this->_currentClient['Id'])
+            ['id' => $this->_currentClient->id]
         );
     }
 

@@ -23,12 +23,15 @@
 namespace Console\Test\Controller;
 
 use Console\Form\Import;
+use Console\Form\Package\AssignPackagesForm;
 use Console\Form\ProductKey;
 use Console\Form\Search as SearchForm;
 use Console\Mvc\Controller\Plugin\PrintForm;
 use Console\View\Helper\Form\ClientConfig;
 use Console\View\Helper\Form\Search as SearchHelper;
 use DateTime;
+use EmptyIterator;
+use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Text;
 use Laminas\Hydrator\ObjectPropertyHydrator;
@@ -43,6 +46,7 @@ use Model\Client\Item\Software;
 use Model\Client\WindowsInstallation;
 use Model\Config;
 use Model\Group\GroupManager;
+use Model\Package\Assignment;
 use Model\Registry\RegistryManager;
 use Model\SoftwareManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -142,7 +146,6 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $serviceManager->setService('Model\Config', $this->_config);
 
         $formManager = $serviceManager->get('FormElementManager');
-        $formManager->setService('Console\Form\Package\Assign', $this->createMock('Console\Form\Package\Assign'));
         $formManager->setService('Console\Form\ClientConfig', $this->createMock('Console\Form\ClientConfig'));
         $formManager->setService('Console\Form\CustomFields', $this->createMock('Console\Form\CustomFields'));
         $formManager->setService('Console\Form\DeleteClient', $this->createMock('Console\Form\DeleteClient'));
@@ -2426,140 +2429,124 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testPackagesActionNoPackages()
     {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Package\Assign');
-        $form->expects($this->never())
-             ->method('setPackages');
-        $form->expects($this->never())
-             ->method('render');
-        $assignments = new \Laminas\Db\ResultSet\ResultSet();
-        $assignments->initialize(new \EmptyIterator());
+        $assignments = new ResultSet();
+        $assignments->initialize(new EmptyIterator());
 
-        $client = $this->createMock('Model\Client\Client');
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
         $client->expects($this->once())
                ->method('getPackageAssignments')
                ->with('PackageName', 'asc')
                ->willReturn($assignments);
         $client->expects($this->once())
                ->method('getAssignablePackages')
-               ->willReturn(array());
+               ->willReturn([]);
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/packages/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//h2');
         $this->assertNotXpathQuery('//table');
+        $this->assertNotXpathQuery('//form');
     }
 
     public function testPackagesActionAssigned()
     {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Package\Assign');
-        $form->expects($this->never())
-             ->method('setPackages');
-        $form->expects($this->never())
-             ->method('render');
-        $assignments = new \Laminas\Db\ResultSet\ResultSet();
-        $assignments->initialize(
-            array(
-                array(
-                    'PackageName' => 'package1',
-                    'Status' => \Model\Package\Assignment::PENDING,
-                    'Timestamp' => 'timestamp1',
-                ),
-                array(
-                    'PackageName' => 'package2',
-                    'Status' => \Model\Package\Assignment::RUNNING,
-                    'Timestamp' => 'timestamp2',
-                ),
-                array(
-                    'PackageName' => 'package3',
-                    'Status' => \Model\Package\Assignment::SUCCESS,
-                    'Timestamp' => 'timestamp3',
-                ),
-                array(
-                    'PackageName' => 'package4',
-                    'Status' => '<ERROR>',
-                    'Timestamp' => 'timestamp4',
-                ),
-            )
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap(array(array('Id', 1))));
+        $timestamp = new DateTime('2022-11-09T20:29:33');
+
+        $assignments = new ResultSet();
+        $assignments->initialize([
+            new Assignment([
+                'PackageName' => 'package1',
+                'Status' => Assignment::PENDING,
+                'Timestamp' => $timestamp,
+            ]),
+            new Assignment([
+                'PackageName' => 'package2',
+                'Status' => Assignment::RUNNING,
+                'Timestamp' => $timestamp,
+            ]),
+            new Assignment([
+                'PackageName' => 'package3',
+                'Status' => Assignment::SUCCESS,
+                'Timestamp' => $timestamp,
+            ]),
+            new Assignment([
+                'PackageName' => 'package4',
+                'Status' => '<ERROR>',
+                'Timestamp' => $timestamp,
+            ]),
+        ]);
+
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->method('__get')->willReturnMap([['id', 1]]);
         $client->expects($this->once())
                ->method('getPackageAssignments')
                ->with('PackageName', 'asc')
                ->willReturn($assignments);
         $client->expects($this->once())
                ->method('getAssignablePackages')
-               ->willReturn(array());
+               ->willReturn([]);
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/packages/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//h2', "\nZugewiesene Pakete\n");
+        $this->assertXpathQueryContentContains('//h2', 'Zugewiesene Pakete');
         $this->assertXpathQueryCount('//h2', 1);
 
-        $this->assertXpathQueryContentContains('//tr[2]/td[2]/span[@class="package_pending"]', 'Ausstehend');
-        $this->assertXpathQueryContentContains('//tr[3]/td[2]/span[@class="package_running"]', 'Laufend');
-        $this->assertXpathQueryContentContains('//tr[4]/td[2]/span[@class="package_success"]', 'Erfolg');
-        $this->assertXpathQueryContentContains('//tr[5]/td[2]/span[@class="package_error"]', '<ERROR>');
+        $this->assertXpathQueryContentContains('//tr[2]/td[2][@class="package_pending"]', 'Ausstehend');
+        $this->assertXpathQueryContentContains('//tr[3]/td[2][@class="package_running"]', 'Laufend');
+        $this->assertXpathQueryContentContains('//tr[4]/td[2][@class="package_success"]', 'Erfolg');
+        $this->assertXpathQueryContentContains('//tr[5]/td[2][@class="package_error"]', '<ERROR>');
+
+        $this->assertXpathQueryContentContains('//td', '09.11.22, 20:29');
 
         // Pending package must not have "reset" link
-        $this->assertXpathQueryContentContains('//tr[2]/td[4]', "\n\n");
+        $this->assertXpathQueryContentRegex('//tr[2]/td[4]', '/^\s*$/');
         // Other packages must have "reset" link
-        $this->assertXpathQueryContentContains(
+        $this->assertXpathQueryContentRegex(
             '//tr[3]/td[4]/a[@href="/console/client/resetpackage/?id=1&package=package2"]',
-            'zurücksetzen'
+            '/zurücksetzen/'
         );
-        $this->assertXpathQueryContentContains(
+        $this->assertXpathQueryContentRegex(
             '//tr[4]/td[4]/a[@href="/console/client/resetpackage/?id=1&package=package3"]',
-            'zurücksetzen'
+            '/zurücksetzen/'
         );
-        $this->assertXpathQueryContentContains(
+        $this->assertXpathQueryContentRegex(
             '//tr[5]/td[4]/a[@href="/console/client/resetpackage/?id=1&package=package4"]',
-            'zurücksetzen'
+            '/zurücksetzen/'
         );
 
         // "remove" link
         $this->assertXpathQueryCount('//tr/td[5]/a', 4);
-        $this->assertXpathQueryContentContains(
+        $this->assertXpathQueryContentRegex(
             '//tr[3]/td[5]/a[@href="/console/client/removepackage/?id=1&package=package2"]',
-            'entfernen'
+            '/entfernen/'
         );
     }
 
-    public function testPackagesActionInstallable()
+    public function testPackagesActionAssignable()
     {
-        $packages = array('package1', 'package2');
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Package\Assign');
-        $form->expects($this->once())
-             ->method('setPackages')
-             ->with($packages);
-        $form->expects($this->once())
-             ->method('setAttribute')
-             ->with('action', '/console/client/assignpackage/?id=1');
-        $form->expects($this->once())
-             ->method('render')
-             ->will($this->returnValue('<form></form>'));
-        $map = array(
-            array('Id', 1),
-        );
-        $assignments = new \Laminas\Db\ResultSet\ResultSet();
-        $assignments->initialize(new \EmptyIterator());
+        $assignablePackages = ['package'];
 
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
+        $assignments = new ResultSet();
+        $assignments->initialize(new EmptyIterator());
+
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
         $client->expects($this->once())
                ->method('getPackageAssignments')
                ->with('PackageName', 'asc')
                ->willReturn($assignments);
         $client->expects($this->once())
                ->method('getAssignablePackages')
-               ->willReturn($packages);
+               ->willReturn($assignablePackages);
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/packages/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//h2', "\nPakete zuweisen\n");
+        $this->assertXpathQueryContentContains('//h2', 'Pakete zuweisen');
         $this->assertXpathQueryCount('//h2', 1);
         $this->assertXPathQuery('//form');
     }
@@ -2902,71 +2889,33 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertRedirectTo('/console/client/packages/?id=1');
     }
 
-    public function testassignpackageActionGet()
+    public function testAssignpackageActionGet()
     {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Package\Assign');
-        $form->expects($this->never())
-             ->method('isValid');
-        $form->expects($this->never())
-             ->method('setData');
-        $form->expects($this->never())
-             ->method('getData');
-        $map = array(
-            array('Id', 1),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
-        $client->expects($this->never())->method('assignPackage');
+        $client = new Client();
+        $client->id = 1;
         $this->_clientManager->method('getClient')->willReturn($client);
 
-        $this->dispatch('/console/client/assignpackage/?id=1');
+        /** @var MockObject|AssignPackagesForm */
+        $form = $this->createMock(AssignPackagesForm::class);
+        $form->expects($this->never())->method('process');
+        $this->getApplicationServiceLocator()->setService(AssignPackagesForm::class, $form);
+
+        $this->dispatch('/console/client/assignpackage/?id=1', 'GET');
         $this->assertRedirectTo('/console/client/packages/?id=1');
     }
 
-    public function testassignpackageActionPostInvalid()
+    public function testAssignpackageActionPost()
     {
-        $postData = array('package1' => '1', 'package2' => '1');
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Package\Assign');
-        $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(false));
-        $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
-        $form->expects($this->never())
-             ->method('getData');
-        $map = array(
-            array('Id', 1),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
-        $client->expects($this->never())->method('assignPackage');
+        $postData = ['packages' => ['package1', 'package2']];
+
+        $client = new Client();
+        $client->id = 1;
         $this->_clientManager->method('getClient')->willReturn($client);
 
-        $this->dispatch('/console/client/assignpackage/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/client/packages/?id=1');
-    }
-
-    public function testassignpackageActionPostValid()
-    {
-        $postData = array('Packages' => array('package1' => '0', 'package2' => '1'));
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Package\Assign');
-        $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
-        $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
-        $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue($postData));
-        $map = array(
-            array('Id', 1),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
-        $client->expects($this->once())->method('assignPackage')->with('package2');
-        $this->_clientManager->method('getClient')->willReturn($client);
+        /** @var MockObject|AssignPackagesForm */
+        $form = $this->createMock(AssignPackagesForm::class);
+        $form->expects($this->once())->method('process')->with($postData, $client);
+        $this->getApplicationServiceLocator()->setService(AssignPackagesForm::class, $form);
 
         $this->dispatch('/console/client/assignpackage/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/packages/?id=1');

@@ -2,6 +2,7 @@
 
 namespace Console\Template;
 
+use Console\Template\Filters\DateFormatFilter;
 use Console\Template\Filters\NumberFormatFilter;
 use Console\Template\Functions\ConsoleUrlFunction;
 use Console\Template\Functions\TranslateFunction;
@@ -21,11 +22,13 @@ class TemplateRendererFactory implements FactoryInterface
         $translateFunction = new TranslateFunction($translator);
         $consoleUrlFunction = new ConsoleUrlFunction($consoleUrl);
         $numberFormatFilter = new NumberFormatFilter();
+        $dateFormatFilter = new DateFormatFilter();
 
         $engine = new Engine();
         $engine->addFunction('translate', $translateFunction);
         $engine->addFunction('consoleUrl', $consoleUrlFunction);
         $engine->addFilter('numberFormat', $numberFormatFilter);
+        $engine->addFilter('dateFormat', $dateFormatFilter);
 
         return new TemplateRenderer($engine);
     }

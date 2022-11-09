@@ -341,7 +341,14 @@ input[size="8"]
     display: table-row;
 }
 
-.table label span, .table label[for], .table span.label, .table input, .table select, .table textarea {
+.table label span,
+.table label[for],
+.table span.label,
+.table button,
+.table input,
+.table select,
+.table textarea
+{
     display: table-cell;
     margin: 1.4ex 1em 1.4ex 1em;
     vertical-align: middle;
@@ -360,7 +367,7 @@ input[size="8"]
     border-style: solid;
 }
 
-.form input[type=submit] {
+.form input[type=submit], .form button[type=submit] {
     margin-top: 3ex;
 }
 
@@ -513,6 +520,13 @@ form.form_addtogroup > * {
     margin: auto;
 }
 
+.form_package_assign label span {
+    text-align: left;
+}
+.form_package_assign button {
+    margin-left: 0;
+}
+
 .form_package_update .label {
     grid-column: label;
     text-align: right;
@@ -538,14 +552,6 @@ form.form_addtogroup > * {
 
 .form_yesno {
     text-align: center;
-}
-
-.form_package_assign label span {
-    text-align: left;
-}
-
-.form_package_assign input[type="submit"] {
-    margin-left: 0;
 }
 
 .form_definefields .cell {

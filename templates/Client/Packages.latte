@@ -1,0 +1,55 @@
+{layout 'Layout.latte'}
+{block clientContent}
+
+{if count($assignments)}
+    <h2>{translate('Assigned packages')}</h2>
+    <table class="alternating">
+        <tr>
+            <th>{include sortableHeader, 'PackageName', translate('Name')}
+            <th>{include sortableHeader, 'Status', translate('Status')}
+            <th>{include sortableHeader, 'Timestamp', translate('Timestamp')}
+            <th></th>
+            <th></th>
+        </tr>
+        <tr n:foreach="$assignments as $assignment">
+            <td>{$assignment->packageName}</td>
+            {switch $assignment->status}
+                {case $assignment::PENDING}
+                    <td class="package_pending">{translate('Pending')}</td>
+                {case $assignment::RUNNING}
+                    <td class="package_running">{translate('Running')}</td>
+                {case $assignment::SUCCESS}
+                    <td class="package_success">{translate('Success')}</td>
+                {default} {* ERR_* *}
+                    <td class="package_error">{$assignment->status}</td>
+            {/switch}
+            <td>{$assignment->timestamp|dateFormat: IntlDateFormatter::SHORT, IntlDateFormatter::SHORT}</td>
+            <td>
+                <a
+                    n:if="$assignment->status != $assignment::PENDING"
+                    href="{consoleUrl(
+                        'client',
+                        'resetpackage',
+                        ['id' => $client->id, 'package' => $assignment->packageName]
+                    )}"
+                >
+                    {translate('reset')}
+                </a>
+            </td>
+            <td>
+                <a href="{consoleUrl(
+                    'client',
+                    'removepackage',
+                    ['id' => $client->id, 'package' => $assignment->packageName]
+                )}">
+                    {translate('remove')}
+                </a>
+            </td>
+        </tr>
+    </table>
+{/if}
+
+{include ../Forms/AssignPackage.latte,
+    action: consoleUrl('client', 'assignpackage', ['id' => $client->id]),
+    packages: $assignablePackages
+}

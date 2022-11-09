@@ -1,0 +1,14 @@
+{if $packages}
+    <h2>{translate('Assign packages')}</h2>
+    <form method="post" action="{$action}" class="form form_package_assign">
+        <input type="hidden" name="csrf" value="{$csrfToken}">
+        <div class="table">
+            <label n:foreach="$packages as $package">
+                <input type="checkbox" name="packages[]" value="{$package}">
+                <span>{$package}</span>
+            </label>
+            <span class="cell"></span>
+            <button type="submit">{translate('Assign')}</button>
+        </div>
+    </form>
+{/if}

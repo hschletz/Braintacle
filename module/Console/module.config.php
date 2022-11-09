@@ -20,6 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Console\Form\Package\AssignPackagesForm;
 use Console\Mvc\Controller\Plugin\Service\TranslateFactory;
 use Console\Mvc\Controller\Plugin\Translate;
 use Console\Template\TemplateRenderer;
@@ -128,6 +129,7 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
+            AssignPackagesForm::class => InvokableFactory::class,
             'Console\Navigation\GroupMenu' => 'Console\Navigation\GroupMenuFactory',
             'Console\Navigation\MainMenu' => 'Console\Navigation\MainMenuFactory',
             TemplateRenderer::class => TemplateRendererFactory::class,

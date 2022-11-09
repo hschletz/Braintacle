@@ -153,7 +153,6 @@ msgstr ""
 #: views/console/client/index.php
 #: views/console/client/misc.php
 #: views/console/client/network.php
-#: views/console/client/packages.php
 #: views/console/client/printers.php
 #: views/console/client/system.php
 #: views/console/client/virtualmachines.php
@@ -162,10 +161,11 @@ msgstr ""
 #: views/console/group/general.php
 #: views/console/group/index.php
 #: views/console/group/members.php
-#: views/console/group/packages.php
 #: views/console/network/index.php
 #: views/console/package/index.php
+#: Client/Packages.latte
 #: Client/Software.latte
+#: Group/Packages.latte
 msgid "Name"
 msgstr ""
 
@@ -389,10 +389,6 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-#: Form/Package/Assign.php
-msgid "Assign"
-msgstr ""
-
 #: Form/Package/Build.php
 #: views/console/package/index.php
 msgid "Platform"
@@ -468,22 +464,22 @@ msgstr ""
 
 #: Form/Package/Update.php
 #: Form/Preferences/Packages.php
-#: views/console/client/packages.php
 #: views/console/package/index.php
+#: Client/Packages.latte
 msgid "Pending"
 msgstr ""
 
 #: Form/Package/Update.php
 #: Form/Preferences/Packages.php
-#: views/console/client/packages.php
 #: views/console/package/index.php
+#: Client/Packages.latte
 msgid "Running"
 msgstr ""
 
 #: Form/Package/Update.php
 #: Form/Preferences/Packages.php
-#: views/console/client/packages.php
 #: views/console/package/index.php
+#: Client/Packages.latte
 msgid "Success"
 msgstr ""
 
@@ -1480,9 +1476,9 @@ msgid "DHCP server"
 msgstr ""
 
 #: views/console/client/network.php
-#: views/console/client/packages.php
 #: views/console/client/system.php
 #: views/console/client/virtualmachines.php
+#: Client/Packages.latte
 msgid "Status"
 msgstr ""
 
@@ -1492,29 +1488,6 @@ msgstr ""
 
 #: views/console/client/network.php
 msgid "Modems"
-msgstr ""
-
-#: views/console/client/packages.php
-msgid "Timestamp"
-msgstr ""
-
-#: views/console/client/packages.php
-msgid "reset"
-msgstr ""
-
-#: views/console/client/packages.php
-#: views/console/group/packages.php
-msgid "remove"
-msgstr ""
-
-#: views/console/client/packages.php
-#: views/console/group/packages.php
-msgid "Assigned packages"
-msgstr ""
-
-#: views/console/client/packages.php
-#: views/console/group/packages.php
-msgid "Assign packages"
 msgstr ""
 
 #: views/console/client/printers.php
@@ -1868,12 +1841,38 @@ msgstr ""
 msgid "Export"
 msgstr ""
 
+#: Client/Packages.latte
+#: Group/Packages.latte
+msgid "Assigned packages"
+msgstr ""
+
+#: Client/Packages.latte
+msgid "Timestamp"
+msgstr ""
+
+#: Client/Packages.latte
+msgid "reset"
+msgstr ""
+
+#: Client/Packages.latte
+#: Group/Packages.latte
+msgid "remove"
+msgstr ""
+
 #: Client/Software.latte
 msgid "Publisher"
 msgstr ""
 
 #: Client/Software.latte
 msgid "Location"
+msgstr ""
+
+#: Forms/AssignPackage.latte
+msgid "Assign packages"
+msgstr ""
+
+#: Forms/AssignPackage.latte
+msgid "Assign"
 msgstr ""
 
 #: Group/Header.latte

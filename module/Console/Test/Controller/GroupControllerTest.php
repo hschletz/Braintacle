@@ -24,7 +24,7 @@ namespace Console\Test\Controller;
 
 use Console\Form\AddToGroup as FormAddToGroup;
 use Console\Form\ClientConfig;
-use Console\Form\Package\Assign;
+use Console\Form\Package\AssignPackagesForm;
 use Console\View\Helper\Form\AddToGroup;
 use Console\View\Helper\Form\ClientConfig as FormClientConfig;
 use Console\View\Helper\GroupHeader;
@@ -53,12 +53,6 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     protected $_clientManager;
 
     /**
-     * Package assignment form mock
-     * @var MockObject|Assign
-     */
-    protected $_packageAssignmentForm;
-
-    /**
      * Add to group form mock
      * @var MockObject|FormAddToGroup
      */
@@ -79,7 +73,6 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
         $this->_groupManager = $this->createMock('Model\Group\GroupManager');
         $this->_clientManager = $this->createMock('Model\Client\ClientManager');
-        $this->_packageAssignmentForm = $this->createMock('Console\Form\Package\Assign');
         $this->_addToGroupForm = $this->createMock('Console\Form\AddToGroup');
         $this->_clientConfigForm = $this->createMock('Console\Form\ClientConfig');
 
@@ -87,7 +80,6 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
         $serviceManager->setService('Model\Group\GroupManager', $this->_groupManager);
         $serviceManager->setService('Model\Client\ClientManager', $this->_clientManager);
         $formManager = $serviceManager->get('FormElementManager');
-        $formManager->setService('Console\Form\Package\Assign', $this->_packageAssignmentForm);
         $formManager->setService('Console\Form\AddToGroup', $this->_addToGroupForm);
         $formManager->setService('Console\Form\ClientConfig', $this->_clientConfigForm);
     }
@@ -335,63 +327,46 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
     public function testPackagesActionOnlyAssigned()
     {
         $url = '/console/group/packages/?name=test';
-        $packages = array('package1', 'package2');
+        $packages = ['package1', 'package2'];
 
         /** @var MockObject|Group */
         $group = $this->createMock(Group::class);
         $group->expects($this->once())->method('getPackages')->with('asc')->willReturn($packages);
+        $group->expects($this->once())->method('getAssignablePackages')->willReturn([]);
         $group->method('__get')->with('name')->willReturn('test');
-        $group->expects($this->once())->method('getAssignablePackages')->willReturn(array());
-        $group->name = 'test';
 
         $this->_groupManager->expects($this->once())
                             ->method('getGroup')
                             ->with('test')
                             ->willReturn($group);
 
-        $this->_packageAssignmentForm->expects($this->never())
-                                     ->method('setPackages');
-        $this->_packageAssignmentForm->expects($this->never())
-                                     ->method('render');
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
             "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='$url']",
             'Pakete'
         );
-        $this->assertXpathQuery("//td[text()='\npackage2\n']");
+        $this->assertXpathQuery('//td[text()="package1"]');
+        $this->assertXpathQuery('//td[text()="package2"]');
         $this->assertXpathQuery(
-            "//td/a[@href='/console/group/removepackage/?package=package2&name=test'][text()='entfernen']"
+            '//td/a[@href="/console/group/removepackage/?name=test&package=package2"][normalize-space(text())="entfernen"]'
         );
     }
 
     public function testPackagesActionOnlyAvailable()
     {
         $url = '/console/group/packages/?name=test';
-        $packages = array('package1', 'package2');
+        $assignablePackages = ['package'];
 
-        $group = $this->createMock('Model\Group\Group');
-        $group->expects($this->once())->method('getPackages')->with('asc')->willReturn(array());
-        $group->method('offsetGet')->with('Name')->willReturn('test');
-        $group->expects($this->once())->method('getAssignablePackages')->willReturn($packages);
+        /** @var MockObject|Group */
+        $group = $this->createMock(Group::class);
+        $group->expects($this->once())->method('getPackages')->with('asc')->willReturn([]);
+        $group->expects($this->once())->method('getAssignablePackages')->willReturn($assignablePackages);
 
         $this->_groupManager->expects($this->once())
                             ->method('getGroup')
                             ->with('test')
                             ->willReturn($group);
-
-        $this->_packageAssignmentForm->expects($this->once())
-                                     ->method('setPackages')
-                                     ->with($packages);
-        $this->_packageAssignmentForm->expects($this->once())
-                                     ->method('render')
-                                     ->will($this->returnValue('<form></form>'));
-        $this->_packageAssignmentForm->expects($this->once())
-                                     ->method('setAttribute')
-                                     ->with('action', '/console/group/assignpackage/?name=test');
-
-        $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');
-        $viewHelperManager->setService(GroupHeader::class, $this->createStub(GroupHeader::class));
 
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
@@ -448,62 +423,32 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testassignpackageActionGet()
     {
-        $group = $this->createMock('Model\Group\Group');
-        $group->expects($this->never())->method('assignPackage');
-        $this->_groupManager->expects($this->once())
-                            ->method('getGroup')
-                            ->with('test')
-                            ->willReturn($group);
-        $this->_packageAssignmentForm->expects($this->never())
-                                     ->method('isValid');
-        $this->_packageAssignmentForm->expects($this->never())
-                                     ->method('setData');
-        $this->_packageAssignmentForm->expects($this->never())
-                                     ->method('getData');
+        /** @var MockObject|AssignPackagesForm */
+        $form = $this->createMock(AssignPackagesForm::class);
+        $form->expects($this->never())->method('process');
 
-        $this->dispatch('/console/group/assignpackage/?name=test');
+        $this->getApplicationServiceLocator()->setService(AssignPackagesForm::class, $form);
+
+        $this->dispatch('/console/group/assignpackage/?name=test', 'GET');
         $this->assertRedirectTo('/console/group/packages/?name=test');
     }
 
-    public function testassignpackageActionPostInvalid()
+    public function testAssignpackageActionPost()
     {
-        $postData = array('Packages' => array('package1' => '0', 'package2' => '1'));
-        $group = $this->createMock('Model\Group\Group');
-        $group->expects($this->never())->method('assignPackage');
-        $this->_groupManager->expects($this->once())
-                            ->method('getGroup')
-                            ->with('test')
-                            ->willReturn($group);
-        $this->_packageAssignmentForm->expects($this->once())
-                                     ->method('isValid')
-                                     ->will($this->returnValue(false));
-        $this->_packageAssignmentForm->expects($this->once())
-                                     ->method('setData')
-                                     ->with($postData);
-        $this->_packageAssignmentForm->expects($this->never())
-                                     ->method('getData');
-        $this->dispatch('/console/group/assignpackage/?name=test', 'POST', $postData);
-        $this->assertRedirectTo('/console/group/packages/?name=test');
-    }
+        $postData = ['packages' => ['package1', 'package2']];
 
-    public function testassignpackageActionPostValid()
-    {
-        $postData = array('Packages' => array('package1' => '0', 'package2' => '1'));
-        $group = $this->createMock('Model\Group\Group');
-        $group->expects($this->once())->method('assignPackage')->with('package2');
+        $group = new Group();
         $this->_groupManager->expects($this->once())
                             ->method('getGroup')
                             ->with('test')
                             ->willReturn($group);
-        $this->_packageAssignmentForm->expects($this->once())
-                                     ->method('isValid')
-                                     ->will($this->returnValue(true));
-        $this->_packageAssignmentForm->expects($this->once())
-                                     ->method('setData')
-                                     ->with($postData);
-        $this->_packageAssignmentForm->expects($this->once())
-                                     ->method('getData')
-                                     ->will($this->returnValue($postData));
+
+        /** @var MockObject|AssignPackagesForm */
+        $form = $this->createMock(AssignPackagesForm::class);
+        $form->expects($this->once())->method('process')->with($postData, $group);
+
+        $this->getApplicationServiceLocator()->setService(AssignPackagesForm::class, $form);
+
         $this->dispatch('/console/group/assignpackage/?name=test', 'POST', $postData);
         $this->assertRedirectTo('/console/group/packages/?name=test');
     }

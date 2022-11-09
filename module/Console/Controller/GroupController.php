@@ -22,6 +22,10 @@
 
 namespace Console\Controller;
 
+use Console\Form\Package\AssignPackagesForm;
+use Console\Template\TemplateViewModel;
+use Console\Validator\CsrfValidator;
+
 /**
  * Controller for managing groups
  */
@@ -38,12 +42,6 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
      * @var \Model\Client\ClientManager
      */
     protected $_clientManager;
-
-    /**
-     * Package assignment form
-     * @var \Console\Form\Package\Assign
-     */
-    protected $_packageAssignmentForm;
 
     /**
      * Add to group form
@@ -63,27 +61,20 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
      */
     protected $_currentGroup;
 
-    /**
-     * Constructor
-     *
-     * @param \Model\Group\GroupManager $groupManager
-     * @param \Model\Client\ClientManager $clientManager
-     * @param \Console\Form\Package\Assign $packageAssignmentForm
-     * @param \Console\Form\AddToGroup $addToGroupForm
-     * @param \Console\Form\ClientConfig $clientConfigForm
-     */
+    private AssignPackagesForm $assignPackagesForm;
+
     public function __construct(
         \Model\Group\GroupManager $groupManager,
         \Model\Client\ClientManager $clientManager,
-        \Console\Form\Package\Assign $packageAssignmentForm,
+        AssignPackagesForm $assignPackagesForm,
         \Console\Form\AddToGroup $addToGroupForm,
         \Console\Form\ClientConfig $clientConfigForm
     ) {
         $this->_groupManager = $groupManager;
         $this->_clientManager = $clientManager;
-        $this->_packageAssignmentForm = $packageAssignmentForm;
         $this->_addToGroupForm = $addToGroupForm;
         $this->_clientConfigForm = $clientConfigForm;
+        $this->assignPackagesForm = $assignPackagesForm;
     }
 
     /** {@inheritdoc} */
@@ -181,33 +172,18 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
 
     /**
      * Show assigned and installable packages
-     *
-     * @return array sorting, group, packageNames, [form]
      */
-    public function packagesAction()
+    public function packagesAction(): TemplateViewModel
     {
         $this->setActiveMenu('Groups');
 
-        $vars['sorting'] = $this->getOrder('Name');
+        $vars = $this->getOrder('Name');
         $vars['group'] = $this->_currentGroup;
-        $vars['packageNames'] = $this->_currentGroup->getPackages($vars['sorting']['direction']);
+        $vars['assignedPackages'] = $this->_currentGroup->getPackages($vars['direction']);
+        $vars['assignablePackages'] = $this->_currentGroup->getAssignablePackages();
+        $vars['csrfToken'] = CsrfValidator::getToken();
 
-        // Add package installation form if packages are available.
-        $packages = $this->_currentGroup->getAssignablePackages();
-        if ($packages) {
-            $this->_packageAssignmentForm->setPackages($packages);
-            $this->_packageAssignmentForm->setAttribute(
-                'action',
-                $this->urlFromRoute(
-                    'group',
-                    'assignpackage',
-                    array('name' => $this->_currentGroup['Name'])
-                )
-            );
-            $vars['form'] = $this->_packageAssignmentForm;
-        }
-
-        return $vars;
+        return new TemplateViewModel('Group/Packages.latte', $vars);
     }
 
     /**
@@ -241,15 +217,8 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
     public function assignpackageAction()
     {
         if ($this->getRequest()->isPost()) {
-            $this->_packageAssignmentForm->setData($this->params()->fromPost());
-            if ($this->_packageAssignmentForm->isValid()) {
-                $data = $this->_packageAssignmentForm->getData();
-                foreach ($data['Packages'] as $name => $install) {
-                    if ($install) {
-                        $this->_currentGroup->assignPackage($name);
-                    }
-                }
-            }
+            $formData = $this->params()->fromPost();
+            $this->assignPackagesForm->process($formData, $this->_currentGroup);
         }
         return $this->redirectToRoute(
             'group',

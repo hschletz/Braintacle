@@ -1,0 +1,29 @@
+{layout 'Layout.latte'}
+{block groupContent}
+
+{if count($assignedPackages)}
+    <h2>{translate('Assigned packages')}</h2>
+    <table class="alternating">
+        <tr>
+            <th>{include sortableHeader, 'Name', translate('Name')}
+            <th></th>
+        </tr>
+        <tr n:foreach="$assignedPackages as $package">
+            <td>{$package}</td>
+            <td>
+                <a href="{consoleUrl(
+                    'group',
+                    'removepackage',
+                    ['name' => $group->name, 'package' => $package]
+                )}">
+                    {translate('remove')}
+                </a>
+            </td>
+        </tr>
+    </table>
+{/if}
+
+{include ../Forms/AssignPackage.latte,
+    action: consoleUrl('group', 'assignpackage', ['name' => $group->name]),
+    packages: $assignablePackages
+}

@@ -113,6 +113,55 @@ msgstr "Virtuelle Maschinen"
 msgid "Windows"
 msgstr "Windows"
 
+#: Client/Packages.latte Group/Packages.latte
+msgid "Assigned packages"
+msgstr "Zugewiesene Pakete"
+
+#: Client/Packages.latte Client/Software.latte Form/AddToGroup.php
+#: Form/ManageRegistryValues.php Form/Package/Build.php Form/Search.php
+#: Form/Subnet.php Group/Packages.latte views/console/client/display.php
+#: views/console/client/index.php views/console/client/misc.php
+#: views/console/client/network.php views/console/client/printers.php
+#: views/console/client/system.php views/console/client/virtualmachines.php
+#: views/console/duplicates/index.php views/console/group/excluded.php
+#: views/console/group/general.php views/console/group/index.php
+#: views/console/group/members.php views/console/network/index.php
+#: views/console/package/index.php
+msgid "Name"
+msgstr "Name"
+
+#: Client/Packages.latte Form/Package/Update.php Form/Preferences/Packages.php
+#: views/console/package/index.php
+msgid "Pending"
+msgstr "Ausstehend"
+
+#: Client/Packages.latte Form/Package/Update.php Form/Preferences/Packages.php
+#: views/console/package/index.php
+msgid "Running"
+msgstr "Laufend"
+
+#: Client/Packages.latte views/console/client/network.php
+#: views/console/client/system.php views/console/client/virtualmachines.php
+msgid "Status"
+msgstr "Status"
+
+#: Client/Packages.latte Form/Package/Update.php Form/Preferences/Packages.php
+#: views/console/package/index.php
+msgid "Success"
+msgstr "Erfolg"
+
+#: Client/Packages.latte
+msgid "Timestamp"
+msgstr "Zeitpunkt"
+
+#: Client/Packages.latte Group/Packages.latte
+msgid "remove"
+msgstr "entfernen"
+
+#: Client/Packages.latte
+msgid "reset"
+msgstr "zurücksetzen"
+
 #: Client/Software.latte views/console/client/msoffice.php
 msgid "Architecture"
 msgstr "Architektur"
@@ -120,19 +169,6 @@ msgstr "Architektur"
 #: Client/Software.latte
 msgid "Location"
 msgstr "Ort"
-
-#: Client/Software.latte Form/AddToGroup.php Form/ManageRegistryValues.php
-#: Form/Package/Build.php Form/Search.php Form/Subnet.php
-#: views/console/client/display.php views/console/client/index.php
-#: views/console/client/misc.php views/console/client/network.php
-#: views/console/client/packages.php views/console/client/printers.php
-#: views/console/client/system.php views/console/client/virtualmachines.php
-#: views/console/duplicates/index.php views/console/group/excluded.php
-#: views/console/group/general.php views/console/group/index.php
-#: views/console/group/members.php views/console/group/packages.php
-#: views/console/network/index.php views/console/package/index.php
-msgid "Name"
-msgstr "Name"
 
 #: Client/Software.latte
 msgid "Publisher"
@@ -453,10 +489,6 @@ msgstr "Werte"
 msgid "Type"
 msgstr "Typ"
 
-#: Form/Package/Assign.php
-msgid "Assign"
-msgstr "Zuweisen"
-
 #: Form/Package/Build.php
 msgid "Action"
 msgstr "Aktion"
@@ -529,21 +561,6 @@ msgstr "Auf Clients installieren, denen das exisierende Paket zugewiesen ist"
 #: views/console/package/index.php
 msgid "Error"
 msgstr "Fehler"
-
-#: Form/Package/Update.php Form/Preferences/Packages.php
-#: views/console/client/packages.php views/console/package/index.php
-msgid "Pending"
-msgstr "Ausstehend"
-
-#: Form/Package/Update.php Form/Preferences/Packages.php
-#: views/console/client/packages.php views/console/package/index.php
-msgid "Running"
-msgstr "Laufend"
-
-#: Form/Package/Update.php Form/Preferences/Packages.php
-#: views/console/client/packages.php views/console/package/index.php
-msgid "Success"
-msgstr "Erfolg"
 
 #: Form/Preferences/AbstractForm.php
 msgid "Set"
@@ -1068,6 +1085,14 @@ msgstr "neu oder nicht kategorisiert"
 msgid "selected for display"
 msgstr "für Anzeige ausgewählt"
 
+#: Forms/AssignPackage.latte
+msgid "Assign"
+msgstr "Zuweisen"
+
+#: Forms/AssignPackage.latte
+msgid "Assign packages"
+msgstr "Pakete zuweisen"
+
 #: Group/Header.latte
 msgid "Details for group '%s'"
 msgstr "Einzelheiten für Gruppe '%s'"
@@ -1440,31 +1465,6 @@ msgstr "Modems"
 #: views/console/client/network.php
 msgid "Network interfaces"
 msgstr "Netzwerkschnittstellen"
-
-#: views/console/client/network.php views/console/client/packages.php
-#: views/console/client/system.php views/console/client/virtualmachines.php
-msgid "Status"
-msgstr "Status"
-
-#: views/console/client/packages.php views/console/group/packages.php
-msgid "Assign packages"
-msgstr "Pakete zuweisen"
-
-#: views/console/client/packages.php views/console/group/packages.php
-msgid "Assigned packages"
-msgstr "Zugewiesene Pakete"
-
-#: views/console/client/packages.php
-msgid "Timestamp"
-msgstr "Zeitpunkt"
-
-#: views/console/client/packages.php views/console/group/packages.php
-msgid "remove"
-msgstr "entfernen"
-
-#: views/console/client/packages.php
-msgid "reset"
-msgstr "zurücksetzen"
 
 #: views/console/client/printers.php
 msgid "Driver"
