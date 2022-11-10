@@ -22,44 +22,38 @@
 
 namespace Model\Test\Package;
 
+use DateTime;
 use Model\Package\Assignment;
+use PHPUnit\DbUnit\DataSet\DefaultDataSet;
 
 /**
  * Tests for Model\Package\Assignment
  */
 class AssignmentTest extends \Model\Test\AbstractTest
 {
-    /** {@inheritdoc} */
     public function getDataSet()
     {
-        return new \PHPUnit\DbUnit\DataSet\DefaultDataSet();
-    }
-
-    public function testObjectProperties()
-    {
-        $model = $this->getModel();
-        $this->assertInstanceOf('ArrayAccess', $model);
-        $this->assertTrue(method_exists($model, 'exchangeArray'));
+        return new DefaultDataSet();
     }
 
     public function testDateFormat()
     {
-        $date = new \DateTime('2014-12-30 19:01:23');
-        $this->assertEquals('Tue Dec 30 19:01:23 2014', $date->format(\Model\Package\Assignment::DATEFORMAT));
+        $date = new DateTime('2014-12-30 19:01:23');
+        $this->assertEquals('Tue Dec 30 19:01:23 2014', $date->format(Assignment::DATEFORMAT));
         $this->assertEquals(
             $date,
-            \DateTime::createFromFormat(\Model\Package\Assignment::DATEFORMAT, 'Tue Dec 30 19:01:23 2014')
+            DateTime::createFromFormat(Assignment::DATEFORMAT, 'Tue Dec 30 19:01:23 2014')
         );
 
-        $date = new \DateTime('2014-03-01 09:01:03');
-        $this->assertEquals('Sat Mar 01 09:01:03 2014', $date->format(\Model\Package\Assignment::DATEFORMAT));
+        $date = new DateTime('2014-03-01 09:01:03');
+        $this->assertEquals('Sat Mar 01 09:01:03 2014', $date->format(Assignment::DATEFORMAT));
         $this->assertEquals(
             $date,
-            \DateTime::createFromFormat(\Model\Package\Assignment::DATEFORMAT, 'Sat Mar 01 09:01:03 2014')
+            DateTime::createFromFormat(Assignment::DATEFORMAT, 'Sat Mar 01 09:01:03 2014')
         );
         $this->assertEquals(
             $date,
-            \DateTime::createFromFormat(\Model\Package\Assignment::DATEFORMAT, 'Sat Mar  1 09:01:03 2014')
+            DateTime::createFromFormat(Assignment::DATEFORMAT, 'Sat Mar  1 09:01:03 2014')
         );
     }
 }

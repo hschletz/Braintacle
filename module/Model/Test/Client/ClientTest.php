@@ -24,6 +24,7 @@ namespace Model\Test\Client;
 
 use Database\Table\ClientConfig;
 use Database\Table\GroupMemberships;
+use DateTime;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\Db\ResultSet\AbstractResultSet;
 use Laminas\ServiceManager\ServiceLocatorInterface;
@@ -31,6 +32,7 @@ use Model\Client\Client;
 use Model\Client\CustomFieldManager;
 use Model\Client\CustomFields;
 use Model\Group\GroupManager;
+use Model\Package\Assignment;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 
@@ -534,22 +536,22 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function getPackageAssignmentsProvider()
     {
-        $package1 = array(
-            'PackageName' => 'package1',
-            'Status' => \Model\Package\Assignment::SUCCESS,
-            'Timestamp' => new \DateTime('2014-12-30 19:02:23'),
-        );
-        $package2 = array(
-            'PackageName' => 'package2',
-            'Status' => \Model\Package\Assignment::RUNNING,
-            'Timestamp' => new \DateTime('2014-12-30 19:01:23'),
-        );
+        $package1 = [
+            'packageName' => 'package1',
+            'status' => Assignment::SUCCESS,
+            'timestamp' => new DateTime('2014-12-30 19:02:23'),
+        ];
+        $package2 = [
+            'packageName' => 'package2',
+            'status' => Assignment::RUNNING,
+            'timestamp' => new DateTime('2014-12-30 19:01:23'),
+        ];
         // Non-default order. Default order tested separately.
-        return array(
-            array('PackageName', 'desc', $package2, $package1),
-            array('Status', 'asc', $package2, $package1),
-            array('Status', 'desc', $package1, $package2),
-        );
+        return [
+            ['packageName', 'desc', $package2, $package1],
+            ['status', 'asc', $package2, $package1],
+            ['status', 'desc', $package1, $package2],
+        ];
     }
 
     /**
@@ -558,49 +560,51 @@ class ClientTest extends \Model\Test\AbstractTest
     public function testGetPackageAssignments($order, $direction, $package0, $package1)
     {
         $model = $this->getModel();
-        $model->Id = 1;
+        $model->id = 1;
 
         $assignments = $model->getPackageAssignments($order, $direction);
-        $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $assignments);
+        $this->assertInstanceOf(AbstractResultSet::class, $assignments);
+        /** @var Assignment[] */
         $assignments = iterator_to_array($assignments);
         $this->assertCount(2, $assignments);
-        $this->assertContainsOnlyInstancesOf('Model\Package\Assignment', $assignments);
-        $this->assertEquals($package0, $assignments[0]->getArrayCopy());
-        $this->assertEquals($package1, $assignments[1]->getArrayCopy());
+        $this->assertContainsOnlyInstancesOf(Assignment::class, $assignments);
+        $this->assertEquals($package0, get_object_vars($assignments[0]));
+        $this->assertEquals($package1, get_object_vars($assignments[1]));
     }
 
     public function testGetPackageAssignmentsDefaultOrder()
     {
         $model = $this->getModel();
-        $model->Id = 1;
+        $model->id = 1;
 
         $assignments = $model->getPackageAssignments();
-        $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $assignments);
+        $this->assertInstanceOf(AbstractResultSet::class, $assignments);
+        /** @var Assignment[] */
         $assignments = iterator_to_array($assignments);
         $this->assertCount(2, $assignments);
-        $this->assertContainsOnlyInstancesOf('Model\Package\Assignment', $assignments);
+        $this->assertContainsOnlyInstancesOf(Assignment::class, $assignments);
         $this->assertEquals(
-            array(
-                'PackageName' => 'package1',
-                'Status' => \Model\Package\Assignment::SUCCESS,
-                'Timestamp' => new \DateTime('2014-12-30 19:02:23'),
-            ),
-            $assignments[0]->getArrayCopy()
+            [
+                'packageName' => 'package1',
+                'status' => Assignment::SUCCESS,
+                'timestamp' => new DateTime('2014-12-30 19:02:23'),
+            ],
+            get_object_vars($assignments[0])
         );
         $this->assertEquals(
-            array(
-                'PackageName' => 'package2',
-                'Status' => \Model\Package\Assignment::RUNNING,
-                'Timestamp' => new \DateTime('2014-12-30 19:01:23'),
-            ),
-            $assignments[1]->getArrayCopy()
+            [
+                'packageName' => 'package2',
+                'status' => Assignment::RUNNING,
+                'timestamp' => new DateTime('2014-12-30 19:01:23'),
+            ],
+            get_object_vars($assignments[1])
         );
     }
 
     public function testGetDownloadedPackageIds()
     {
         $model = $this->getModel();
-        $model->Id = 1;
+        $model->id = 1;
         $this->assertEquals(array(1, 2), $model->getDownloadedPackageIds());
     }
 

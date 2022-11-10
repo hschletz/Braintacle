@@ -22,14 +22,12 @@
 
 namespace Model\Package;
 
+use DateTimeInterface;
+
 /**
  * Package assignment on a client
- *
- * @property string $PackageName Package name
- * @property string $Status Status
- * @property \DateTime $Timestamp Timestamp of last status change
  */
-class Assignment extends \Model\AbstractModel
+class Assignment
 {
     /**
      * Database-internal date format
@@ -63,4 +61,19 @@ class Assignment extends \Model\AbstractModel
      * Prefix of database value for error status
      */
     const ERROR_PREFIX = 'ERR';
+
+    /**
+     * Package name
+     */
+    public string $packageName;
+
+    /**
+     * Status (PENDING/RUNNUNG/SUCCESS/ERR_*)
+     */
+    public ?string $status;
+
+    /**
+     * Timestamp of last status change
+     */
+    public DateTimeInterface $timestamp;
 }

@@ -430,7 +430,7 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
      */
     public function packagesAction(): TemplateViewModel
     {
-        $vars = $this->getOrder('PackageName');
+        $vars = $this->getOrder('packageName');
         $vars['client'] = $this->_currentClient;
         $vars['csrfToken'] = CsrfValidator::getToken();
         $vars['assignments'] = $this->_currentClient->getPackageAssignments($vars['order'], $vars['direction']);

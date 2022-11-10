@@ -2436,7 +2436,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client = $this->createMock(Client::class);
         $client->expects($this->once())
                ->method('getPackageAssignments')
-               ->with('PackageName', 'asc')
+               ->with('packageName', 'asc')
                ->willReturn($assignments);
         $client->expects($this->once())
                ->method('getAssignablePackages')
@@ -2453,37 +2453,36 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testPackagesActionAssigned()
     {
         $timestamp = new DateTime('2022-11-09T20:29:33');
-
-        $assignments = new ResultSet();
-        $assignments->initialize([
-            new Assignment([
-                'PackageName' => 'package1',
-                'Status' => Assignment::PENDING,
-                'Timestamp' => $timestamp,
-            ]),
-            new Assignment([
-                'PackageName' => 'package2',
-                'Status' => Assignment::RUNNING,
-                'Timestamp' => $timestamp,
-            ]),
-            new Assignment([
-                'PackageName' => 'package3',
-                'Status' => Assignment::SUCCESS,
-                'Timestamp' => $timestamp,
-            ]),
-            new Assignment([
-                'PackageName' => 'package4',
-                'Status' => '<ERROR>',
-                'Timestamp' => $timestamp,
-            ]),
-        ]);
+        $hydrator = new ObjectPropertyHydrator();
+        $assignments = [
+            $hydrator->hydrate([
+                'packageName' => 'package1',
+                'status' => Assignment::PENDING,
+                'timestamp' => $timestamp,
+            ], new Assignment()),
+            $hydrator->hydrate([
+                'packageName' => 'package2',
+                'status' => Assignment::RUNNING,
+                'timestamp' => $timestamp,
+            ], new Assignment()),
+            $hydrator->hydrate([
+                'packageName' => 'package3',
+                'status' => Assignment::SUCCESS,
+                'timestamp' => $timestamp,
+            ], new Assignment()),
+            $hydrator->hydrate([
+                'packageName' => 'package4',
+                'status' => '<ERROR>',
+                'timestamp' => $timestamp,
+            ], new Assignment()),
+        ];
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
         $client->method('__get')->willReturnMap([['id', 1]]);
         $client->expects($this->once())
                ->method('getPackageAssignments')
-               ->with('PackageName', 'asc')
+               ->with('packageName', 'asc')
                ->willReturn($assignments);
         $client->expects($this->once())
                ->method('getAssignablePackages')
@@ -2537,7 +2536,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client = $this->createMock(Client::class);
         $client->expects($this->once())
                ->method('getPackageAssignments')
-               ->with('PackageName', 'asc')
+               ->with('packageName', 'asc')
                ->willReturn($assignments);
         $client->expects($this->once())
                ->method('getAssignablePackages')

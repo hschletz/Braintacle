@@ -22,6 +22,13 @@
 
 namespace Model\Client;
 
+use Database\Hydrator\NamingStrategy\MapNamingStrategy;
+use Database\Table\ClientConfig;
+use Laminas\Db\ResultSet\HydratingResultSet;
+use Laminas\Db\Sql\Select;
+use Laminas\Hydrator\ObjectPropertyHydrator;
+use Laminas\Hydrator\Strategy\DateTimeFormatterStrategy;
+use Model\Package\Assignment;
 use ReturnTypeWillChange;
 
 /**
@@ -367,45 +374,38 @@ class Client extends \Model\ClientOrGroup
     /**
      * Get package assignments
      *
-     * @param string $order Package assignment property to sort by, default: PackageName
+     * @param string $order Package assignment property to sort by, default: packageName
      * @param string $direction asc|desc, default: asc
-     * @return \Laminas\Db\ResultSet\AbstractResultSet Result set producing \Model\Package\Assignment
+     * @return iterable<Assignment>
      */
-    public function getPackageAssignments($order = 'PackageName', $direction = 'asc')
+    public function getPackageAssignments(string $order = 'packageName', string $direction = 'asc'): iterable
     {
-        $hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
+        $hydrator = new ObjectPropertyHydrator();
         $hydrator->setNamingStrategy(
-            new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
-                array(
-                    'name' => 'PackageName',
-                    'tvalue' => 'Status',
-                    'comments' => 'Timestamp',
-                )
-            )
+            new MapNamingStrategy([
+                'name' => 'packageName',
+                'tvalue' => 'status',
+                'comments' => 'timestamp',
+            ])
         );
         $hydrator->addStrategy(
-            'Timestamp',
-            new \Laminas\Hydrator\Strategy\DateTimeFormatterStrategy(
-                \Model\Package\Assignment::DATEFORMAT
-            )
+            'timestamp',
+            new DateTimeFormatterStrategy(Assignment::DATEFORMAT)
         );
 
-        $sql = $this->_serviceLocator->get('Database\Table\ClientConfig')->getSql();
+        $sql = $this->_serviceLocator->get(ClientConfig::class)->getSql();
         $select = $sql->select();
-        $select->columns(array('tvalue', 'comments'))
+        $select->columns(['tvalue', 'comments'])
                ->join(
                    'download_available',
                    'download_available.fileid = devices.ivalue',
-                   array('name'),
-                   \Laminas\Db\Sql\Select::JOIN_INNER
+                   ['name'],
+                   Select::JOIN_INNER
                )
-               ->where(array('hardware_id' => $this['Id'], 'devices.name' => 'DOWNLOAD'))
-               ->order(array($hydrator->extractName($order) => $direction));
+               ->where(['hardware_id' => $this['Id'], 'devices.name' => 'DOWNLOAD'])
+               ->order([$hydrator->extractName($order) => $direction]);
 
-        $resultSet = new \Laminas\Db\ResultSet\HydratingResultSet(
-            $hydrator,
-            clone $this->_serviceLocator->get('Model\Package\Assignment')
-        );
+        $resultSet = new HydratingResultSet($hydrator, new Assignment());
         $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());
 
         return $resultSet;
