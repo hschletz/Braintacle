@@ -31,6 +31,8 @@ use Laminas\Form\FormInterface;
  * has been exceeded.
  *
  * The render() method proxies to renderForm().
+ *
+ * @deprecated Render forms via templates
  */
 class Form extends \Laminas\Form\View\Helper\Form
 {

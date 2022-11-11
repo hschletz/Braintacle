@@ -47,6 +47,8 @@ use Laminas\Validator\Date;
  * - Default rendering methods (deprecated).
  *
  * - Helper methods for dealing with localized integer, float and date formats.
+ *
+ * @deprecated Render forms via templates, use InputFilter directly
  */
 class Form extends \Laminas\Form\Form
 {
