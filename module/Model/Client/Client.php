@@ -141,6 +141,7 @@ class Client extends \Model\ClientOrGroup
     #[ReturnTypeWillChange]
     public function offsetGet($key)
     {
+        $key = ucfirst($key);
         if ($this->offsetExists($key)) {
             $value = parent::offsetGet($key);
         } elseif (strpos($key, 'Registry.') === 0) {

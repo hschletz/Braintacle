@@ -60,8 +60,8 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testOffsetGetExistingProperty()
     {
-        $model = new \Model\Client\Client(array('key' => 'value'));
-        $this->assertEquals('value', $model['key']);
+        $model = new Client(['Key' => 'value']);
+        $this->assertEquals('value', $model['Key']);
     }
 
     public function testOffsetGetAndroidNotNull()
@@ -215,8 +215,9 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testOffsetGetItems()
     {
+        /** @var MockObject|Client */
         $model = $this->createPartialMock(Client::class, ['getItems']);
-        $model->expects($this->once())->method('getItems')->with('type')->willReturn('items');
+        $model->expects($this->once())->method('getItems')->with('Type')->willReturn('items');
         $this->assertEquals('items', $model['type']);
         $this->assertEquals('items', $model['type']); // cached result
     }
