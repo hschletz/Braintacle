@@ -20,20 +20,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Library\Application;
+use Library\Test\View\Helper\AbstractTest;
+
 error_reporting(-1);
 ini_set('memory_limit', '400M');
 date_default_timezone_set('Europe/Berlin');
-\Locale::setDefault('de');
+Locale::setDefault('de');
 
-$serviceManager = \Library\Application::init('Console')->getServiceManager();
-$serviceManager->setService(
-    'Library\UserConfig',
-    array(
-        'debug' => array(
-            'display backtrace' => true,
-            'report missing translations' => true,
-        ),
-    )
-);
-\Library\Test\View\Helper\AbstractTest::$serviceManager = $serviceManager;
-unset($serviceManager);
+AbstractTest::$serviceManager = Application::init('Console')->getServiceManager();
