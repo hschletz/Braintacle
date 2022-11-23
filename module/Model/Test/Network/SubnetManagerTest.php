@@ -22,9 +22,10 @@
 
 namespace Model\Test\Network;
 
+use Database\Table\Subnets;
 use InvalidArgumentException;
-use Laminas\Validator\ValidatorPluginManager;
 use Library\Validator\IpNetworkAddress;
+use Model\Network\SubnetManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -183,14 +184,14 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
      */
     public function testGetSubnet($address, $mask, $name)
     {
-        /** @var MockObject */
+        /** @var MockObject|IpNetworkAddress */
         $validator = $this->createMock(IpNetworkAddress::class);
         $validator->expects($this->once())->method('isValid')->with("$address/$mask")->willReturn(true);
 
-        $validatorPluginManager = $this->createMock(ValidatorPluginManager::class);
-        $validatorPluginManager->method('get')->with(IpNetworkAddress::class)->willReturn($validator);
-
-        $model = $this->getModel([ValidatorPluginManager::class => $validatorPluginManager]);
+        $model = new SubnetManager(
+            static::$serviceManager->get(Subnets::class),
+            $validator
+        );
         $subnet = $model->getSubnet($address, $mask);
         $this->assertInstanceOf('Model\Network\Subnet', $subnet);
         $this->assertEquals(
@@ -208,15 +209,15 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('message');
 
-        /** @var MockObject */
+        /** @var MockObject|IpNetworkAddress */
         $validator = $this->createMock(IpNetworkAddress::class);
         $validator->expects($this->once())->method('isValid')->with('address/mask')->willReturn(false);
         $validator->method('getMessages')->willReturn(['message']);
 
-        $validatorPluginManager = $this->createMock(ValidatorPluginManager::class);
-        $validatorPluginManager->method('get')->with(IpNetworkAddress::class)->willReturn($validator);
-
-        $model = $this->getModel([ValidatorPluginManager::class => $validatorPluginManager]);
+        $model = new SubnetManager(
+            static::$serviceManager->get(Subnets::class),
+            $validator
+        );
         $model->getSubnet('address', 'mask');
     }
 
@@ -237,14 +238,14 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
      */
     public function testSaveSubnet($address, $mask, $name, $dataSet)
     {
-        /** @var MockObject */
+        /** @var MockObject|IpNetworkAddress */
         $validator = $this->createMock(IpNetworkAddress::class);
         $validator->expects($this->once())->method('isValid')->with("$address/$mask")->willReturn(true);
 
-        $validatorPluginManager = $this->createMock(ValidatorPluginManager::class);
-        $validatorPluginManager->method('get')->with(IpNetworkAddress::class)->willReturn($validator);
-
-        $model = $this->getModel([ValidatorPluginManager::class => $validatorPluginManager]);
+        $model = new SubnetManager(
+            static::$serviceManager->get(Subnets::class),
+            $validator
+        );
         $model->saveSubnet($address, $mask, $name, $dataSet);
         $this->assertTablesEqual(
             $this->loadDataSet($dataSet)->getTable('subnet'),
@@ -260,15 +261,15 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('message');
 
-        /** @var MockObject */
+        /** @var MockObject|IpNetworkAddress */
         $validator = $this->createMock(IpNetworkAddress::class);
         $validator->expects($this->once())->method('isValid')->with('address/mask')->willReturn(false);
         $validator->method('getMessages')->willReturn(['message']);
 
-        $validatorPluginManager = $this->createMock(ValidatorPluginManager::class);
-        $validatorPluginManager->method('get')->with(IpNetworkAddress::class)->willReturn($validator);
-
-        $model = $this->getModel([ValidatorPluginManager::class => $validatorPluginManager]);
+        $model = new SubnetManager(
+            static::$serviceManager->get(Subnets::class),
+            $validator
+        );
         $model->saveSubnet('address', 'mask', null);
     }
 }

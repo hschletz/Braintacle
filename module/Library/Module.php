@@ -22,8 +22,13 @@
 
 namespace Library;
 
+use Laminas\Di\ConfigInterface;
+use Laminas\Di\Container\ConfigFactory;
+use Laminas\Di\Container\InjectorFactory;
+use Laminas\Di\InjectorInterface;
 use Laminas\ModuleManager\Feature;
-use Laminas\ServiceManager\Factory\InvokableFactory;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 use Library\Mvc\Controller\Plugin\RedirectToRoute;
 use Library\Mvc\Controller\Plugin\UrlFromRoute;
 use Library\Mvc\Service\RedirectToRouteFactory;
@@ -58,14 +63,8 @@ class Module implements Feature\ConfigProviderInterface
             ),
             'filters' => array(
                 'aliases' => array(
-                    'Library\EmptyArray' => 'Library\Filter\EmptyArray',
                     'Library\FixEncodingErrors' => 'Library\Filter\FixEncodingErrors',
                     'Library\LogLevel' => 'Library\Filter\LogLevel',
-                ),
-                'factories' => array(
-                    'Library\Filter\EmptyArray' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-                    'Library\Filter\FixEncodingErrors' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-                    'Library\Filter\LogLevel' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                 ),
             ),
             'log' => array(
@@ -83,19 +82,21 @@ class Module implements Feature\ConfigProviderInterface
                 'delegators' => array(
                     'Laminas\Mvc\I18n\Translator' => array('Library\I18n\Translator\DelegatorFactory'),
                 ),
+                'aliases' => [
+                    ServiceLocatorInterface::class => ServiceManager::class,
+                ],
                 'factories' => [
-                    'Library\ArchiveManager' => 'Laminas\ServiceManager\Factory\InvokableFactory',
+                    ConfigInterface::class => ConfigFactory::class,
+                    InjectorInterface::class => InjectorFactory::class,
                     'Library\HttpClient' => function () {
                         return new \Laminas\Http\Client();
                     },
-                    'Library\I18n\Translator\DelegatorFactory' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Library\Log\Writer\StdErr' => function () {
                         return new \Laminas\Log\Writer\Stream('php://stderr');
                     },
                     'Library\Now' => function () {
                         return new \DateTime();
                     },
-                    'Library\Random' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                     'Library\UserConfig' => 'Library\Service\UserConfigFactory',
                 ],
                 'shared' => [
@@ -116,9 +117,6 @@ class Module implements Feature\ConfigProviderInterface
                 'aliases' => array(
                     'Po' => 'Library\I18n\Translator\Loader\Po',
                 ),
-                'factories' => array(
-                    'Library\I18n\Translator\Loader\Po' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-                ),
             ),
             'validators' => array(
                 'aliases' => array(
@@ -128,14 +126,6 @@ class Module implements Feature\ConfigProviderInterface
                     'Library\LogLevel' => 'Library\Validator\LogLevel',
                     'Library\NotInArray' => 'Library\Validator\NotInArray',
                     'Library\ProductKey' => 'Library\Validator\ProductKey',
-                ),
-                'factories' => array(
-                    'Library\Validator\DirectoryWritable' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-                    'Library\Validator\FileReadable' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-                    Validator\IpNetworkAddress::class => InvokableFactory::class,
-                    'Library\Validator\LogLevel' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-                    'Library\Validator\NotInArray' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-                    'Library\Validator\ProductKey' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                 ),
             ),
             'view_helpers' => array(

@@ -22,6 +22,8 @@
 
 namespace Protocol\Test;
 
+use Library\Application;
+
 class ServicesTest extends \PHPUnit\Framework\TestCase
 {
     protected static $_serviceManager;
@@ -70,6 +72,8 @@ class ServicesTest extends \PHPUnit\Framework\TestCase
         $serviceManager = new \Laminas\ServiceManager\ServiceManager($config['service_manager']);
         $serviceManager->setService('config', $config);
         $serviceManager->setService('Db', $this->createMock('Laminas\Db\Adapter\Adapter'));
+        Application::addAbstractFactories($serviceManager);
+
         $this->assertEquals($class, get_class($serviceManager->get($service)));
     }
 }

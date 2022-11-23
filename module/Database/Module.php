@@ -52,9 +52,6 @@ class Module implements
                     'Database\Service\AbstractDatabaseFactory',
                     'Database\Service\AbstractTableFactory',
                 ),
-                'factories' => array(
-                    'Database\SchemaManager' => 'Database\Service\SchemaManagerFactory',
-                ),
             ),
         );
     }

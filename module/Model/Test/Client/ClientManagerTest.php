@@ -23,19 +23,33 @@
 namespace Model\Test\Client;
 
 use Database\Table\AndroidInstallations;
+use Database\Table\Attachments;
 use Database\Table\ClientConfig;
+use Database\Table\Clients;
 use Database\Table\ClientsAndGroups;
 use Database\Table\ClientSystemInfo;
 use Database\Table\Comments;
 use Database\Table\CustomFields;
 use Database\Table\GroupMemberships;
+use Database\Table\NetworkDevicesIdentified;
+use Database\Table\NetworkDevicesScanned;
+use Database\Table\NetworkInterfaces;
 use Database\Table\PackageHistory;
+use Database\Table\RegistryData;
+use Database\Table\WindowsInstallations;
 use Database\Table\WindowsProductKeys;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\Db\Adapter\Driver\DriverInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Model\Client\Client;
 use Model\Client\ClientManager;
+use Model\Client\CustomFieldManager;
+use Model\Client\ItemManager;
+use Model\Config;
+use Model\Group\Group;
 use Nada\Column\AbstractColumn as Column;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class ClientManagerTest extends \Model\Test\AbstractTest
 {
@@ -752,12 +766,21 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $clients->method('getTable')->willReturn('clients');
         $clients->method('getHydrator')->willReturn($hydrator);
 
-        $model = $this->getModel(
-            array(
-                'Database\Table\Clients' => $clients,
-                'Model\Client\CustomFieldManager' => $customFieldManager,
-            )
-        );
+
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator->method('get')->willReturnMap([
+            ['Db', static::$serviceManager->get('Db')],
+            ['Database\Nada', static::$serviceManager->get('Database\Nada')],
+            [CustomFields::class, static::$serviceManager->get(CustomFields::class)],
+            [ItemManager::class, static::$serviceManager->get(ItemManager::class)],
+            [RegistryData::class, static::$serviceManager->get(RegistryData::class)],
+            [WindowsInstallations::class, static::$serviceManager->get(WindowsInstallations::class)],
+            [Clients::class, $clients],
+            [CustomFieldManager::class, $customFieldManager],
+        ]);
+
+        $model = new ClientManager($serviceLocator);
 
         // The mock object has a unique class name which survives the clone
         // operation and can be used to check that the result set prototype was
@@ -815,6 +838,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
      */
     public function testGetClientsGroupFilter($filter, $order, $direction, $groupId, $addColumn, $expected)
     {
+        /** @var MockObject|Group */
         $group = $this->createMock('Model\Group\Group');
         $group->method('offsetGet')->with('Id')->willReturn($groupId);
         $group->expects($this->once())->method('update');
@@ -836,7 +860,14 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $clients->method('getResultSetPrototype')->willReturn($resultSetPrototype);
         $clients->method('getHydrator')->willReturn($hydrator);
 
-        $model = $this->getModel(array('Database\Table\Clients' => $clients));
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator->method('get')->willReturnMap([
+            ['Db', static::$serviceManager->get('Db')],
+            [Clients::class, $clients],
+        ]);
+
+        $model = new ClientManager($serviceLocator);
         $model->getClients(array('Id'), $order, $direction, $filter, $group, null, null, $addColumn);
         $this->assertEquals($expected, $result);
     }
@@ -884,7 +915,16 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $clients->method('getResultSetPrototype')->willReturn($resultSetPrototype);
         $clients->method('getHydrator')->willReturn($hydrator);
 
-        $model = $this->getModel(array('Database\Table\Clients' => $clients));
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator->method('get')->willReturnMap([
+            ['Db', static::$serviceManager->get('Db')],
+            ['Database\Nada', static::$serviceManager->get('Database\Nada')],
+            [ItemManager::class, static::$serviceManager->get(ItemManager::class)],
+            [Clients::class, $clients],
+        ]);
+
+        $model = new ClientManager($serviceLocator);
         $model->getClients(array('Id'), 'Id', 'asc', 'Software.Name', 'name2', null, null, true, $distinct);
         $this->assertEquals($expected, $result);
     }
@@ -977,7 +1017,16 @@ class ClientManagerTest extends \Model\Test\AbstractTest
             )
         );
 
-        $model = $this->getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator->method('get')->willReturnMap([
+            ['Db', static::$serviceManager->get('Db')],
+            ['Database\Nada', static::$serviceManager->get('Database\Nada')],
+            [Clients::class, static::$serviceManager->get(Clients::class)],
+            [CustomFieldManager::class, $customFieldManager],
+        ]);
+
+        $model = new ClientManager($serviceLocator);
         $model->getClients(array('Id'), $order, 'asc', $filter, '2015-08-17', $operator, true);
     }
 
@@ -1035,6 +1084,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
      */
     public function testDeleteClientNoDeleteInterfaces($connection)
     {
+        /** @var MockObject|Client */
         $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('lock')->willReturn(true);
         $client->expects($this->once())->method('offsetGet')->with('Id')->willReturn(42);
@@ -1081,27 +1131,30 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $clientsAndGroups = $this->createMock('Database\Table\ClientsAndGroups');
         $clientsAndGroups->expects($this->once())->method('delete')->with(array('id' => 42));
 
-        $clientManager = $this->getModel(
-            array(
-                'Db' => $adapter,
-                'Database\Table\AndroidInstallations' => $androidInstallations,
-                'Database\Table\Attachments' => $attachments,
-                'Database\Table\ClientsAndGroups' => $clientsAndGroups,
-                'Database\Table\ClientConfig' => $clientConfig,
-                'Database\Table\ClientSystemInfo' => $clientSystemInfo,
-                'Database\Table\Comments' => $comments,
-                'Database\Table\CustomFields' => $customFields,
-                'Database\Table\GroupMemberships' => $groupMemberships,
-                'Database\Table\PackageHistory' => $packageHistory,
-                'Database\Table\WindowsProductKeys' => $windowsProductKeys,
-                'Model\Client\ItemManager' => $itemManager,
-            )
-        );
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator->method('get')->willReturnMap([
+            ['Db', $adapter],
+            [AndroidInstallations::class, $androidInstallations],
+            [Attachments::class, $attachments],
+            [ClientConfig::class, $clientConfig],
+            [ClientsAndGroups::class, $clientsAndGroups],
+            [ClientSystemInfo::class, $clientSystemInfo],
+            [Comments::class, $comments],
+            [CustomFields::class, $customFields],
+            [GroupMemberships::class, $groupMemberships],
+            [ItemManager::class, $itemManager],
+            [PackageHistory::class, $packageHistory],
+            [WindowsProductKeys::class, $windowsProductKeys],
+        ]);
+
+        $clientManager = new ClientManager($serviceLocator);
         $clientManager->deleteClient($client, false);
     }
 
     public function testDeleteClientDeleteInterfaces()
     {
+        /** @var MockObject|Client */
         $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('lock')->willReturn(true);
         $client->expects($this->once())->method('offsetGet')->with('Id')->willReturn(4);
@@ -1142,21 +1195,27 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $clientsAndGroups = $this->createMock(ClientsAndGroups::class);
         $clientsAndGroups->expects($this->once())->method('delete')->with(array('id' => 4));
 
-        $clientManager = $this->getModel(
-            array(
-                'Database\Table\AndroidInstallations' => $androidInstallations,
-                'Database\Table\Attachments' => $attachments,
-                'Database\Table\ClientsAndGroups' => $clientsAndGroups,
-                'Database\Table\ClientConfig' => $clientConfig,
-                'Database\Table\ClientSystemInfo' => $clientSystemInfo,
-                'Database\Table\Comments' => $comments,
-                'Database\Table\CustomFields' => $customFields,
-                'Database\Table\GroupMemberships' => $groupMemberships,
-                'Database\Table\PackageHistory' => $packageHistory,
-                'Database\Table\WindowsProductKeys' => $windowsProductKeys,
-                'Model\Client\ItemManager' => $itemManager,
-            )
-        );
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator->method('get')->willReturnMap([
+            ['Db', static::$serviceManager->get('Db')],
+            [NetworkDevicesIdentified::class, static::$serviceManager->get(NetworkDevicesIdentified::class)],
+            [NetworkDevicesScanned::class, static::$serviceManager->get(NetworkDevicesScanned::class)],
+            [NetworkInterfaces::class, static::$serviceManager->get(NetworkInterfaces::class)],
+            [AndroidInstallations::class, $androidInstallations],
+            [Attachments::class, $attachments],
+            [ClientConfig::class, $clientConfig],
+            [ClientsAndGroups::class, $clientsAndGroups],
+            [ClientSystemInfo::class, $clientSystemInfo],
+            [Comments::class, $comments],
+            [CustomFields::class, $customFields],
+            [GroupMemberships::class, $groupMemberships],
+            [ItemManager::class, $itemManager],
+            [PackageHistory::class, $packageHistory],
+            [WindowsProductKeys::class, $windowsProductKeys],
+        ]);
+
+        $clientManager = new ClientManager($serviceLocator);
         $clientManager->deleteClient($client, true);
 
         $dataSet = $this->loadDataSet('DeleteClientDeleteInterfaces');
@@ -1176,14 +1235,16 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Could not lock client for deletion');
 
+        /** @var MockObject|Client */
         $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('lock')->willReturn(false);
         $client->expects($this->never())->method('unlock');
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
-        $serviceManager->expects($this->never())->method('get');
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator->expects($this->never())->method('get');
 
-        $clientManager = $this->getModel(array('ServiceManager' => $serviceManager));
+        $clientManager = new ClientManager($serviceLocator);
         $clientManager->deleteClient($client, false);
     }
 
@@ -1214,6 +1275,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('message');
 
+        /** @var MockObject|Client */
         $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('lock')->willReturn(true);
         $client->expects($this->once())->method('offsetGet')->with('Id')->willReturn(42);
@@ -1228,12 +1290,14 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $androidInstallations = $this->createMock(AndroidInstallations::class);
         $androidInstallations->method('delete')->willThrowException(new \RuntimeException('message'));
 
-        $clientManager = $this->getModel(
-            array(
-                'Db' => $adapter,
-                'Database\Table\AndroidInstallations' => $androidInstallations,
-            )
-        );
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator->method('get')->willReturnMap([
+            ['Db', $adapter],
+            [AndroidInstallations::class, $androidInstallations],
+        ]);
+
+        $clientManager = new ClientManager($serviceLocator);
         $clientManager->deleteClient($client, false);
     }
 
@@ -1275,7 +1339,14 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $config = $this->createMock('Model\Config');
         $config->method('__get')->with('communicationServerUri')->willReturn($uri);
 
-        $model = $this->getModel(['Model\Config' => $config, 'Library\HttpClient' => $httpClient]);
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator->method('get')->willReturnMap([
+            [Config::class, $config],
+            ['Library\HttpClient', $httpClient],
+        ]);
+
+        $model = new ClientManager($serviceLocator);
         $model->importClient($content);
     }
 
@@ -1302,7 +1373,14 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $config = $this->createMock('Model\Config');
         $config->method('__get')->with('communicationServerUri')->willReturn('http://example.net/server');
 
-        $model = $this->getModel(['Model\Config' => $config, 'Library\HttpClient' => $httpClient]);
+        /** @var MockObject|ServiceLocatorInterface */
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator->method('get')->willReturnMap([
+            [Config::class, $config],
+            ['Library\HttpClient', $httpClient]
+        ]);
+
+        $model = new ClientManager($serviceLocator);
         $model->importClient('content');
     }
 }

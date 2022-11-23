@@ -27,6 +27,7 @@
         "laminas/laminas-authentication": "^2.5",
         "laminas/laminas-config": "^3.0",
         "laminas/laminas-db": "^2.15",
+        "laminas/laminas-di": "^3.9",
         "laminas/laminas-eventmanager": "^3.5",
         "laminas/laminas-filter": "^2.18",
         "laminas/laminas-form": "^3.4",

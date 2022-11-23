@@ -22,7 +22,12 @@
 
 namespace Protocol;
 
+use Laminas\Di\Container\ServiceManager\AutowireFactory;
 use Laminas\ModuleManager\Feature;
+use Protocol\Hydrator\ClientsBios;
+use Protocol\Hydrator\ClientsHardware;
+use Protocol\Hydrator\Filesystems;
+use Protocol\Hydrator\Software;
 
 /**
  * The Protocol module
@@ -51,21 +56,17 @@ class Module implements
                 'aliases' => array(
                     'Protocol\InventoryDecode' => 'Protocol\Filter\InventoryDecode',
                 ),
-                'factories' => array(
-                    'Protocol\Filter\InventoryDecode' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-                ),
             ),
             'service_manager' => array(
                 'abstract_factories' => array(
                     'Protocol\Service\AbstractHydratorFactory',
                 ),
                 'factories' => [
-                    'Protocol\Hydrator\ClientsBios' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-                    'Protocol\Hydrator\ClientsHardware' => 'Protocol\Service\Hydrator\ClientsHardwareFactory',
-                    'Protocol\Hydrator\Filesystems' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-                    'Protocol\Hydrator\Software' => Service\Hydrator\SoftwareFactory::class,
-                    'Protocol\Message\InventoryRequest' => Service\Message\InventoryRequestFactory::class,
-                    'Protocol\Message\InventoryRequest\Content' => Service\Message\InventoryRequest\ContentFactory::class,
+                    // Declare factories explicitly where AbstractHydratorFactory is unsuitable.
+                    ClientsBios::class => AutowireFactory::class,
+                    ClientsHardware::class => AutowireFactory::class,
+                    Filesystems::class => AutowireFactory::class,
+                    Software::class => AutowireFactory::class,
                 ],
                 'shared' => [
                     'Protocol\Message\InventoryRequest' => false,

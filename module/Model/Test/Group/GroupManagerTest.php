@@ -22,10 +22,17 @@
 
 namespace Model\Test\Group;
 
+use Database\Table\ClientConfig;
 use Database\Table\ClientsAndGroups;
+use Database\Table\GroupInfo;
+use Database\Table\GroupMemberships;
+use DateTime;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery;
+use Model\Group\Group;
 use Model\Group\GroupManager;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class GroupManagerTest extends AbstractGroupTest
 {
@@ -95,13 +102,22 @@ class GroupManagerTest extends AbstractGroupTest
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Invalid group filter: invalid');
-        $model = $this->getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
+
+        /** @var MockObject|ServiceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager->method('get')->with(GroupInfo::class)->willReturn($this->_groupInfo);
+
+        $model = new GroupManager($serviceManager);
         $resultSet = $model->getGroups('invalid');
     }
 
     public function testGetGroup()
     {
-        $model = $this->getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
+        /** @var MockObject|ServiceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager->method('get')->with(GroupInfo::class)->willReturn($this->_groupInfo);
+
+        $model = new GroupManager($serviceManager);
         $group = $model->getGroup('name2');
         $this->assertInstanceOf('Model\Group\Group', $group);
         $this->assertEquals('name2', $group['Name']);
@@ -111,7 +127,12 @@ class GroupManagerTest extends AbstractGroupTest
     {
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Unknown group name: invalid');
-        $model = $this->getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
+
+        /** @var MockObject|ServiceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager->method('get')->with(GroupInfo::class)->willReturn($this->_groupInfo);
+
+        $model = new GroupManager($serviceManager);
         $group = $model->getGroup('invalid');
     }
 
@@ -136,12 +157,17 @@ class GroupManagerTest extends AbstractGroupTest
      */
     public function testCreateGroup($description, $expectedDescription)
     {
-        $model = $this->getModel(
-            array(
-                'Database\Table\GroupInfo' => $this->_groupInfo,
-                'Library\Now' => new \DateTime('2015-02-12 22:07:00'),
-            )
-        );
+        /** @var MockObject|ServiceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager->method('get')->willReturnMap([
+            ['Library\Now', new DateTime('2015-02-12 22:07:00')],
+            ['Database\Nada', static::$serviceManager->get('Database\Nada')],
+            ['Db', static::$serviceManager->get('Db')],
+            [ClientsAndGroups::class, static::$serviceManager->get(ClientsAndGroups::class)],
+            [GroupInfo::class, $this->_groupInfo],
+        ]);
+
+        $model = new GroupManager($serviceManager);
         $model->createGroup('name3', $description);
 
         $table = static::$serviceManager->get('Database\Table\ClientsAndGroups');
@@ -243,23 +269,38 @@ class GroupManagerTest extends AbstractGroupTest
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test message');
 
-        $model = $this->getModel(
-            array(
-                'Db' => $adapter,
-                'Database\Table\ClientsAndGroups' => $clientsAndGroups,
-            )
-        );
+        /** @var MockObject|ServiceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager->method('get')->willReturnMap([
+            ['Db', $adapter],
+            ['Database\Nada', static::$serviceManager->get('Database\Nada')],
+            ['Library\Now', static::$serviceManager->get('Library\Now')],
+            [ClientsAndGroups::class, $clientsAndGroups],
+        ]);
+
+        $model = new GroupManager($serviceManager);
         $model->createGroup('name', 'description');
     }
 
     public function testDeleteGroup()
     {
+        /** @var MockObject|Group */
         $group = $this->createMock('Model\Group\Group');
         $group->method('lock')->willReturn(true);
         $group->method('offsetGet')->with('Id')->willReturn(1);
         $group->expects($this->once())->method('unlock');
 
-        $model = $this->getModel(array('Database\Table\GroupInfo' => $this->_groupInfo));
+        /** @var MockObject|ServiceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager->method('get')->willReturnMap([
+            ['Db', static::$serviceManager->get('Db')],
+            [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
+            [ClientsAndGroups::class, static::$serviceManager->get(ClientsAndGroups::class)],
+            [GroupMemberships::class, static::$serviceManager->get(GroupMemberships::class)],
+            [GroupInfo::class, $this->_groupInfo],
+        ]);
+
+        $model = new GroupManager($serviceManager);
         $model->deleteGroup($group);
 
         $dataSet = $this->loadDataSet('DeleteGroup');
@@ -340,18 +381,24 @@ class GroupManagerTest extends AbstractGroupTest
 
     public function testDeleteGroupDatabaseError()
     {
+        /** @var MockObject|Group */
         $group = $this->createMock('Model\Group\Group');
         $group->method('lock')->willReturn(true);
 
         $clientsAndGroups = $this->createMock(ClientsAndGroups::class);
         $clientsAndGroups->method('delete')->will($this->throwException(new \RuntimeException('database error')));
 
-        $model = $this->getModel(
-            array(
-                'Database\Table\ClientsAndGroups' => $clientsAndGroups,
-                'Database\Table\GroupInfo' => $this->_groupInfo,
-            )
-        );
+        /** @var MockObject|ServiceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager->method('get')->willReturnMap([
+            ['Db', static::$serviceManager->get('Db')],
+            [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
+            [GroupMemberships::class, static::$serviceManager->get(GroupMemberships::class)],
+            [ClientsAndGroups::class, $clientsAndGroups],
+            [GroupInfo::class, $this->_groupInfo],
+        ]);
+
+        $model = new GroupManager($serviceManager);
         try {
             $model->deleteGroup($group);
             $this->fail('Expected exception was not thrown');

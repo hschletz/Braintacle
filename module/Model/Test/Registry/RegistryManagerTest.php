@@ -26,6 +26,7 @@ use Database\Table\RegistryData;
 use Database\Table\RegistryValueDefinitions;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Model\Registry\RegistryManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 
 /**
@@ -263,6 +264,7 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $resultSet = $this->createMock('Laminas\Db\ResultSet\AbstractResultSet');
         $resultSet->method('count')->willReturn(0);
 
+        /** @var MockObject|RegistryValueDefinitions */
         $registryValueDefinitions = $this->createMock('Database\Table\RegistryValueDefinitions');
         $registryValueDefinitions->method('getAdapter')->willReturn($adapter);
         $registryValueDefinitions->method('select')->willReturn($resultSet);
@@ -271,7 +273,10 @@ class RegistryManagerTest extends \Model\Test\AbstractTest
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test message');
 
-        $model = $this->getModel(array('Database\Table\RegistryValueDefinitions' => $registryValueDefinitions));
+        $model = new RegistryManager(
+            $registryValueDefinitions,
+            static::$serviceManager->get(RegistryData::class)
+        );
         $model->renameValueDefinition('name1', 'name2');
     }
 

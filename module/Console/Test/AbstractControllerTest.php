@@ -23,11 +23,12 @@
 namespace Console\Test;
 
 use Laminas\Mvc\MvcEvent;
+use Library\Application;
 
 /**
  * Abstract controller test case
  *
- * This base class performs common setup for all coltroller tests.
+ * This base class performs common setup for all controller tests.
  */
 abstract class AbstractControllerTest extends \Laminas\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
 {
@@ -56,6 +57,7 @@ abstract class AbstractControllerTest extends \Laminas\Test\PHPUnit\Controller\A
                 ),
             )
         );
+        Application::addAbstractFactories($serviceManager);
     }
 
     public function testRedirectToLoginPage()

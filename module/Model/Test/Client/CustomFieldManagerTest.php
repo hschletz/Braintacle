@@ -42,9 +42,12 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
     public function testGetFields()
     {
         $fieldInfo = array('field' => array('column' => 'column_name', 'type' => 'text'));
+
+        /** @var MockObject|CustomFieldConfig */
         $customFieldConfig = $this->createMock('Database\Table\CustomFieldConfig');
         $customFieldConfig->expects($this->once())->method('getFields')->willReturn($fieldInfo);
-        $model = $this->getModel(array('Database\Table\CustomFieldConfig' => $customFieldConfig));
+
+        $model = new CustomFieldManager($customFieldConfig, static::$serviceManager->get(TableCustomFields::class));
 
         // The second invocation should return a cached result.
         $fields = array('field' => 'text');
@@ -55,9 +58,12 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
     public function testGetColumnMap()
     {
         $fieldInfo = array('field' => array('column' => 'column_name', 'type' => 'text'));
+
+        /** @var MockObject|CustomFieldConfig */
         $customFieldConfig = $this->createMock('Database\Table\CustomFieldConfig');
         $customFieldConfig->expects($this->once())->method('getFields')->willReturn($fieldInfo);
-        $model = $this->getModel(array('Database\Table\CustomFieldConfig' => $customFieldConfig));
+
+        $model = new CustomFieldManager($customFieldConfig, static::$serviceManager->get(TableCustomFields::class));
 
         // The second invocation should return a cached result.
         $fields = array('field' => 'column_name');

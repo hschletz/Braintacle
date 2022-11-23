@@ -22,6 +22,11 @@
 
 namespace Model\Test\Operator;
 
+use Database\Table\Operators;
+use Model\Operator\AuthenticationService;
+use Model\Operator\OperatorManager;
+use PHPUnit\Framework\MockObject\MockObject;
+
 /**
  * Tests for Model\Operator\OperatorManager
  */
@@ -108,10 +113,14 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $adapter = $this->createMock('Model\Operator\AuthenticationAdapter');
         $adapter->method('generateHash')->willReturn('new_hash');
 
+        /** @var MockObject|AuthenticationService */
         $authenticationService = $this->createMock('Model\Operator\AuthenticationService');
         $authenticationService->method('getAdapter')->willReturn($adapter);
 
-        $model = $this->getModel(array('Laminas\Authentication\AuthenticationService' => $authenticationService));
+        $model = new OperatorManager(
+            $authenticationService,
+            static::$serviceManager->get(Operators::class)
+        );
         $model->createOperator(array('Id' => 'new_id'), 'new_passwd');
         $this->assertTablesEqual(
             $this->loadDataSet('CreateMinimal')->getTable('operators'),
@@ -127,10 +136,14 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $adapter = $this->createMock('Model\Operator\AuthenticationAdapter');
         $adapter->method('generateHash')->willReturn('new_hash');
 
+        /** @var MockObject|AuthenticationService */
         $authenticationService = $this->createMock('Model\Operator\AuthenticationService');
         $authenticationService->method('getAdapter')->willReturn($adapter);
 
-        $model = $this->getModel(array('Laminas\Authentication\AuthenticationService' => $authenticationService));
+        $model = new OperatorManager(
+            $authenticationService,
+            static::$serviceManager->get(Operators::class)
+        );
         $model->createOperator(
             array(
                 'Id' => 'new_id',
@@ -215,12 +228,16 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         $adapter = $this->createMock('Model\Operator\AuthenticationAdapter');
         $adapter->method('generateHash')->willReturn('new_hash');
 
+        /** @var MockObject|AuthenticationService */
         $authService = $this->createMock('Model\Operator\AuthenticationService');
         $authService->method('getIdentity')->willReturn('user2');
         $authService->method('getAdapter')->willReturn($adapter);
         $authService->expects($this->never())->method('changeIdentity');
 
-        $model = $this->getModel(array('Laminas\Authentication\AuthenticationService' => $authService));
+        $model = new OperatorManager(
+            $authService,
+            static::$serviceManager->get(Operators::class)
+        );
         $model->updateOperator('user1', $data, $password);
         $this->assertTablesEqual(
             $this->loadDataSet($dataSet)->getTable('operators'),
@@ -233,11 +250,15 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testUpdateOperatorCurrentIdentity()
     {
+        /** @var MockObject|AuthenticationService */
         $authService = $this->createMock('Model\Operator\AuthenticationService');
         $authService->method('getIdentity')->willReturn('user1');
         $authService->expects($this->once())->method('changeIdentity')->with('new_id');
 
-        $model = $this->getModel(array('Laminas\Authentication\AuthenticationService' => $authService));
+        $model = new OperatorManager(
+            $authService,
+            static::$serviceManager->get(Operators::class)
+        );
         $model->updateOperator('user1', array('Id' => 'new_id'), '');
         $this->assertTablesEqual(
             $this->loadDataSet('UpdateIdentity')->getTable('operators'),
@@ -296,9 +317,14 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
 
     public function testDeleteOperatorCurrentUser()
     {
+        /** @var MockObject|AuthenticationService */
         $authService = $this->createMock('Model\Operator\AuthenticationService');
         $authService->expects($this->once())->method('getIdentity')->willReturn('user2');
-        $model = $this->getModel(array('Laminas\Authentication\AuthenticationService' => $authService));
+
+        $model = new OperatorManager(
+            $authService,
+            static::$serviceManager->get(Operators::class)
+        );
         try {
             $model->deleteOperator('user2');
             $this->fail('Expected Exception was not thrown');

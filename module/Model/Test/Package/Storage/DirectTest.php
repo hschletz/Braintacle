@@ -251,9 +251,13 @@ class DirectTest extends \Model\Test\AbstractTest
             'Id' => 'id',
             'FileLocation' => '',
         );
+
+        /** @var MockObject|Config */
         $config = $this->createMock('Model\Config');
-        $model = $this->getModel(array('Model\Config' => $config));
-        $this->assertSame(0, $model->writeContent($data, null, null));
+
+        $model = new Direct($config, static::$serviceManager->get(Metadata::class));
+
+        $this->assertSame(0, $model->writeContent($data, '', false));
     }
 
     public function writeContentProvider()

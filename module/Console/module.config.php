@@ -20,13 +20,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-use Console\Form\Package\AssignPackagesForm;
 use Console\Mvc\Controller\Plugin\Service\TranslateFactory;
 use Console\Mvc\Controller\Plugin\Translate;
 use Console\Template\TemplateRenderer;
 use Console\Template\TemplateRendererFactory;
-use Console\Template\TemplateStrategy;
-use Console\Template\TemplateStrategyFactory;
 use Console\View\Helper\ClientHeader;
 use Console\View\Helper\ConsoleScript;
 use Console\View\Helper\Form\AddToGroup;
@@ -80,13 +77,9 @@ return array(
         ),
         'factories' => array(
             'Console\Form\AddToGroup' => 'Console\Form\Service\AddToGroupFactory',
-            'Console\Form\ClientConfig' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\Form\CustomFields' => 'Console\Form\Service\CustomFieldsFactory',
             'Console\Form\DefineFields' => 'Console\Form\Service\DefineFieldsFactory',
             'Console\Form\DeleteClient' => 'Console\Form\Service\DeleteClientFactory',
-            'Console\Form\GroupMemberships' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-            'Console\Form\Import' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-            'Console\Form\Login' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\Form\ManageRegistryValues' => 'Console\Form\Service\ManageRegistryValuesFactory',
             'Console\Form\NetworkDevice' => 'Console\Form\Service\NetworkDeviceFactory',
             'Console\Form\NetworkDeviceTypes' => 'Console\Form\Service\NetworkDeviceTypesFactory',
@@ -100,12 +93,9 @@ return array(
             'Console\Form\Preferences\Packages' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\Form\Preferences\RawData' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\Form\Preferences\System' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-            'Console\Form\ProductKey' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\Form\Search' => 'Console\Form\Service\SearchFactory',
             'Console\Form\ShowDuplicates' => 'Console\Form\Service\ShowDuplicatesFactory',
             'Console\Form\Software' => 'Console\Form\Service\SoftwareFactory',
-            'Console\Form\SoftwareFilter' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-            'Console\Form\Subnet' => 'Laminas\ServiceManager\Factory\InvokableFactory',
         ),
     ),
     'router' => array(
@@ -129,11 +119,8 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-            AssignPackagesForm::class => InvokableFactory::class,
-            'Console\Navigation\GroupMenu' => 'Console\Navigation\GroupMenuFactory',
             'Console\Navigation\MainMenu' => 'Console\Navigation\MainMenuFactory',
             TemplateRenderer::class => TemplateRendererFactory::class,
-            TemplateStrategy::class => TemplateStrategyFactory::class,
         ),
     ),
     'translator' => array(

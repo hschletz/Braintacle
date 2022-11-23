@@ -22,6 +22,7 @@
 
 namespace Database;
 
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Nada\Table\Mysql;
 
 /**
@@ -45,12 +46,7 @@ class SchemaManager
      */
     protected $_serviceLocator;
 
-    /**
-     * Constructor
-     *
-     * @param \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator
-     */
-    public function __construct($serviceLocator)
+    public function __construct(ServiceLocatorInterface $serviceLocator)
     {
         $this->_serviceLocator = $serviceLocator;
     }

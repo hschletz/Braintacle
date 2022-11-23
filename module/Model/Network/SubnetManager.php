@@ -171,12 +171,9 @@ EOT;
     /**
      * Store subnet properties
      *
-     * @param string $address
-     * @param string $mask
-     * @param string $name
      * @throws \InvalidArgumentException if address or mask is invalid
      */
-    public function saveSubnet($address, $mask, $name)
+    public function saveSubnet(string $address, string $mask, ?string $name)
     {
         $this->validate($address, $mask);
 

@@ -164,6 +164,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
                       ->columns(array('id', 'name', 'lastcome', 'ssn', 'assettag'))
                       ->order(array($ordercolumns[$order] => $direction));
 
+        /** @var MockObject|ClientManager */
         $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClients')
                       ->with(
@@ -199,11 +200,15 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
                     }
                 );
 
-        $duplicates = $this->getModel(
-            array(
-                'Database\Table\Clients' => $clients,
-                'Model\Client\ClientManager' => $clientManager,
-            )
+        $duplicates = new DuplicatesManager(
+            $clients,
+            static::$serviceManager->get(NetworkInterfaces::class),
+            static::$serviceManager->get(DuplicateAssetTags::class),
+            static::$serviceManager->get(DuplicateSerials::class),
+            static::$serviceManager->get(DuplicateMacAddresses::class),
+            static::$serviceManager->get(ClientConfig::class),
+            $clientManager,
+            static::$serviceManager->get(SoftwareManager::class)
         );
 
         $resultSet = $duplicates->find($criteria, $order, $direction);

@@ -22,6 +22,8 @@
 
 namespace Console\Test\Navigation;
 
+use Library\Application;
+
 /**
  * Tests for the main menu
  */
@@ -69,6 +71,7 @@ class MainMenuTest extends \Laminas\Test\PHPUnit\Controller\AbstractHttpControll
         $serviceManager->setService('Laminas\Authentication\AuthenticationService', $auth);
         $serviceManager->setService('Model\SoftwareManager', $model);
         $serviceManager->setService('Library\UserConfig', array());
+        Application::addAbstractFactories($serviceManager);
 
         // Dispatch arbitrary action and test corresponding menu entry
         $this->dispatch('/console/licenses/index/');

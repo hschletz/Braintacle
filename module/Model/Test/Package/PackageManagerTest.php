@@ -22,10 +22,16 @@
 
 namespace Model\Test\Package;
 
+use Database\Table\ClientConfig;
+use Database\Table\GroupInfo;
+use Database\Table\Packages;
+use DateTime;
 use Laminas\ServiceManager\ServiceManager;
 use Model\Package\Package;
 use Model\Package\PackageBuilder;
 use Model\Package\PackageManager;
+use Model\Package\Storage\Direct;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 
 /**
@@ -65,7 +71,16 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         );
         $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->expects($this->once())->method('readMetadata')->with('1415958320')->willReturn($metadata);
-        $model = $this->getModel(array('Model\Package\Storage\Direct' => $storage));
+
+        /** @var MockObject|ServiceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager->method('get')->willReturnMap([
+            [Direct::class, $storage],
+            [Packages::class, static::$serviceManager->get(Packages::class)],
+        ]);
+
+        $model = new PackageManager($serviceManager);
+
         $package = $model->getPackage('package2');
         $this->assertInstanceOf('Model\Package\Package', $package);
         $this->assertEquals(
@@ -88,7 +103,16 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $this->expectExceptionMessage('metadata error');
         $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->method('readMetadata')->will($this->throwException(new \RuntimeException('metadata error')));
-        $model = $this->getModel(array('Model\Package\Storage\Direct' => $storage));
+
+        /** @var MockObject|ServiceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager->method('get')->willReturnMap([
+            [Direct::class, $storage],
+            [Packages::class, static::$serviceManager->get(Packages::class)],
+        ]);
+
+        $model = new PackageManager($serviceManager);
+
         $model->getPackage('package1');
     }
 
@@ -182,7 +206,16 @@ class PackageManagerTest extends \Model\Test\AbstractTest
     {
         $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->expects($this->once())->method('cleanup')->with('1415958319');
-        $model = $this->getModel(array('Model\Package\Storage\Direct' => $storage));
+
+        /** @var MockObject|ServiceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager->method('get')->willReturnMap([
+            [Direct::class, $storage],
+            [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
+            [Packages::class, static::$serviceManager->get(Packages::class)],
+        ]);
+
+        $model = new PackageManager($serviceManager);
         $model->deletePackage('package1');
 
         $connection = $this->getConnection();
@@ -289,7 +322,15 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $deployError,
         $deployGroups
     ) {
-        $model = $this->getModel(array('Library\Now' => new \DateTime('2015-02-08 14:17:29')));
+        /** @var MockObject|ServiceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager->method('get')->willReturnMap([
+            ['Library\Now', new DateTime('2015-02-08 14:17:29')],
+            [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
+            [GroupInfo::class, static::$serviceManager->get(GroupInfo::class)],
+        ]);
+
+        $model = new PackageManager($serviceManager);
         $model->updateAssignments(
             1415958319,
             3,
@@ -317,7 +358,16 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $data = array('Timestamp' => new \DateTime('@1415958319'));
         $clientConfig = $this->createMock('Database\Table\ClientConfig');
         $clientConfig->method('getSql')->will($this->throwException(new \RuntimeException('database error')));
-        $model = $this->getModel(array('Database\Table\ClientConfig' => $clientConfig));
+
+        /** @var MockObject|ServiceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager->method('get')->willReturnMap([
+            [ClientConfig::class, $clientConfig],
+            [GroupInfo::class, static::$serviceManager->get(GroupInfo::class)],
+            ['Library\Now', static::$serviceManager->get('Library\Now')],
+        ]);
+
+        $model = new PackageManager($serviceManager);
         $model->updateAssignments(1, 2, true, true, true, true, true);
     }
 }

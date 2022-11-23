@@ -159,6 +159,7 @@ abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
      *
      * @param array $overrideServices Optional associative array (name => instance) with services to override
      * @return object Model instance
+     * @deprecated Create instance by constructor, by pulling from the container, or as partial mock
      */
     protected function getModel(array $overrideServices = array())
     {
