@@ -24,6 +24,8 @@ namespace Model;
 
 use Laminas\ModuleManager\Feature;
 use Model\Package\PackageBuilder;
+use Model\Package\Storage\Direct;
+use Model\Package\Storage\StorageInterface;
 use Model\Service\Package\PackageBuilderFactory;
 
 /**
@@ -54,6 +56,7 @@ class Module implements
             'service_manager' => array(
                 'aliases' => array(
                     'Laminas\Authentication\AuthenticationService' => 'Model\Operator\AuthenticationService',
+                    StorageInterface::class => Direct::class, // this is the only implementation so far
                 ),
                 'factories' => array(
                     'Model\Client\Client' => 'Model\Service\Client\ClientFactory',
