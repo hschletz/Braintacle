@@ -22,6 +22,8 @@
 
 namespace Console\Service;
 
+use Console\Form\SoftwareManagementForm;
+
 /**
  * Factory for SoftwareController
  */
@@ -35,8 +37,7 @@ class SoftwareControllerFactory implements \Laminas\ServiceManager\Factory\Facto
     ) {
         return new \Console\Controller\SoftwareController(
             $container->get('Model\SoftwareManager'),
-            $container->get('FormElementManager'),
-            $container->get('FilterManager')->get('Library\FixEncodingErrors')
+            $container->get(SoftwareManagementForm::class),
         );
     }
 }

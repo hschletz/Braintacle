@@ -134,6 +134,7 @@ $renderCallbacks = array(
 );
 
 foreach ($this->columns as $column) {
+    $column = ucfirst($column);
     if (preg_match('/^(Registry|CustomFields)\.(.+)/', $column, $matches)) {
         // Extract column header from name
         $headers[$column] = $matches[2];

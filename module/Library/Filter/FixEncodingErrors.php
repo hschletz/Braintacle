@@ -34,6 +34,8 @@ namespace Library\Filter;
  * This filter takes an UTF-8 string and replaces the incorrect characters with
  * their original counterparts. It's safe to apply this filter to arbitrary
  * UTF-8 strings, even if it's not affected by the bug.
+ *
+ * @deprecated Don't care about those very, very outdated agents.
  */
 class FixEncodingErrors extends \Laminas\Filter\AbstractFilter
 {

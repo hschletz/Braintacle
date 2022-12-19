@@ -4,6 +4,7 @@ namespace Console\Test\Template;
 
 use Console\Template\TemplateRenderer;
 use Console\Template\TemplateRendererFactory;
+use Console\View\Helper\ConsoleScript;
 use Console\View\Helper\ConsoleUrl;
 use ErrorException;
 use Laminas\I18n\Translator\TranslatorInterface;
@@ -14,6 +15,7 @@ use Latte\Engine;
 use Latte\Loaders\FileLoader;
 use Library\Application;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Throwable;
@@ -26,13 +28,19 @@ class TemplateRendererTest extends TestCase
         $translator = $this->createStub(Translator::class);
         $translator->method('translate')->willReturn('translated');
 
+        /** @var Stub|ConsoleScript */
+        $consoleScript = $this->createStub(ConsoleScript::class);
+
         /** @var MockObject|ConsoleUrl */
         $consoleUrl = $this->createMock(ConsoleUrl::class);
         $consoleUrl->method('__invoke')->willReturn('url');
 
         /** @var MockObject|HelperPluginManager */
         $viewHelperManager = $this->createMock(HelperPluginManager::class);
-        $viewHelperManager->method('get')->with(ConsoleUrl::class)->willReturn($consoleUrl);
+        $viewHelperManager->method('get')->willReturnMap([
+            [ConsoleScript::class, null, $consoleScript],
+            [ConsoleUrl::class, null, $consoleUrl],
+        ]);
 
         /** @var MockObject|ContainerInterface */
         $container = $this->createMock(ContainerInterface::class);

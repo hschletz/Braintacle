@@ -20,6 +20,9 @@ Misc:
 
 - Fixed PHP 8.1 compatibility.
 
+- Workarounds for very outdated agents are beginning to be removed. Should not
+  affect any agent released within the last 10 years.
+
 
 CHANGES IN VERSION 1.9
 ======================

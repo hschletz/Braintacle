@@ -548,6 +548,10 @@ form.form_addtogroup > * {
     margin-right: .5em;
 }
 
+.form_software button {
+    margin-bottom: 2ex;
+}
+
 /* The following rules are for forms still using the deprecated render() method. */
 
 .form_yesno {
@@ -648,8 +652,4 @@ form.form_addtogroup > * {
     display: block;
     text-align: center;
     margin: 2ex auto 0 auto;
-}
-
-.form_software input[type="submit"] {
-    margin-bottom: 2ex;
 }

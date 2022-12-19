@@ -95,9 +95,9 @@ class SoftwareManager
      * @param array $filters Associative array of filters. Default: none.
      * @param string $order One of "name" or "num_clients", default: "name"
      * @param string $direction Onde of "asc" or "desc", default: "asc"
-     * @return ResultSet Result set producing arrays with "name" and "num_clients" keys
+     * @return iterable<array{name: string, num_clients: int}>
      */
-    public function getSoftware(array $filters = null, string $order = 'name', string $direction = 'asc'): ResultSet
+    public function getSoftware(array $filters = null, string $order = 'name', string $direction = 'asc'): iterable
     {
         $sql = $this->_software->getSql();
         $select = $sql->select();

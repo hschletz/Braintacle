@@ -84,6 +84,7 @@ class ClientManager
             $properties = array_keys($map); // Select all properties
         }
         foreach ($properties as $property) {
+            $property = ucfirst($property);
             if (isset($map[$property])) {
                 $fromClients[] = $map[$property];
             } elseif (preg_match('/^Windows\.(.*)/', $property, $matches)) {

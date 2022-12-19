@@ -22,6 +22,11 @@
 
 namespace Console\Controller;
 
+use Console\Form\SoftwareManagementForm;
+use Console\Template\TemplateViewModel;
+use Console\Validator\CsrfValidator;
+use Laminas\Session\Container;
+
 /**
  * Controller for all software-related actions.
  */
@@ -33,17 +38,7 @@ class SoftwareController extends \Laminas\Mvc\Controller\AbstractActionControlle
      */
     protected $_softwareManager;
 
-    /**
-     * Form manager
-     * @var \Laminas\Form\FormElementManager
-     */
-    protected $_formManager;
-
-    /**
-     * Filter to fix incorrectly encoded names
-     * @var \Library\Filter\FixEncodingErrors
-     */
-    protected $_fixEncodingErrors;
+    private SoftwareManagementForm $softwareManagementForm;
 
     /**
      * Constructor
@@ -54,20 +49,16 @@ class SoftwareController extends \Laminas\Mvc\Controller\AbstractActionControlle
      */
     public function __construct(
         \Model\SoftwareManager $softwareManager,
-        \Laminas\Form\FormElementManager $formManager,
-        \Library\Filter\FixEncodingErrors $fixEncodingErrors
+        SoftwareManagementForm $softwareManagementForm
     ) {
         $this->_softwareManager = $softwareManager;
-        $this->_formManager = $formManager;
-        $this->_fixEncodingErrors = $fixEncodingErrors;
+        $this->softwareManagementForm = $softwareManagementForm;
     }
 
     /**
      * Display filter and software forms according to selected filter (default: accepted)
-     *
-     * @return array filter, software[], order, filterForm, softwareForm
      */
-    public function indexAction()
+    public function indexAction(): TemplateViewModel
     {
         $filter = $this->params()->fromQuery('filter', 'accepted');
         $order = $this->getOrder('name');
@@ -79,61 +70,35 @@ class SoftwareController extends \Laminas\Mvc\Controller\AbstractActionControlle
             ),
             $order['order'],
             $order['direction']
-        )->toArray();
-
-        $filterForm = $this->_formManager->get('Console\Form\SoftwareFilter');
-        $filterForm->setFilter($filter);
-
-        $softwareForm = $this->_formManager->get('Console\Form\Software');
-        $softwareForm->setSoftware($software);
+        );
 
         $session = new \Laminas\Session\Container('ManageSoftware');
         $session->filter = $filter;
 
-        return array(
-            'filterForm' => $filterForm,
-            'softwareForm' => $softwareForm,
+        return new TemplateViewModel('Software\Manage.latte', [
             'software' => $software,
-            'order' => $order,
+            'order' => $order['order'],
+            'direction' => $order['direction'],
             'filter' => $filter,
-        );
+            'csrfToken' => CsrfValidator::getToken(),
+        ]);
     }
 
     /**
      * Confirm software definition actions
-     *
-     * @return array|\Laminas\Http\Response array(software, display)
      */
     public function confirmAction()
     {
-        $post = $this->params()->fromPost();
-
-        if (isset($post['Accept']) or isset($post['Ignore'])) {
-            $session = new \Laminas\Session\Container('ManageSoftware');
-            $form = $this->_formManager->get('Console\Form\Software');
-            $form->setData($post);
-            if ($form->isValid()) {
-                $software = $form->getData()['Software'];
-                if ($software) {
-                    $session->setExpirationHops(1);
-                    $session['software'] = array();
-                    foreach ($software as $name => $value) {
-                        $session['software'][] = base64_decode($name);
-                    }
-                    $session['display'] = isset($post['Accept']);
-
-                    $vars = $session->getArrayCopy();
-                    foreach ($vars['software'] as &$name) {
-                        $name = $this->_fixEncodingErrors->filter($name);
-                    }
-                    return $vars;
-                }
-            }
-            return $this->redirectToRoute('software', 'index', array('filter' => $session['filter']));
+        $session = new Container('ManageSoftware');
+        $formData = $this->params()->fromPost();
+        if ($this->softwareManagementForm->getValidationMessages($formData)) {
+            return $this->redirectToRoute('software', 'index', ['filter' => $session['filter']]);
         } else {
-            $response = $this->getResponse();
-            $response->setStatusCode(400);
-            return $response;
+            $session->setExpirationHops(1);
+            $session['software'] = $formData['software'];
+            $session['display'] = isset($formData['accept']);
+
+            return new TemplateViewModel('Software/Confirm.latte', $session->getArrayCopy());
         }
     }
 
@@ -145,18 +110,15 @@ class SoftwareController extends \Laminas\Mvc\Controller\AbstractActionControlle
     public function manageAction()
     {
         $post = $this->params()->fromPost();
-        $session = new \Laminas\Session\Container('ManageSoftware');
+        $session = new Container('ManageSoftware');
 
         if (isset($post['no'])) {
-            return $this->redirectToRoute('software', 'index', array('filter' => $session['filter']));
+            return $this->redirectToRoute('software', 'index', ['filter' => $session['filter']]);
         } elseif (isset($post['yes'])) {
-            $software = $session['software'];
-            if ($software) {
-                foreach ($software as $name) {
-                    $this->_softwareManager->setDisplay($name, $session['display']);
-                }
+            foreach ($session['software'] as $name) {
+                $this->_softwareManager->setDisplay($name, $session['display']);
             }
-            return $this->redirectToRoute('software', 'index', array('filter' => $session['filter']));
+            return $this->redirectToRoute('software', 'index', ['filter' => $session['filter']]);
         } else {
             $response = $this->getResponse();
             $response->setStatusCode(400);

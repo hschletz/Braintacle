@@ -95,7 +95,6 @@ return array(
             'Console\Form\Preferences\System' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\Form\Search' => 'Console\Form\Service\SearchFactory',
             'Console\Form\ShowDuplicates' => 'Console\Form\Service\ShowDuplicatesFactory',
-            'Console\Form\Software' => 'Console\Form\Service\SoftwareFactory',
         ),
     ),
     'router' => array(

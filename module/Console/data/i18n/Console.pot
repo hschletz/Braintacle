@@ -166,6 +166,7 @@ msgstr ""
 #: Client/Packages.latte
 #: Client/Software.latte
 #: Group/Packages.latte
+#: Software/Manage.latte
 msgid "Name"
 msgstr ""
 
@@ -320,11 +321,13 @@ msgstr ""
 
 #: Form/DeleteClient.php
 #: View/Helper/Form/ClientConfig.php
+#: Software/Confirm.latte
 msgid "Yes"
 msgstr ""
 
 #: Form/DeleteClient.php
 #: View/Helper/Form/ClientConfig.php
+#: Software/Confirm.latte
 msgid "No"
 msgstr ""
 
@@ -1044,34 +1047,6 @@ msgstr ""
 msgid "At least 2 different clients have to be selected"
 msgstr ""
 
-#: Form/Software.php
-msgid "Accept selected"
-msgstr ""
-
-#: Form/Software.php
-msgid "Ignore selected"
-msgstr ""
-
-#: Form/SoftwareFilter.php
-msgid "Filter"
-msgstr ""
-
-#: Form/SoftwareFilter.php
-msgid "selected for display"
-msgstr ""
-
-#: Form/SoftwareFilter.php
-msgid "ignored for display"
-msgstr ""
-
-#: Form/SoftwareFilter.php
-msgid "new or not categorized"
-msgstr ""
-
-#: Form/SoftwareFilter.php
-msgid "all"
-msgstr ""
-
 #: Navigation/MainMenuFactory.php
 msgid "Inventory"
 msgstr ""
@@ -1709,6 +1684,7 @@ msgid "Identified network devices"
 msgstr ""
 
 #: views/console/network/index.php
+#: Software/Manage.latte
 msgid "Count"
 msgstr ""
 
@@ -1773,14 +1749,6 @@ msgstr ""
 
 #: views/console/preferences/registryvalues.php
 msgid "Manage registry values"
-msgstr ""
-
-#: views/console/software/confirm.php
-msgid "The following software will be marked as known and accepted. Continue?"
-msgstr ""
-
-#: views/console/software/confirm.php
-msgid "The following software will be marked as known but ignored. Continue?"
 msgstr ""
 
 #: views/layout/layout.php
@@ -1885,4 +1853,40 @@ msgstr ""
 
 #: Group/Header.latte
 msgid "Excluded"
+msgstr ""
+
+#: Software/Confirm.latte
+msgid "The following software will be marked as known and accepted. Continue?"
+msgstr ""
+
+#: Software/Confirm.latte
+msgid "The following software will be marked as known but ignored. Continue?"
+msgstr ""
+
+#: Software/Manage.latte
+msgid "Filter"
+msgstr ""
+
+#: Software/Manage.latte
+msgid "selected for display"
+msgstr ""
+
+#: Software/Manage.latte
+msgid "ignored for display"
+msgstr ""
+
+#: Software/Manage.latte
+msgid "new or not categorized"
+msgstr ""
+
+#: Software/Manage.latte
+msgid "all"
+msgstr ""
+
+#: Software/Manage.latte
+msgid "Accept selected"
+msgstr ""
+
+#: Software/Manage.latte
+msgid "Ignore selected"
 msgstr ""

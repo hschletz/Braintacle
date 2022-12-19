@@ -22,12 +22,9 @@
 
 namespace Console\Test\Controller;
 
-use Console\Form\Software;
-use Console\Form\SoftwareFilter;
+use Console\Form\SoftwareManagementForm;
 use Console\Mvc\Controller\Plugin\GetOrder;
-use Console\View\Helper\ConsoleUrl;
-use Console\View\Helper\Form\Software as FormSoftware;
-use Library\View\Helper\FormYesNo;
+use Laminas\Session\Container;
 use Model\SoftwareManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -42,23 +39,13 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
     protected $_softwareManager;
 
     /**
-     * @var MockObject|SoftwareFilter
-     */
-    protected $_filterForm;
-
-    /**
-     * @var MockObject|Software
-     */
-    protected $_softwareForm;
-
-    /**
      * Sample result data
      * @var array[]
      */
-    protected $_result = array(
-        array('name' => 'name', 'num_clients' => 1),
-        array('name' => "<name\xC2\x96>", 'num_clients' => 2), // Check for proper encoding and escaping
-    );
+    protected $_result = [
+        ['name' => 'name', 'num_clients' => 1],
+        ['name' => "<name>", 'num_clients' => 2], // Check for proper escaping
+    ];
 
     /**
      * Session container
@@ -73,18 +60,12 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->_session = new \Laminas\Session\Container('ManageSoftware');
 
         $this->_softwareManager = $this->createMock('Model\SoftwareManager');
-        $this->_filterForm = $this->createMock('Console\Form\SoftwareFilter');
-        $this->_softwareForm = $this->createMock('Console\Form\Software');
 
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setService('Model\SoftwareManager', $this->_softwareManager);
-
-        $formManager = $serviceManager->get('FormElementManager');
-        $formManager->setService('Console\Form\SoftwareFilter', $this->_filterForm);
-        $formManager->setService('Console\Form\Software', $this->_softwareForm);
     }
 
-    public function testIndexAction()
+    public function testIndexActionParameterEvaluation()
     {
         $serviceManager = $this->getApplicationServiceLocator();
 
@@ -109,176 +90,139 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
             'Status' => 'filterName',
         );
 
-        $result = $this->createMock('Laminas\Db\ResultSet\ResultSet');
-        $result->method('toArray')->willReturn($this->_result);
-
-        $this->_softwareManager->method('getSoftware')->with($filters, '_order', '_direction')->willReturn($result);
-
-        $consoleUrl = $this->createMock('Console\View\Helper\ConsoleUrl');
-        $consoleUrl->method('__invoke')->with('software', 'confirm')->willReturn('/console/software/confirm');
-
-        $viewHelperManager = $serviceManager->get('ViewHelperManager');
-        $viewHelperManager->setService('consoleUrl', $consoleUrl);
-
-        $view = $serviceManager->get('ViewRenderer');
-
-        $this->_filterForm->expects($this->once())->method('setFilter')->with('filterName');
-        $this->_filterForm->expects($this->once())->method('render')->with($view)->willReturn("FILTER_FORM\n");
-
-        $this->_softwareForm->expects($this->once())->method('setSoftware')->with($this->_result);
-        $this->_softwareForm->expects($this->exactly(2))->method('setAttribute')->withConsecutive(
-            array('action', '/console/software/confirm'),
-            array('method', 'POST')
-        );
-
-        $softwareFormHelper = $this->createMock(FormSoftware::class);
-        $softwareFormHelper->method('__invoke')->with(
-            $this->_softwareForm,
-            $this->_result,
-            ['order' => '_order', 'direction' => '_direction'],
-            'filterName'
-        )->willReturn("SOFTWARE_FORM\n");
-
-        $serviceManager->get('ViewHelperManager')->setService('consoleFormSoftware', $softwareFormHelper);
+        $this->_softwareManager->method('getSoftware')
+             ->with($filters, '_order', '_direction')
+             ->willReturn($this->_result);
 
         $this->dispatch('/console/software/index/');
 
         $this->assertEquals('filterName', $this->_session->filter);
         $this->assertResponseStatusCode(200);
-        $this->assertQueryContentRegex(
-            'div',
-            "/FILTER_FORM\nSOFTWARE_FORM\n/"
-        );
     }
 
-    public function confirmActionButtonProvider()
+    public function indexActionFilterProvider()
     {
-        return array(
-            array('Accept'),
-            array('Ignore'),
-        );
-    }
-
-    /**
-     * @dataProvider confirmActionButtonProvider
-     */
-    public function testConfirmActionPostConfirmInvalid($button)
-    {
-        $postData = array($button => 'button label');
-
-        $this->_softwareForm->expects($this->once())->method('setData')->with($postData);
-        $this->_softwareForm->method('isValid')->willReturn(false);
-
-        $this->_session['filter'] = 'filterName';
-
-        $this->dispatch('/console/software/confirm/', 'POST', $postData);
-
-        $this->assertRedirectTo('/console/software/index/?filter=filterName');
-        $this->assertEquals(array('filter' => 'filterName'), $this->_session->getArrayCopy());
+        return [
+            ['accepted'],
+            ['ignored'],
+            ['new'],
+            ['all'],
+        ];
     }
 
     /**
-     * @dataProvider confirmActionButtonProvider
+     * @dataProvider indexActionFilterProvider
      */
-    public function testConfirmActionPostConfirmValidEmptyList($button)
+    public function testIndexActionFilterSelect(string $filter)
     {
-        $postData = array($button => 'button label');
-        $formData = array('Software' => array());
-
-        $this->_softwareForm->expects($this->once())->method('setData')->with($postData);
-        $this->_softwareForm->method('isValid')->willReturn(true);
-        $this->_softwareForm->expects($this->once())->method('getData')->willReturn($formData);
-
-        $this->_session['filter'] = 'filterName';
-
-        $this->dispatch('/console/software/confirm/', 'POST', $postData);
-
-        $this->assertRedirectTo('/console/software/index/?filter=filterName');
-        $this->assertEquals(array('filter' => 'filterName'), $this->_session->getArrayCopy());
+        $this->dispatch('/console/software/index/?filter=' . $filter);
+        $this->assertXpathQuery("//option[@value='$filter'][@selected]");
+        $this->assertXpathQueryCount('//option[@selected]', 1);
     }
 
-    public function confirmActionPostConfirmValidNonEmptyListProvider()
+    public function testIndexActionInvalidFilter()
     {
-        return array(
-            array('Accept', true, 'The following software will be marked as known and accepted. Continue?'),
-            array('Ignore', false, 'The following software will be marked as known but ignored. Continue?'),
-        );
+        $this->dispatch('/console/software/index/?filter=invalid');
+        $this->assertNotXpathQuery('//option[@selected]');
+    }
+
+    public function testIndexActioneFilterButtonsAccepted()
+    {
+        $this->dispatch('/console/software/index/?filter=accepted');
+        $this->assertNotXpathQuery('//button[@name="accept"]');
+        $this->assertXpathQuery('//button[@name="ignore"]');
+    }
+
+    public function testIndexActioneFilterButtonsIgnored()
+    {
+        $this->dispatch('/console/software/index/?filter=ignored');
+        $this->assertXpathQuery('//button[@name="accept"]');
+        $this->assertNotXpathQuery('//button[@name="ignore"]');
+    }
+
+    public function testIndexActioneFilterButtonsNew()
+    {
+        $this->dispatch('/console/software/index/?filter=new');
+        $this->assertXpathQuery('//button[@name="accept"]');
+        $this->assertXpathQuery('//button[@name="ignore"]');
+    }
+
+    public function testIndexActioneFilterButtonsAll()
+    {
+        $this->dispatch('/console/software/index/?filter=new');
+        $this->assertXpathQuery('//button[@name="accept"]');
+        $this->assertXpathQuery('//button[@name="ignore"]');
+    }
+
+    public function testIndexActionSoftwareList()
+    {
+        $this->_softwareManager->method('getSoftware')->willReturn($this->_result);
+        $this->dispatch('/console/software/index/');
+        $this->assertXpathQueryCount('//tr[td]', 2);
+
+        $this->assertXpathQuery('//tr[2]/td[1]/input[@value="name"]');
+        $this->assertXpathQuery('//tr[2]/td[2][text()="name"]');
+        $this->assertXpathQuery('//tr[2]/td[3]/a[normalize-space(text())="1"][contains(@href, "search=name")]');
+
+        $this->assertXpathQuery('//tr[3]/td[1]/input[@value="<name>"]');
+        $this->assertXpathQuery('//tr[3]/td[2][text()="<name>"]');
+        $this->assertXpathQuery('//tr[3]/td[3]/a[normalize-space(text())="2"][contains(@href, "search=%3Cname%3E")]');
+    }
+
+    public function confirmActionValidProvider()
+    {
+        return [
+            ['accept', true, 'Die folgende Software wird als bekannt und akzeptiert markiert. Fortfahren?'],
+            ['ignore', false, 'Die folgende Software wird als bekannt aber ignoriert markiert. Fortfahren?'],
+        ];
     }
 
     /**
-     * @dataProvider confirmActionPostConfirmValidNonEmptyListProvider
+     * @dataProvider confirmActionValidProvider
      */
-    public function testConfirmActionPostConfirmValidNonEmptyList($button, $accept, $message)
+    public function testConfirmActionValid(string $button, bool $display, string $message)
     {
-        $postData = array($button => 'button label');
-        $formData = array(
-            'Software' => array(
-                'cmF3MQ==' => '1', // 'raw1'
-                'cmF3Mg==' => '1', // 'raw2'
-            )
-        );
+        $software = ['software1', 'software2'];
+        $postData = [
+            'software' => $software,
+            $button => '',
+        ];
 
-        $this->_softwareForm->expects($this->once())->method('setData')->with($postData);
-        $this->_softwareForm->method('isValid')->willReturn(true);
-        $this->_softwareForm->expects($this->once())->method('getData')->willReturn($formData);
-
-        $this->_session['filter'] = 'filterName';
-
-        $serviceManager = $this->getApplicationServiceLocator();
-
-        $fixEncodingErrors = $this->createMock('Library\Filter\FixEncodingErrors');
-        $fixEncodingErrors->method('filter')
-                          ->withConsecutive(array('raw1'), array('raw2'))
-                          ->willReturnOnConsecutiveCalls('filtered1', 'filtered2');
-        $serviceManager->get('FilterManager')->setService('Library\FixEncodingErrors', $fixEncodingErrors);
-
-        $viewHelperManager = $serviceManager->get('ViewHelperManager');
-
-        $translate = $this->createMock('Laminas\I18n\View\Helper\Translate');
-        $translate->method('__invoke')->with($message)->willReturn('MESSAGE');
-        $viewHelperManager->setService('Laminas\I18n\View\Helper\Translate', $translate);
-
-        $consoleUrl = $this->createMock(ConsoleUrl::class);
-        $consoleUrl->method('__invoke')->with('software', 'manage')->willReturn('URL');
-        $viewHelperManager->setService('consoleUrl', $consoleUrl);
-
-        $formYesNo = $this->createMock(FormYesNo::class);
-        $formYesNo->method('__invoke')->with('MESSAGE', array(), array('action' => 'URL'))->willReturn('<form>FORM</form>');
-        $viewHelperManager->setService('Library\View\Helper\FormYesNo', $formYesNo);
-
-        $htmlList = $this->createMock('Laminas\View\Helper\HtmlList');
-        $htmlList->method('__invoke')->with(array('filtered1', 'filtered2'))->willReturn('LIST');
-        $viewHelperManager->setService('Laminas\View\Helper\HtmlList', $htmlList);
+        /** @var MockObject|SoftwareManagementForm */
+        $softwareManagementForm = $this->createMock(SoftwareManagementForm::class);
+        $softwareManagementForm->method('getValidationMessages')->with($postData)->willReturn([]);
+        $this->getApplicationServiceLocator()->setService(SoftwareManagementForm::class, $softwareManagementForm);
 
         $this->dispatch('/console/software/confirm/', 'POST', $postData);
 
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//form', 'FORM');
-        $this->assertXPathQueryContentContains('//div[@class="textcenter"]', "\nLIST\n");
-
+        $session = new Container('ManageSoftware');
         $this->assertEquals(
             1,
-            $this->_session->getManager()->getStorage()->getMetadata('ManageSoftware')['EXPIRE_HOPS']['hops']
+            $session->getManager()->getStorage()->getMetadata('ManageSoftware')['EXPIRE_HOPS']['hops']
         );
-        $this->assertEquals(
-            array('raw1', 'raw2'),
-            $this->_session['software']
-        );
-        $this->assertSame($accept, $this->_session['display']);
+        $this->assertEquals($software, $session['software']);
+        $this->assertSame($display, $session['display']);
+
+        $this->assertXpathQuery("//p[normalize-space(text())='$message']");
+        $this->assertXpathQueryCount('//li', 2);
+        $this->assertXpathQueryContentContains('//li[1]', 'software1');
+        $this->assertXpathQueryContentContains('//li[2]', 'software2');
     }
 
-    public function testConfirmActionGet()
+    public function testConfirmActionInvalid()
     {
+        /** @var MockObject|SoftwareManagementForm */
+        $softwareManagementForm = $this->createMock(SoftwareManagementForm::class);
+        $softwareManagementForm->method('getValidationMessages')->with([])->willReturn(['message']);
+        $this->getApplicationServiceLocator()->setService(SoftwareManagementForm::class, $softwareManagementForm);
+
+        $session = new Container('ManageSoftware');
+        $session['filter'] = 'filterName';
+
         $this->dispatch('/console/software/confirm/');
-        $this->assertResponseStatusCode(400);
-        $this->assertEmpty($this->_session->getArrayCopy());
-    }
 
-    public function testConfirmActionPostBadRequest()
-    {
-        $this->dispatch('/console/software/confirm/', 'POST', array());
-        $this->assertResponseStatusCode(400);
-        $this->assertEmpty($this->_session->getArrayCopy());
+        $this->assertRedirectTo('/console/software/index/?filter=filterName');
+        $this->assertEquals(['filter' => 'filterName'], $session->getArrayCopy());
     }
 
     public function testManageActionPostNo()
