@@ -168,6 +168,7 @@ class Module implements
     {
         $vars = $model->getVariables();
         if (!$vars instanceof \Laminas\View\Variables) {
+            /** @psalm-suppress InvalidArgument if this is called, wo apparently have an array */
             $vars = new \Laminas\View\Variables($vars);
         }
         $vars->setStrictVars(true);

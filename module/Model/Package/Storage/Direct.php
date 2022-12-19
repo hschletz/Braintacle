@@ -167,7 +167,7 @@ class Direct implements StorageInterface
             $numFragments = 1;
         } else {
             // Split file into fragments of nearly identical size no bigger than $maxFragmentSize.
-            $fragmentSize = ceil($fileSize / ceil($fileSize / $maxFragmentSize));
+            $fragmentSize = (int) ceil($fileSize / ceil($fileSize / $maxFragmentSize));
             // Determine number of fragments by files actually written
             $numFragments = 0;
             $input = new \Library\FileObject($file, 'rb');

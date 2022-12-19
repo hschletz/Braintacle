@@ -59,12 +59,13 @@ class Cpu extends DefaultPlugin
                     $cpu[$client][$manufacturer][$type] = $row;
                 }
             }
+            // Remove keys (client ID) because argument unpacking for
+            // array_merge() would create invalid named parameters.
+            $cpu = array_values($cpu);
             // flatten array, resulting in per-CPU list
-            $result = array_merge(
-                ...array_values(
-                    array_merge(...$cpu)
-                )
-            );
+            $cpuByManufacturer = array_merge(...$cpu);
+            $cpuByManufacturer = array_values($cpuByManufacturer);
+            $result = array_merge(...$cpuByManufacturer);
         }
 
         foreach ($result as &$row) {

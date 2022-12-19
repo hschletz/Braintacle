@@ -35,6 +35,8 @@ use ReturnTypeWillChange;
  * instances of array access have been removed, the base class can be removed
  * from the model class.
  *
+ * @extends \ArrayObject<string, mixed>
+ *
  * @deprecated Declare properties explicitly and avoid ArrayAccess usage.
  */
 abstract class AbstractModel extends \ArrayObject

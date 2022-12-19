@@ -95,6 +95,7 @@ class Table extends \Laminas\View\Helper\AbstractHelper
         $columnClasses = array(),
         $rowClassCallback = null
     ) {
+        /** @psalm-suppress InvalidArgument assume countable */
         if (count($data) == 0) {
             return '';
         }

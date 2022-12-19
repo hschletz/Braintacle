@@ -172,7 +172,7 @@ class ClientConfig extends Form
                           ->setMessage(
                               str_replace(
                                   '%min%',
-                                  $min,
+                                  (string) $min,
                                   $minValueValidator->getTranslator()->translate($message)
                               )
                           )

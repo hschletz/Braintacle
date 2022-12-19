@@ -268,6 +268,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $model->expects($this->once())->method('updateAssignments')->with('old_id', 'new_id', 'p', 'r', 's', 'e', 'g');
         $model->expects($this->once())->method('deletePackage')->with('old_name');
 
+        /** @psalm-suppress InvalidArgument test with unambiguous string arguments instead of bool */
         $model->updatePackage($package, $newPackageData, true, 'p', 'r', 's', 'e', 'g');
     }
 

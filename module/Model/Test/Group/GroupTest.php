@@ -87,7 +87,7 @@ class GroupTest extends AbstractGroupTest
                           'filter',
                           'search',
                           'operator',
-                          'invert',
+                          true,
                           false,
                           true,
                           true
@@ -118,7 +118,7 @@ class GroupTest extends AbstractGroupTest
         $model['Id'] = 10;
         $model->setServiceLocator($serviceManager);
 
-        $model->setMembersFromQuery($type, 'filter', 'search', 'operator', 'invert');
+        $model->setMembersFromQuery($type, 'filter', 'search', 'operator', true);
         $this->assertTablesEqual(
             $this->loadDataSet($dataSet)->getTable('groups_cache'),
             $this->getConnection()->createQueryTable(
@@ -172,7 +172,7 @@ class GroupTest extends AbstractGroupTest
 
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test');
-        $model->setMembersFromQuery(\Model\Client\Client::MEMBERSHIP_ALWAYS, 'filter', 'search', 'operator', 'invert');
+        $model->setMembersFromQuery(\Model\Client\Client::MEMBERSHIP_ALWAYS, 'filter', 'search', 'operator', true);
     }
 
     public function setMembersFromQueryDynamicProvider()
@@ -216,7 +216,7 @@ class GroupTest extends AbstractGroupTest
                           'filter',
                           'search',
                           'operator',
-                          'invert',
+                          true,
                           false,
                           true,
                           false
@@ -250,7 +250,7 @@ class GroupTest extends AbstractGroupTest
             'filter',
             'search',
             'operator',
-            'invert'
+            true
         );
         $this->assertTablesEqual(
             $this->loadDataSet('SetMembersFromQueryDynamic')->getTable('groups'),
@@ -293,7 +293,7 @@ class GroupTest extends AbstractGroupTest
             'filter',
             'search',
             'operator',
-            'invert'
+            true
         );
     }
 

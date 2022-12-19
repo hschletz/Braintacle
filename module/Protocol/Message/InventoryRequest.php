@@ -30,7 +30,7 @@ use Protocol\Message\InventoryRequest\Content;
  */
 class InventoryRequest extends \Library\DomDocument
 {
-    protected $content;
+    protected Content $content;
 
     public function __construct(Content $content)
     {

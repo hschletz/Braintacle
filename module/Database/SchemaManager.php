@@ -282,6 +282,7 @@ class SchemaManager
                 $primaryKey = array();
             }
             if ($schema['primary_key'] != $primaryKey) {
+                /** @psalm-suppress InvalidArgument $primaryKey is really array<string> */
                 $logger->info(
                     sprintf(
                         'Changing PK of %s from (%s) to (%s)...',

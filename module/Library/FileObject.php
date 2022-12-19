@@ -36,6 +36,8 @@ use ReturnTypeWillChange;
  * method invocation. This inconsistency cannot be implemented in PHP.
  *
  * Not all methods are implemented yet.
+ *
+ * @implements \Iterator<int, string|false>
  */
 class FileObject extends \SplFileInfo implements \Iterator
 {

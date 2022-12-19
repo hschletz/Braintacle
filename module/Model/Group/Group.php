@@ -23,6 +23,8 @@
 namespace Model\Group;
 
 use DateTimeInterface;
+use Laminas\Db\Sql\Literal;
+use Model\Client\Client;
 
 /**
  * A group of clients
@@ -226,7 +228,7 @@ class Group extends \Model\ClientOrGroup
             array(
                 'hardware_id' => 'id',
                 'group_id' => new \Laminas\Db\Sql\Expression('?', $this['Id']),
-                'static' => new \Laminas\Db\Sql\Literal(\Model\Client\Client::MEMBERSHIP_AUTOMATIC),
+                'static' => new Literal((string) Client::MEMBERSHIP_AUTOMATIC),
             )
         )->where(
             array(

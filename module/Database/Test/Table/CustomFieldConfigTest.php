@@ -45,7 +45,7 @@ class CustomFieldConfigTest extends AbstractTest
         // CustomFieldConfig table to be truncated first because
         // CustomFields::updateSchema() would not drop any columns with a
         // matching record in CustomFieldConfig.
-        static::$_table->delete(true);
+        static::$_table->delete([]);
         $customFields = static::$serviceManager->get('Database\Table\CustomFields');
         $customFields->updateSchema(true);
 

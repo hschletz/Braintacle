@@ -423,7 +423,7 @@ class ClientManager
      */
     public function getClient($id)
     {
-        $result = $this->getClients(null, null, null, 'Id', $id);
+        $result = $this->getClients(null, null, null, 'Id', (string) $id);
         if (!$result->count()) {
             throw new \RuntimeException("Invalid client ID: $id");
         }
