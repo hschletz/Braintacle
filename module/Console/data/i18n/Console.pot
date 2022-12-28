@@ -104,8 +104,8 @@ msgstr ""
 
 #: Form/Account/AbstractForm.php
 #: Form/Package/Build.php
-#: views/console/client/general.php
 #: views/console/client/misc.php
+#: Client/General.latte
 msgid "Comment"
 msgstr ""
 
@@ -380,7 +380,6 @@ msgstr ""
 
 #: Form/NetworkDevice.php
 #: views/console/client/display.php
-#: views/console/client/general.php
 #: views/console/client/index.php
 #: views/console/client/misc.php
 #: views/console/client/network.php
@@ -389,6 +388,7 @@ msgstr ""
 #: views/console/client/virtualmachines.php
 #: views/console/network/index.php
 #: views/console/network/showidentified.php
+#: Client/General.latte
 msgid "Type"
 msgstr ""
 
@@ -799,14 +799,14 @@ msgid "Last inventory"
 msgstr ""
 
 #: Form/Search.php
-#: views/console/client/general.php
 #: views/console/client/index.php
+#: Client/General.latte
 msgid "Last contact"
 msgstr ""
 
 #: Form/Search.php
-#: views/console/client/general.php
 #: views/console/client/index.php
+#: Client/General.latte
 msgid "CPU type"
 msgstr ""
 
@@ -824,7 +824,7 @@ msgid "Physical memory"
 msgstr ""
 
 #: Form/Search.php
-#: views/console/client/general.php
+#: Client/General.latte
 msgid "Swap memory"
 msgstr ""
 
@@ -838,26 +838,26 @@ msgid "Manufacturer"
 msgstr ""
 
 #: Form/Search.php
-#: views/console/client/general.php
 #: views/console/client/index.php
 #: views/console/client/storage.php
+#: Client/General.latte
 msgid "Model"
 msgstr ""
 
 #: Form/Search.php
 #: views/console/client/display.php
-#: views/console/client/general.php
 #: views/console/client/index.php
 #: views/console/client/storage.php
 #: views/console/client/system.php
 #: views/console/duplicates/index.php
+#: Client/General.latte
 msgid "Serial number"
 msgstr ""
 
 #: Form/Search.php
-#: views/console/client/general.php
 #: views/console/client/index.php
 #: views/console/duplicates/index.php
+#: Client/General.latte
 msgid "Asset tag"
 msgstr ""
 
@@ -1229,56 +1229,6 @@ msgstr ""
 msgid "Displays"
 msgstr ""
 
-#: views/console/client/general.php
-#: views/console/client/index.php
-#: views/console/group/general.php
-msgid "ID"
-msgstr ""
-
-#: views/console/client/general.php
-#: views/console/client/index.php
-msgid "ID string"
-msgstr ""
-
-#: views/console/client/general.php
-msgid "Inventory date"
-msgstr ""
-
-#: views/console/client/general.php
-msgid "User Agent"
-msgstr ""
-
-#: views/console/client/general.php
-msgid "Operating System"
-msgstr ""
-
-#: views/console/client/general.php
-#: views/console/client/index.php
-msgid "CPU clock"
-msgstr ""
-
-#: views/console/client/general.php
-msgid "Number of CPU cores"
-msgstr ""
-
-#: views/console/client/general.php
-msgid "RAM detected by agent"
-msgstr ""
-
-#: views/console/client/general.php
-msgid "RAM reported by OS"
-msgstr ""
-
-#: views/console/client/general.php
-msgid "Last user logged in"
-msgstr ""
-
-#: views/console/client/general.php
-#: views/console/client/index.php
-#: views/console/client/virtualmachines.php
-msgid "UUID"
-msgstr ""
-
 #: views/console/client/groups.php
 #: views/console/group/members.php
 msgid "Membership"
@@ -1302,6 +1252,22 @@ msgid "Import locally generated inventory data"
 msgstr ""
 
 #: views/console/client/index.php
+#: views/console/group/general.php
+#: Client/General.latte
+msgid "ID"
+msgstr ""
+
+#: views/console/client/index.php
+#: Client/General.latte
+msgid "ID string"
+msgstr ""
+
+#: views/console/client/index.php
+#: Client/General.latte
+msgid "CPU clock"
+msgstr ""
+
+#: views/console/client/index.php
 msgid "Swap"
 msgstr ""
 
@@ -1313,6 +1279,12 @@ msgstr ""
 #: views/console/group/excluded.php
 #: views/console/group/members.php
 msgid "User"
+msgstr ""
+
+#: views/console/client/index.php
+#: views/console/client/virtualmachines.php
+#: Client/General.latte
+msgid "UUID"
 msgstr ""
 
 #: views/console/client/index.php
@@ -1753,6 +1725,34 @@ msgstr ""
 
 #: views/layout/layout.php
 msgid "Logout"
+msgstr ""
+
+#: Client/General.latte
+msgid "Inventory date"
+msgstr ""
+
+#: Client/General.latte
+msgid "User Agent"
+msgstr ""
+
+#: Client/General.latte
+msgid "Operating System"
+msgstr ""
+
+#: Client/General.latte
+msgid "Number of CPU cores"
+msgstr ""
+
+#: Client/General.latte
+msgid "RAM detected by agent"
+msgstr ""
+
+#: Client/General.latte
+msgid "RAM reported by OS"
+msgstr ""
+
+#: Client/General.latte
+msgid "Last user logged in"
 msgstr ""
 
 #: Client/Header.latte

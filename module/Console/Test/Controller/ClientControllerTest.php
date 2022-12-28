@@ -27,6 +27,7 @@ use Console\Form\Package\AssignPackagesForm;
 use Console\Form\ProductKey;
 use Console\Form\Search as SearchForm;
 use Console\Mvc\Controller\Plugin\PrintForm;
+use Console\Template\Filters\DateFormatFilter;
 use Console\View\Helper\Form\ClientConfig;
 use Console\View\Helper\Form\Search as SearchHelper;
 use DateTime;
@@ -35,7 +36,6 @@ use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Text;
 use Laminas\Hydrator\ObjectPropertyHydrator;
-use Laminas\I18n\View\Helper\DateFormat;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 use Library\Form\Element\Submit;
@@ -847,7 +847,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $inventoryDate = new \DateTime('2014-05-29 11:16:15');
         $lastContactDate = new \DateTime('2014-05-29 11:17:34');
 
-        $dateFormat = $this->createMock(DateFormat::class);
+        /** @var MockObject|DateFormatFilter */
+        $dateFormat = $this->createMock(DateFormatFilter::class);
         $dateFormat->expects($this->exactly(2))
                    ->method('__invoke')
                    ->withConsecutive(
@@ -855,42 +856,46 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                        array($lastContactDate, \IntlDateFormatter::FULL, \IntlDateFormatter::LONG)
                    )
                    ->willReturnOnConsecutiveCalls('inventory_date', 'last_contact_date');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('dateFormat', $dateFormat);
+        $this->getApplicationServiceLocator()->setService(DateFormatFilter::class, $dateFormat);
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'IdString' => 'id_string',
-            'InventoryDate' => $inventoryDate,
-            'LastContactDate' => $lastContactDate,
-            'UserAgent' => 'user_agent',
-            'Manufacturer' => 'manufacturer',
-            'ProductName' => 'product_name',
-            'IsSerialBlacklisted' => false,
-            'Serial' => 'serial',
-            'IsAssetTagBlacklisted' => false,
-            'AssetTag' => 'asset_tag',
-            'Type' => 'type',
-            'OsName' => 'os_name',
-            'OsVersionString' => 'os_version_string',
-            'OsVersionNumber' => 'os_version_number',
-            'OsComment' => 'os_comment',
-            'CpuType' => 'cpu_type',
-            'CpuClock' => 1234,
-            'CpuCores' => 2,
-            'MemorySlot' => array(array('Size' => 2), array('Size' => 3)),
-            'PhysicalMemory' => 1234,
-            'SwapMemory' => 5678,
-            'UserName' => 'user_name',
-            'Windows' => null,
-            'Uuid' => 'uuid',
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->method('__get')->willReturnMap([
+            ['id', 1],
+            ['name', 'name'],
+            ['idString', 'id_string'],
+            ['inventoryDate', $inventoryDate],
+            ['lastContactDate', $lastContactDate],
+            ['userAgent', 'user_agent'],
+            ['manufacturer', 'manufacturer'],
+            ['productName', 'product_name'],
+            ['serial', 'serial'],
+            ['assetTag', 'asset_tag'],
+            ['type', 'type'],
+            ['osName', 'os_name'],
+            ['osVersionString', 'os_version_string'],
+            ['osVersionNumber', 'os_version_number'],
+            ['osComment', 'os_comment'],
+            ['cpuType', 'cpu_type'],
+            ['cpuClock', 1234],
+            ['cpuCores', 2],
+            ['physicalMemory', 1234],
+            ['swapMemory', 5678],
+            ['userName', 'user_name'],
+            ['uuid', 'uuid'],
         ]);
+        $client->method('offsetGet')->willReturnMap([
+            ['IsSerialBlacklisted', false],
+            ['IsAssetTagBlacklisted', false],
+            ['MemorySlot', [(object) ['size' => 2], (object) ['size' => 3]]],
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/general/?id=1');
         $this->assertResponseStatusCode(200);
 
-        $query = "//table/tr/td[text()='\n%s\n']/following::td[1][text()='\n%s\n']";
+        $query = '//table/tr/td[text()="%s"]/following::td[1][normalize-space(text())="%s"]';
         $this->assertXPathQuery(sprintf($query, 'ID', 1));
         $this->assertXPathQuery(sprintf($query, 'ID-String', 'id_string'));
         $this->assertXPathQuery(sprintf($query, 'Datum der Inventarinformationen', 'inventory_date'));
@@ -910,99 +915,162 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXPathQuery(sprintf($query, 'Auslagerungsspeicher', "5678\xC2\xA0MB"));
         $this->assertXPathQuery(sprintf($query, 'Letzter angemeldeter Benutzer', 'user_name'));
         $this->assertXPathQuery(sprintf($query, 'UUID', 'uuid'));
-        $this->assertXpathQuery("//table/tr/td[text()='\nserial\n'][not(@class)]");
-        $this->assertXpathQuery("//table/tr/td[text()='\nasset_tag\n'][not(@class)]");
+        $this->assertXpathQuery('//table/tr/td[text()="serial"][not(@class)]');
+        $this->assertXpathQuery('//table/tr/td[text()="asset_tag"][not(@class)]');
+    }
+
+    public function testGeneralActionNoUuid()
+    {
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->method('__get')->willReturnMap([
+            ['id', 1],
+            ['name', 'name'],
+            ['idString', 'id_string'],
+            ['inventoryDate', new DateTime()],
+            ['lastContactDate', new DateTime()],
+            ['userAgent', 'user_agent'],
+            ['manufacturer', 'manufacturer'],
+            ['productName', 'product_name'],
+            ['serial', 'serial'],
+            ['assetTag', 'asset_tag'],
+            ['type', 'type'],
+            ['osName', 'os_name'],
+            ['osVersionString', 'os_version_string'],
+            ['osVersionNumber', 'os_version_number'],
+            ['osComment', 'os_comment'],
+            ['cpuType', 'cpu_type'],
+            ['cpuClock', 1234],
+            ['cpuCores', 2],
+            ['physicalMemory', 1234],
+            ['swapMemory', 5678],
+            ['userName', 'user_name'],
+            ['uuid', null],
+        ]);
+        $client->method('offsetGet')->willReturnMap([
+            ['MemorySlot', []],
+        ]);
+
+        $this->_clientManager->method('getClient')->willReturn($client);
+
+        $this->dispatch('/console/client/general/?id=1');
+        $this->assertResponseStatusCode(200);
+
+        $this->assertNotXpathQuery('//td[text()="UUID"]');
     }
 
     public function testGeneralActionSerialBlacklisted()
     {
-        $map = array(
-            array('IsSerialBlacklisted', true),
-            array('Serial', 'serial'),
-            array('IsAssetTagBlacklisted', false),
-            array('AssetTag', 'asset_tag'),
-            array('MemorySlot', array()),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->method('__get')->willReturnMap([
+            ['inventoryDate', new DateTime()],
+            ['lastContactDate', new DateTime()],
+            ['serial', 'serial'],
+            ['assetTag', 'asset_tag'],
+        ]);
+        $client->method('offsetGet')->willReturnMap([
+            ['IsSerialBlacklisted', true],
+            ['IsAssetTagBlacklisted', false],
+            ['MemorySlot', []],
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/general/?id=1');
-        $this->assertXpathQuery("//td[text()='\nserial\n'][@class='blacklisted']");
-        $this->assertXpathQuery("//td[text()='\nasset_tag\n'][not(@class)]");
+        $this->assertXpathQuery('//td[text()="serial"][@class="blacklisted"]');
+        $this->assertXpathQuery('//td[text()="asset_tag"][not(@class)]');
     }
 
     public function testGeneralActionAssetTagBlacklisted()
     {
-        $map = array(
-            array('IsSerialBlacklisted', false),
-            array('Serial', 'serial'),
-            array('IsAssetTagBlacklisted', true),
-            array('AssetTag', 'asset_tag'),
-            array('MemorySlot', array()),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->method('__get')->willReturnMap([
+            ['inventoryDate', new DateTime()],
+            ['lastContactDate', new DateTime()],
+            ['serial', 'serial'],
+            ['assetTag', 'asset_tag'],
+        ]);
+        $client->method('offsetGet')->willReturnMap([
+            ['IsSerialBlacklisted', false],
+            ['IsAssetTagBlacklisted', true],
+            ['MemorySlot', []],
+        ]);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/general/?id=1');
-        $this->assertXpathQuery("//td[text()='\nserial\n'][not(@class)]");
-        $this->assertXpathQuery("//td[text()='\nasset_tag\n'][@class='blacklisted']");
+        $this->assertXpathQuery('//td[text()="serial"][not(@class)]');
+        $this->assertXpathQuery('//td[text()="asset_tag"][@class="blacklisted"]');
     }
 
     public function testGeneralActionWindowsUser()
     {
-        $map = array(
-            array('Windows', array('UserDomain' => 'user_domain')),
-            array('UserName', 'user_name'),
-            array('MemorySlot', array()),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->method('__get')->willReturnMap([
+            ['inventoryDate', new DateTime()],
+            ['lastContactDate', new DateTime()],
+            ['userName', 'user_name'],
+        ]);
+        $client->method('offsetGet')->willReturnMap([
+            ['Windows', ['UserDomain' => 'domain']],
+            ['MemorySlot', []],
+        ]);
+        $client->method('offsetExists')->with('Windows')->willReturn(true);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/general/?id=1');
-        $this->assertXpathQueryContentContains('//td', "\nuser_name @ user_domain\n");
+        $this->assertXpathQueryContentContains('//td', 'user_name @ domain');
     }
 
     public function testGeneralActionWindowsNoArch()
     {
-        $map = array(
-            array('OsName', 'os_name'),
-            array('OsVersionString', 'os_version_string'),
-            array('OsVersionNumber', 'os_version_number'),
-            array('Windows', array('CpuArchitecture' => null, 'UserDomain' => 'domain')),
-            array('MemorySlot', array()),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->willReturnMap($map);
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->method('__get')->willReturnMap([
+            ['inventoryDate', new DateTime()],
+            ['lastContactDate', new DateTime()],
+            ['osName', 'os_name'],
+            ['osVersionString', 'os_version_string'],
+            ['osVersionNumber', 'os_version_number'],
+        ]);
+        $client->method('offsetGet')->willReturnMap([
+            ['Windows', ['CpuArchitecture' => null, 'UserDomain' => 'domain']],
+            ['MemorySlot', []],
+        ]);
+        $client->method('offsetExists')->with('Windows')->willReturn(true);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/general/?id=1');
-        $this->assertXpathQueryContentContains(
-            '//td',
-            "\nos_name os_version_string (os_version_number)\n"
-        );
+        $this->assertXpathQuery('//td[normalize-space(text())="os_name os_version_string (os_version_number)"]');
     }
 
     public function testGeneralActionWindowsWithArch()
     {
-        $map = array(
-            array('OsName', 'os_name'),
-            array('OsVersionString', 'os_version_string'),
-            array('OsVersionNumber', 'os_version_number'),
-            array('Windows', array('CpuArchitecture' => 'cpu_architecture', 'UserDomain' => 'domain')),
-            array('MemorySlot', array()),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->willReturnMap($map);
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->method('__get')->willReturnMap([
+            ['inventoryDate', new DateTime()],
+            ['lastContactDate', new DateTime()],
+            ['osName', 'os_name'],
+            ['osVersionString', 'os_version_string'],
+            ['osVersionNumber', 'os_version_number'],
+        ]);
+        $client->method('offsetGet')->willReturnMap([
+            ['Windows', ['CpuArchitecture' => 'cpu_architecture', 'UserDomain' => 'domain']],
+            ['MemorySlot', []],
+        ]);
         $client->method('offsetExists')->with('Windows')->willReturn(true);
+
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/general/?id=1');
-        $this->assertXpathQueryContentContains(
-            '//td',
-            "\nos_name os_version_string (os_version_number) \xE2\x80\x93 cpu_architecture\n"
+        $this->assertXpathQuery(
+            "//td[normalize-space(text())='os_name os_version_string (os_version_number) \xE2\x80\x93 cpu_architecture']"
         );
     }
 

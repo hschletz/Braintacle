@@ -29,6 +29,93 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: Client/General.latte Form/Search.php views/console/client/index.php
+#: views/console/duplicates/index.php
+msgid "Asset tag"
+msgstr "Asset tag"
+
+#: Client/General.latte views/console/client/index.php
+msgid "CPU clock"
+msgstr "CPU Takt"
+
+#: Client/General.latte Form/Search.php views/console/client/index.php
+msgid "CPU type"
+msgstr "CPU Typ"
+
+#: Client/General.latte Form/Account/AbstractForm.php Form/Package/Build.php
+#: views/console/client/misc.php
+msgid "Comment"
+msgstr "Kommentar"
+
+#: Client/General.latte views/console/client/index.php
+#: views/console/group/general.php
+msgid "ID"
+msgstr "ID"
+
+#: Client/General.latte views/console/client/index.php
+msgid "ID string"
+msgstr "ID-String"
+
+#: Client/General.latte
+msgid "Inventory date"
+msgstr "Datum der Inventarinformationen"
+
+#: Client/General.latte Form/Search.php views/console/client/index.php
+msgid "Last contact"
+msgstr "Letzter Kontakt"
+
+#: Client/General.latte
+msgid "Last user logged in"
+msgstr "Letzter angemeldeter Benutzer"
+
+#: Client/General.latte Form/Search.php views/console/client/index.php
+#: views/console/client/storage.php
+msgid "Model"
+msgstr "Modell"
+
+#: Client/General.latte
+msgid "Number of CPU cores"
+msgstr "Anzahl der CPU-Kerne"
+
+#: Client/General.latte
+msgid "Operating System"
+msgstr "Betriebssystem"
+
+#: Client/General.latte
+msgid "RAM detected by agent"
+msgstr "Vom Agenten entdeckter Arbeitsspeicher"
+
+#: Client/General.latte
+msgid "RAM reported by OS"
+msgstr "Arbeitsspeicher lt. Betriebssystem"
+
+#: Client/General.latte Form/Search.php views/console/client/display.php
+#: views/console/client/index.php views/console/client/storage.php
+#: views/console/client/system.php views/console/duplicates/index.php
+msgid "Serial number"
+msgstr "Seriennummer"
+
+#: Client/General.latte Form/Search.php
+msgid "Swap memory"
+msgstr "Auslagerungsspeicher"
+
+#: Client/General.latte Form/NetworkDevice.php views/console/client/display.php
+#: views/console/client/index.php views/console/client/misc.php
+#: views/console/client/network.php views/console/client/storage.php
+#: views/console/client/system.php views/console/client/virtualmachines.php
+#: views/console/network/index.php views/console/network/showidentified.php
+msgid "Type"
+msgstr "Typ"
+
+#: Client/General.latte views/console/client/index.php
+#: views/console/client/virtualmachines.php
+msgid "UUID"
+msgstr "UUID"
+
+#: Client/General.latte
+msgid "User Agent"
+msgstr "User-Agent"
+
 #: Client/Header.latte
 msgid "BIOS"
 msgstr "BIOS"
@@ -243,11 +330,6 @@ msgstr "Paket '%s' wurde erfolgreich erstellt."
 #, php-format
 msgid "Package '%s' was successfully deleted."
 msgstr "Paket '%s' wurde erfolgreich gelöscht."
-
-#: Form/Account/AbstractForm.php Form/Package/Build.php
-#: views/console/client/general.php views/console/client/misc.php
-msgid "Comment"
-msgstr "Kommentar"
 
 #: Form/Account/AbstractForm.php views/console/accounts/index.php
 msgid "First name"
@@ -481,15 +563,6 @@ msgstr "Unterschlüssel"
 #: Form/ManageRegistryValues.php
 msgid "Values"
 msgstr "Werte"
-
-#: Form/NetworkDevice.php views/console/client/display.php
-#: views/console/client/general.php views/console/client/index.php
-#: views/console/client/misc.php views/console/client/network.php
-#: views/console/client/storage.php views/console/client/system.php
-#: views/console/client/virtualmachines.php views/console/network/index.php
-#: views/console/network/showidentified.php
-msgid "Type"
-msgstr "Typ"
 
 #: Form/Package/Build.php
 msgid "Action"
@@ -775,11 +848,6 @@ msgstr "XML-Daten validieren"
 msgid "Product key (if different)"
 msgstr "Lizenzschlüssel (falls verschieden)"
 
-#: Form/Search.php views/console/client/general.php
-#: views/console/client/index.php views/console/duplicates/index.php
-msgid "Asset tag"
-msgstr "Asset tag"
-
 #: Form/Search.php views/console/client/index.php
 msgid "Audio device"
 msgstr "Audiogerät"
@@ -799,11 +867,6 @@ msgstr "CPU-Taktfrequenz (MHz)"
 #: Form/Search.php views/console/client/index.php
 msgid "CPU cores"
 msgstr "CPU-Kerne"
-
-#: Form/Search.php views/console/client/general.php
-#: views/console/client/index.php
-msgid "CPU type"
-msgstr "CPU Typ"
 
 #: Form/Search.php views/console/client/index.php
 #: views/console/client/network.php
@@ -846,11 +909,6 @@ msgstr "IP-Adresse"
 msgid "Invert results"
 msgstr "Ergebnisse invertieren"
 
-#: Form/Search.php views/console/client/general.php
-#: views/console/client/index.php
-msgid "Last contact"
-msgstr "Letzter Kontakt"
-
 #: Form/Search.php views/console/client/index.php
 #: views/console/group/excluded.php views/console/group/members.php
 msgid "Last inventory"
@@ -876,11 +934,6 @@ msgstr "Microsoft Office-Lizenzschlüssel"
 #: views/console/client/misc.php views/console/client/system.php
 msgid "Manufacturer"
 msgstr "Hersteller"
-
-#: Form/Search.php views/console/client/general.php
-#: views/console/client/index.php views/console/client/storage.php
-msgid "Model"
-msgstr "Modell"
 
 #: Form/Search.php views/console/client/index.php
 msgid "Modem"
@@ -962,13 +1015,6 @@ msgstr "Suchen"
 msgid "Search for"
 msgstr "Suche nach"
 
-#: Form/Search.php views/console/client/display.php
-#: views/console/client/general.php views/console/client/index.php
-#: views/console/client/storage.php views/console/client/system.php
-#: views/console/duplicates/index.php
-msgid "Serial number"
-msgstr "Seriennummer"
-
 #: Form/Search.php views/console/client/index.php
 msgid "Software: Comment"
 msgstr "Software: Kommentar"
@@ -992,10 +1038,6 @@ msgstr "Software: Version"
 #: Form/Search.php
 msgid "Substring match, wildcards '?' and '*' allowed"
 msgstr "Teilzeichenfolge, Platzhalter '?' und '*' erlaubt"
-
-#: Form/Search.php views/console/client/general.php
-msgid "Swap memory"
-msgstr "Auslagerungsspeicher"
 
 #: Form/Search.php views/console/client/index.php
 msgid "User agent"
@@ -1270,52 +1312,6 @@ msgstr "EDID"
 #: views/console/client/virtualmachines.php
 msgid "Memory"
 msgstr "Speicher"
-
-#: views/console/client/general.php views/console/client/index.php
-msgid "CPU clock"
-msgstr "CPU Takt"
-
-#: views/console/client/general.php views/console/client/index.php
-#: views/console/group/general.php
-msgid "ID"
-msgstr "ID"
-
-#: views/console/client/general.php views/console/client/index.php
-msgid "ID string"
-msgstr "ID-String"
-
-#: views/console/client/general.php
-msgid "Inventory date"
-msgstr "Datum der Inventarinformationen"
-
-#: views/console/client/general.php
-msgid "Last user logged in"
-msgstr "Letzter angemeldeter Benutzer"
-
-#: views/console/client/general.php
-msgid "Number of CPU cores"
-msgstr "Anzahl der CPU-Kerne"
-
-#: views/console/client/general.php
-msgid "Operating System"
-msgstr "Betriebssystem"
-
-#: views/console/client/general.php
-msgid "RAM detected by agent"
-msgstr "Vom Agenten entdeckter Arbeitsspeicher"
-
-#: views/console/client/general.php
-msgid "RAM reported by OS"
-msgstr "Arbeitsspeicher lt. Betriebssystem"
-
-#: views/console/client/general.php views/console/client/index.php
-#: views/console/client/virtualmachines.php
-msgid "UUID"
-msgstr "UUID"
-
-#: views/console/client/general.php
-msgid "User Agent"
-msgstr "User-Agent"
 
 #: views/console/client/groups.php
 msgid "Group memberships"

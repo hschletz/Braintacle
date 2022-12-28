@@ -1,0 +1,86 @@
+{layout 'Layout.latte'}
+{block clientContent}
+
+<table class="topspacing textnormalsize">
+    <tr>
+        <td class="label">{translate('ID')}</td>
+        <td>{$client->id}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('ID string')}</td>
+        <td>{$client->idString}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('Inventory date')}</td>
+        <td>{$client->inventoryDate|dateFormat: IntlDateFormatter::FULL, IntlDateFormatter::LONG}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('Last contact')}</td>
+        <td>{$client->lastContactDate|dateFormat: IntlDateFormatter::FULL, IntlDateFormatter::LONG}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('User Agent')}</td>
+        <td>{$client->userAgent}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('Model')}</td>
+        <td>{$client->manufacturer} {$client->productName}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('Serial number')}</td>
+        <td n:class="$client['IsSerialBlacklisted'] ? blacklisted">{$client->serial}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('Asset tag')}</td>
+        <td n:class="$client['IsAssetTagBlacklisted'] ? blacklisted">{$client->assetTag}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('Type')}</td>
+        <td>{$client->type}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('Operating System')}</td>
+        <td>
+            {$client->osName} {$client->osVersionString} ({$client->osVersionNumber})
+            {if $client['Windows']['CpuArchitecture'] ?? null}
+                &ndash; {$client['Windows']['CpuArchitecture']}
+            {/if}
+        </td>
+    </tr>
+    <tr>
+        <td class="label">{translate('Comment')}</td>
+        <td>{$client->osComment}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('CPU type')}</td>
+        <td>{$client->cpuType}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('CPU clock')}</td>
+        <td>{$client->cpuClock}&nbsp;MHz</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('Number of CPU cores')}</td>
+        <td>{$client->cpuCores}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('RAM detected by agent')}</td>
+        <td>{$physicalRam}&nbsp;MB</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('RAM reported by OS')}</td>
+        <td>{$client->physicalMemory}&nbsp;MB</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('Swap memory')}</td>
+        <td>{$client->swapMemory}&nbsp;MB</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('Last user logged in')}</td>
+        <td>{$client->userName}{if $client['Windows']['UserDomain'] ?? null} @ {$client['Windows']['UserDomain']}{/if}</td>
+    </tr>
+    <tr n:if="$client->uuid">
+        <td class="label">{translate('UUID')}</td>
+        <td>{$client->uuid}</td>
+    </tr>
+</table>

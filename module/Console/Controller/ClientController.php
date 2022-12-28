@@ -220,12 +220,18 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
 
     /**
      * General information about a client
-     *
-     * @return array client
      */
     public function generalAction()
     {
-        return array('client' => $this->_currentClient);
+        $physicalRam = 0;
+        foreach ($this->_currentClient['MemorySlot'] as $slot) {
+            $physicalRam += $slot->size;
+        }
+
+        return new TemplateViewModel('Client/General.latte', [
+            'client' => $this->_currentClient,
+            'physicalRam' => $physicalRam,
+        ]);
     }
 
     /**

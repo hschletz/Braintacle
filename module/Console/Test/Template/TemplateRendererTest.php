@@ -2,6 +2,7 @@
 
 namespace Console\Test\Template;
 
+use Console\Template\Filters\DateFormatFilter;
 use Console\Template\TemplateRenderer;
 use Console\Template\TemplateRendererFactory;
 use Console\View\Helper\ConsoleScript;
@@ -45,6 +46,7 @@ class TemplateRendererTest extends TestCase
         /** @var MockObject|ContainerInterface */
         $container = $this->createMock(ContainerInterface::class);
         $container->method('get')->willReturnMap([
+            [DateFormatFilter::class, new DateFormatFilter()],
             [Translator::class, $translator],
             ['ViewHelperManager', $viewHelperManager],
         ]);

@@ -30,7 +30,7 @@ class TemplateRendererFactory implements FactoryInterface
         $consoleUrlFunction = new ConsoleUrlFunction($consoleUrl);
         $translateFunction = new TranslateFunction($translator);
 
-        $dateFormatFilter = new DateFormatFilter();
+        $dateFormatFilter = $container->get(DateFormatFilter::class);
         $numberFormatFilter = new NumberFormatFilter();
 
         $engine = new Engine();
