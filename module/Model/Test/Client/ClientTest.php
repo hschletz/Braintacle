@@ -76,7 +76,8 @@ class ClientTest extends \Model\Test\AbstractTest
             }
         );
 
-        $model = new \Model\Client\Client(array('Id' => 3));
+        $model = new Client();
+        $model->id = 3;
         $model->setServiceLocator($serviceManager);
 
         $android = $model['Android'];
@@ -105,7 +106,8 @@ class ClientTest extends \Model\Test\AbstractTest
             }
         );
 
-        $model = new \Model\Client\Client(array('Id' => 2));
+        $model = new Client();
+        $model->id = 2;
         $model->setServiceLocator($serviceManager);
 
         $this->assertNull($model['Android']);
@@ -124,7 +126,8 @@ class ClientTest extends \Model\Test\AbstractTest
             }
         );
 
-        $model = new \Model\Client\Client(array('Id' => 2));
+        $model = new Client();
+        $model->id = 2;
         $model->setServiceLocator($serviceManager);
 
         $windows = $model['Windows'];
@@ -157,7 +160,8 @@ class ClientTest extends \Model\Test\AbstractTest
             }
         );
 
-        $model = new \Model\Client\Client(array('Id' => 3));
+        $model = new Client();
+        $model->id = 3;
         $model->setServiceLocator($serviceManager);
 
         $this->assertNull($model['Windows']);
@@ -207,7 +211,8 @@ class ClientTest extends \Model\Test\AbstractTest
                 return static::$serviceManager->get($name);
             }
         );
-        $model = new \Model\Client\Client(array($initialIndex => $initialValue));
+        $model = new Client();
+        $model->$initialIndex = $initialValue;
         $model->setServiceLocator($serviceManager);
         $this->assertSame($result, $model[$index]);
         $this->assertSame($result, $model[$index]); // cached result
@@ -217,9 +222,9 @@ class ClientTest extends \Model\Test\AbstractTest
     {
         /** @var MockObject|Client */
         $model = $this->createPartialMock(Client::class, ['getItems']);
-        $model->expects($this->once())->method('getItems')->with('Type')->willReturn('items');
-        $this->assertEquals('items', $model['type']);
-        $this->assertEquals('items', $model['type']); // cached result
+        $model->expects($this->once())->method('getItems')->with('ItemType')->willReturn('items');
+        $this->assertEquals('items', $model['ItemType']);
+        $this->assertEquals('items', $model['ItemType']); // cached result
     }
 
     public function getDefaultConfigProvider()

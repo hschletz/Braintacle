@@ -24,6 +24,7 @@ namespace Model\Client;
 
 use Database\Hydrator\NamingStrategy\MapNamingStrategy;
 use Database\Table\ClientConfig;
+use DateTimeInterface;
 use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Db\Sql\Select;
 use Laminas\Hydrator\ObjectPropertyHydrator;
@@ -37,34 +38,6 @@ use ReturnTypeWillChange;
  * Additional virtual properties from searched items are provided by filters on
  * an item in the form "Type.Property".
  *
- * @property integer $Id primary key
- * @property string $IdString client-generated ID (name + timestamp, like 'NAME-2009-04-27-15-52-37')
- * @property string $Name Name
- * @property string $Type Type (Desktop, Notebook...) as reported by BIOS
- * @property string $Manufacturer system manufacturer
- * @property string $ProductName product name
- * @property string $Serial serial number
- * @property string $AssetTag asset tag
- * @property integer $CpuClock CPU clock in MHz
- * @property integer $CpuCores total number of CPUs/cores
- * @property string $CpuType CPU manufacturer and model
- * @property \DateTime $InventoryDate timestamp of last inventory
- * @property \DateTime $LastContactDate timestamp of last agent contact (may be newer than InventoryDate)
- * @property integer $PhysicalMemory Amount of RAM as reported by OS. May be lower than actual RAM.
- * @property integer $SwapMemory Amount of swap space in use
- * @property string $BiosManufacturer BIOS manufacturer
- * @property string $BiosVersion BIOS version
- * @property string $BiosDate BIOS date (no unified format, not parseable)
- * @property string $DnsDomain DNS domain name (UNIX clients only)
- * @property string $DnsServer IP Address of DNS server
- * @property string $DefaultGateway default gateway
- * @property string $OsName OS name
- * @property string $OsVersionNumber internal OS version number
- * @property string $OsVersionString OS version (Service pack, kernel version etc...)
- * @property string $OsComment OS comment
- * @property string $UserAgent user agent identification string
- * @property string $UserName user logged in at time of inventory
- * @property string $Uuid UUID (typically provided by BIOS)
  * @property \Model\Client\AndroidInstallation $Android Android installation info, NULL for non-Android systems
  * @property \Model\Client\WindowsInstallation $Windows Windows installation info, NULL for non-Windows systems
  * @property \Model\Client\CustomFields $CustomFields custom fields
@@ -119,6 +92,156 @@ class Client extends \Model\ClientOrGroup
      * Value denoting any membership value - only as argument for getGroupMemberships()
      */
     const MEMBERSHIP_ANY = -2;
+
+    /**
+     * Primary key
+     */
+    public int $id;
+
+    /**
+     * Client-generated ID (name + timestamp, like 'NAME-2009-04-27-15-52-37')
+     */
+    public string $idString;
+
+    /**
+     * Name
+     */
+    public string $name;
+
+    /**
+     * Type (Desktop, Notebook...) as reported by BIOS
+     */
+    public ?string $type;
+
+    /**
+     * System manufacturer
+     */
+    public ?string $manufacturer ;
+
+    /**
+     * Product name
+     */
+    public ?string $productName;
+
+    /**
+     * Serial number
+     */
+    public ?string $serial ;
+
+    /**
+     * Asset tag
+     */
+    public ?string $assetTag;
+
+    /**
+     * CPU clock in MHz
+     */
+    public int $cpuClock;
+
+    /**
+     * Total number of CPUs/cores
+     */
+    public int $cpuCores;
+
+    /**
+     * CPU manufacturer and model
+     */
+    public string $cpuType;
+
+    /**
+     * Timestamp of last inventory
+     */
+    public DateTimeInterface $inventoryDate;
+
+    /**
+     * Timestamp of last agent contact (may be newer than $inventoryDate)
+     */
+    public DateTimeInterface $lastContactDate;
+
+    /**
+     * Amount of RAM as reported by OS. May be lower than actual RAM.
+     */
+    public int $physicalMemory;
+
+    /**
+     * Amount of swap space in use
+     */
+    public int $swapMemory;
+
+    /**
+     * BIOS manufacturer
+     */
+    public ?string $biosManufacturer;
+
+    /**
+     * BIOS version
+     */
+    public ?string $biosVersion;
+
+    /**
+     * BIOS date (no unified format, not parseable)
+     */
+    public ?string $biosDate;
+
+    /**
+     * DNS domain name (UNIX clients only)
+     */
+    public ?string $dnsDomain;
+
+    /**
+     * IP Address of DNS server
+     */
+    public ?string $dnsServer;
+
+    /**
+     * Default gateway
+     */
+    public ?string $defaultGateway;
+
+    /**
+     * OS name
+     */
+    public string $osName;
+
+    /**
+     * Internal OS version number
+     */
+    public string $osVersionNumber;
+
+    /**
+     * OS version (Service pack, kernel version etc...)
+     */
+    public ?string $osVersionString;
+
+    /**
+     * OS comment
+     */
+    public ?string $osComment;
+
+    /**
+     * User agent identification string
+     */
+    public string $userAgent;
+
+    /**
+     * User logged in at time of inventory
+     */
+    public string $userName;
+
+    /**
+     * UUID (typically provided by BIOS)
+     */
+    public ?string $uuid;
+
+    /**
+     * Bitmask of changed inventory sections.
+     */
+    public int $inventoryDiff;
+
+    /**
+     * @deprecated Enumerate all interfaces for a complete list of IP addresses.
+     */
+    public ?string $ipAddress;
 
     /**
      * Cache for getDefaultConfig() results
@@ -179,11 +302,11 @@ class Client extends \Model\ClientOrGroup
                     break;
                 case 'IsSerialBlacklisted':
                     $duplicateSerials = $this->_serviceLocator->get('Database\Table\DuplicateSerials');
-                    $value = (bool) $duplicateSerials->select(array('serial' => $this['Serial']))->count();
+                    $value = (bool) $duplicateSerials->select(['serial' => $this->serial])->count();
                     break;
                 case 'IsAssetTagBlacklisted':
                     $duplicateAssetTags = $this->_serviceLocator->get('Database\Table\DuplicateAssetTags');
-                    $value = (bool) $duplicateAssetTags->select(array('assettag' => $this['AssetTag']))->count();
+                    $value = (bool) $duplicateAssetTags->select(['assettag' => $this->assetTag])->count();
                     break;
                 default:
                     $value = $this->getItems($key);

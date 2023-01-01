@@ -26,4 +26,13 @@ trait DomMatcherTrait
             'Failed asserting that XPath expression matches.'
         );
     }
+
+    private function assertNotXpathMatches(Document $document, string $xPath): void
+    {
+        $this->assertEquals(
+            0,
+            count(Query::execute($xPath, $document)),
+            'Failed asserting that XPath expression does not match.'
+        );
+    }
 }

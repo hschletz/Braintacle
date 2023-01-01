@@ -169,40 +169,6 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
     }
 
-    public function testMenuForWindowsClients()
-    {
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
-            'Printer' => array(),
-        ]);
-
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/printers/?id=1');
-        $query = '//ul[contains(concat(" ", normalize-space(@class), " "), " navigation_details ")]/li';
-        $this->assertXpathQuery($query . '/a[@href="/console/client/windows/?id=1"]');
-        $this->assertXpathQuery($query . '/a[@href="/console/client/msoffice/?id=1"]');
-        $this->assertXpathQuery($query . '/a[@href="/console/client/registry/?id=1"]');
-    }
-
-    public function testMenuForNonWindowsClients()
-    {
-        $client = array(
-            'Name' => 'name',
-            'Windows' => null,
-            'Printer' => array(),
-        );
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/printers/?id=1');
-        $query = '//ul[contains(concat(" ", normalize-space(@class), " "), " navigation_details ")]/li';
-        $this->assertNotXpathQuery($query . '/a[@href="/console/client/windows/?id=1"]');
-        $this->assertNotXpathQuery($query . '/a[@href="/console/client/msoffice/?id=1"]');
-        $this->assertNotXpathQuery($query . '/a[@href="/console/client/registry/?id=1"]');
-    }
-
     public function testIndexActionWithoutParams()
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
@@ -860,30 +826,28 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
-        $client->method('__get')->willReturnMap([
-            ['id', 1],
-            ['name', 'name'],
-            ['idString', 'id_string'],
-            ['inventoryDate', $inventoryDate],
-            ['lastContactDate', $lastContactDate],
-            ['userAgent', 'user_agent'],
-            ['manufacturer', 'manufacturer'],
-            ['productName', 'product_name'],
-            ['serial', 'serial'],
-            ['assetTag', 'asset_tag'],
-            ['type', 'type'],
-            ['osName', 'os_name'],
-            ['osVersionString', 'os_version_string'],
-            ['osVersionNumber', 'os_version_number'],
-            ['osComment', 'os_comment'],
-            ['cpuType', 'cpu_type'],
-            ['cpuClock', 1234],
-            ['cpuCores', 2],
-            ['physicalMemory', 1234],
-            ['swapMemory', 5678],
-            ['userName', 'user_name'],
-            ['uuid', 'uuid'],
-        ]);
+        $client->id = 1;
+        $client->name = 'name';
+        $client->idString = 'id_string';
+        $client->inventoryDate = $inventoryDate;
+        $client->lastContactDate = $lastContactDate;
+        $client->userAgent = 'user_agent';
+        $client->manufacturer = 'manufacturer';
+        $client->productName = 'product_name';
+        $client->serial = 'serial';
+        $client->assetTag = 'asset_tag';
+        $client->type = 'type';
+        $client->osName = 'os_name';
+        $client->osVersionString = 'os_version_string';
+        $client->osVersionNumber = 'os_version_number';
+        $client->osComment = 'os_comment';
+        $client->cpuType = 'cpu_type';
+        $client->cpuClock = 1234;
+        $client->cpuCores = 2;
+        $client->physicalMemory = 1234;
+        $client->swapMemory = 5678;
+        $client->userName = 'user_name';
+        $client->uuid = 'uuid';
         $client->method('offsetGet')->willReturnMap([
             ['IsSerialBlacklisted', false],
             ['IsAssetTagBlacklisted', false],
@@ -923,30 +887,28 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
-        $client->method('__get')->willReturnMap([
-            ['id', 1],
-            ['name', 'name'],
-            ['idString', 'id_string'],
-            ['inventoryDate', new DateTime()],
-            ['lastContactDate', new DateTime()],
-            ['userAgent', 'user_agent'],
-            ['manufacturer', 'manufacturer'],
-            ['productName', 'product_name'],
-            ['serial', 'serial'],
-            ['assetTag', 'asset_tag'],
-            ['type', 'type'],
-            ['osName', 'os_name'],
-            ['osVersionString', 'os_version_string'],
-            ['osVersionNumber', 'os_version_number'],
-            ['osComment', 'os_comment'],
-            ['cpuType', 'cpu_type'],
-            ['cpuClock', 1234],
-            ['cpuCores', 2],
-            ['physicalMemory', 1234],
-            ['swapMemory', 5678],
-            ['userName', 'user_name'],
-            ['uuid', null],
-        ]);
+        $client->id = 1;
+        $client->name = 'name';
+        $client->idString = 'id_string';
+        $client->inventoryDate = new DateTime();
+        $client->lastContactDate = new DateTime();
+        $client->userAgent = 'user_agent';
+        $client->manufacturer = 'manufacturer';
+        $client->productName = 'product_name';
+        $client->serial = 'serial';
+        $client->assetTag = 'asset_tag';
+        $client->type = 'type';
+        $client->osName = 'os_name';
+        $client->osVersionString = 'os_version_string';
+        $client->osVersionNumber = 'os_version_number';
+        $client->osComment = 'os_comment';
+        $client->cpuType = 'cpu_type';
+        $client->cpuClock = 1234;
+        $client->cpuCores = 2;
+        $client->physicalMemory = 1234;
+        $client->swapMemory = 5678;
+        $client->userName = 'user_name';
+        $client->uuid = null;
         $client->method('offsetGet')->willReturnMap([
             ['MemorySlot', []],
         ]);
@@ -963,12 +925,28 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
-        $client->method('__get')->willReturnMap([
-            ['inventoryDate', new DateTime()],
-            ['lastContactDate', new DateTime()],
-            ['serial', 'serial'],
-            ['assetTag', 'asset_tag'],
-        ]);
+        $client->id = 1;
+        $client->name = 'test';
+        $client->idString = 'id_string';
+        $client->inventoryDate = new DateTime();
+        $client->lastContactDate = new DateTime();
+        $client->userAgent = 'user_agent';
+        $client->manufacturer = 'manufacturer';
+        $client->productName = 'product_name';
+        $client->serial = 'serial';
+        $client->assetTag = 'asset_tag';
+        $client->type = 'type';
+        $client->osName = 'os_name';
+        $client->osVersionString = 'os_version_string';
+        $client->osVersionNumber = 'os_version_number';
+        $client->osComment = 'os_comment';
+        $client->cpuType = 'cpu_type';
+        $client->cpuClock = 1234;
+        $client->cpuCores = 2;
+        $client->physicalMemory = 1234;
+        $client->swapMemory = 5678;
+        $client->userName = 'user_name';
+        $client->uuid = 'uuid';
         $client->method('offsetGet')->willReturnMap([
             ['IsSerialBlacklisted', true],
             ['IsAssetTagBlacklisted', false],
@@ -986,12 +964,28 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
-        $client->method('__get')->willReturnMap([
-            ['inventoryDate', new DateTime()],
-            ['lastContactDate', new DateTime()],
-            ['serial', 'serial'],
-            ['assetTag', 'asset_tag'],
-        ]);
+        $client->id = 1;
+        $client->name = 'test';
+        $client->idString = 'id_string';
+        $client->inventoryDate = new DateTime();
+        $client->lastContactDate = new DateTime();
+        $client->userAgent = 'user_agent';
+        $client->manufacturer = 'manufacturer';
+        $client->productName = 'product_name';
+        $client->serial = 'serial';
+        $client->assetTag = 'asset_tag';
+        $client->type = 'type';
+        $client->osName = 'os_name';
+        $client->osVersionString = 'os_version_string';
+        $client->osVersionNumber = 'os_version_number';
+        $client->osComment = 'os_comment';
+        $client->cpuType = 'cpu_type';
+        $client->cpuClock = 1234;
+        $client->cpuCores = 2;
+        $client->physicalMemory = 1234;
+        $client->swapMemory = 5678;
+        $client->userName = 'user_name';
+        $client->uuid = 'uuid';
         $client->method('offsetGet')->willReturnMap([
             ['IsSerialBlacklisted', false],
             ['IsAssetTagBlacklisted', true],
@@ -1009,11 +1003,28 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
-        $client->method('__get')->willReturnMap([
-            ['inventoryDate', new DateTime()],
-            ['lastContactDate', new DateTime()],
-            ['userName', 'user_name'],
-        ]);
+        $client->id = 1;
+        $client->name = 'test';
+        $client->idString = 'id_string';
+        $client->inventoryDate = new DateTime();
+        $client->lastContactDate = new DateTime();
+        $client->userAgent = 'user_agent';
+        $client->manufacturer = 'manufacturer';
+        $client->productName = 'product_name';
+        $client->serial = 'serial';
+        $client->assetTag = 'asset_tag';
+        $client->type = 'type';
+        $client->osName = 'os_name';
+        $client->osVersionString = 'os_version_string';
+        $client->osVersionNumber = 'os_version_number';
+        $client->osComment = 'os_comment';
+        $client->cpuType = 'cpu_type';
+        $client->cpuClock = 1234;
+        $client->cpuCores = 2;
+        $client->physicalMemory = 1234;
+        $client->swapMemory = 5678;
+        $client->userName = 'user_name';
+        $client->uuid = 'uuid';
         $client->method('offsetGet')->willReturnMap([
             ['Windows', ['UserDomain' => 'domain']],
             ['MemorySlot', []],
@@ -1030,13 +1041,28 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
-        $client->method('__get')->willReturnMap([
-            ['inventoryDate', new DateTime()],
-            ['lastContactDate', new DateTime()],
-            ['osName', 'os_name'],
-            ['osVersionString', 'os_version_string'],
-            ['osVersionNumber', 'os_version_number'],
-        ]);
+        $client->id = 1;
+        $client->name = 'test';
+        $client->idString = 'id_string';
+        $client->inventoryDate = new DateTime();
+        $client->lastContactDate = new DateTime();
+        $client->userAgent = 'user_agent';
+        $client->manufacturer = 'manufacturer';
+        $client->productName = 'product_name';
+        $client->serial = 'serial';
+        $client->assetTag = 'asset_tag';
+        $client->type = 'type';
+        $client->osName = 'os_name';
+        $client->osVersionString = 'os_version_string';
+        $client->osVersionNumber = 'os_version_number';
+        $client->osComment = 'os_comment';
+        $client->cpuType = 'cpu_type';
+        $client->cpuClock = 1234;
+        $client->cpuCores = 2;
+        $client->physicalMemory = 1234;
+        $client->swapMemory = 5678;
+        $client->userName = 'user_name';
+        $client->uuid = 'uuid';
         $client->method('offsetGet')->willReturnMap([
             ['Windows', ['CpuArchitecture' => null, 'UserDomain' => 'domain']],
             ['MemorySlot', []],
@@ -1053,13 +1079,28 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
-        $client->method('__get')->willReturnMap([
-            ['inventoryDate', new DateTime()],
-            ['lastContactDate', new DateTime()],
-            ['osName', 'os_name'],
-            ['osVersionString', 'os_version_string'],
-            ['osVersionNumber', 'os_version_number'],
-        ]);
+        $client->id = 1;
+        $client->name = 'test';
+        $client->idString = 'id_string';
+        $client->inventoryDate = new DateTime();
+        $client->lastContactDate = new DateTime();
+        $client->userAgent = 'user_agent';
+        $client->manufacturer = 'manufacturer';
+        $client->productName = 'product_name';
+        $client->serial = 'serial';
+        $client->assetTag = 'asset_tag';
+        $client->type = 'type';
+        $client->osName = 'os_name';
+        $client->osVersionString = 'os_version_string';
+        $client->osVersionNumber = 'os_version_number';
+        $client->osComment = 'os_comment';
+        $client->cpuType = 'cpu_type';
+        $client->cpuClock = 1234;
+        $client->cpuCores = 2;
+        $client->physicalMemory = 1234;
+        $client->swapMemory = 5678;
+        $client->userName = 'user_name';
+        $client->uuid = 'uuid';
         $client->method('offsetGet')->willReturnMap([
             ['Windows', ['CpuArchitecture' => 'cpu_architecture', 'UserDomain' => 'domain']],
             ['MemorySlot', []],
@@ -1109,11 +1150,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_softwareManager->expects($this->never())->method('setProductKey');
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => $windows,
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'test';
+        $client['Windows'] = $windows;
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1161,16 +1201,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $formManager->setAllowOverride(true);
         $formManager->setService('Console\Form\ProductKey', $form);
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => [
-                'Company' => 'company',
-                'Owner' => 'owner',
-                'ProductId' => 'product_id',
-                'ProductKey' => 'product_key',
-            ],
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'test';
+        $client['Windows'] = [
+            'Company' => 'company',
+            'Owner' => 'owner',
+            'ProductId' => 'product_id',
+            'ProductKey' => 'product_key',
+        ];
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1213,16 +1252,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         // DnsServer and DefaultGateway typically show up both or not at all, so
         // they are not tested separately.
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'DnsDomain' => 'dns_domain',
-            'DnsServer' => 'dns_server',
-            'DefaultGateway' => 'default_gateway',
-            'NetworkInterface' => array(),
-            'Modem' => array(),
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'name';
+        $client->dnsDomain = 'dns_domain';
+        $client->dnsServer = 'dns_server';
+        $client->defaultGateway = 'default_gateway';
+        $client['Windows'] = null;
+        $client['NetworkInterface'] = [];
+        $client['Modem'] = [];
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1240,16 +1278,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testNetworkActionSettingsOnlyWindows()
     {
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => array('Workgroup' => 'workgroup'),
-            'DnsDomain' => null,
-            'DnsServer' => null,
-            'DefaultGateway' => null,
-            'NetworkInterface' => array(),
-            'Modem' => array(),
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'test';
+        $client->dnsDomain = null;
+        $client->dnsServer = null;
+        $client->defaultGateway = null;
+        $client['Windows'] = ['Workgroup' => 'workgroup'];
+        $client['NetworkInterface'] = [];
+        $client['Modem'] = [];
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1286,16 +1323,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             $interface + array('IsBlacklisted' => true),
         );
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'DnsDomain' => null,
-            'DnsServer' => null,
-            'DefaultGateway' => null,
-            'NetworkInterface' => $interfaces,
-            'Modem' => array(),
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'test';
+        $client->dnsDomain = null;
+        $client->dnsServer = null;
+        $client->defaultGateway = null;
+        $client['Windows'] = null;
+        $client['NetworkInterface'] = $interfaces;
+        $client['Modem'] = [];
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1315,16 +1351,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Name' => 'name',
         );
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'DnsDomain' => null,
-            'DnsServer' => null,
-            'DefaultGateway' => null,
-            'NetworkInterface' => array(),
-            'Modem' => array($modem),
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'test';
+        $client->dnsDomain = null;
+        $client->dnsServer = null;
+        $client->defaultGateway = null;
+        $client['Windows'] = null;
+        $client['NetworkInterface'] = [];
+        $client['Modem'] = [$modem];
 
         $this->_clientManager->method('getClient')->willReturn($client);
         $this->dispatch('/console/client/network/?id=1');
@@ -1417,14 +1452,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
-            'Android' => null,
-            'StorageDevice' => $devices,
-            'Filesystem' => $filesystems,
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'test';
+        $client['Windows'] = new WindowsInstallation();
+        $client['Android'] = null;
+        $client['StorageDevice'] = $devices;
+        $client['Filesystem'] = $filesystems;
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1484,14 +1518,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'Android' => null,
-            'StorageDevice' => $devices,
-            'Filesystem' => $filesystems,
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'test';
+        $client['Windows'] = null;
+        $client['Android'] = null;
+        $client['StorageDevice'] = $devices;
+        $client['Filesystem'] = $filesystems;
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1524,14 +1557,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ],
         ];
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'Android' => $this->createMock('Model\Client\AndroidInstallation'),
-            'StorageDevice' => $devices,
-            'Filesystem' => $filesystems,
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'test';
+        $client['Windows'] = null;
+        $client['Android'] = new AndroidInstallation();
+        $client['StorageDevice'] = $devices;
+        $client['Filesystem'] = $filesystems;
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1558,13 +1590,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'DisplayController' => $displayControllers,
-            'Display' => array(),
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'test';
+        $client['Windows'] = null;
+        $client['DisplayController'] = $displayControllers;
+        $client['Display'] = [];
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1587,13 +1618,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Type' => 'type',
         );
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'DisplayController' => array(),
-            'Display' => array($display),
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'test';
+        $client['Windows'] = null;
+        $client['DisplayController'] = [];
+        $client['Display'] = [$display];
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1605,14 +1635,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testBiosAction()
     {
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'BiosManufacturer' => 'manufacturer',
-            'BiosDate' => 'date',
-            'BiosVersion' => 'line1;line2',
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'test';
+        $client->biosManufacturer = 'manufacturer';
+        $client->biosDate = 'date';
+        $client->biosVersion = 'line1;line2';
+        $client['Windows'] = null;
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1633,14 +1662,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'MemorySlot' => array(),
-            'Controller' => $controllers,
-            'ExtensionSlot' => array(),
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'test';
+        $client['Windows'] = null;
+        $client['MemorySlot'] = [];
+        $client['Controller'] = $controllers;
+        $client['ExtensionSlot'] = [];
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1664,14 +1692,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
-            'MemorySlot' => array(),
-            'Controller' => $controllers,
-            'ExtensionSlot' => array(),
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'test';
+        $client['Windows'] = new WindowsInstallation();
+        $client['MemorySlot'] = [];
+        $client['Controller'] = $controllers;
+        $client['ExtensionSlot'] = [];
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1706,14 +1733,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'MemorySlot' => $slots,
-            'Controller' => array(),
-            'ExtensionSlot' => array(),
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'test';
+        $client['Windows'] = null;
+        $client['MemorySlot'] = $slots;
+        $client['Controller'] = [];
+        $client['ExtensionSlot'] = [];
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1748,14 +1774,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'MemorySlot' => array(),
-            'Controller' => array(),
-            'ExtensionSlot' => $slots,
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'test';
+        $client['Windows'] = null;
+        $client['MemorySlot'] = [];
+        $client['Controller'] = [];
+        $client['ExtensionSlot'] = $slots;
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1778,12 +1803,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                 'Description' => 'description',
             ),
         );
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'Printer' => $printers,
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'test';
+        $client['Windows'] = null;
+        $client['Printer'] = $printers;
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -1816,6 +1840,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
+        $client->id = 1;
+        $client->name = 'test';
         $client->method('__get')->willReturnMap([['windows', $windows]]);
         $client->expects($this->once())
                ->method('getItems')
@@ -1845,6 +1871,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->once())
                ->method('getItems')
                ->with('Software')
@@ -1873,6 +1901,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
+        $client->id = 1;
+        $client->name = 'test';
         $client->method('__get')->willReturnMap([
             ['windows', null],
             ['android', $this->createStub(AndroidInstallation::class)],
@@ -1910,6 +1940,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->once())
                ->method('getItems')
                ->with('Software')
@@ -1966,6 +1998,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
+        $client->id = 1;
+        $client->name = 'test';
         $client->method('__get')->willReturnMap([['windows', $windows]]);
         $client->expects($this->once())
                ->method('getItems')
@@ -1988,6 +2022,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->once())
                ->method('getItems')
                ->with('Software', 'name', 'asc', ['Software.NotIgnored' => null])
@@ -2008,6 +2044,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->once())
                ->method('getItems')
                ->with('Software', 'name', 'asc', [])
@@ -2032,6 +2070,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
         $client = $this->createMock('Model\Client\Client');
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->exactly(2))
                ->method('getItems')
                ->will($this->onConsecutiveCalls($products, array()));
@@ -2057,6 +2097,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
         $client = $this->createMock('Model\Client\Client');
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->exactly(2))
                ->method('getItems')
                ->will($this->onConsecutiveCalls(array(), $products));
@@ -2090,6 +2132,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
         $client = $this->createMock('Model\Client\Client');
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->exactly(2))
                ->method('getItems')
                ->will($this->onConsecutiveCalls($products, array()));
@@ -2122,6 +2166,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
         $client = $this->createMock('Model\Client\Client');
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->exactly(2))
                ->method('getItems')
                ->will($this->onConsecutiveCalls($products, array()));
@@ -2136,6 +2182,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testRegistryActionNoValues()
     {
         $client = $this->createMock('Model\Client\Client');
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->once())
                ->method('getItems')
                ->with('RegistryData', 'Value', 'asc')
@@ -2165,6 +2213,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             )
         );
         $client = $this->createMock('Model\Client\Client');
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->once())
                ->method('getItems')
                ->with('RegistryData', 'Value', 'asc')
@@ -2181,6 +2231,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testVirtualmachinesActionNoMachines()
     {
         $client = $this->createMock('Model\Client\Client');
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->once())
                ->method('getItems')
                ->with('VirtualMachine', 'Name', 'asc')
@@ -2213,6 +2265,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
         $client = $this->createMock('Model\Client\Client');
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->once())
                ->method('getItems')
                ->with('VirtualMachine', 'Name', 'asc')
@@ -2233,14 +2287,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Description' => 'description',
         );
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'AudioDevice' => array($audiodevice),
-            'InputDevice' => array(),
-            'Port' => array(),
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'name';
+        $client['Windows'] = null;
+        $client['AudioDevice'] = [$audiodevice];
+        $client['InputDevice'] = [];
+        $client['Port'] = [];
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -2279,14 +2332,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'AudioDevice' => array(),
-            'InputDevice' => $inputdevices,
-            'Port' => array(),
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'name';
+        $client['Windows'] = null;
+        $client['AudioDevice'] = [];
+        $client['InputDevice'] = $inputdevices;
+        $client['Port'] = [];
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -2308,14 +2360,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Name' => 'name',
         );
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => $this->createMock('Model\Client\WindowsInstallation'),
-            'AudioDevice' => array(),
-            'InputDevice' => array(),
-            'Port' => array($port),
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'name';
+        $client['Windows'] = new WindowsInstallation();
+        $client['AudioDevice'] = [];
+        $client['InputDevice'] = [];
+        $client['Port'] = [$port];
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -2337,14 +2388,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Connector' => 'connector',
         );
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'AudioDevice' => array(),
-            'InputDevice' => array(),
-            'Port' => array($port),
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'name';
+        $client['Windows'] = null;
+        $client['AudioDevice'] = [];
+        $client['InputDevice'] = [];
+        $client['Port'] = [$port];
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -2365,12 +2415,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                      ->method('getArrayCopy')
                      ->will($this->returnValue(array()));
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'CustomFields' => $customFields,
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'name';
+        $client['Windows'] = null;
+        $client['CustomFields'] = $customFields;
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -2398,12 +2447,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
                      ->method('getArrayCopy')
                      ->will($this->returnValue($data));
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null,
-            'CustomFields' => $customFields,
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'name';
+        $client['Windows'] = null;
+        $client['CustomFields'] = $customFields;
 
         $this->_clientManager->method('getClient')->willReturn($client);
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\CustomFields');
@@ -2434,11 +2482,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             'Fields' => array('field1' => 'value1', 'field2' => 'value2')
         );
 
-        $client = new Client([
-            'Id' => 1,
-            'Name' => 'name',
-            'Windows' => null
-        ]);
+        $client = new Client();
+        $client->id = 1;
+        $client->name = 'name';
+        $client['Windows'] = null;
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\CustomFields');
@@ -2502,6 +2549,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->once())
                ->method('getPackageAssignments')
                ->with('packageName', 'asc')
@@ -2547,7 +2596,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
-        $client->method('__get')->willReturnMap([['id', 1]]);
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->once())
                ->method('getPackageAssignments')
                ->with('packageName', 'asc')
@@ -2602,6 +2652,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->once())
                ->method('getPackageAssignments')
                ->with('packageName', 'asc')
@@ -2625,10 +2677,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->never())
              ->method('render');
-        $client = $this->createMock('Model\Client\Client');
-        $client->expects($this->never())->method('getGroupMemberships');
 
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->id = 1;
+        $client->name = 'test';
+        $client->expects($this->never())->method('getGroupMemberships');
         $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->_groupManager->expects($this->once())
                            ->method('getGroups')
                            ->with(null, null, 'Name')
@@ -2661,14 +2717,17 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('setAttribute')
              ->with('action', '/console/client/managegroups/?id=1');
-        $client = $this->createMock('Model\Client\Client');
+
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->once())
                ->method('getGroupMemberships')
-               ->with(\Model\Client\Client::MEMBERSHIP_ANY)
-               ->willReturn(array(1 => \Model\Client\Client::MEMBERSHIP_NEVER));
-        $client->method('offsetGet')
-               ->will($this->returnValueMap(array(array('Id', 1))));
+               ->with(Client::MEMBERSHIP_ANY)
+               ->willReturn([1 => Client::MEMBERSHIP_NEVER]);
         $this->_clientManager->method('getClient')->willReturn($client);
+
         $this->_groupManager->expects($this->once())
                             ->method('getGroups')
                             ->with(null, null, 'Name')
@@ -2707,13 +2766,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $form->expects($this->once())
              ->method('setAttribute')
              ->with('action', '/console/client/managegroups/?id=1');
-        $client = $this->createMock('Model\Client\Client');
+
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->once())
                ->method('getGroupMemberships')
-               ->with(\Model\Client\Client::MEMBERSHIP_ANY)
+               ->with(Client::MEMBERSHIP_ANY)
                ->willReturn($memberships);
-        $client->method('offsetGet')
-               ->will($this->returnValueMap(array(array('Id', 1))));
         $this->_clientManager->method('getClient')->willReturn($client);
         $this->_groupManager->expects($this->once())
                             ->method('getGroups')
@@ -2739,9 +2800,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testConfigurationActionGet()
     {
         $config = array('name' => 'value');
-        $client = $this->createMock('Model\Client\Client');
+
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->id = 1;
+        $client->name = 'test';
         $client->expects($this->once())->method('getAllConfig')->willReturn($config);
         $this->_clientManager->method('getClient')->willReturn($client);
+
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\ClientConfig');
         $form->expects($this->once())
              ->method('setClientObject')
@@ -2768,8 +2834,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testConfigurationActionPostInvalid()
     {
         $postData = array('key' => 'value');
-        $client = $this->createMock('Model\Client\Client');
+
+        $client = $this->createMock(Client::class);
+        $client->id = 1;
+        $client->name = 'test';
         $this->_clientManager->method('getClient')->willReturn($client);
+
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\ClientConfig');
         $form->expects($this->once())
              ->method('setClientObject')

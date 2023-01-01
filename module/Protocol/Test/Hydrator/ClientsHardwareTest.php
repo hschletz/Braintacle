@@ -22,13 +22,15 @@
 
 namespace Protocol\Test\Hydrator;
 
+use AssertionError;
 use DateTime;
-use Model\AbstractModel;
+use Model\Client\Client;
 use Model\Client\WindowsInstallation;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
+class ClientsHardwareTest extends TestCase
 {
     /**
      * WindowsInstallation prototype injected into hydrator
@@ -117,55 +119,22 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
     /**
      * @dataProvider hydrateProvider
      */
-    public function testHydrateWithStdClass(array $data, array $objectData)
+    public function testHydrate(array $data, array $objectData)
     {
         if (isset($objectData['windows'])) {
             // Set up prototype with new mock object to validate hydrated data.
             /** @var MockObject|WindowsInstallation */
             $this->_windowsInstallation = $this->createMock(WindowsInstallation::class);
             $this->_windowsInstallation->expects($this->once())->method('exchangeArray')->with($objectData['windows']);
-
-            // Replace array with mock object (which hydrate() will clone)
-            $objectData['windows'] = $this->_windowsInstallation;
         }
 
         $hydrator = $this->getHydrator();
-        $object = new stdClass();
+        $object = new Client();
         $object->idString = 'ignored';
         $this->assertSame($object, $hydrator->hydrate($data, $object));
+
+        unset($objectData['windows']); // not a regular property
         $this->assertEquals($objectData, get_object_vars($object));
-    }
-
-    /**
-     * @dataProvider hydrateProvider
-     */
-    public function testHydrateWithAbstractModel(array $data, array $objectData)
-    {
-        if (isset($objectData['Windows'])) {
-            // Set up prototype with new mock object to validate hydrated data.
-            /** @var MockObject|WindowsInstallation */
-            $this->_windowsInstallation = $this->createMock(WindowsInstallation::class);
-            $this->_windowsInstallation->expects($this->once())->method('exchangeArray')->with($objectData['Windows']);
-
-            // Replace array with mock object (which hydrate() will clone)
-            $objectData['Windows'] = $this->_windowsInstallation;
-        }
-
-        $hydrator = $this->getHydrator();
-        $object = $this->getMockForAbstractClass(AbstractModel::class);
-        $object->idString = 'ignored';
-        $this->assertSame($object, $hydrator->hydrate($data, $object));
-
-        $expected = [];
-        foreach ($objectData as $key => $value) {
-            $expected[ucfirst($key)] = $value;
-        }
-        $actual = $object->getArrayCopy();
-        // remove incompatible windows property. It got already validated by the
-        // exchangeArray expectation.
-        unset($expected['Windows']); // array
-        unset($actual['Windows']); // mock object
-        $this->assertEquals($expected, $actual);
     }
 
     public function extractProvider()
@@ -239,5 +208,25 @@ class ClientsHardwareTest extends \Library\Test\Hydrator\AbstractHydratorTest
             ], // UNIX client
             [$hydrated + $windowsHydrated, $extracted + $windowsExtracted], // Windows client
         ];
+    }
+
+    /**
+     * @dataProvider extractProvider
+     */
+    public function testExtract(array $objectData, array $data)
+    {
+        $hydrator = $this->getHydrator();
+        $object = new Client();
+        foreach ($objectData as $key => $value) {
+            $object->$key = $value;
+        }
+        $this->assertEquals($data, $hydrator->extract($object));
+    }
+
+    public function testExtractInvalidClass()
+    {
+        $this->expectException(AssertionError::class);
+        $hydrator = $this->getHydrator();
+        $hydrator->extract(new stdClass());
     }
 }

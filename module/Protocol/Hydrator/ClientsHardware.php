@@ -22,7 +22,7 @@
 
 namespace Protocol\Hydrator;
 
-use Model\AbstractModel;
+use Model\Client\Client;
 
 /**
  * Hydrator for clients (HARDWARE section)
@@ -180,11 +180,10 @@ class ClientsHardware implements \Laminas\Hydrator\HydratorInterface
     /** {@inheritdoc} */
     public function extract(object $object): array
     {
-        $data = array();
-        foreach ($object as $name => $value) {
-            if ($object instanceof AbstractModel) {
-                $name = lcfirst($name);
-            }
+        assert($object instanceof Client);
+
+        $data = [];
+        foreach (get_object_vars($object) as $name => $value) {
             $name = $this->extractName($name);
             if ($name) {
                 $data[$name] = $this->extractValue($name, $value);

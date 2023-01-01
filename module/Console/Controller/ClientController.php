@@ -482,7 +482,7 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
                 $this->urlFromRoute(
                     'client',
                     'managegroups',
-                    array('id' => $this->_currentClient['Id'])
+                    ['id' => $this->_currentClient->id]
                 )
             );
             $vars['form'] = $form;

@@ -198,6 +198,8 @@ class Run
         }
 
         $cmd = [(new \Symfony\Component\Process\PhpExecutableFinder())->find()];
+        $cmd[] = '-d zend.assertions=1';
+        $cmd[] = '-d assert.exception=1';
         if ($xdebugMode) {
             $cmd[] = '-d zend_extension=xdebug.' . PHP_SHLIB_SUFFIX;
         }
