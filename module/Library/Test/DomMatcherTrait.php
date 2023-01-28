@@ -13,9 +13,8 @@ trait DomMatcherTrait
         // ignores the specified encoding and always interprets content as
         // ISO 8859-1, causing any matches against UTF-8 strings to fail. As a
         // workaround, non-ASCII characters (and only those) are encoded as HTML
-        // entities first. HTML special characters are preserved, which is
-        // required for correct HTML parsing.
-        return new Document(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'));
+        // entities first.
+        return new Document(mb_encode_numericentity($content, [0x7f, 0x10ffff, 0, 0x1fffff], 'UTF-8'));
     }
 
     private function assertXpathMatches(Document $document, string $xPath): void
