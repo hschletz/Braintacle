@@ -42,41 +42,16 @@ class ShowDuplicates extends Form
     public function init()
     {
         parent::init();
-        $config = $this->getOption('config');
 
         $mergeOptions = new Element\MultiCheckbox('mergeOptions');
         $mergeOptions->setValueOptions([
-            [
-                'value' => \Model\Client\DuplicatesManager::MERGE_CUSTOM_FIELDS,
-                'label' => $this->_('Merge user supplied information'),
-                'selected' => $config->defaultMergeCustomFields,
-            ],
-            [
-                'value' => \Model\Client\DuplicatesManager::MERGE_CONFIG,
-                'label' => $this->_('Merge configuration'),
-                'selected' => $config->defaultMergeConfig,
-            ],
-            [
-                'value' => \Model\Client\DuplicatesManager::MERGE_GROUPS,
-                'label' => $this->_('Merge manual group assignments'),
-                'selected' => $config->defaultMergeGroups,
-            ],
-            [
-                'value' => \Model\Client\DuplicatesManager::MERGE_PACKAGES,
-                'label' => $this->_('Merge missing package assignments'),
-                'selected' => $config->defaultMergePackages,
-            ],
-            [
-                'value' => \Model\Client\DuplicatesManager::MERGE_PRODUCT_KEY,
-                'label' => $this->_('Keep manually entered Windows product key'),
-                'selected' => $config->defaultMergeProductKey,
-            ],
+            ['value' => \Model\Client\DuplicatesManager::MERGE_CUSTOM_FIELDS],
+            ['value' => \Model\Client\DuplicatesManager::MERGE_CONFIG],
+            ['value' => \Model\Client\DuplicatesManager::MERGE_GROUPS],
+            ['value' => \Model\Client\DuplicatesManager::MERGE_PACKAGES],
+            ['value' => \Model\Client\DuplicatesManager::MERGE_PRODUCT_KEY,],
         ]);
         $this->add($mergeOptions);
-
-        $submit = new \Library\Form\Element\Submit('submit');
-        $submit->setLabel('Merge selected clients');
-        $this->add($submit);
 
         // Checkboxes for "clients[]" are generated manually, without
         // \Laminas\Form\Element. Define an input filter to have them processed.

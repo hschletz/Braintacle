@@ -38,7 +38,6 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
     {
         $mergeOptions = $this->_form->get('mergeOptions');
         $this->assertInstanceOf('\Laminas\Form\Element\MultiCheckbox', $mergeOptions);
-        $this->assertInstanceOf('\Library\Form\Element\Submit', $this->_form->get('submit'));
     }
 
     public function initMergeOptionsProvider()
@@ -65,31 +64,11 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
         ]);
 
         $expectedOptions = [
-            [
-                'value' => 'mergeCustomFields',
-                'label' => 'Merge user supplied information',
-                'selected' => (int) ($option == 'mergeCustomFields'),
-            ],
-            [
-                'value' => 'mergeConfig',
-                'label' => 'Merge configuration',
-                'selected' => (int) ($option == 'mergeConfig'),
-            ],
-            [
-                'value' => 'mergeGroups',
-                'label' => 'Merge manual group assignments',
-                'selected' => (int) ($option == 'mergeGroups'),
-            ],
-            [
-                'value' => 'mergePackages',
-                'label' => 'Merge missing package assignments',
-                'selected' => (int) ($option == 'mergePackages'),
-            ],
-            [
-                'value' => 'mergeProductKey',
-                'label' => 'Keep manually entered Windows product key',
-                'selected' => (int) ($option == 'mergeProductKey'),
-            ],
+            ['value' => 'mergeCustomFields'],
+            ['value' => 'mergeConfig'],
+            ['value' => 'mergeGroups'],
+            ['value' => 'mergePackages'],
+            ['value' => 'mergeProductKey'],
         ];
 
         $form = new ShowDuplicates();

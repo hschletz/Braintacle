@@ -22,6 +22,8 @@
 
 namespace Console\Service;
 
+use Model\Config;
+
 /**
  * Factory for DuplicatesController
  */
@@ -34,6 +36,7 @@ class DuplicatesControllerFactory implements \Laminas\ServiceManager\Factory\Fac
         array $options = null
     ) {
         return new \Console\Controller\DuplicatesController(
+            $container->get(Config::class),
             $container->get('Model\Client\DuplicatesManager'),
             $container->get('FormElementManager')->get('Console\Form\ShowDuplicates')
         );

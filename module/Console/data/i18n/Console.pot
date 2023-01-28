@@ -165,6 +165,7 @@ msgstr ""
 #: views/console/package/index.php
 #: Client/Packages.latte
 #: Client/Software.latte
+#: Forms/ShowDuplicates.latte
 #: Group/Packages.latte
 #: Software/Manage.latte
 msgid "Name"
@@ -801,6 +802,7 @@ msgstr ""
 #: Form/Search.php
 #: views/console/client/index.php
 #: Client/General.latte
+#: Forms/ShowDuplicates.latte
 msgid "Last contact"
 msgstr ""
 
@@ -851,6 +853,7 @@ msgstr ""
 #: views/console/client/system.php
 #: views/console/duplicates/index.php
 #: Client/General.latte
+#: Forms/ShowDuplicates.latte
 msgid "Serial number"
 msgstr ""
 
@@ -858,6 +861,7 @@ msgstr ""
 #: views/console/client/index.php
 #: views/console/duplicates/index.php
 #: Client/General.latte
+#: Forms/ShowDuplicates.latte
 msgid "Asset tag"
 msgstr ""
 
@@ -1017,30 +1021,6 @@ msgstr ""
 #: Form/Search.php
 #: Navigation/MainMenuFactory.php
 msgid "Search"
-msgstr ""
-
-#: Form/ShowDuplicates.php
-msgid "Merge user supplied information"
-msgstr ""
-
-#: Form/ShowDuplicates.php
-msgid "Merge configuration"
-msgstr ""
-
-#: Form/ShowDuplicates.php
-msgid "Merge manual group assignments"
-msgstr ""
-
-#: Form/ShowDuplicates.php
-msgid "Merge missing package assignments"
-msgstr ""
-
-#: Form/ShowDuplicates.php
-msgid "Keep manually entered Windows product key"
-msgstr ""
-
-#: Form/ShowDuplicates.php
-msgid "Merge selected clients"
 msgstr ""
 
 #: Form/ShowDuplicates.php
@@ -1254,6 +1234,7 @@ msgstr ""
 #: views/console/client/index.php
 #: views/console/group/general.php
 #: Client/General.latte
+#: Forms/ShowDuplicates.latte
 msgid "ID"
 msgstr ""
 
@@ -1592,6 +1573,7 @@ msgid "Exclude asset tag '%s' from duplicates search?"
 msgstr ""
 
 #: views/console/duplicates/index.php
+#: Forms/ShowDuplicates.latte
 msgid "MAC Address"
 msgstr ""
 
@@ -1841,6 +1823,30 @@ msgstr ""
 
 #: Forms/AssignPackage.latte
 msgid "Assign"
+msgstr ""
+
+#: Forms/ShowDuplicates.latte
+msgid "Merge user supplied information"
+msgstr ""
+
+#: Forms/ShowDuplicates.latte
+msgid "Merge configuration"
+msgstr ""
+
+#: Forms/ShowDuplicates.latte
+msgid "Merge manual group assignments"
+msgstr ""
+
+#: Forms/ShowDuplicates.latte
+msgid "Merge missing package assignments"
+msgstr ""
+
+#: Forms/ShowDuplicates.latte
+msgid "Keep manually entered Windows product key"
+msgstr ""
+
+#: Forms/ShowDuplicates.latte
+msgid "Merge selected clients"
 msgstr ""
 
 #: Group/Header.latte

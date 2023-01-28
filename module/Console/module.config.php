@@ -94,7 +94,6 @@ return array(
             'Console\Form\Preferences\RawData' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\Form\Preferences\System' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\Form\Search' => 'Console\Form\Service\SearchFactory',
-            'Console\Form\ShowDuplicates' => 'Console\Form\Service\ShowDuplicatesFactory',
         ),
     ),
     'router' => array(
@@ -147,7 +146,6 @@ return array(
             'consoleFormPackageBuild' => Build::class,
             'consoleFormPackageUpdate' => Update::class,
             'consoleFormSearch' => Search::class,
-            'consoleFormShowDuplicates' => 'Console\View\Helper\Form\ShowDuplicates',
             'consoleFormSoftware' => 'Console\View\Helper\Form\Software',
         ),
         'factories' => array(

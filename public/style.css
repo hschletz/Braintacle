@@ -548,6 +548,12 @@ form.form_addtogroup > * {
     margin-right: .5em;
 }
 
+.form_showduplicates label, .form_showduplicates button {
+    display: block;
+    text-align: center;
+    margin: 2ex auto 0 auto;
+}
+
 .form_software button {
     margin-bottom: 2ex;
 }
@@ -646,10 +652,4 @@ form.form_addtogroup > * {
     margin: 0;
     padding: 0;
     display: inline;
-}
-
-.form_showduplicates label, .form_showduplicates input[type=submit] {
-    display: block;
-    text-align: center;
-    margin: 2ex auto 0 auto;
 }

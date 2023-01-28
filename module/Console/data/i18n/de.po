@@ -29,8 +29,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: Client/General.latte Form/Search.php views/console/client/index.php
-#: views/console/duplicates/index.php
+#: Client/General.latte Form/Search.php Forms/ShowDuplicates.latte
+#: views/console/client/index.php views/console/duplicates/index.php
 msgid "Asset tag"
 msgstr "Asset tag"
 
@@ -47,8 +47,8 @@ msgstr "CPU Typ"
 msgid "Comment"
 msgstr "Kommentar"
 
-#: Client/General.latte views/console/client/index.php
-#: views/console/group/general.php
+#: Client/General.latte Forms/ShowDuplicates.latte
+#: views/console/client/index.php views/console/group/general.php
 msgid "ID"
 msgstr "ID"
 
@@ -60,7 +60,8 @@ msgstr "ID-String"
 msgid "Inventory date"
 msgstr "Datum der Inventarinformationen"
 
-#: Client/General.latte Form/Search.php views/console/client/index.php
+#: Client/General.latte Form/Search.php Forms/ShowDuplicates.latte
+#: views/console/client/index.php
 msgid "Last contact"
 msgstr "Letzter Kontakt"
 
@@ -89,9 +90,10 @@ msgstr "Vom Agenten entdeckter Arbeitsspeicher"
 msgid "RAM reported by OS"
 msgstr "Arbeitsspeicher lt. Betriebssystem"
 
-#: Client/General.latte Form/Search.php views/console/client/display.php
-#: views/console/client/index.php views/console/client/storage.php
-#: views/console/client/system.php views/console/duplicates/index.php
+#: Client/General.latte Form/Search.php Forms/ShowDuplicates.latte
+#: views/console/client/display.php views/console/client/index.php
+#: views/console/client/storage.php views/console/client/system.php
+#: views/console/duplicates/index.php
 msgid "Serial number"
 msgstr "Seriennummer"
 
@@ -206,14 +208,15 @@ msgstr "Zugewiesene Pakete"
 
 #: Client/Packages.latte Client/Software.latte Form/AddToGroup.php
 #: Form/ManageRegistryValues.php Form/Package/Build.php Form/Search.php
-#: Form/Subnet.php Group/Packages.latte Software/Manage.latte
-#: views/console/client/display.php views/console/client/index.php
-#: views/console/client/misc.php views/console/client/network.php
-#: views/console/client/printers.php views/console/client/system.php
-#: views/console/client/virtualmachines.php views/console/duplicates/index.php
-#: views/console/group/excluded.php views/console/group/general.php
-#: views/console/group/index.php views/console/group/members.php
-#: views/console/network/index.php views/console/package/index.php
+#: Form/Subnet.php Forms/ShowDuplicates.latte Group/Packages.latte
+#: Software/Manage.latte views/console/client/display.php
+#: views/console/client/index.php views/console/client/misc.php
+#: views/console/client/network.php views/console/client/printers.php
+#: views/console/client/system.php views/console/client/virtualmachines.php
+#: views/console/duplicates/index.php views/console/group/excluded.php
+#: views/console/group/general.php views/console/group/index.php
+#: views/console/group/members.php views/console/network/index.php
+#: views/console/package/index.php
 msgid "Name"
 msgstr "Name"
 
@@ -1077,30 +1080,6 @@ msgstr "Arbeitsgruppe"
 msgid "At least 2 different clients have to be selected"
 msgstr "Es müssen mindestens 2 verschiedene Clients ausgewählt werden"
 
-#: Form/ShowDuplicates.php
-msgid "Keep manually entered Windows product key"
-msgstr "Manuell eingegebenen Windows-Lizenzschlüssel beibehalten"
-
-#: Form/ShowDuplicates.php
-msgid "Merge configuration"
-msgstr "Konfiguration übernehmen"
-
-#: Form/ShowDuplicates.php
-msgid "Merge manual group assignments"
-msgstr "Manuelle Gruppenzuweisungen übernehmen"
-
-#: Form/ShowDuplicates.php
-msgid "Merge missing package assignments"
-msgstr "Fehlende Paketzuweisungen übernehmen"
-
-#: Form/ShowDuplicates.php
-msgid "Merge selected clients"
-msgstr "Ausgewählte Clients zusammenführen"
-
-#: Form/ShowDuplicates.php
-msgid "Merge user supplied information"
-msgstr "Benutzerdefinierte Informationen übernehmen"
-
 #: Forms/AssignPackage.latte
 msgid "Assign"
 msgstr "Zuweisen"
@@ -1108,6 +1087,34 @@ msgstr "Zuweisen"
 #: Forms/AssignPackage.latte
 msgid "Assign packages"
 msgstr "Pakete zuweisen"
+
+#: Forms/ShowDuplicates.latte
+msgid "Keep manually entered Windows product key"
+msgstr "Manuell eingegebenen Windows-Lizenzschlüssel beibehalten"
+
+#: Forms/ShowDuplicates.latte views/console/duplicates/index.php
+msgid "MAC Address"
+msgstr "MAC-Adresse"
+
+#: Forms/ShowDuplicates.latte
+msgid "Merge configuration"
+msgstr "Konfiguration übernehmen"
+
+#: Forms/ShowDuplicates.latte
+msgid "Merge manual group assignments"
+msgstr "Manuelle Gruppenzuweisungen übernehmen"
+
+#: Forms/ShowDuplicates.latte
+msgid "Merge missing package assignments"
+msgstr "Fehlende Paketzuweisungen übernehmen"
+
+#: Forms/ShowDuplicates.latte
+msgid "Merge selected clients"
+msgstr "Ausgewählte Clients zusammenführen"
+
+#: Forms/ShowDuplicates.latte
+msgid "Merge user supplied information"
+msgstr "Benutzerdefinierte Informationen übernehmen"
 
 #: Group/Header.latte
 msgid "Details for group '%s'"
@@ -1624,10 +1631,6 @@ msgstr "Asset Tag '%s' von Duplikatsuche ausschließen?"
 #, php-format
 msgid "Exclude serial number '%s' from duplicates search?"
 msgstr "Seriennummer '%s' von Duplikatsuche ausschließen?"
-
-#: views/console/duplicates/index.php
-msgid "MAC Address"
-msgstr "MAC-Adresse"
 
 #: views/console/duplicates/index.php
 msgid "No duplicates present."

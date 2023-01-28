@@ -22,11 +22,18 @@
 
 namespace Console\Controller;
 
+use Console\Template\TemplateViewModel;
+use Model\Config;
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
+
 /**
  * Controller for managing duplicate clients and the criteria for determining duplicates.
  */
 class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionController
 {
+    private Config $config;
+
     /**
      * Duplicates prototype
      * @var \Model\Client\DuplicatesManager
@@ -46,9 +53,11 @@ class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionControl
      * @param \Console\Form\ShowDuplicates $showDuplicates
      */
     public function __construct(
+        Config $config,
         \Model\Client\DuplicatesManager $duplicates,
         \Console\Form\ShowDuplicates $showDuplicates
     ) {
+        $this->config = $config;
         $this->_duplicates = $duplicates;
         $this->_showDuplicates = $showDuplicates;
     }
@@ -72,8 +81,6 @@ class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionControl
 
     /**
      * Form for displaying and merging duplicate clients
-     *
-     * @return array|\Laminas\Http\Response array(form) or Redirect response
      */
     public function manageAction()
     {
@@ -83,9 +90,11 @@ class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionControl
                 $data = $this->_showDuplicates->getData();
                 $this->_duplicates->merge($data['clients'], $data['mergeOptions']);
                 $this->flashMessenger()->addSuccessMessage($this->_('The selected clients have been merged.'));
+
                 return $this->redirectToRoute('duplicates', 'index');
             }
         }
+
         $this->setActiveMenu('Inventory', 'Duplicates');
         $ordering = $this->getOrder('Id', 'asc');
         $clients = $this->_duplicates->find(
@@ -93,14 +102,19 @@ class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionControl
             $ordering['order'],
             $ordering['direction']
         );
-        $this->_showDuplicates->setOptions(
-            array(
-                'clients' => $clients,
-                'order' => $ordering['order'],
-                'direction' => $ordering['direction'],
-            )
-        );
-        return array('form' => $this->_showDuplicates);
+
+        $messages = $this->_showDuplicates->getMessages();
+        $context = [
+            // Flatten $messages to a single-level list
+            'messages' => new RecursiveIteratorIterator(new RecursiveArrayIterator($messages)),
+            'clients' => $clients,
+            'csrfToken' => $this->_showDuplicates->get('_csrf')->getValue(),
+            'config' => $this->config,
+            'order' => $ordering['order'],
+            'direction' => $ordering['direction'],
+        ];
+
+        return new TemplateViewModel('Forms/ShowDuplicates.latte', $context);
     }
 
     /**

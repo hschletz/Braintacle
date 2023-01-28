@@ -23,9 +23,12 @@
 namespace Console\Test\Controller;
 
 use Console\Form\ShowDuplicates;
-use Console\View\Helper\Form\ShowDuplicates as FormShowDuplicates;
+use DateTime;
+use Laminas\Form\Element\Csrf;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
+use Model\Client\Client;
 use Model\Client\DuplicatesManager;
+use Model\Config;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -43,14 +46,21 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
      */
     protected $_showDuplicates;
 
+    /**
+     * @var MockObject|Config
+     */
+    private $config;
+
     public function setUp(): void
     {
         parent::setUp();
 
+        $this->config = $this->createMock(Config::class);
         $this->_duplicates = $this->createMock('Model\Client\DuplicatesManager');
         $this->_showDuplicates = $this->createMock('Console\Form\ShowDuplicates');
 
         $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setService(Config::class, $this->config);
         $serviceManager->setService('Model\Client\DuplicatesManager', $this->_duplicates);
         $serviceManager->get('FormElementManager')->setService('Console\Form\ShowDuplicates', $this->_showDuplicates);
     }
@@ -129,7 +139,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_showDuplicates->expects($this->never())->method('setData');
         $this->_showDuplicates->expects($this->never())->method('isValid');
         $this->_showDuplicates->expects($this->never())->method('getData');
-        $this->_showDuplicates->expects($this->never())->method('render');
+
         $this->_duplicates->expects($this->once())
                           ->method('find')
                           ->with(null)
@@ -145,7 +155,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_showDuplicates->expects($this->never())->method('setData');
         $this->_showDuplicates->expects($this->never())->method('isValid');
         $this->_showDuplicates->expects($this->never())->method('getData');
-        $this->_showDuplicates->expects($this->never())->method('render');
+
         $this->_duplicates->expects($this->once())
                           ->method('find')
                           ->with('invalid')
@@ -158,24 +168,15 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testManageActionGet()
     {
-        $this->_duplicates->expects($this->once())
-                          ->method('find')
-                          ->with('Name', 'Id', 'asc')
-                          ->willReturn('client_list');
-        $this->_duplicates->expects($this->never())->method('merge');
         $this->_showDuplicates->expects($this->never())->method('setData');
         $this->_showDuplicates->expects($this->never())->method('isValid');
         $this->_showDuplicates->expects($this->never())->method('getData');
-        $this->_showDuplicates->expects($this->once())
-                              ->method('setOptions')
-                              ->with(array('clients' => 'client_list', 'order' => 'Id', 'direction' => 'asc'));
-        $this->_showDuplicates->expects($this->once())->method('getMessages')->willReturn(array());
+        $this->_showDuplicates->expects($this->once())->method('getMessages')->willReturn([]);
 
-        $formHelper = $this->createMock(FormShowDuplicates::class);
-        $formHelper->method('__invoke')->with($this->_showDuplicates)->willReturn('<form></form>');
-        $this->getApplicationServiceLocator()
-             ->get('ViewHelperManager')
-             ->setService('consoleFormShowDuplicates', $formHelper);
+        $this->_duplicates->expects($this->once())
+                          ->method('find')
+                          ->with('Name', 'Id', 'asc')->willReturn([]);
+        $this->_duplicates->expects($this->never())->method('merge');
 
         $this->dispatch('/console/duplicates/manage/?criteria=Name');
         $this->assertResponseStatusCode(200);
@@ -199,13 +200,6 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_duplicates->expects($this->never())->method('find');
         $this->_duplicates->expects($this->once())->method('merge')->with([1, 2], $mergeOptions);
 
-        $formHelper = $this->createMock(FormShowDuplicates::class);
-        $formHelper->expects($this->never())->method('__invoke');
-
-        $this->getApplicationServiceLocator()
-             ->get('ViewHelperManager')
-             ->setService('consoleFormShowDuplicates', $formHelper);
-
         $this->dispatch('/console/duplicates/manage/', 'POST', $params);
         $this->assertRedirectTo('/console/duplicates/index/');
         $this->assertContains(
@@ -216,30 +210,17 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testManageActionPostInvalid()
     {
-        $this->_showDuplicates->expects($this->once())
-                              ->method('setData');
-        $this->_showDuplicates->expects($this->once())
-                              ->method('isValid')
-                              ->will($this->returnValue(false));
+        $this->_showDuplicates->expects($this->once())->method('setData');
+        $this->_showDuplicates->expects($this->once())->method('isValid')->willReturn(false);
         $this->_showDuplicates->expects($this->never())->method('getData');
-        $this->_showDuplicates->expects($this->once())
-                              ->method('setOptions')
-                              ->with(array('clients' => 'client_list', 'order' => 'Id', 'direction' => 'asc'));
-        $this->_showDuplicates->expects($this->once())
-                              ->method('getMessages')
-                              ->willReturn(array('clients' => array('invalid')));
+        $this->_showDuplicates->expects($this->once())->method('getMessages')->willReturn(['clients' => ['invalid']]);
+
         $this->_duplicates->expects($this->once())
                           ->method('find')
                           ->with('Name', 'Id', 'asc')
-                          ->willReturn('client_list');
+                          ->willReturn([]);
         $this->_duplicates->expects($this->never())
                           ->method('merge');
-
-        $formHelper = $this->createMock(FormShowDuplicates::class);
-        $formHelper->method('__invoke')->with($this->_showDuplicates)->willReturn('<form></form>');
-        $this->getApplicationServiceLocator()
-             ->get('ViewHelperManager')
-             ->setService('consoleFormShowDuplicates', $formHelper);
 
         $this->dispatch('/console/duplicates/manage/?criteria=Name', 'POST');
         $this->assertResponseStatusCode(200);
@@ -247,6 +228,123 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXPathQueryCount('//li', 1);
         $this->assertXPathQueryContentContains('//ul[@class="error"]/li', 'invalid');
         $this->assertXpathQuery('//form');
+    }
+
+    public function testManageActionTemplateNoMessages()
+    {
+        $this->_showDuplicates->expects($this->once())->method('getMessages')->willReturn([]);
+        $this->_duplicates->method('find')->willReturn([]);
+        $this->dispatch('/console/duplicates/manage/');
+        $this->assertResponseStatusCode(200);
+        $this->assertNotXpathQuery('//ul');
+    }
+
+    public function testManageActionTemplateMessages()
+    {
+        $messages = [
+            'element1' => [
+                'validator' => 'message1',
+            ],
+            'element2' => [
+                'validator' => '<message2>',
+            ],
+        ];
+        $this->_showDuplicates->expects($this->once())->method('getMessages')->willReturn($messages);
+        $this->_duplicates->method('find')->willReturn([]);
+        $this->dispatch('/console/duplicates/manage/');
+        $this->assertXpathQueryCount('//li', 2);
+        $this->assertXpathQueryContentContains('//li[1]', 'message1');
+        $this->assertXpathQueryContentContains('//li[2]', '<message2>');
+    }
+
+    public function testManageActionTemplateCsrfToken()
+    {
+        /** @var MockObject|Csrf */
+        $csrf = $this->createStub(Csrf::class);
+        $csrf->method('getValue')->willReturn('token');
+
+        $this->_showDuplicates->method('get')->with('_csrf')->willReturn($csrf);
+        $this->_duplicates->method('find')->willReturn([]);
+
+        $this->dispatch('/console/duplicates/manage/');
+        $this->assertXpathQuery('//input[@name="_csrf"][@value="token"]');
+    }
+
+    public function testManageActionTemplateTable()
+    {
+        /** @var MockObject|Client */
+        $client1 = $this->createMock(Client::class);
+        $client1->id = 1;
+        $client1->name = 'name1';
+        $client1->serial = 'serial1';
+        $client1->assetTag = null;
+        $client1->lastContactDate = new DateTime('2022-12-22T13:22:00');
+        $client1->method('offsetGet')->with('NetworkInterface.MacAddress')->willReturn('mac1');
+
+        /** @var MockObject|Client */
+        $client2 = $this->createMock(Client::class);
+        $client2->id = 2;
+        $client2->name = 'name2';
+        $client2->serial = null;
+        $client2->assetTag = 'at2';
+        $client2->lastContactDate = new DateTime('2023-01-28T17:27:00');
+        $client2->method('offsetGet')->with('NetworkInterface.MacAddress')->willReturn('mac2');
+
+        $this->_duplicates->method('find')->willReturn([$client1, $client2]);
+
+        $this->dispatch('/console/duplicates/manage/');
+
+        $this->assertXpathQueryCount('//tr[td]', 2);
+
+        $this->assertXpathQuery('//tr[2]/td[1]/input[@value="1"]');
+        $this->assertXpathQuery('//tr[2]/td[2]/a[contains(@href, "id=1")][text()="name1"]');
+        $this->assertXpathQuery(
+            '//tr[2]/td[3]/a[contains(@href, "criteria=MacAddress")][contains(@href, "value=mac1")][text()="mac1"]'
+        );
+        $this->assertXpathQuery(
+            '//tr[2]/td[4]/a[contains(@href, "criteria=Serial")][contains(@href, "value=serial1")][text()="serial1"]'
+        );
+        $this->assertXpathQuery('//tr[2]/td[5][not(a)]');
+        $this->assertXpathQuery('//tr[2]/td[6][normalize-space(text())="22.12.22, 13:22"]');
+
+        $this->assertXpathQuery('//tr[3]/td[1]/input[@value="2"]');
+        $this->assertXpathQuery('//tr[3]/td[2]/a[contains(@href, "id=2")][text()="name2"]');
+        $this->assertXpathQuery(
+            '//tr[3]/td[3]/a[contains(@href, "criteria=MacAddress")][contains(@href, "value=mac2")][text()="mac2"]'
+        );
+        $this->assertXpathQuery('//tr[3]/td[4][not(a)]');
+        $this->assertXpathQuery(
+            '//tr[3]/td[5]/a[contains(@href, "criteria=AssetTag")][contains(@href, "value=at2")][text()="at2"]'
+        );
+        $this->assertXpathQuery('//tr[3]/td[6][normalize-space(text())="28.01.23, 17:27"]');
+    }
+
+    public function testManageActionTemplateOptionsUnset()
+    {
+        $this->config->method('__get')->willReturn(false);
+        $this->_duplicates->method('find')->willReturn([]);
+
+        $this->dispatch('/console/duplicates/manage/');
+
+        $this->assertXpathQuery('//input[@value="mergeCustomFields"][not(@checked)]');
+        $this->assertXpathQuery('//input[@value="mergeConfig"][not(@checked)]');
+        $this->assertXpathQuery('//input[@value="mergeGroups"][not(@checked)]');
+        $this->assertXpathQuery('//input[@value="mergePackages"][not(@checked)]');
+        $this->assertXpathQuery('//input[@value="mergeProductKey"][not(@checked)]');
+    }
+
+    public function testManageActionTemplateOptionsSet()
+    {
+        $this->config->method('__get')->willReturn(true);
+        $this->_duplicates->method('find')->willReturn([]);
+
+        $this->dispatch('/console/duplicates/manage/');
+
+        $this->assertXpathQuery('//input[@value="mergeCustomFields"][@checked]');
+        $this->assertXpathQuery('//input[@value="mergeConfig"][@checked]');
+        $this->assertXpathQuery('//input[@value="mergeGroups"][@checked]');
+        $this->assertXpathQuery('//input[@value="mergePackages"][@checked]');
+        $this->assertXpathQuery('//input[@value="mergeProductKey"][@checked]');
     }
 
     public function testAllowActionGet()
