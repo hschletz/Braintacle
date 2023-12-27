@@ -24,6 +24,7 @@ namespace Console\Test\Form;
 
 use Console\Form\DefineFields;
 use Laminas\Dom\Document\Query as Query;
+use Laminas\Form\FieldsetInterface;
 use Laminas\Form\View\Helper\FormElementErrors;
 use Model\Client\CustomFieldManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -68,6 +69,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
         $this->assertInstanceOf('Laminas\Form\Element\Select', $this->_form->get('NewType'));
 
+        /** @var FieldsetInterface */
         $fields = $this->_form->get('Fields');
         $this->assertCount(2, $fields);
 

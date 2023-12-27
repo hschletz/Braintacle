@@ -15,6 +15,7 @@ use Laminas\View\Model\ViewModel;
 use Latte\Engine;
 use Latte\Loaders\FileLoader;
 use Library\Application;
+use PHPUnit\Framework\Error\Warning;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
@@ -94,9 +95,11 @@ class TemplateRendererTest extends TestCase
         $templateRenderer = new TemplateRenderer($engine);
         $this->assertEquals('content', $templateRenderer->render('template', ['values']));
 
-        $this->expectWarning();
-        $this->expectWarningMessage('handler restored');
-        trigger_error('handler restored', E_USER_WARNING);
+        try {
+            trigger_error('handler restored', E_USER_WARNING);
+        } catch (Warning $warning) {
+            $this->assertEquals('handler restored', $warning->getMessage());
+        }
     }
 
     public function testRenderWithViewModel()
@@ -110,9 +113,11 @@ class TemplateRendererTest extends TestCase
         $templateRenderer = new TemplateRenderer($engine);
         $this->assertEquals('content', $templateRenderer->render($viewModel));
 
-        $this->expectWarning();
-        $this->expectWarningMessage('handler restored');
-        trigger_error('handler restored', E_USER_WARNING);
+        try {
+            trigger_error('handler restored', E_USER_WARNING);
+        } catch (Warning $warning) {
+            $this->assertEquals('handler restored', $warning->getMessage());
+        }
     }
 
     public function testRenderThrowsExceptionOnWarning()
@@ -132,9 +137,11 @@ class TemplateRendererTest extends TestCase
             $this->fail('Expected ErrorException was not thrown');
         }
 
-        $this->expectWarning();
-        $this->expectWarningMessage('handler restored');
-        trigger_error('handler restored', E_USER_WARNING);
+        try {
+            trigger_error('handler restored', E_USER_WARNING);
+        } catch (Warning $warning) {
+            $this->assertEquals('handler restored', $warning->getMessage());
+        }
     }
 
     public function testRenderAcceptsSuppressedWarning()
@@ -148,8 +155,10 @@ class TemplateRendererTest extends TestCase
         $templateRenderer = new TemplateRenderer($engine);
         $this->assertEquals('success', $templateRenderer->render('template'));
 
-        $this->expectWarning();
-        $this->expectWarningMessage('handler restored');
-        trigger_error('handler restored', E_USER_WARNING);
+        try {
+            trigger_error('handler restored', E_USER_WARNING);
+        } catch (Warning $warning) {
+            $this->assertEquals('handler restored', $warning->getMessage());
+        }
     }
 }

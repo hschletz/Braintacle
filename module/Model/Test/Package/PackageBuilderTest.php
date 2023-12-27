@@ -231,7 +231,7 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
     public function testCheckNameException()
     {
         $this->expectException(RuntimeException::class);
-        $this->expectDeprecationMessage("Package 'name' already exists");
+        $this->expectExceptionMessage("Package 'name' already exists");
 
         $packageManager = $this->createMock(PackageManager::class);
         $packageManager->method('packageExists')->with('name')->willReturn(true);

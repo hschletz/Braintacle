@@ -24,6 +24,7 @@ namespace Console\Test\Form;
 
 use Console\Form\NetworkDeviceTypes;
 use Laminas\Dom\Document\Query as Query;
+use Laminas\Form\FieldsetInterface;
 use Laminas\Form\View\Helper\FormElementErrors;
 use Model\Network\DeviceManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -64,6 +65,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         $this->assertInstanceOf('Laminas\Form\Element\Text', $this->_form->get('Add'));
         $this->assertInstanceOf('Library\Form\Element\Submit', $this->_form->get('Submit'));
 
+        /** @var FieldsetInterface */
         $types = $this->_form->get('Types');
         $this->assertCount(2, $types);
 

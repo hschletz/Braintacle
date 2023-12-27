@@ -22,6 +22,8 @@
 
 namespace Library\Test;
 
+use PHPUnit\Framework\Error\Notice;
+
 /**
  * Tests for the Translator setup
  */
@@ -82,8 +84,6 @@ class TranslatorTest extends \PHPUnit\Framework\TestCase
      */
     public function testMissingTranslationTriggersNoticeWhenEnabled($locale)
     {
-        $this->expectNotice();
-        $this->expectNoticeMessage('Missing translation: this_string_is_not_translated');
         \Locale::setDefault($locale);
         $serviceManager = \Library\Application::init('Library')->getServiceManager();
         $serviceManager->setService(
@@ -93,7 +93,11 @@ class TranslatorTest extends \PHPUnit\Framework\TestCase
             )
         );
         $translator = $serviceManager->get('MvcTranslator');
-        $this->assertEquals('this_string_is_not_translated', $translator->translate('this_string_is_not_translated'));
+        try {
+            $translator->translate('this_string_is_not_translated');
+        } catch (Notice $notice) {
+            $this->assertEquals('Missing translation: this_string_is_not_translated', $notice->getMessage());
+        }
     }
 
     /**

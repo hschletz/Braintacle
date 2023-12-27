@@ -24,6 +24,7 @@ namespace Console\Test\Form;
 
 use Console\Form\GroupMemberships;
 use Laminas\Dom\Document\Query;
+use Laminas\Form\FieldsetInterface;
 
 /**
  * Tests for GroupMemberships form
@@ -61,6 +62,8 @@ class GroupMembershipsTest extends \Console\Test\AbstractFormTest
         $form = new GroupMemberships();
         $form->setGroups(['group1', 'group2']);
         $this->assertTrue($form->has('Groups'));
+
+        /** @var FieldsetInterface */
         $groups = $form->get('Groups');
         $this->assertCount(2, $groups);
         $group2 = $groups->get('group2');
@@ -71,6 +74,8 @@ class GroupMembershipsTest extends \Console\Test\AbstractFormTest
         // Overwrite previously set groups
         $form->setGroups([]);
         $this->assertTrue($form->has('Groups'));
+
+        /** @var FieldsetInterface */
         $groups = $form->get('Groups');
         $this->assertCount(0, $groups);
     }

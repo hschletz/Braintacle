@@ -73,13 +73,13 @@ abstract class AbstractModel extends \ArrayObject
         return property_exists($this, $lcKey) ? $this->$lcKey : parent::offsetGet($key);
     }
 
-    public function offsetSet($key, $value): void
+    public function offsetSet($offset, $value): void
     {
-        $lcKey = lcfirst($key);
+        $lcKey = lcfirst($offset);
         if (property_exists($this, $lcKey)) {
             $this->$lcKey = $value;
         } else {
-            parent::offsetSet($key, $value);
+            parent::offsetSet($offset, $value);
         }
     }
 }
