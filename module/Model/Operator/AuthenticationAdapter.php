@@ -103,7 +103,6 @@ class AuthenticationAdapter extends \Laminas\Authentication\Adapter\AbstractAdap
     {
         $sql = $this->_operators->getSql();
         $select = $sql->select();
-        $select = $sql->select();
         $select->columns(['passwd', 'password_version'])->where(['id' => $this->getIdentity()]);
         $operator = $sql->prepareStatementForSqlObject($select)->execute()->current();
 
