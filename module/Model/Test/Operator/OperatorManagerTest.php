@@ -126,7 +126,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->loadDataSet('CreateMinimal')->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
-                'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
+                'SELECT id, firstname, lastname, passwd, password_version, comments, email FROM operators ORDER BY id DESC'
             )
         );
     }
@@ -159,7 +159,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->loadDataSet('CreateFull')->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
-                'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
+                'SELECT id, firstname, lastname, passwd, password_version, comments, email FROM operators ORDER BY id DESC'
             )
         );
     }
@@ -177,7 +177,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->loadDataSet()->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
-                'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
+                'SELECT id, firstname, lastname, passwd, password_version, comments, email FROM operators ORDER BY id DESC'
             )
         );
     }
@@ -195,7 +195,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->loadDataSet()->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
-                'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
+                'SELECT id, firstname, lastname, passwd, password_version, comments, email FROM operators ORDER BY id DESC'
             )
         );
     }
@@ -282,8 +282,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
                 $this->loadDataSet()->getTable('operators'),
                 $this->getConnection()->createQueryTable(
                     'operators',
-                    'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators ' .
-                        'ORDER BY id DESC'
+                    'SELECT id, firstname, lastname, passwd, password_version, comments, email FROM operators ORDER BY id DESC'
                 )
             );
         }
@@ -310,7 +309,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->loadDataSet()->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
-                'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
+                'SELECT id, firstname, lastname, passwd, password_version, comments, email FROM operators ORDER BY id DESC'
             )
         );
     }
@@ -335,7 +334,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
             $this->loadDataSet()->getTable('operators'),
             $this->getConnection()->createQueryTable(
                 'operators',
-                'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators'
+                'SELECT id, firstname, lastname, passwd, password_version, comments, email FROM operators ORDER BY id DESC'
             )
         );
     }

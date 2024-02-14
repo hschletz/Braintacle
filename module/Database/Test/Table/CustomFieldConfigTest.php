@@ -177,6 +177,10 @@ class CustomFieldConfigTest extends AbstractTest
         $adapterProperty->setAccessible(true);
         $adapterProperty->setValue($table, $adapter);
 
+        $useTransactionProperty = new \ReflectionProperty(get_class($table), 'useTransaction');
+        $useTransactionProperty->setAccessible(true);
+        $useTransactionProperty->setValue($table, true);
+
         $serviceLocatorProperty = new \ReflectionProperty(get_class($table), '_serviceLocator');
         $serviceLocatorProperty->setAccessible(true);
         $serviceLocatorProperty->setValue($table, $serviceManager);
@@ -238,6 +242,10 @@ class CustomFieldConfigTest extends AbstractTest
         $adapterProperty = new \ReflectionProperty(get_class($table), 'adapter');
         $adapterProperty->setAccessible(true);
         $adapterProperty->setValue($table, $adapter);
+
+        $useTransactionProperty = new \ReflectionProperty(get_class($table), 'useTransaction');
+        $useTransactionProperty->setAccessible(true);
+        $useTransactionProperty->setValue($table, true);
 
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test message');

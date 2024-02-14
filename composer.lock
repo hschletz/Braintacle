@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a3d780cbc6998cc7d189de906acd2f7",
+    "content-hash": "4dbfb45ff53e2816c63c017eba3e1842",
     "packages": [
         {
             "name": "brick/varexporter",
@@ -205,17 +205,20 @@
         },
         {
             "name": "hschletz/nada",
-            "version": "v1.2",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hschletz/NADA.git",
-                "reference": "c30bbb5db7853ea9cbabbfc38e91324d7852d3f6"
+                "reference": "3ac31a727c69d24fc6776e15cbfc76da55f97b7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hschletz/NADA/zipball/c30bbb5db7853ea9cbabbfc38e91324d7852d3f6",
-                "reference": "c30bbb5db7853ea9cbabbfc38e91324d7852d3f6",
+                "url": "https://api.github.com/repos/hschletz/NADA/zipball/3ac31a727c69d24fc6776e15cbfc76da55f97b7d",
+                "reference": "3ac31a727c69d24fc6776e15cbfc76da55f97b7d",
                 "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ^8.0 || ^8.1 || ^8.2 || ^8.3"
             },
             "type": "library",
             "autoload": {
@@ -237,9 +240,9 @@
             "homepage": "https://github.com/hschletz/NADA",
             "support": {
                 "issues": "https://github.com/hschletz/NADA/issues",
-                "source": "https://github.com/hschletz/NADA/tree/v1.2"
+                "source": "https://github.com/hschletz/NADA/tree/v1.2.1"
             },
-            "time": "2022-10-28T17:58:27+00:00"
+            "time": "2024-02-11T11:07:17+00:00"
         },
         {
             "name": "laminas/laminas-authentication",
@@ -7615,7 +7618,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.4 || ~8.0.0 || ~8.1.0 || ~8.2.0",
+        "php": "^7.4 || ^8.0 || ^8.1 || ^8.2 || ^8.3",
         "ext-dom": "*",
         "ext-intl": "*",
         "ext-zip": "*"

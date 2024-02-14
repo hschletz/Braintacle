@@ -366,7 +366,7 @@ class GroupManagerTest extends AbstractGroupTest
                 $dataSet->getTable('groups_cache'),
                 $connection->createQueryTable(
                     'groups_cache',
-                    'SELECT group_id, hardware_id, static FROM groups_cache'
+                    'SELECT group_id, hardware_id, static FROM groups_cache ORDER BY group_id, hardware_id'
                 )
             );
             $this->assertTablesEqual(
@@ -424,7 +424,7 @@ class GroupManagerTest extends AbstractGroupTest
                 $dataSet->getTable('groups_cache'),
                 $connection->createQueryTable(
                     'groups_cache',
-                    'SELECT group_id, hardware_id, static FROM groups_cache'
+                    'SELECT group_id, hardware_id, static FROM groups_cache ORDER BY group_id, hardware_id'
                 )
             );
             $this->assertTablesEqual(

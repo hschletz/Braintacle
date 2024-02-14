@@ -23,6 +23,7 @@
 namespace Database\Table;
 
 use Nada\Column\AbstractColumn as Column;
+use Nada\Database\AbstractDatabase;
 
 /**
  * "accountinfo_config" table
@@ -44,6 +45,9 @@ class CustomFieldConfig extends \Database\AbstractTable
      **/
     const INTERNALTYPE_DATE = 6;
 
+    protected AbstractDatabase $database;
+    protected bool $useTransaction;
+
     /**
      * {@inheritdoc}
      * @codeCoverageIgnore
@@ -52,6 +56,9 @@ class CustomFieldConfig extends \Database\AbstractTable
     {
         $this->table = 'accountinfo_config';
         parent::__construct($serviceLocator);
+
+        $this->database = $serviceLocator->get('Database\Nada');
+        $this->useTransaction = $this->database->canUseDdlTransaction();
     }
 
     /**
@@ -184,9 +191,9 @@ class CustomFieldConfig extends \Database\AbstractTable
         }
 
         $connection = $this->adapter->getDriver()->getConnection();
-        $nada = $this->_serviceLocator->get('Database\Nada');
-
-        $connection->beginTransaction();
+        if ($this->useTransaction) {
+            $connection->beginTransaction();
+        }
 
         try {
             $select = $this->getSql()->select();
@@ -206,11 +213,15 @@ class CustomFieldConfig extends \Database\AbstractTable
             $select->columns(array('id'))->where(array('account_type' => 'COMPUTERS', 'name' => $name));
             $id = $this->selectWith($select)->current()['id'];
 
-            $nada->getTable('accountinfo')->addColumn("fields_$id", $datatype, $length);
+            $this->database->getTable('accountinfo')->addColumn("fields_$id", $datatype, $length);
 
-            $connection->commit();
+            if ($this->useTransaction) {
+                $connection->commit();
+            }
         } catch (\Exception $e) {
-            $connection->rollback();
+            if ($this->useTransaction) {
+                $connection->rollback();
+            }
             throw $e;
         }
     }
@@ -242,7 +253,9 @@ class CustomFieldConfig extends \Database\AbstractTable
     public function deleteField($name)
     {
         $connection = $this->adapter->getDriver()->getConnection();
-        $connection->beginTransaction();
+        if ($this->useTransaction) {
+            $connection->beginTransaction();
+        }
 
         try {
             $select = $this->getSql()->select();
@@ -250,11 +263,15 @@ class CustomFieldConfig extends \Database\AbstractTable
             $id = $this->selectWith($select)->current()['id'];
 
             $this->delete(array('id' => $id));
-            $this->_serviceLocator->get('Database\Nada')->getTable('accountinfo')->dropColumn('fields_' . $id);
+            $this->database->getTable('accountinfo')->dropColumn('fields_' . $id);
 
-            $connection->commit();
+            if ($this->useTransaction) {
+                $connection->commit();
+            }
         } catch (\Exception $e) {
-            $connection->rollback();
+            if ($this->useTransaction) {
+                $connection->rollback();
+            }
             throw $e;
         }
     }
