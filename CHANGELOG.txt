@@ -18,7 +18,7 @@ Upgrading from previous versions:
 
 Misc:
 
-- Fixed PHP 8.1 and 8.2 compatibility.
+- Fixed PHP 8.1 through 8.3 compatibility.
 
 - Workarounds for very outdated agents are beginning to be removed. Should not
   affect any agent released within the last 10 years.
