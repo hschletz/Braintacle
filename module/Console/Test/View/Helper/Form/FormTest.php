@@ -3,7 +3,7 @@
 /**
  * Tests for the Form helper
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -89,10 +89,10 @@ class FormTest extends \Library\Test\View\Helper\AbstractTest
 
         $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('__call')
-             ->willreturnMap([
-                 ['translate', ['The post_max_size value of %s has been exceeded.'], 'exceeded %s'],
-                 ['htmlElement', ['p', 'exceeded ' . ini_get('post_max_size'), ['class' => 'error']], 'exceeded']
-             ]);
+            ->willreturnMap([
+                ['translate', ['The post_max_size value of %s has been exceeded.'], 'exceeded %s'],
+                ['htmlElement', ['p', 'exceeded ' . ini_get('post_max_size'), ['class' => 'error']], 'exceeded']
+            ]);
 
         $helper = $this->createPartialMock(FormHelper::class, ['getView']);
         $helper->method('getView')->willReturn($view);

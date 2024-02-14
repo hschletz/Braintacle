@@ -3,7 +3,7 @@
 /**
  * Form for defining and deleting inventoried registry values
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -66,7 +66,7 @@ class ManageRegistryValues extends Form
             $elementName = base64_encode($name);
             $element = new Element\Text($elementName);
             $element->setValue($name)
-                    ->setLabel($value['FullPath']);
+                ->setLabel($value['FullPath']);
             $inputFilterExisting->add(
                 array(
                     'name' => $elementName,
@@ -98,9 +98,9 @@ class ManageRegistryValues extends Form
 
         $newRootKey = new Element\Select('root_key');
         $newRootKey->setLabel('Root key')
-                   ->setAttribute('type', 'select_untranslated')
-                   ->setValueOptions(\Model\Registry\Value::rootKeys())
-                   ->setValue(\Model\Registry\Value::HKEY_LOCAL_MACHINE);
+            ->setAttribute('type', 'select_untranslated')
+            ->setValueOptions(\Model\Registry\Value::rootKeys())
+            ->setValue(\Model\Registry\Value::HKEY_LOCAL_MACHINE);
         $fieldsetNew->add($newRootKey);
 
         // Additional validation in isValid()

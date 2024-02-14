@@ -3,7 +3,7 @@
 /**
  * Tests for ConfigListener
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -66,17 +66,17 @@ class ConfigListenerTest extends \PHPUnit\Framework\TestCase
         $serviceManager->method('get')->willReturn(['key' => 'value']);
         $serviceManager->method('getAllowOverride')->willReturn('initialAllowOverride');
         $serviceManager->expects($this->exactly(2))
-                       ->method('setAllowOverride')
-                       ->withConsecutive([true], ['initialAllowOverride']);
+            ->method('setAllowOverride')
+            ->withConsecutive([true], ['initialAllowOverride']);
         $serviceManager->expects($this->once())
-                       ->method('setService')
-                       ->with(
-                           'ApplicationConfig',
-                           [
-                               'key' => 'value',
-                               'Library\UserConfig' => $configOption,
-                           ]
-                       );
+            ->method('setService')
+            ->with(
+                'ApplicationConfig',
+                [
+                    'key' => 'value',
+                    'Library\UserConfig' => $configOption,
+                ]
+            );
 
         $configListener = new ConfigListener($serviceManager);
         $configListener($event);

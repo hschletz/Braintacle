@@ -3,7 +3,7 @@
 /**
  * Tests for NetworkController
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -107,8 +107,8 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         );
         $this->_deviceManager->expects($this->once())->method('getTypeCounts')->willReturn($devices);
         $this->_subnetManager->expects($this->once())
-                             ->method('getSubnets')
-                             ->willReturn($subnets);
+            ->method('getSubnets')
+            ->willReturn($subnets);
         $this->dispatch('/console/network/index/');
         $this->assertResponseStatusCode(200);
 
@@ -184,15 +184,15 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
         $this->_deviceManager->expects($this->once())
-                             ->method('getDevices')
-                             ->with($filters, 'DiscoveryDate', 'desc')
-                             ->willReturn($result);
+            ->method('getDevices')
+            ->with($filters, 'DiscoveryDate', 'desc')
+            ->willReturn($result);
 
         $dateFormat = $this->createMock(DateFormat::class);
         $dateFormat->expects($this->once())
-                   ->method('__invoke')
-                   ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
-                   ->willReturn('date1');
+            ->method('__invoke')
+            ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
+            ->willReturn('date1');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('dateFormat', $dateFormat);
 
         $this->dispatch('/console/network/showidentified/');
@@ -230,9 +230,9 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
         $this->_deviceManager->expects($this->once())
-                             ->method('getDevices')
-                             ->with($filters, 'DiscoveryDate', 'desc')
-                             ->willReturn($result);
+            ->method('getDevices')
+            ->with($filters, 'DiscoveryDate', 'desc')
+            ->willReturn($result);
         $this->dispatch('/console/network/showidentified/?subnet=192.0.2.0&mask=255.255.255.0&type=type');
     }
 
@@ -252,15 +252,15 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
         $this->_deviceManager->expects($this->once())
-                             ->method('getDevices')
-                             ->with($filters, 'DiscoveryDate', 'desc')
-                             ->willReturn($result);
+            ->method('getDevices')
+            ->with($filters, 'DiscoveryDate', 'desc')
+            ->willReturn($result);
 
         $dateFormat = $this->createMock(DateFormat::class);
         $dateFormat->expects($this->once())
-                   ->method('__invoke')
-                   ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
-                   ->willReturn('date1');
+            ->method('__invoke')
+            ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
+            ->willReturn('date1');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('dateFormat', $dateFormat);
 
         $this->dispatch('/console/network/showunknown/');
@@ -299,9 +299,9 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             ),
         );
         $this->_deviceManager->expects($this->once())
-                             ->method('getDevices')
-                             ->with($filters, 'DiscoveryDate', 'desc')
-                             ->willReturn($result);
+            ->method('getDevices')
+            ->with($filters, 'DiscoveryDate', 'desc')
+            ->willReturn($result);
         $this->dispatch('/console/network/showunknown/?subnet=192.0.2.0&mask=255.255.255.0&type=type');
     }
 
@@ -315,17 +315,17 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $this->_subnetManager->expects($this->once())
-                             ->method('getSubnet')
-                             ->with('192.0.2.0', '255.255.255.0')
-                             ->willReturn($subnet);
+            ->method('getSubnet')
+            ->with('192.0.2.0', '255.255.255.0')
+            ->willReturn($subnet);
         $this->_subnetManager->expects($this->never())->method('saveSubnet');
 
         $this->_subnetForm->expects($this->once())
-                          ->method('setData')
-                          ->with(array('Name' => 'name'));
+            ->method('setData')
+            ->with(array('Name' => 'name'));
         $this->_subnetForm->expects($this->once())
-                          ->method('render')
-                          ->will($this->returnValue('<form></form>'));
+            ->method('render')
+            ->will($this->returnValue('<form></form>'));
         $this->dispatch('/console/network/properties/?subnet=192.0.2.0&mask=255.255.255.0');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains(
@@ -340,19 +340,19 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array('Name' => 'new_name');
 
         $this->_subnetManager->expects($this->once())
-                             ->method('getSubnet')
-                             ->with('192.0.2.0', '255.255.255.0')
-                             ->willReturn(['CidrAddress' => '192.0.2.0/24']);
+            ->method('getSubnet')
+            ->with('192.0.2.0', '255.255.255.0')
+            ->willReturn(['CidrAddress' => '192.0.2.0/24']);
         $this->_subnetManager->expects($this->never())->method('saveSubnet');
 
         $this->_subnetForm->expects($this->once())
-                          ->method('setData')
-                          ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $this->_subnetForm->expects($this->once())
-                          ->method('isValid')
-                          ->will($this->returnValue(false));
+            ->method('isValid')
+            ->will($this->returnValue(false));
         $this->_subnetForm->expects($this->once())
-                          ->method('render');
+            ->method('render');
         $this->dispatch('/console/network/properties/?subnet=192.0.2.0&mask=255.255.255.0', 'POST', $postData);
         $this->assertResponseStatusCode(200);
     }
@@ -364,22 +364,22 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $subnet = array('Address' => 'address', 'Mask' => 'mask');
 
         $this->_subnetManager->expects($this->once())
-                             ->method('getSubnet')
-                             ->with('192.0.2.0', '255.255.255.0')
-                             ->willReturn($subnet);
+            ->method('getSubnet')
+            ->with('192.0.2.0', '255.255.255.0')
+            ->willReturn($subnet);
         $this->_subnetManager->expects($this->once())->method('saveSubnet')->with('address', 'mask', 'new_name');
 
         $this->_subnetForm->expects($this->once())
-                          ->method('setData')
-                          ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $this->_subnetForm->expects($this->once())
-                          ->method('isValid')
-                          ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $this->_subnetForm->expects($this->once())
-                          ->method('getData')
-                          ->will($this->returnValue($postData));
+            ->method('getData')
+            ->will($this->returnValue($postData));
         $this->_subnetForm->expects($this->never())
-                          ->method('render');
+            ->method('render');
 
         $this->dispatch('/console/network/properties/?subnet=192.0.2.0&mask=255.255.255.0', 'POST', $postData);
         $this->assertRedirectTo('/console/network/index/');
@@ -388,9 +388,9 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     public function testPropertiesActionMissingParams()
     {
         $this->_subnetManager->expects($this->once())
-                             ->method('getSubnet')
-                             ->with(null, null)
-                             ->will($this->throwException(new \InvalidArgumentException()));
+            ->method('getSubnet')
+            ->with(null, null)
+            ->will($this->throwException(new \InvalidArgumentException()));
 
         $this->dispatch('/console/network/properties');
         $this->assertApplicationException('InvalidArgumentException');
@@ -400,11 +400,11 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     {
         $macAddress = $this->createMock('Library\MacAddress');
         $macAddress->expects($this->any())
-                   ->method('__toString')
-                   ->will($this->returnValue('00:00:5E:00:53:00'));
+            ->method('__toString')
+            ->will($this->returnValue('00:00:5E:00:53:00'));
         $macAddress->expects($this->any())
-                   ->method('getVendor')
-                   ->will($this->returnValue('vendor'));
+            ->method('getVendor')
+            ->will($this->returnValue('vendor'));
         $date = new \DateTime();
         $device = array(
             'MacAddress' => $macAddress,
@@ -416,14 +416,14 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         );
         $dateFormat = $this->createMock(DateFormat::class);
         $dateFormat->expects($this->once())
-                   ->method('__invoke')
-                   ->with($date, \IntlDateFormatter::MEDIUM, \IntlDateFormatter::MEDIUM)
-                   ->willReturn('date_format');
+            ->method('__invoke')
+            ->with($date, \IntlDateFormatter::MEDIUM, \IntlDateFormatter::MEDIUM)
+            ->willReturn('date_format');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('dateFormat', $dateFormat);
 
         $this->_deviceManager->method('getDevice')
-                             ->with('00:00:5E:00:53:00')
-                             ->willReturn($device);
+            ->with('00:00:5E:00:53:00')
+            ->willReturn($device);
 
         $type = new SelectSimple('Type');
         $type->setLabel('Type');
@@ -436,8 +436,8 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
 
         $deviceForm = $this->createPartialMock(NetworkDevice::class, ['setData', 'isValid', 'prepare', 'get']);
         $deviceForm->expects($this->once())
-                   ->method('setData')
-                   ->with(array('Type' => 'type1', 'Description' => 'description1'));
+            ->method('setData')
+            ->with(array('Type' => 'type1', 'Description' => 'description1'));
         $deviceForm->expects($this->never())->method('isValid');
         $deviceForm->expects($this->once())->method('prepare');
         $deviceForm->method('get')->willReturnMap([
@@ -475,11 +475,11 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array('Type' => 'type', 'Description' => 'description');
         $macAddress = $this->createMock('Library\MacAddress');
         $macAddress->expects($this->any())
-                   ->method('__toString')
-                   ->will($this->returnValue('00:00:5E:00:53:00'));
+            ->method('__toString')
+            ->will($this->returnValue('00:00:5E:00:53:00'));
         $macAddress->expects($this->any())
-                   ->method('getVendor')
-                   ->will($this->returnValue('vendor'));
+            ->method('getVendor')
+            ->will($this->returnValue('vendor'));
         $device = array(
             'MacAddress' => $macAddress,
             'IpAddress' => '192.0.2.1',
@@ -487,8 +487,8 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
             'DiscoveryDate' => 'date',
         );
         $this->_deviceManager->method('getDevice')
-                             ->with('00:00:5E:00:53:00')
-                             ->willReturn($device);
+            ->with('00:00:5E:00:53:00')
+            ->willReturn($device);
 
 
         $type = new SelectSimple('Type');
@@ -524,19 +524,19 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array('Type' => 'type', 'Description' => 'description');
         $this->_deviceForm->expects($this->once())
-                          ->method('setData')
-                          ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $this->_deviceForm->expects($this->once())
-                          ->method('getData')
-                          ->will($this->returnValue($postData + array('_csrf' => '', 'Submit' => '')));
+            ->method('getData')
+            ->will($this->returnValue($postData + array('_csrf' => '', 'Submit' => '')));
         $this->_deviceForm->expects($this->once())
-                          ->method('isValid')
-                          ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $this->_deviceForm->expects($this->never())
-                          ->method('prepare');
+            ->method('prepare');
         $this->_deviceManager->expects($this->once())
-                             ->method('saveDevice')
-                             ->with('00:00:5E:00:53:00', 'type', 'description');
+            ->method('saveDevice')
+            ->with('00:00:5E:00:53:00', 'type', 'description');
         $this->dispatch('/console/network/edit/?macaddress=00:00:5E:00:53:00', 'POST', $postData);
         $this->assertRedirectTo('/console/network/index/');
     }
@@ -544,9 +544,9 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     public function testEditActionMissingParams()
     {
         $this->_deviceManager->expects($this->once())
-                             ->method('getDevice')
-                             ->with(null)
-                             ->will($this->throwException(new \Model\Network\RuntimeException()));
+            ->method('getDevice')
+            ->with(null)
+            ->will($this->throwException(new \Model\Network\RuntimeException()));
         $this->dispatch('/console/network/edit/');
         $this->assertRedirectTo('/console/network/index/');
     }
@@ -555,17 +555,17 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     {
         $macAddress = $this->createMock('Library\MacAddress');
         $macAddress->expects($this->any())
-                   ->method('__toString')
-                   ->will($this->returnValue('00:00:5E:00:53:00'));
+            ->method('__toString')
+            ->will($this->returnValue('00:00:5E:00:53:00'));
         $device = array(
             'MacAddress' => $macAddress,
             'Hostname' => 'host.example.net',
             'Description' => null,
         );
         $this->_deviceManager->expects($this->once())
-                             ->method('getDevice')
-                             ->with('00:00:5E:00:53:00')
-                             ->willReturn($device);
+            ->method('getDevice')
+            ->with('00:00:5E:00:53:00')
+            ->willReturn($device);
         $this->_deviceManager->expects($this->never())->method('deleteDevice');
         $this->dispatch('/console/network/delete/?macaddress=00:00:5E:00:53:00');
         $this->assertResponseStatusCode(200);
@@ -592,9 +592,9 @@ class NetworkControllerTest extends \Console\Test\AbstractControllerTest
     public function testDeleteActionMissingParams()
     {
         $this->_deviceManager->expects($this->once())
-                             ->method('getDevice')
-                             ->with(null)
-                             ->will($this->throwException(new \Model\Network\RuntimeException()));
+            ->method('getDevice')
+            ->with(null)
+            ->will($this->throwException(new \Model\Network\RuntimeException()));
         $this->_deviceManager->expects($this->never())->method('deleteDevice');
         $this->dispatch('/console/network/delete/');
         $this->assertRedirectTo('/console/network/index/');

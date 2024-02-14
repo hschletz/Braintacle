@@ -3,7 +3,7 @@
 /**
  * Tests for CustomFields form
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -41,16 +41,16 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
     {
         $this->_customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $this->_customFieldManager->expects($this->once())
-                                  ->method('getFields')
-                                  ->willReturn(
-                                      array(
-                                        'TAG' => 'text',
-                                        'Clob' => 'clob',
-                                        'Integer' => 'integer',
-                                        'Float' => 'float',
-                                        'Date' => 'date',
-                                      )
-                                  );
+            ->method('getFields')
+            ->willReturn(
+                array(
+                    'TAG' => 'text',
+                    'Clob' => 'clob',
+                    'Integer' => 'integer',
+                    'Float' => 'float',
+                    'Date' => 'date',
+                )
+            );
         parent::setUp();
     }
 

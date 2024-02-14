@@ -3,7 +3,7 @@
 /**
  * Tests for Model\Client\CustomFieldManager
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -337,8 +337,8 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
 
         $hydrator = $this->createMock(HydratorInterface::class);
         $hydrator->method('hydrate')
-                 ->with(['raw_name' => 'raw_value'], $this->isInstanceOf(CustomFields::class))
-                 ->willReturn($customFields);
+            ->with(['raw_name' => 'raw_value'], $this->isInstanceOf(CustomFields::class))
+            ->willReturn($customFields);
 
         $model = $this->createPartialMock(CustomFieldManager::class, ['getColumnMap', 'readRaw', 'getHydrator']);
         $model->method('getColumnMap')->willReturn($columnMap);

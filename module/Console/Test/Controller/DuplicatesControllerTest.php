@@ -3,7 +3,7 @@
 /**
  * Tests for DuplicatesController
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -68,8 +68,8 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
     public function testIndexActionNoDuplicates()
     {
         $this->_duplicates->expects($this->exactly(4))
-                          ->method('count')
-                          ->will($this->returnValue(0));
+            ->method('count')
+            ->will($this->returnValue(0));
         $this->dispatch('/console/duplicates/index/');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains('p', 'Keine Duplikate vorhanden.');
@@ -78,8 +78,8 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
     public function testIndexActionShowDuplicates()
     {
         $this->_duplicates->expects($this->exactly(4))
-                          ->method('count')
-                          ->will($this->returnValue(2));
+            ->method('count')
+            ->will($this->returnValue(2));
         $this->dispatch('/console/duplicates/index/');
         $this->assertResponseStatusCode(200);
         // List with 4 hyperlinks.
@@ -92,12 +92,12 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
-                       ->with('getMessagesFromNamespace')
-                       ->willReturn(array());
+            ->with('getMessagesFromNamespace')
+            ->willReturn(array());
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('FlashMessenger', $flashMessenger);
 
         $this->_duplicates->method('count')
-                          ->will($this->returnValue(0));
+            ->will($this->returnValue(0));
         $this->dispatch('/console/duplicates/index/');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//ul');
@@ -108,19 +108,19 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
-                       ->withConsecutive(
-                           array('getMessagesFromNamespace', array('error')),
-                           array('getMessagesFromNamespace', array('info')),
-                           array('getMessagesFromNamespace', array('success'))
-                       )->willReturnOnConsecutiveCalls(
-                           [],
-                           ['info message'],
-                           ["success message"]
-                       );
+            ->withConsecutive(
+                array('getMessagesFromNamespace', array('error')),
+                array('getMessagesFromNamespace', array('info')),
+                array('getMessagesFromNamespace', array('success'))
+            )->willReturnOnConsecutiveCalls(
+                [],
+                ['info message'],
+                ["success message"]
+            );
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
         $this->_duplicates->method('count')
-                          ->will($this->returnValue(0));
+            ->will($this->returnValue(0));
         $this->dispatch('/console/duplicates/index/');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryCount('//ul', 2);
@@ -141,9 +141,9 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_showDuplicates->expects($this->never())->method('getData');
 
         $this->_duplicates->expects($this->once())
-                          ->method('find')
-                          ->with(null)
-                          ->will($this->throwException(new \InvalidArgumentException('Invalid criteria')));
+            ->method('find')
+            ->with(null)
+            ->will($this->throwException(new \InvalidArgumentException('Invalid criteria')));
         $this->_duplicates->expects($this->never())->method('merge');
 
         $this->dispatch('/console/duplicates/manage/');
@@ -157,9 +157,9 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_showDuplicates->expects($this->never())->method('getData');
 
         $this->_duplicates->expects($this->once())
-                          ->method('find')
-                          ->with('invalid')
-                          ->will($this->throwException(new \InvalidArgumentException('Invalid criteria')));
+            ->method('find')
+            ->with('invalid')
+            ->will($this->throwException(new \InvalidArgumentException('Invalid criteria')));
         $this->_duplicates->expects($this->never())->method('merge');
 
         $this->dispatch('/console/duplicates/manage/?criteria=invalid');
@@ -174,8 +174,8 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_showDuplicates->expects($this->once())->method('getMessages')->willReturn([]);
 
         $this->_duplicates->expects($this->once())
-                          ->method('find')
-                          ->with('Name', 'Id', 'asc')->willReturn([]);
+            ->method('find')
+            ->with('Name', 'Id', 'asc')->willReturn([]);
         $this->_duplicates->expects($this->never())->method('merge');
 
         $this->dispatch('/console/duplicates/manage/?criteria=Name');
@@ -216,11 +216,11 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
         $this->_showDuplicates->expects($this->once())->method('getMessages')->willReturn(['clients' => ['invalid']]);
 
         $this->_duplicates->expects($this->once())
-                          ->method('find')
-                          ->with('Name', 'Id', 'asc')
-                          ->willReturn([]);
+            ->method('find')
+            ->with('Name', 'Id', 'asc')
+            ->willReturn([]);
         $this->_duplicates->expects($this->never())
-                          ->method('merge');
+            ->method('merge');
 
         $this->dispatch('/console/duplicates/manage/?criteria=Name', 'POST');
         $this->assertResponseStatusCode(200);
@@ -350,7 +350,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
     public function testAllowActionGet()
     {
         $this->_duplicates->expects($this->never())
-                          ->method('allow');
+            ->method('allow');
         $this->dispatch('/console/duplicates/allow/?criteria=Serial&value=12345678');
         $this->assertResponseStatusCode(200);
         $this->assertQuery('form');
@@ -359,7 +359,7 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
     public function testAllowActionPostNo()
     {
         $this->_duplicates->expects($this->never())
-                          ->method('allow');
+            ->method('allow');
         $this->dispatch('/console/duplicates/allow/?criteria=Serial&value=12345678', 'POST', array('no' => 'No'));
         $this->assertRedirectTo('/console/duplicates/manage/?criteria=Serial');
     }
@@ -367,8 +367,8 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
     public function testAllowActionPostYes()
     {
         $this->_duplicates->expects($this->once())
-                          ->method('allow')
-                          ->with('Serial', '12345678');
+            ->method('allow')
+            ->with('Serial', '12345678');
         $this->dispatch('/console/duplicates/allow/?criteria=Serial&value=12345678', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/duplicates/index/');
         $this->assertEquals(

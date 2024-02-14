@@ -3,7 +3,7 @@
 /**
  * Client
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -116,7 +116,7 @@ class Client extends \Model\ClientOrGroup
     /**
      * System manufacturer
      */
-    public ?string $manufacturer ;
+    public ?string $manufacturer;
 
     /**
      * Product name
@@ -126,7 +126,7 @@ class Client extends \Model\ClientOrGroup
     /**
      * Serial number
      */
-    public ?string $serial ;
+    public ?string $serial;
 
     /**
      * Asset tag
@@ -520,14 +520,14 @@ class Client extends \Model\ClientOrGroup
         $sql = $this->_serviceLocator->get(ClientConfig::class)->getSql();
         $select = $sql->select();
         $select->columns(['tvalue', 'comments'])
-               ->join(
-                   'download_available',
-                   'download_available.fileid = devices.ivalue',
-                   ['name'],
-                   Select::JOIN_INNER
-               )
-               ->where(['hardware_id' => $this['Id'], 'devices.name' => 'DOWNLOAD'])
-               ->order([$hydrator->extractName($order) => $direction]);
+            ->join(
+                'download_available',
+                'download_available.fileid = devices.ivalue',
+                ['name'],
+                Select::JOIN_INNER
+            )
+            ->where(['hardware_id' => $this['Id'], 'devices.name' => 'DOWNLOAD'])
+            ->order([$hydrator->extractName($order) => $direction]);
 
         $resultSet = new HydratingResultSet($hydrator, new Assignment());
         $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());
@@ -545,8 +545,8 @@ class Client extends \Model\ClientOrGroup
         $packageHistory = $this->_serviceLocator->get('Database\Table\PackageHistory');
         $select = $packageHistory->getSql()->select();
         $select->columns(array('pkg_id'))
-               ->where(array('hardware_id' => $this['Id']))
-               ->order('pkg_id');
+            ->where(array('hardware_id' => $this['Id']))
+            ->order('pkg_id');
         return array_column($packageHistory->selectWith($select)->toArray(), 'pkg_id');
     }
 

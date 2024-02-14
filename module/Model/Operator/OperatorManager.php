@@ -3,7 +3,7 @@
 /**
  * Operator manager
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -96,7 +96,7 @@ class OperatorManager
         }
         $select = $this->_operators->getSql()->select();
         $select->columns(array('id', 'firstname', 'lastname', 'email', 'comments'))
-               ->where(array('id' => $id));
+            ->where(array('id' => $id));
         $operator = $this->_operators->selectWith($select)->current();
         if (!$operator) {
             throw new \RuntimeException('Invalid login name supplied');

@@ -3,7 +3,7 @@
 /**
  * Form for display/setting of 'groups' preferences
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -56,7 +56,7 @@ class Groups extends AbstractForm
 
         $groupCacheExpirationInterval = new \Laminas\Form\Element\Text('groupCacheExpirationInterval');
         $groupCacheExpirationInterval->setLabel('Minimum seconds between group cache rebuilds')
-                                     ->setAttribute('size', 5);
+            ->setAttribute('size', 5);
         $preferences->add($groupCacheExpirationInterval);
         $inputFilter->add(
             array(
@@ -68,7 +68,7 @@ class Groups extends AbstractForm
 
         $groupCacheExpirationFuzz = new \Laminas\Form\Element\Text('groupCacheExpirationFuzz');
         $groupCacheExpirationFuzz->setLabel('Maximum seconds added to above value')
-                                 ->setAttribute('size', 5);
+            ->setAttribute('size', 5);
         $preferences->add($groupCacheExpirationFuzz);
         $inputFilter->add(
             array(

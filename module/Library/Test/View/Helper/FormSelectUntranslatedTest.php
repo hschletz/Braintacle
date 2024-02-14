@@ -3,7 +3,7 @@
 /**
  * Tests for the FormSelectUntranslated helper
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -31,7 +31,7 @@ class FormSelectUntranslatedTest extends AbstractTest
     {
         $element = new \Laminas\Form\Element\Select('test');
         $element->setAttribute('type', 'select_untranslated')
-                ->setValueOptions(array('Yes<b>', 'No'));
+            ->setValueOptions(array('Yes<b>', 'No'));
         $expected = <<<EOT
 <select name="test"><option value="0">Yes&lt;b&gt;</option>
 <option value="1">No</option></select>

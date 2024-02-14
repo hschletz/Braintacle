@@ -3,7 +3,7 @@
 /**
  * Client manager
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -89,8 +89,8 @@ class ClientManager
                 $fromClients[] = $map[$property];
             } elseif (preg_match('/^Windows\.(.*)/', $property, $matches)) {
                 $column = $this->_serviceLocator->get('Database\Table\WindowsInstallations')
-                                               ->getHydrator()
-                                               ->extractName($matches[1]);
+                    ->getHydrator()
+                    ->extractName($matches[1]);
                 $fromWindows["windows_$column"] = $column;
             }
             // Ignore other properties. They might get added by a filter.
@@ -247,12 +247,12 @@ class ClientManager
                     // $arg is expected to be a \Model\Group\Group object.
                     $arg->update();
                     $select->join('groups_cache', 'groups_cache.hardware_id = clients.id', array())
-                           ->where(
-                               array(
-                                   'groups_cache.group_id' => $arg['Id'],
-                                   'groups_cache.static' => \Model\Client\Client::MEMBERSHIP_NEVER
-                               )
-                           );
+                        ->where(
+                            array(
+                                'groups_cache.group_id' => $arg['Id'],
+                                'groups_cache.static' => \Model\Client\Client::MEMBERSHIP_NEVER
+                            )
+                        );
                     break;
                 case 'Filesystem.Size':
                 case 'Filesystem.FreeSpace':
@@ -272,7 +272,7 @@ class ClientManager
                     if (preg_match('#^CustomFields\\.(.*)#', $type, $matches)) {
                         $property = $matches[1];
                         $fieldType = $this->_serviceLocator->get('Model\Client\CustomFieldManager')
-                                                          ->getFields()[$property];
+                            ->getFields()[$property];
                         switch ($fieldType) {
                             case 'text':
                             case 'clob':
@@ -348,7 +348,7 @@ class ClientManager
                 $order = 'groups_cache.static';
             } elseif (preg_match('/^CustomFields\\.(.+)/', $order, $matches)) {
                 $order = 'customfields_' . $this->_serviceLocator->get('Model\Client\CustomFieldManager')
-                                                                ->getColumnMap()[$matches[1]];
+                    ->getColumnMap()[$matches[1]];
             } elseif (preg_match('/^Windows\.(.+)/', $order, $matches)) {
                 $hydrator = $this->_serviceLocator->get('Database\Table\WindowsInstallations')->getHydrator();
                 $order = 'windows_' . $hydrator->extractName($matches[1]);
@@ -656,16 +656,16 @@ class ClientManager
             'devices.hardware_id = clients.id',
             $addSearchColumns ? array('package_status' => 'tvalue') : array()
         )
-        ->join(
-            'download_available',
-            'download_available.fileid = devices.ivalue',
-            array()
-        )->where(
-            array(
-                'download_available.name' => $package,
-                'devices.name' => 'DOWNLOAD'
-            )
-        )->where($condition);
+            ->join(
+                'download_available',
+                'download_available.fileid = devices.ivalue',
+                array()
+            )->where(
+                array(
+                    'download_available.name' => $package,
+                    'devices.name' => 'DOWNLOAD'
+                )
+            )->where($condition);
     }
 
     /**
@@ -888,9 +888,9 @@ class ClientManager
             'useragent' => 'Braintacle_local_upload', // Substring 'local' required for correct server operation
         ]);
         $httpClient->setMethod('POST')
-                   ->setUri($uri)
-                   ->setHeaders(array('Content-Type' => 'application/x-compress'))
-                   ->setRawBody($data);
+            ->setUri($uri)
+            ->setHeaders(array('Content-Type' => 'application/x-compress'))
+            ->setRawBody($data);
         $response = $httpClient->send();
         if (!$response->isSuccess()) {
             throw new \RuntimeException(

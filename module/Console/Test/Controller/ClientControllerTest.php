@@ -3,7 +3,7 @@
 /**
  * Tests for ClientController
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -158,9 +158,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testInvalidClient()
     {
         $this->_clientManager->expects($this->once())
-                             ->method('getClient')
-                             ->with(42)
-                             ->will($this->throwException(new \RuntimeException()));
+            ->method('getClient')
+            ->with(42)
+            ->will($this->throwException(new \RuntimeException()));
         $this->dispatch('/console/client/general/?id=42');
         $this->assertRedirectTo('/console/client/index/');
         $this->assertContains(
@@ -173,21 +173,21 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->never())
-             ->method('setData');
+            ->method('setData');
         $this->_clientManager->expects($this->once())
-                             ->method('getClients')
-                             ->with(
-                                 $this->_defaultColumns,
-                                 'InventoryDate',
-                                 'desc',
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 true,
-                                 false
-                             )
-                             ->willReturn($this->_sampleClients);
+            ->method('getClients')
+            ->with(
+                $this->_defaultColumns,
+                'InventoryDate',
+                'desc',
+                null,
+                null,
+                null,
+                null,
+                true,
+                false
+            )
+            ->willReturn($this->_sampleClients);
         $this->dispatch('/console/client/index/');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//p[@class="textcenter"]', "\nAnzahl Clients: 2\n");
@@ -203,21 +203,21 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->never())
-             ->method('setData');
+            ->method('setData');
         $this->_clientManager->expects($this->once())
-                             ->method('getClients')
-                             ->with(
-                                 array('Name', 'InventoryDate'),
-                                 'InventoryDate',
-                                 'desc',
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 true,
-                                 false
-                             )
-                             ->willReturn($this->_sampleClients);
+            ->method('getClients')
+            ->with(
+                array('Name', 'InventoryDate'),
+                'InventoryDate',
+                'desc',
+                null,
+                null,
+                null,
+                null,
+                true,
+                false
+            )
+            ->willReturn($this->_sampleClients);
         $this->dispatch('/console/client/index/?columns=Name,InventoryDate');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryCount('//th', 2);
@@ -231,18 +231,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             array('OsName' => 'not Microsoft OS'),
         );
         $this->_clientManager->method('getClients')
-                             ->with(
-                                 array('OsName'),
-                                 'InventoryDate',
-                                 'desc',
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 true,
-                                 false
-                             )
-                             ->willReturn($sampleClients);
+            ->with(
+                array('OsName'),
+                'InventoryDate',
+                'desc',
+                null,
+                null,
+                null,
+                null,
+                true,
+                false
+            )
+            ->willReturn($sampleClients);
         $this->dispatch('/console/client/index/?columns=OsName');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//tr[2]/td[1]', "\nOS version1\n");
@@ -254,7 +254,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->never())
-             ->method('setData');
+            ->method('setData');
         $this->_clientManager->expects($this->once())->method('getClients')->willReturn($this->_sampleClients);
 
         $this->dispatch('/console/client/index/?jumpto=software');
@@ -269,7 +269,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->never())
-             ->method('setData');
+            ->method('setData');
         $this->_clientManager->expects($this->once())->method('getClients')->willReturn($this->_sampleClients);
 
         $this->dispatch('/console/client/index/?jumpto=invalid');
@@ -284,21 +284,21 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->never())
-             ->method('setData');
+            ->method('setData');
         $this->_clientManager->expects($this->once())
-                             ->method('getClients')
-                             ->with(
-                                 $this->_defaultColumns,
-                                 'InventoryDate',
-                                 'desc',
-                                 'PackageError',
-                                 'packageName',
-                                 null,
-                                 null,
-                                 true,
-                                 false
-                             )
-                             ->willReturn($this->_sampleClients);
+            ->method('getClients')
+            ->with(
+                $this->_defaultColumns,
+                'InventoryDate',
+                'desc',
+                'PackageError',
+                'packageName',
+                null,
+                null,
+                true,
+                false
+            )
+            ->willReturn($this->_sampleClients);
         $this->dispatch('/console/client/index/?filter=PackageError&search=packageName');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
@@ -311,25 +311,25 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->never())
-             ->method('setData');
+            ->method('setData');
         $this->_clientManager->expects($this->once())
-                             ->method('getClients')
-                             ->with(
-                                 $this->_defaultColumns,
-                                 'InventoryDate',
-                                 'desc',
-                                 ['NetworkInterface.Subnet', 'NetworkInterface.Netmask'],
-                                 ['192.0.2.0', '255.255.255.0'],
-                                 [null, null],
-                                 [null, null],
-                                 true,
-                                 false
-                             )
-                             ->willReturn($this->_sampleClients);
+            ->method('getClients')
+            ->with(
+                $this->_defaultColumns,
+                'InventoryDate',
+                'desc',
+                ['NetworkInterface.Subnet', 'NetworkInterface.Netmask'],
+                ['192.0.2.0', '255.255.255.0'],
+                [null, null],
+                [null, null],
+                true,
+                false
+            )
+            ->willReturn($this->_sampleClients);
         $this->dispatch(
             '/console/client/index/?' .
-            'filter1=NetworkInterface.Subnet&search1=192.0.2.0&' .
-            'filter2=NetworkInterface.Netmask&search2=255.255.255.0'
+                'filter1=NetworkInterface.Subnet&search1=192.0.2.0&' .
+                'filter2=NetworkInterface.Netmask&search2=255.255.255.0'
         );
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
@@ -342,21 +342,21 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->never())
-             ->method('setData');
+            ->method('setData');
         $this->_clientManager->expects($this->once())
-                             ->method('getClients')
-                             ->with(
-                                 $this->_defaultColumns,
-                                 'InventoryDate',
-                                 'desc',
-                                 'Software',
-                                 "\xc2\x99", // Incorrect representation of TM symbol
-                                 null,
-                                 null,
-                                 true,
-                                 false
-                             )
-                             ->willReturn($this->_sampleClients);
+            ->method('getClients')
+            ->with(
+                $this->_defaultColumns,
+                'InventoryDate',
+                'desc',
+                'Software',
+                "\xc2\x99", // Incorrect representation of TM symbol
+                null,
+                null,
+                true,
+                false
+            )
+            ->willReturn($this->_sampleClients);
         $this->dispatch('/console/client/index/?filter=Software&search=%C2%99');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
@@ -369,21 +369,21 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->never())
-             ->method('setData');
+            ->method('setData');
         $this->_clientManager->expects($this->once())
-                             ->method('getClients')
-                             ->with(
-                                 $this->_defaultColumns,
-                                 'InventoryDate',
-                                 'desc',
-                                 'Software',
-                                 'name',
-                                 null,
-                                 null,
-                                 true,
-                                 true
-                             )
-                             ->willReturn($this->_sampleClients);
+            ->method('getClients')
+            ->with(
+                $this->_defaultColumns,
+                'InventoryDate',
+                'desc',
+                'Software',
+                'name',
+                null,
+                null,
+                true,
+                true
+            )
+            ->willReturn($this->_sampleClients);
         $this->dispatch('/console/client/index/?filter=Software&search=name&distinct=');
         $this->assertResponseStatusCode(200);
     }
@@ -399,28 +399,28 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
-             ->method('setData')
-             ->with($formData);
+            ->method('setData')
+            ->with($formData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue($formData));
+            ->method('getData')
+            ->will($this->returnValue($formData));
         $this->_clientManager->expects($this->once())
-                             ->method('getClients')
-                             ->with(
-                                 array('Name', 'UserName', 'InventoryDate'),
-                                 'InventoryDate',
-                                 'desc',
-                                 'Name',
-                                 'test',
-                                 'eq',
-                                 '1',
-                                 true,
-                                 false
-                             )
-                             ->willReturn($this->_sampleClients);
+            ->method('getClients')
+            ->with(
+                array('Name', 'UserName', 'InventoryDate'),
+                'InventoryDate',
+                'desc',
+                'Name',
+                'test',
+                'eq',
+                '1',
+                true,
+                false
+            )
+            ->willReturn($this->_sampleClients);
         $query = 'filter=Name&search=test&operator=eq&invert=1';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -440,46 +440,46 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $date = new \DateTime('2014-05-12');
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
-             ->method('setData')
-             ->with(
-                 array(
+            ->method('setData')
+            ->with(
+                array(
                     'filter' => 'InventoryDate',
                     'search' => '2014-05-12',
                     'operator' => 'eq',
                     'invert' => '1',
                     'customSearch' => 'button',
-                 )
-             );
+                )
+            );
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('getData')
-             ->will(
-                 $this->returnValue(
-                     array(
+            ->method('getData')
+            ->will(
+                $this->returnValue(
+                    array(
                         'filter' => 'InventoryDate',
                         'search' => $date,
                         'operator' => 'eq',
                         'invert' => '1',
                         'customSearch' => 'button',
-                     )
-                 )
-             );
+                    )
+                )
+            );
         $this->_clientManager->expects($this->once())
-                             ->method('getClients')
-                             ->with(
-                                 array('Name', 'UserName', 'InventoryDate'),
-                                 'InventoryDate',
-                                 'desc',
-                                 'InventoryDate',
-                                 $date,
-                                 'eq',
-                                 '1',
-                                 true,
-                                 false
-                             )
-                             ->willReturn($this->_sampleClients);
+            ->method('getClients')
+            ->with(
+                array('Name', 'UserName', 'InventoryDate'),
+                'InventoryDate',
+                'desc',
+                'InventoryDate',
+                $date,
+                'eq',
+                '1',
+                true,
+                false
+            )
+            ->willReturn($this->_sampleClients);
         $query = 'filter=InventoryDate&search=2014-05-12&operator=eq&invert=1';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -493,35 +493,35 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         // Equality search should not add the searched column.
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('getData')
-             ->will(
-                 $this->returnValue(
-                     array(
+            ->method('getData')
+            ->will(
+                $this->returnValue(
+                    array(
                         'filter' => 'CpuType',
                         'search' => 'value',
                         'operator' => 'eq',
                         'invert' => '0',
                         'customSearch' => 'button',
-                     )
-                 )
-             );
+                    )
+                )
+            );
         $this->_clientManager->expects($this->once())
-                             ->method('getClients')
-                             ->with(
-                                 array('Name', 'UserName', 'InventoryDate'),
-                                 'InventoryDate',
-                                 'desc',
-                                 'CpuType',
-                                 'value',
-                                 'eq',
-                                 '0',
-                                 true,
-                                 false
-                             )
-                             ->willReturn(array());
+            ->method('getClients')
+            ->with(
+                array('Name', 'UserName', 'InventoryDate'),
+                'InventoryDate',
+                'desc',
+                'CpuType',
+                'value',
+                'eq',
+                '0',
+                true,
+                false
+            )
+            ->willReturn(array());
         $query = 'filter=CpuType&search=value&operator=eq&invert=0';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -532,35 +532,35 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         // Non-equality search should add the searched column.
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('getData')
-             ->will(
-                 $this->returnValue(
-                     array(
+            ->method('getData')
+            ->will(
+                $this->returnValue(
+                    array(
                         'filter' => 'CpuType',
                         'search' => 'value',
                         'operator' => 'ne',
                         'invert' => '0',
                         'customSearch' => 'button',
-                     )
-                 )
-             );
+                    )
+                )
+            );
         $this->_clientManager->expects($this->once())
-                             ->method('getClients')
-                             ->with(
-                                 array('Name', 'UserName', 'InventoryDate', 'CpuType'),
-                                 'InventoryDate',
-                                 'desc',
-                                 'CpuType',
-                                 'value',
-                                 'ne',
-                                 '0',
-                                 true,
-                                 false
-                             )
-                             ->willReturn(array());
+            ->method('getClients')
+            ->with(
+                array('Name', 'UserName', 'InventoryDate', 'CpuType'),
+                'InventoryDate',
+                'desc',
+                'CpuType',
+                'value',
+                'ne',
+                '0',
+                true,
+                false
+            )
+            ->willReturn(array());
         $query = 'filter=CpuType&search=value&operator=ne&invert=0';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -571,35 +571,35 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         // Inverted equality search should add the searched column.
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('getData')
-             ->will(
-                 $this->returnValue(
-                     array(
+            ->method('getData')
+            ->will(
+                $this->returnValue(
+                    array(
                         'filter' => 'CpuType',
                         'search' => 'value',
                         'operator' => 'eq',
                         'invert' => '1',
                         'customSearch' => 'button',
-                     )
-                 )
-             );
+                    )
+                )
+            );
         $this->_clientManager->expects($this->once())
-                             ->method('getClients')
-                             ->with(
-                                 array('Name', 'UserName', 'InventoryDate', 'CpuType'),
-                                 'InventoryDate',
-                                 'desc',
-                                 'CpuType',
-                                 'value',
-                                 'eq',
-                                 '1',
-                                 true,
-                                 false
-                             )
-                             ->willReturn(array());
+            ->method('getClients')
+            ->with(
+                array('Name', 'UserName', 'InventoryDate', 'CpuType'),
+                'InventoryDate',
+                'desc',
+                'CpuType',
+                'value',
+                'eq',
+                '1',
+                true,
+                false
+            )
+            ->willReturn(array());
         $query = 'filter=CpuType&search=value&operator=eq&invert=1';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -616,28 +616,28 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
-             ->method('setData')
-             ->with($formData);
+            ->method('setData')
+            ->with($formData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue($formData));
+            ->method('getData')
+            ->will($this->returnValue($formData));
         $this->_clientManager->expects($this->once())
-                             ->method('getClients')
-                             ->with(
-                                 array('Name', 'UserName', 'InventoryDate', 'Registry.value'),
-                                 'InventoryDate',
-                                 'desc',
-                                 'Registry.value',
-                                 'test',
-                                 'like',
-                                 '0',
-                                 true,
-                                 false
-                             )
-                             ->willReturn($this->_sampleClients);
+            ->method('getClients')
+            ->with(
+                array('Name', 'UserName', 'InventoryDate', 'Registry.value'),
+                'InventoryDate',
+                'desc',
+                'Registry.value',
+                'test',
+                'like',
+                '0',
+                true,
+                false
+            )
+            ->willReturn($this->_sampleClients);
         $query = 'filter=Registry.value&search=test&operator=like&invert=0';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -655,28 +655,28 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
-             ->method('setData')
-             ->with($formData);
+            ->method('setData')
+            ->with($formData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue($formData));
+            ->method('getData')
+            ->will($this->returnValue($formData));
         $this->_clientManager->expects($this->once())
-                             ->method('getClients')
-                             ->with(
-                                 array('Name', 'UserName', 'InventoryDate', 'CustomFields.customField'),
-                                 'InventoryDate',
-                                 'desc',
-                                 'CustomFields.customField',
-                                 'test',
-                                 'like',
-                                 '0',
-                                 true,
-                                 false
-                             )
-                             ->willReturn($this->_sampleClients);
+            ->method('getClients')
+            ->with(
+                array('Name', 'UserName', 'InventoryDate', 'CustomFields.customField'),
+                'InventoryDate',
+                'desc',
+                'CustomFields.customField',
+                'test',
+                'like',
+                '0',
+                true,
+                false
+            )
+            ->willReturn($this->_sampleClients);
         $query = 'filter=CustomFields.customField&search=test&operator=like&invert=0';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -696,32 +696,32 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
-             ->method('setData')
-             ->with($formData);
+            ->method('setData')
+            ->with($formData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue($formData));
+            ->method('getData')
+            ->will($this->returnValue($formData));
 
         $sampleClients = $this->_sampleClients;
         $sampleClients[0]['CustomFields.customField'] = new \DateTime('2015-04-11 10:31:00');
         $sampleClients[1]['CustomFields.customField'] = new \DateTime('2015-04-12 10:32:00');
         $this->_clientManager->expects($this->once())
-                             ->method('getClients')
-                             ->with(
-                                 array('Name', 'UserName', 'InventoryDate', 'CustomFields.customField'),
-                                 'InventoryDate',
-                                 'desc',
-                                 'CustomFields.customField',
-                                 'test',
-                                 'like',
-                                 '0',
-                                 true,
-                                 false
-                             )
-                             ->willReturn($sampleClients);
+            ->method('getClients')
+            ->with(
+                array('Name', 'UserName', 'InventoryDate', 'CustomFields.customField'),
+                'InventoryDate',
+                'desc',
+                'CustomFields.customField',
+                'test',
+                'like',
+                '0',
+                true,
+                false
+            )
+            ->willReturn($sampleClients);
         $query = 'filter=CustomFields.customField&search=test&operator=like&invert=0';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -741,28 +741,28 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
-             ->method('setData')
-             ->with($formData);
+            ->method('setData')
+            ->with($formData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue($formData));
+            ->method('getData')
+            ->will($this->returnValue($formData));
         $this->_clientManager->expects($this->once())
-                             ->method('getClients')
-                             ->with(
-                                 array('Name', 'UserName', 'InventoryDate', 'CustomFields.TAG'),
-                                 'InventoryDate',
-                                 'desc',
-                                 'CustomFields.TAG',
-                                 'test',
-                                 'like',
-                                 '0',
-                                 true,
-                                 false
-                             )
-                             ->willReturn($this->_sampleClients);
+            ->method('getClients')
+            ->with(
+                array('Name', 'UserName', 'InventoryDate', 'CustomFields.TAG'),
+                'InventoryDate',
+                'desc',
+                'CustomFields.TAG',
+                'test',
+                'like',
+                '0',
+                true,
+                false
+            )
+            ->willReturn($this->_sampleClients);
         $query = 'filter=CustomFields.TAG&search=test&operator=like&invert=0';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
         $this->assertResponseStatusCode(200);
@@ -775,12 +775,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
         $form->expects($this->once())
-             ->method('setData');
+            ->method('setData');
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(false));
+            ->method('isValid')
+            ->will($this->returnValue(false));
         $form->expects($this->never())
-             ->method('getData');
+            ->method('getData');
         $this->_clientManager->expects($this->never())->method('getClients');
         $query = 'filter=CpuClock&search=invalid&operator=lt&invert=1';
         $this->dispatch("/console/client/index/?customSearch=button&$query");
@@ -792,13 +792,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
-                       ->withConsecutive(
-                           array('getMessagesFromNamespace', array('error')),
-                           array('getMessagesFromNamespace', array('success'))
-                       )->willReturnOnConsecutiveCalls(
-                           ['error'],
-                           ['success']
-                       );
+            ->withConsecutive(
+                array('getMessagesFromNamespace', array('error')),
+                array('getMessagesFromNamespace', array('success'))
+            )->willReturnOnConsecutiveCalls(
+                ['error'],
+                ['success']
+            );
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
         $this->_clientManager->expects($this->once())->method('getClients')->willReturn(array());
@@ -816,12 +816,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         /** @var MockObject|DateFormatFilter */
         $dateFormat = $this->createMock(DateFormatFilter::class);
         $dateFormat->expects($this->exactly(2))
-                   ->method('__invoke')
-                   ->withConsecutive(
-                       array($inventoryDate, \IntlDateFormatter::FULL, \IntlDateFormatter::LONG),
-                       array($lastContactDate, \IntlDateFormatter::FULL, \IntlDateFormatter::LONG)
-                   )
-                   ->willReturnOnConsecutiveCalls('inventory_date', 'last_contact_date');
+            ->method('__invoke')
+            ->withConsecutive(
+                array($inventoryDate, \IntlDateFormatter::FULL, \IntlDateFormatter::LONG),
+                array($lastContactDate, \IntlDateFormatter::FULL, \IntlDateFormatter::LONG)
+            )
+            ->willReturnOnConsecutiveCalls('inventory_date', 'last_contact_date');
         $this->getApplicationServiceLocator()->setService(DateFormatFilter::class, $dateFormat);
 
         /** @var MockObject|Client */
@@ -1125,12 +1125,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $form = $this->createPartialMock(ProductKey::class, ['setData', 'isValid', 'prepare', 'get']);
         $form->expects($this->once())
-             ->method('setData')
-             ->with(array('Key' => 'manual_product_key'));
+            ->method('setData')
+            ->with(array('Key' => 'manual_product_key'));
         $form->expects($this->never())
-             ->method('isValid');
+            ->method('isValid');
         $form->expects($this->once())
-             ->method('prepare');
+            ->method('prepare');
         $form->method('get')->willReturnMap([
             ['Key', $key],
             ['_csrf', $csrf],
@@ -1184,13 +1184,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $form = $this->createPartialMock(ProductKey::class, ['setData', 'isValid', 'prepare', 'get']);
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(false));
+            ->method('isValid')
+            ->will($this->returnValue(false));
         $form->expects($this->once())
-             ->method('prepare');
+            ->method('prepare');
         $form->method('get')->willReturnMap([
             ['Key', $key],
             ['_csrf', $csrf],
@@ -1224,14 +1224,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array('Key' => 'entered_key');
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\ProductKey');
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue($postData));
+            ->method('getData')
+            ->will($this->returnValue($postData));
 
         $map = array(
             array('Id', 1),
@@ -1241,8 +1241,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->_softwareManager->expects($this->once())
-                               ->method('setProductKey')
-                               ->with($client, 'entered_key');
+            ->method('setProductKey')
+            ->with($client, 'entered_key');
 
         $this->dispatch('/console/client/windows/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/windows/?id=1');
@@ -1303,11 +1303,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $macAddress = $this->createMock('Library\MacAddress');
         $macAddress->expects($this->exactly(2))
-                   ->method('getAddress')
-                   ->will($this->onConsecutiveCalls('mac_address_regular', 'mac_address_blacklisted'));
+            ->method('getAddress')
+            ->will($this->onConsecutiveCalls('mac_address_regular', 'mac_address_blacklisted'));
         $macAddress->expects($this->exactly(2))
-                   ->method('getVendor')
-                   ->will($this->onConsecutiveCalls('vendor1', null));
+            ->method('getVendor')
+            ->will($this->onConsecutiveCalls('vendor1', null));
         $interface = array(
             'Description' => 'description',
             'Rate' => 'data_rate',
@@ -1844,9 +1844,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->name = 'test';
         $client->method('__get')->willReturnMap([['windows', $windows]]);
         $client->expects($this->once())
-               ->method('getItems')
-               ->with('Software')
-               ->willReturn(array($software1, $software2));
+            ->method('getItems')
+            ->with('Software')
+            ->willReturn(array($software1, $software2));
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/software/?id=1');
@@ -1874,9 +1874,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->once())
-               ->method('getItems')
-               ->with('Software')
-               ->willReturn(array($software1));
+            ->method('getItems')
+            ->with('Software')
+            ->willReturn(array($software1));
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/software/?id=1');
@@ -1908,9 +1908,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
             ['android', $this->createStub(AndroidInstallation::class)],
         ]);
         $client->expects($this->once())
-               ->method('getItems')
-               ->with('Software')
-               ->willReturn([$software1]);
+            ->method('getItems')
+            ->with('Software')
+            ->willReturn([$software1]);
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/software/?id=1');
@@ -1943,9 +1943,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->once())
-               ->method('getItems')
-               ->with('Software')
-               ->willReturn(array($software1, $software2));
+            ->method('getItems')
+            ->with('Software')
+            ->willReturn(array($software1, $software2));
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/software/?id=1');
@@ -2002,9 +2002,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->name = 'test';
         $client->method('__get')->willReturnMap([['windows', $windows]]);
         $client->expects($this->once())
-               ->method('getItems')
-               ->with('Software')
-               ->willReturn(array($software1a, $software2, $software1b));
+            ->method('getItems')
+            ->with('Software')
+            ->willReturn(array($software1a, $software2, $software1b));
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/software/?id=1');
@@ -2016,18 +2016,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testSoftwareActionHideBlacklisted()
     {
         $this->_config->expects($this->once())
-                      ->method('__get')
-                      ->with('displayBlacklistedSoftware')
-                      ->willReturn(0);
+            ->method('__get')
+            ->with('displayBlacklistedSoftware')
+            ->willReturn(0);
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->once())
-               ->method('getItems')
-               ->with('Software', 'name', 'asc', ['Software.NotIgnored' => null])
-               ->willReturn([]);
+            ->method('getItems')
+            ->with('Software', 'name', 'asc', ['Software.NotIgnored' => null])
+            ->willReturn([]);
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -2038,18 +2038,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     public function testSoftwareActionShowBlacklisted()
     {
         $this->_config->expects($this->once())
-                      ->method('__get')
-                      ->with('displayBlacklistedSoftware')
-                      ->willReturn(1);
+            ->method('__get')
+            ->with('displayBlacklistedSoftware')
+            ->willReturn(1);
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->once())
-               ->method('getItems')
-               ->with('Software', 'name', 'asc', [])
-               ->willReturn([]);
+            ->method('getItems')
+            ->with('Software', 'name', 'asc', [])
+            ->willReturn([]);
 
         $this->_clientManager->method('getClient')->willReturn($client);
 
@@ -2073,8 +2073,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->exactly(2))
-               ->method('getItems')
-               ->will($this->onConsecutiveCalls($products, array()));
+            ->method('getItems')
+            ->will($this->onConsecutiveCalls($products, array()));
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/msoffice/?id=1');
@@ -2100,8 +2100,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->exactly(2))
-               ->method('getItems')
-               ->will($this->onConsecutiveCalls(array(), $products));
+            ->method('getItems')
+            ->will($this->onConsecutiveCalls(array(), $products));
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/msoffice/?id=1');
@@ -2135,8 +2135,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->exactly(2))
-               ->method('getItems')
-               ->will($this->onConsecutiveCalls($products, array()));
+            ->method('getItems')
+            ->will($this->onConsecutiveCalls($products, array()));
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/msoffice/?id=1');
@@ -2169,8 +2169,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->exactly(2))
-               ->method('getItems')
-               ->will($this->onConsecutiveCalls($products, array()));
+            ->method('getItems')
+            ->will($this->onConsecutiveCalls($products, array()));
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/msoffice/?id=1');
@@ -2185,9 +2185,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->once())
-               ->method('getItems')
-               ->with('RegistryData', 'Value', 'asc')
-               ->willReturn(array());
+            ->method('getItems')
+            ->with('RegistryData', 'Value', 'asc')
+            ->willReturn(array());
         $this->_clientManager->method('getClient')->willReturn($client);
         $this->_registryManager->expects($this->once())->method('getValueDefinitions')->willReturn(array());
         $this->dispatch('/console/client/registry/?id=1');
@@ -2216,9 +2216,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->once())
-               ->method('getItems')
-               ->with('RegistryData', 'Value', 'asc')
-               ->willReturn(array($data));
+            ->method('getItems')
+            ->with('RegistryData', 'Value', 'asc')
+            ->willReturn(array($data));
         $this->_clientManager->method('getClient')->willReturn($client);
         $this->_registryManager->expects($this->once())->method('getValueDefinitions')->willReturn($values);
         $this->dispatch('/console/client/registry/?id=1');
@@ -2234,9 +2234,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->once())
-               ->method('getItems')
-               ->with('VirtualMachine', 'Name', 'asc')
-               ->willReturn(array());
+            ->method('getItems')
+            ->with('VirtualMachine', 'Name', 'asc')
+            ->willReturn(array());
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/virtualmachines/?id=1');
@@ -2268,9 +2268,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->once())
-               ->method('getItems')
-               ->with('VirtualMachine', 'Name', 'asc')
-               ->willReturn($vms);
+            ->method('getItems')
+            ->with('VirtualMachine', 'Name', 'asc')
+            ->willReturn($vms);
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/virtualmachines/?id=1');
@@ -2412,8 +2412,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $customFields = $this->createMock('Model\Client\CustomFields');
         $customFields->expects($this->once())
-                     ->method('getArrayCopy')
-                     ->will($this->returnValue(array()));
+            ->method('getArrayCopy')
+            ->will($this->returnValue(array()));
 
         $client = new Client();
         $client->id = 1;
@@ -2426,9 +2426,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->expects($this->once())
-                       ->method('render')
-                       ->with('success')
-                       ->willReturn('<ul class="success"><li>successMessage</li></ul>');
+            ->method('render')
+            ->with('success')
+            ->willReturn('<ul class="success"><li>successMessage</li></ul>');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
         $this->disableTranslator();
@@ -2444,8 +2444,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $data = array('field1' => 'value1', 'field2' => 'value2');
         $customFields = $this->createMock('Model\Client\CustomFields');
         $customFields->expects($this->once())
-                     ->method('getArrayCopy')
-                     ->will($this->returnValue($data));
+            ->method('getArrayCopy')
+            ->will($this->returnValue($data));
 
         $client = new Client();
         $client->id = 1;
@@ -2456,15 +2456,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_clientManager->method('getClient')->willReturn($client);
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\CustomFields');
         $form->expects($this->never())
-             ->method('isValid');
+            ->method('isValid');
         $form->expects($this->never())
-             ->method('getData');
+            ->method('getData');
         $form->expects($this->once())
-             ->method('setData')
-             ->with(array('Fields' => $data));
+            ->method('setData')
+            ->with(array('Fields' => $data));
         $form->expects($this->once())
-             ->method('render')
-             ->will($this->returnValue('<form></form>'));
+            ->method('render')
+            ->will($this->returnValue('<form></form>'));
         $this->dispatch('/console/client/customfields/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertEmpty($this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages());
@@ -2490,15 +2490,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\CustomFields');
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(false));
+            ->method('isValid')
+            ->will($this->returnValue(false));
         $form->expects($this->never())
-             ->method('getData');
+            ->method('getData');
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->once())
-             ->method('render');
+            ->method('render');
         $this->dispatch('/console/client/customfields/?id=1', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertEmpty($this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages());
@@ -2516,16 +2516,16 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\CustomFields');
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue($postData));
+            ->method('getData')
+            ->will($this->returnValue($postData));
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->never())
-             ->method('render');
+            ->method('render');
         $map = array(
             array('Id', 1),
         );
@@ -2552,12 +2552,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->once())
-               ->method('getPackageAssignments')
-               ->with('packageName', 'asc')
-               ->willReturn($assignments);
+            ->method('getPackageAssignments')
+            ->with('packageName', 'asc')
+            ->willReturn($assignments);
         $client->expects($this->once())
-               ->method('getAssignablePackages')
-               ->willReturn([]);
+            ->method('getAssignablePackages')
+            ->willReturn([]);
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/packages/?id=1');
@@ -2599,12 +2599,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->once())
-               ->method('getPackageAssignments')
-               ->with('packageName', 'asc')
-               ->willReturn($assignments);
+            ->method('getPackageAssignments')
+            ->with('packageName', 'asc')
+            ->willReturn($assignments);
         $client->expects($this->once())
-               ->method('getAssignablePackages')
-               ->willReturn([]);
+            ->method('getAssignablePackages')
+            ->willReturn([]);
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/packages/?id=1');
@@ -2655,12 +2655,12 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->once())
-               ->method('getPackageAssignments')
-               ->with('packageName', 'asc')
-               ->willReturn($assignments);
+            ->method('getPackageAssignments')
+            ->with('packageName', 'asc')
+            ->willReturn($assignments);
         $client->expects($this->once())
-               ->method('getAssignablePackages')
-               ->willReturn($assignablePackages);
+            ->method('getAssignablePackages')
+            ->willReturn($assignablePackages);
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/packages/?id=1');
@@ -2676,7 +2676,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $resultSet->initialize(new \EmptyIterator());
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->never())
-             ->method('render');
+            ->method('render');
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
@@ -2686,9 +2686,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->_groupManager->expects($this->once())
-                           ->method('getGroups')
-                           ->with(null, null, 'Name')
-                           ->willReturn($resultSet);
+            ->method('getGroups')
+            ->with(null, null, 'Name')
+            ->willReturn($resultSet);
         $this->dispatch('/console/client/groups/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//h2');
@@ -2709,29 +2709,29 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->once())
-             ->method('render')
-             ->will($this->returnValue('<form></form>'));
+            ->method('render')
+            ->will($this->returnValue('<form></form>'));
         $form->expects($this->once())
-             ->method('setData')
-             ->with(array('Groups' => $formGroups));
+            ->method('setData')
+            ->with(array('Groups' => $formGroups));
         $form->expects($this->once())
-             ->method('setAttribute')
-             ->with('action', '/console/client/managegroups/?id=1');
+            ->method('setAttribute')
+            ->with('action', '/console/client/managegroups/?id=1');
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->once())
-               ->method('getGroupMemberships')
-               ->with(Client::MEMBERSHIP_ANY)
-               ->willReturn([1 => Client::MEMBERSHIP_NEVER]);
+            ->method('getGroupMemberships')
+            ->with(Client::MEMBERSHIP_ANY)
+            ->willReturn([1 => Client::MEMBERSHIP_NEVER]);
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->_groupManager->expects($this->once())
-                            ->method('getGroups')
-                            ->with(null, null, 'Name')
-                            ->willReturn($resultSet);
+            ->method('getGroups')
+            ->with(null, null, 'Name')
+            ->willReturn($resultSet);
         $this->dispatch('/console/client/groups/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nMitgliedschaften verwalten\n");
@@ -2758,28 +2758,28 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->once())
-             ->method('render')
-             ->will($this->returnValue('<form></form>'));
+            ->method('render')
+            ->will($this->returnValue('<form></form>'));
         $form->expects($this->once())
-             ->method('setData')
-             ->with(array('Groups' => $formGroups));
+            ->method('setData')
+            ->with(array('Groups' => $formGroups));
         $form->expects($this->once())
-             ->method('setAttribute')
-             ->with('action', '/console/client/managegroups/?id=1');
+            ->method('setAttribute')
+            ->with('action', '/console/client/managegroups/?id=1');
 
         /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
         $client->id = 1;
         $client->name = 'test';
         $client->expects($this->once())
-               ->method('getGroupMemberships')
-               ->with(Client::MEMBERSHIP_ANY)
-               ->willReturn($memberships);
+            ->method('getGroupMemberships')
+            ->with(Client::MEMBERSHIP_ANY)
+            ->willReturn($memberships);
         $this->_clientManager->method('getClient')->willReturn($client);
         $this->_groupManager->expects($this->once())
-                            ->method('getGroups')
-                            ->with(null, null, 'Name')
-                            ->willReturn($resultSet);
+            ->method('getGroups')
+            ->with(null, null, 'Name')
+            ->willReturn($resultSet);
         $this->dispatch('/console/client/groups/?id=1');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains('//h2', "\nGruppenmitgliedschaften\n");
@@ -2810,21 +2810,21 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\ClientConfig');
         $form->expects($this->once())
-             ->method('setClientObject')
-             ->with($client);
+            ->method('setClientObject')
+            ->with($client);
         $form->expects($this->once())
-             ->method('setData')
-             ->with($config);
+            ->method('setData')
+            ->with($config);
         $form->expects($this->never())
-             ->method('isValid');
+            ->method('isValid');
         $form->expects($this->never())
-             ->method('process');
+            ->method('process');
 
         $formHelper = $this->createMock(ClientConfig::class);
         $formHelper->method('__invoke')->with($form)->willReturn('<form></form>');
         $this->getApplicationServiceLocator()
-             ->get('ViewHelperManager')
-             ->setService('consoleFormClientConfig', $formHelper);
+            ->get('ViewHelperManager')
+            ->setService('consoleFormClientConfig', $formHelper);
 
         $this->dispatch('/console/client/configuration/?id=1');
         $this->assertResponseStatusCode(200);
@@ -2842,22 +2842,22 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\ClientConfig');
         $form->expects($this->once())
-             ->method('setClientObject')
-             ->with($client);
+            ->method('setClientObject')
+            ->with($client);
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(false));
+            ->method('isValid')
+            ->will($this->returnValue(false));
         $form->expects($this->never())
-             ->method('process');
+            ->method('process');
 
         $formHelper = $this->createMock(ClientConfig::class);
         $formHelper->method('__invoke')->with($form)->willReturn('<form></form>');
         $this->getApplicationServiceLocator()
-             ->get('ViewHelperManager')
-             ->setService('consoleFormClientConfig', $formHelper);
+            ->get('ViewHelperManager')
+            ->setService('consoleFormClientConfig', $formHelper);
 
         $this->dispatch('/console/client/configuration/?id=1', 'POST', $postData);
         $this->assertResponseStatusCode(200);
@@ -2874,16 +2874,16 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\ClientConfig');
         $form->expects($this->once())
-             ->method('setClientObject')
-             ->with($client);
+            ->method('setClientObject')
+            ->with($client);
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('process');
+            ->method('process');
 
         $this->dispatch('/console/client/configuration/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/configuration/?id=1');
@@ -2893,8 +2893,8 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\DeleteClient');
         $form->expects($this->once())
-             ->method('render')
-             ->will($this->returnValue('<form></form>'));
+            ->method('render')
+            ->will($this->returnValue('<form></form>'));
         $map = array(
             array('Name', 'name'),
         );
@@ -2917,7 +2917,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\DeleteClient');
         $form->expects($this->never())
-             ->method('render');
+            ->method('render');
         $map = array(
             array('Id', 1),
         );
@@ -2935,7 +2935,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\DeleteClient');
         $form->expects($this->never())
-             ->method('render');
+            ->method('render');
         $map = array(
             array('Name', 'name'),
         );
@@ -2960,7 +2960,7 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\DeleteClient');
         $form->expects($this->never())
-             ->method('render');
+            ->method('render');
         $map = array(
             array('Name', 'name'),
         );
@@ -2969,9 +2969,9 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $this->_clientManager->method('getClient')->willReturn($client);
         $this->_clientManager->expects($this->once())
-                             ->method('deleteClient')
-                             ->with($client, false)
-                             ->willThrowException(new \RuntimeException());
+            ->method('deleteClient')
+            ->with($client, false)
+            ->willThrowException(new \RuntimeException());
 
         $postData = array('yes' => 'Yes', 'DeleteInterfaces' => '0');
         $this->dispatch('/console/client/delete/?id=1', 'POST', $postData);
@@ -3098,11 +3098,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->never())
-             ->method('setData');
+            ->method('setData');
         $form->expects($this->never())
-             ->method('getData');
+            ->method('getData');
         $form->expects($this->never())
-             ->method('isValid');
+            ->method('isValid');
         $map = array(
             array('Id', 1),
         );
@@ -3122,13 +3122,13 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->never())
-             ->method('getData');
+            ->method('getData');
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(false));
+            ->method('isValid')
+            ->will($this->returnValue(false));
         $map = array(
             array('Id', 1),
         );
@@ -3148,14 +3148,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         );
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue($postData));
+            ->method('getData')
+            ->will($this->returnValue($postData));
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $map = array(
             array('Id', 1),
         );
@@ -3174,18 +3174,18 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $form = $serviceManager->get('FormElementManager')->get(SearchForm::class);
         $form->expects($this->never())
-             ->method('setData');
+            ->method('setData');
         $form->expects($this->never())
-             ->method('isValid');
+            ->method('isValid');
         $form->expects($this->once())
-             ->method('remove')
-             ->with('_csrf');
+            ->method('remove')
+            ->with('_csrf');
         $form->expects($this->exactly(2))
-             ->method('setAttribute')
-             ->with(
-                 $this->matchesRegularExpression('#^(method|action)$#'),
-                 $this->matchesRegularExpression('#^(GET|/console/client/index/)$#')
-             );
+            ->method('setAttribute')
+            ->with(
+                $this->matchesRegularExpression('#^(method|action)$#'),
+                $this->matchesRegularExpression('#^(GET|/console/client/index/)$#')
+            );
 
 
         $viewModel = new ViewModel();
@@ -3207,19 +3207,19 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         $form = $serviceManager->get('FormElementManager')->get(SearchForm::class);
         $form->expects($this->once())
-             ->method('setData')
-             ->with(['filter' => 'Name', 'search' => 'value']);
+            ->method('setData')
+            ->with(['filter' => 'Name', 'search' => 'value']);
         $form->expects($this->once())
-             ->method('isValid');
+            ->method('isValid');
         $form->expects($this->once())
-             ->method('remove')
-             ->with('_csrf');
+            ->method('remove')
+            ->with('_csrf');
         $form->expects($this->exactly(2))
-             ->method('setAttribute')
-             ->with(
-                 $this->matchesRegularExpression('#^(method|action)$#'),
-                 $this->matchesRegularExpression('#^(GET|/console/client/index/)$#')
-             );
+            ->method('setAttribute')
+            ->with(
+                $this->matchesRegularExpression('#^(method|action)$#'),
+                $this->matchesRegularExpression('#^(GET|/console/client/index/)$#')
+            );
 
         $viewModel = new ViewModel();
 
@@ -3238,14 +3238,14 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Import');
         $form->expects($this->never())
-             ->method('isValid');
+            ->method('isValid');
         $form->expects($this->never())
-             ->method('setData');
+            ->method('setData');
         $form->expects($this->never())
-             ->method('getData');
+            ->method('getData');
         $form->expects($this->once())
-             ->method('render')
-             ->will($this->returnValue('<form></form>'));
+            ->method('render')
+            ->will($this->returnValue('<form></form>'));
 
         $this->_clientManager->expects($this->never())->method('importFile');
 
@@ -3261,15 +3261,15 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array('key' => 'value');
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Import');
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(false));
+            ->method('isValid')
+            ->will($this->returnValue(false));
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->never())
-             ->method('getData');
+            ->method('getData');
         $form->expects($this->once())
-             ->method('render');
+            ->method('render');
 
         $this->_clientManager->expects($this->never())->method('importFile');
 
@@ -3286,26 +3286,26 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array('key' => 'value');
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Import');
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('setData')
-             ->with(
-                 array(
-                     'File' => $fileSpec,
-                     'key' => 'value',
-                 )
-             );
+            ->method('setData')
+            ->with(
+                array(
+                    'File' => $fileSpec,
+                    'key' => 'value',
+                )
+            );
         $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue(array('File' => $fileSpec)));
+            ->method('getData')
+            ->will($this->returnValue(array('File' => $fileSpec)));
         $form->expects($this->once())
-             ->method('render');
+            ->method('render');
 
         $this->_clientManager->expects($this->once())
-                             ->method('importFile')
-                             ->with('uploaded_file')
-                             ->willThrowException(new \RuntimeException('<error message>'));
+            ->method('importFile')
+            ->with('uploaded_file')
+            ->willThrowException(new \RuntimeException('<error message>'));
 
         $this->dispatch('/console/client/import/', 'POST', $postData);
         $this->assertResponseStatusCode(200);
@@ -3323,25 +3323,25 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array('key' => 'value');
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Import');
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('setData')
-             ->with(
-                 array(
-                     'File' => $fileSpec,
-                     'key' => 'value',
-                 )
-             );
+            ->method('setData')
+            ->with(
+                array(
+                    'File' => $fileSpec,
+                    'key' => 'value',
+                )
+            );
         $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue(array('File' => $fileSpec)));
+            ->method('getData')
+            ->will($this->returnValue(array('File' => $fileSpec)));
         $form->expects($this->never())
-             ->method('render');
+            ->method('render');
 
         $this->_clientManager->expects($this->once())
-                             ->method('importFile')
-                             ->with('uploaded_file');
+            ->method('importFile')
+            ->with('uploaded_file');
 
         $this->dispatch('/console/client/import/', 'POST', $postData);
         $this->assertRedirectTo('/console/client/index/');
@@ -3352,11 +3352,11 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $xmlContent = "xml_content\n";
         $document = $this->createMock('\Protocol\Message\InventoryRequest');
         $document->expects($this->once())
-                 ->method('getFilename')
-                 ->will($this->returnValue('filename.xml'));
+            ->method('getFilename')
+            ->will($this->returnValue('filename.xml'));
         $document->expects($this->once())
-                 ->method('saveXml')
-                 ->will($this->returnValue($xmlContent));
+            ->method('saveXml')
+            ->will($this->returnValue($xmlContent));
         $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('toDomDocument')->willReturn($document);
         $this->_clientManager->method('getClient')->willReturn($client);

@@ -3,7 +3,7 @@
 /**
  * Display list of clients
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -173,20 +173,20 @@ if ($filter) {
             'invert' => $this->invert,
         );
         $header = sprintf($this->translate('%d matches'), $count)
-                . "<br>\n"
-                . $this->htmlElement(
-                    'a',
-                    $this->translate('Edit filter'),
-                    array('href' => $this->consoleUrl('client', 'search', $params)),
-                    true
-                )
-                . "\n&nbsp;&nbsp;&nbsp;\n"
-                . $this->htmlElement(
-                    'a',
-                    $this->translate('Save to group'),
-                    array('href' => $this->consoleUrl('group', 'add', $params)),
-                    true
-                );
+            . "<br>\n"
+            . $this->htmlElement(
+                'a',
+                $this->translate('Edit filter'),
+                array('href' => $this->consoleUrl('client', 'search', $params)),
+                true
+            )
+            . "\n&nbsp;&nbsp;&nbsp;\n"
+            . $this->htmlElement(
+                'a',
+                $this->translate('Save to group'),
+                array('href' => $this->consoleUrl('group', 'add', $params)),
+                true
+            );
     } else {
         // For fixed filters, print a nicer description.
         if ($filter == 'Software') {

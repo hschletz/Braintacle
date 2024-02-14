@@ -3,7 +3,7 @@
 /**
  * Tests for the FormSelectSimple helper
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -31,7 +31,7 @@ class FormSelectSimpleTest extends AbstractTest
     {
         $element = new \Library\Form\Element\SelectSimple('test');
         $element->setValueOptions(array('option<b>1', 'option2'))
-                ->setValue('option<b>1');
+            ->setValue('option<b>1');
         $expected = <<<EOT
 <select name="test">
 <option selected="selected">option&lt;b&gt;1</option>

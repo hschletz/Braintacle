@@ -3,7 +3,7 @@
 /**
  * Tests for Model\ClientOrGroup
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -335,8 +335,8 @@ class ClientOrGroupTest extends AbstractTest
     {
         $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getPackage')
-                       ->with($name)
-                       ->willReturn(array('Id' => $id));
+            ->with($name)
+            ->willReturn(array('Id' => $id));
 
         $now = $this->createMock('DateTime');
         $now->method('format')->with('D M d H:i:s Y')->willReturn('current timestamp');
@@ -369,7 +369,7 @@ class ClientOrGroupTest extends AbstractTest
             $this->getConnection()->createQueryTable(
                 'devices',
                 'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ' . $where .
-                'ORDER BY hardware_id, name, ivalue'
+                    'ORDER BY hardware_id, name, ivalue'
             )
         );
     }
@@ -378,8 +378,8 @@ class ClientOrGroupTest extends AbstractTest
     {
         $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getPackage')
-                       ->with('package5')
-                       ->willReturn(array('Id' => 5));
+            ->with('package5')
+            ->willReturn(array('Id' => 5));
 
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
@@ -402,7 +402,7 @@ class ClientOrGroupTest extends AbstractTest
             $this->getConnection()->createQueryTable(
                 'devices',
                 'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ' .
-                'WHERE hardware_id < 10 ORDER BY hardware_id, name, ivalue'
+                    'WHERE hardware_id < 10 ORDER BY hardware_id, name, ivalue'
             )
         );
     }
@@ -489,7 +489,8 @@ class ClientOrGroupTest extends AbstractTest
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
         $serviceManager->method('get')->willReturnMap(
             array(
-                array('Database\Table\ClientConfig',
+                array(
+                    'Database\Table\ClientConfig',
                     static::$serviceManager->get('Database\Table\ClientConfig')
                 ),
                 array('Model\Config', $config),
@@ -511,7 +512,7 @@ class ClientOrGroupTest extends AbstractTest
             $this->getConnection()->createQueryTable(
                 'devices',
                 'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ' .
-                'WHERE hardware_id >= 10 ORDER BY hardware_id, name, ivalue'
+                    'WHERE hardware_id >= 10 ORDER BY hardware_id, name, ivalue'
             )
         );
     }

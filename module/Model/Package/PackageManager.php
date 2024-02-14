@@ -3,7 +3,7 @@
 /**
  * Package manager
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -72,7 +72,7 @@ class PackageManager
 
         $select = $packages->getSql()->select();
         $select->columns(array('fileid', 'name', 'priority', 'fragments', 'size', 'osname', 'comment'))
-               ->where(array('name' => $name));
+            ->where(array('name' => $name));
 
         try {
             $packages = $packages->selectWith($select);
@@ -104,14 +104,14 @@ class PackageManager
         // Subquery prototype for deployment statistics
         $subquery = $clientConfig->getSql()->select();
         $subquery->columns(array(new Predicate\Literal('COUNT(hardware_id)')))
-                 ->where(
-                     array('name' => 'DOWNLOAD', 'ivalue' => new \Laminas\Db\Sql\Literal('fileid'))
-                 );
+            ->where(
+                array('name' => 'DOWNLOAD', 'ivalue' => new \Laminas\Db\Sql\Literal('fileid'))
+            );
 
         $groups = $groupInfo->getSql()->select()->columns(array('hardware_id'));
         $pending = clone $subquery;
         $pending->where(new Predicate\IsNull('tvalue'))
-                ->where(new Predicate\NotIn('hardware_id', $groups));
+            ->where(new Predicate\NotIn('hardware_id', $groups));
 
         $running = clone $subquery;
         $running->where(array('tvalue' => \Model\Package\Assignment::RUNNING));
@@ -310,9 +310,9 @@ class PackageManager
         try {
             // Remove DOWNLOAD_* options from updated assignments
             $subquery = $clientConfig->getSql()
-                                     ->select()
-                                     ->columns(array('hardware_id'))
-                                     ->where($where);
+                ->select()
+                ->columns(array('hardware_id'))
+                ->where($where);
             // @codeCoverageIgnoreStart
             if ($clientConfig->getAdapter()->getPlatform()->getName() == 'MySQL') {
                 // MySQL does not allow subquery on the same table for DELETE
@@ -324,9 +324,9 @@ class PackageManager
                 // $subquery is either an SQL statement or a non-empty array.
                 $delete = new \Laminas\Db\Sql\Where();
                 $delete->equalTo('ivalue', $oldPackageId)
-                       ->notEqualTo('name', 'DOWNLOAD_SWITCH')
-                       ->in('hardware_id', $subquery)
-                       ->like('name', 'DOWNLOAD_%');
+                    ->notEqualTo('name', 'DOWNLOAD_SWITCH')
+                    ->in('hardware_id', $subquery)
+                    ->like('name', 'DOWNLOAD_%');
                 $clientConfig->delete($delete);
             }
 

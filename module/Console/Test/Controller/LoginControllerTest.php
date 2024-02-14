@@ -3,7 +3,7 @@
 /**
  * Tests for LoginController
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -72,18 +72,18 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
     protected function mockAuthenticationService($hasIdentity)
     {
         $this->_authenticationService->expects($this->any())
-                                     ->method('login')
-                                     ->will(
-                                         $this->returnValueMap(
-                                             array(
-                                                 array('gooduser', 'goodpassword', true),
-                                                 array('baduser', 'badpassword', false),
-                                             )
-                                         )
-                                     );
+            ->method('login')
+            ->will(
+                $this->returnValueMap(
+                    array(
+                        array('gooduser', 'goodpassword', true),
+                        array('baduser', 'badpassword', false),
+                    )
+                )
+            );
         $this->_authenticationService->expects($this->any())
-                                     ->method('hasIdentity')
-                                     ->will($this->returnValue($hasIdentity));
+            ->method('hasIdentity')
+            ->will($this->returnValue($hasIdentity));
     }
 
     public function testLoginActionWithIdentity()
@@ -98,14 +98,14 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
         $this->mockAuthenticationService(false);
         $postData = array('userid' => 'gooduser', 'password' => 'goodpassword');
         $this->_form->expects($this->once())
-                    ->method('setData')
-                    ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $this->_form->expects($this->once())
-                    ->method('isValid')
-                    ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $this->_form->expects($this->once())
-                    ->method('getData')
-                    ->will($this->returnValue(array('User' => 'gooduser', 'Password' => 'goodpassword')));
+            ->method('getData')
+            ->will($this->returnValue(array('User' => 'gooduser', 'Password' => 'goodpassword')));
         $this->dispatch('/console/login/login', 'POST', $postData);
         $this->assertRedirectTo('/console/client/index/');
     }
@@ -115,16 +115,16 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
         $this->mockAuthenticationService(false);
         $postData = array('userid' => 'baduser', 'password' => 'badpassword');
         $this->_form->expects($this->once())
-                    ->method('setData')
-                    ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $this->_form->expects($this->once())
-                    ->method('isValid')
-                    ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $this->_form->expects($this->once())
-                    ->method('getData')
-                    ->will($this->returnValue(array('User' => 'baduser', 'Password' => 'badpassword')));
+            ->method('getData')
+            ->will($this->returnValue(array('User' => 'baduser', 'Password' => 'badpassword')));
         $this->_form->expects($this->once())
-                    ->method('render');
+            ->method('render');
         $this->dispatch('/console/login/login', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertXPathQueryContentContains('//p[@class="error"]', "\nBenutzername und/oder Passwort ungültig.\n");
@@ -135,13 +135,13 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
         $this->mockAuthenticationService(false);
         $postData = array('userid' => '', 'password' => '');
         $this->_form->expects($this->once())
-                    ->method('setData')
-                    ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $this->_form->expects($this->once())
-                    ->method('isValid')
-                    ->will($this->returnValue(false));
+            ->method('isValid')
+            ->will($this->returnValue(false));
         $this->_form->expects($this->once())
-                    ->method('render');
+            ->method('render');
         $this->dispatch('/console/login/login', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertXPathQueryContentContains('//p[@class="error"]', "\nBenutzername und/oder Passwort ungültig.\n");
@@ -151,12 +151,12 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
     {
         $this->mockAuthenticationService(false);
         $this->_form->expects($this->never())
-                    ->method('setData');
+            ->method('setData');
         $this->_form->expects($this->never())
-                    ->method('isValid');
+            ->method('isValid');
         $this->_form->expects($this->once())
-                    ->method('render')
-                    ->will($this->returnValue('<form></form>'));
+            ->method('render')
+            ->will($this->returnValue('<form></form>'));
         $this->dispatch('/console/login/login');
         $this->assertResponseStatusCode(200);
         $this->assertXPathQuery('//form');
@@ -170,11 +170,11 @@ class LoginControllerTest extends \Console\Test\AbstractControllerTest
         $session = new \Laminas\Session\Container('login');
         $session->originalUri = 'redirectTest';
         $this->_form->expects($this->once())
-                    ->method('isValid')
-                    ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $this->_form->expects($this->once())
-                    ->method('getData')
-                    ->will($this->returnValue(array('User' => 'gooduser', 'Password' => 'goodpassword')));
+            ->method('getData')
+            ->will($this->returnValue(array('User' => 'gooduser', 'Password' => 'goodpassword')));
         $this->dispatch('/console/login/login', 'POST', $postData);
         $this->assertRedirectTo('redirectTest');
         $this->assertArrayNotHasKey('login', $_SESSION); // Should be cleared by action

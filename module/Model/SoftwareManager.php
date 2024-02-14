@@ -3,7 +3,7 @@
 /**
  * Manager for installed software (licenses, blacklists)
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -26,7 +26,7 @@ use Laminas\Db\ResultSet\ResultSet;
 
 /**
  * Manager for installed software (licenses, blacklists)
-*/
+ */
 class SoftwareManager
 {
     /**
@@ -195,7 +195,7 @@ class SoftwareManager
         $sql = $this->_windowsInstallations->getSql();
         $select = $sql->select();
         $select->columns(array('num' => new \Laminas\Db\Sql\Literal('COUNT(manual_product_key)')))
-               ->where(new \Laminas\Db\Sql\Predicate\IsNotNull('manual_product_key'));
+            ->where(new \Laminas\Db\Sql\Predicate\IsNotNull('manual_product_key'));
         return $sql->getAdapter()->query(
             $sql->buildSqlString($select),
             \Laminas\Db\Adapter\Adapter::QUERY_MODE_EXECUTE

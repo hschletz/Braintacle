@@ -3,7 +3,7 @@
 /**
  * "accountinfo_config" table
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -95,8 +95,8 @@ class CustomFieldConfig extends \Database\AbstractTable
         $columns = $this->_serviceLocator->get('Database\Nada')->getTable('accountinfo')->getColumns();
         $select = $this->getSql()->select();
         $select->columns(array('id', 'type', 'name'))
-               ->where(array('account_type' => 'COMPUTERS'))
-               ->order('show_order');
+            ->where(array('account_type' => 'COMPUTERS'))
+            ->order('show_order');
         // Determine name and type of each field. Silently ignore unsupported field types.
         $fields = array();
         foreach ($this->selectWith($select) as $field) {

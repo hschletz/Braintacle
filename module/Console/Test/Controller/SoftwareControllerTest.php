@@ -3,7 +3,7 @@
 /**
  * Tests for SoftwareController
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -91,8 +91,8 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         );
 
         $this->_softwareManager->method('getSoftware')
-             ->with($filters, '_order', '_direction')
-             ->willReturn($this->_result);
+            ->with($filters, '_order', '_direction')
+            ->willReturn($this->_result);
 
         $this->dispatch('/console/software/index/');
 
@@ -250,8 +250,8 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
     public function testManageActionPostYesNonEmptyList()
     {
         $this->_softwareManager->expects($this->exactly(2))
-                               ->method('setDisplay')
-                               ->withConsecutive(array('name1'), array('name2'));
+            ->method('setDisplay')
+            ->withConsecutive(array('name1'), array('name2'));
 
         $this->_session['filter'] = 'FILTER';
         $this->_session['software'] = array('name1', 'name2');

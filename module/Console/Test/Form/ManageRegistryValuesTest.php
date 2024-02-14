@@ -3,7 +3,7 @@
 /**
  * Tests for ManageRegistryValues
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -66,8 +66,8 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $resultSet->initialize($this->_values);
         $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
         $this->_registryManager->expects($this->once())
-                               ->method('getValueDefinitions')
-                               ->willReturn($resultSet);
+            ->method('getValueDefinitions')
+            ->willReturn($resultSet);
         parent::setUp();
     }
 
@@ -207,8 +207,8 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
 
         $registryManager = $this->createMock('Model\Registry\RegistryManager');
         $registryManager->expects($this->once())
-                        ->method('addValueDefinition')
-                        ->with('name', 'root_key', 'subkeys', 'value');
+            ->method('addValueDefinition')
+            ->with('name', 'root_key', 'subkeys', 'value');
         $registryManager->expects($this->never())->method('renameValueDefinition');
 
         $form = $this->createPartialMock(ManageRegistryValues::class, ['getData', 'getOption']);
@@ -242,11 +242,11 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $registryManager = $this->createMock('Model\Registry\RegistryManager');
         $registryManager->expects($this->never())->method('addValueDefinition');
         $registryManager->expects($this->exactly(2))
-                        ->method('renameValueDefinition')
-                        ->withConsecutive(
-                            array('Test1', 'Test1_new'),
-                            array('Test2', 'Test2')
-                        );
+            ->method('renameValueDefinition')
+            ->withConsecutive(
+                array('Test1', 'Test1_new'),
+                array('Test2', 'Test2')
+            );
 
         $form = $this->createPartialMock(ManageRegistryValues::class, ['getData', 'getOption', 'getDefinedValues']);
         $form->expects($this->once())->method('getData')->willReturn($data);

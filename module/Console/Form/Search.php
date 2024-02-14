@@ -3,7 +3,7 @@
 /**
  * Search form
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -177,10 +177,10 @@ class Search extends Form
 
         $filter = new Element\Select('filter');
         $filter->setLabel('Search for')
-               ->setAttribute('data-types', json_encode($this->_types))
-               ->setAttribute('type', 'select_untranslated')
-               ->setValueOptions($this->_filters)
-               ->setValue('Name'); // Default value
+            ->setAttribute('data-types', json_encode($this->_types))
+            ->setAttribute('type', 'select_untranslated')
+            ->setValueOptions($this->_filters)
+            ->setValue('Name'); // Default value
         $this->add($filter);
 
         $search = new Element\Text('search');
@@ -192,10 +192,10 @@ class Search extends Form
         // InArray validator must be disabled and replaced by a callback.
         $operator = new Element\Select('operator');
         $operator->setAttribute('type', 'select_untranslated')
-                 ->setAttribute('data-operators-ordinal', json_encode($this->_operatorsOrdinal))
-                 ->setAttribute('data-operators-text', json_encode($this->_operatorsText))
-                 ->setValueOptions($this->_operatorsText) // Operators for default value "Name"
-                 ->setLabel('Operator');
+            ->setAttribute('data-operators-ordinal', json_encode($this->_operatorsOrdinal))
+            ->setAttribute('data-operators-text', json_encode($this->_operatorsText))
+            ->setValueOptions($this->_operatorsText) // Operators for default value "Name"
+            ->setLabel('Operator');
         $this->add($operator);
 
         $invert = new Element\Checkbox('invert');

@@ -3,7 +3,7 @@
 /**
  * Form for display/setting of 'packages' preferences
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -76,25 +76,25 @@ class Packages extends AbstractForm
 
         $defaultPlatform = new \Laminas\Form\Element\Select('defaultPlatform');
         $defaultPlatform->setLabel('Default platform')
-                        ->setAttribute('type', 'select_untranslated')
-                        ->setValueOptions(
-                            array(
-                                'windows' => 'Windows',
-                                'linux' => 'Linux',
-                                'mac' => 'MacOS'
-                            )
-                        );
+            ->setAttribute('type', 'select_untranslated')
+            ->setValueOptions(
+                array(
+                    'windows' => 'Windows',
+                    'linux' => 'Linux',
+                    'mac' => 'MacOS'
+                )
+            );
         $preferences->add($defaultPlatform);
 
         $defaultAction = new \Laminas\Form\Element\Select('defaultAction');
         $defaultAction->setLabel('Default action')
-                      ->setValueOptions(
-                          array(
-                            'launch' => $this->_('Download package, execute command, retrieve result'),
-                            'execute' => $this->_('Optionally download package, execute command'),
-                            'store' => $this->_('Just download package to target path'),
-                          )
-                      );
+            ->setValueOptions(
+                array(
+                    'launch' => $this->_('Download package, execute command, retrieve result'),
+                    'execute' => $this->_('Optionally download package, execute command'),
+                    'store' => $this->_('Just download package to target path'),
+                )
+            );
         $preferences->add($defaultAction);
 
         $defaultActionParam = new \Laminas\Form\Element\Text('defaultActionParam');
@@ -103,12 +103,12 @@ class Packages extends AbstractForm
 
         $defaultPackagePriority = new \Library\Form\Element\SelectSimple('defaultPackagePriority');
         $defaultPackagePriority->setValueOptions(range(0, 10))
-                               ->setLabel('Default priority (0: exclusive, 10: lowest)');
+            ->setLabel('Default priority (0: exclusive, 10: lowest)');
         $preferences->add($defaultPackagePriority);
 
         $defaultMaxFragmentSize = new \Laminas\Form\Element\Text('defaultMaxFragmentSize');
         $defaultMaxFragmentSize->setAttribute('size', '8')
-                               ->setLabel('Default maximum fragment size (kB)');
+            ->setLabel('Default maximum fragment size (kB)');
         $preferences->add($defaultMaxFragmentSize);
         $inputFilter->add(
             array(
@@ -129,7 +129,7 @@ class Packages extends AbstractForm
 
         $defaultWarnCountdown = new \Laminas\Form\Element\Text('defaultWarnCountdown');
         $defaultWarnCountdown->setAttribute('size', '5')
-                             ->setLabel('Default warn countdown (seconds)');
+            ->setLabel('Default warn countdown (seconds)');
         $preferences->add($defaultWarnCountdown);
         $inputFilter->add(
             array(

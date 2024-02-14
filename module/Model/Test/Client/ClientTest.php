@@ -3,7 +3,7 @@
 /**
  * Tests for Model\Client\Client
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -297,9 +297,9 @@ class ClientTest extends \Model\Test\AbstractTest
     {
         $config = $this->createMock('Model\Config');
         $config->expects($this->exactly(2))
-               ->method('__get')
-               ->withConsecutive(array('option1'), array('option2'))
-               ->willReturnOnConsecutiveCalls('value1', 'value2');
+            ->method('__get')
+            ->withConsecutive(array('option1'), array('option2'))
+            ->willReturnOnConsecutiveCalls('value1', 'value2');
 
         /** @var MockObject|ServiceLocatorInterface */
         $serviceManager = $this->createMock(ServiceLocatorInterface::class);
@@ -483,7 +483,7 @@ class ClientTest extends \Model\Test\AbstractTest
     {
         return array(
             array(-1, array(1), 1, -1), // global value -1 always precedes
-            array( 0, array(-1), -1, 0), // global value 0 always precedes
+            array(0, array(-1), -1, 0), // global value 0 always precedes
             array(1, array(2, null), 3, 2), // smallest value from groups/client
             array(1, array(3, null), 2, 2), // smallest value from groups/client
             array(1, array(), null, 1), // no values defined, fall back to global value
@@ -531,9 +531,9 @@ class ClientTest extends \Model\Test\AbstractTest
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getConfig']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->expects($this->exactly(2))
-              ->method('getConfig')
-              ->withConsecutive(array('option1'), array('option2'))
-              ->willReturnOnConsecutiveCalls('value1', 'value2');
+            ->method('getConfig')
+            ->withConsecutive(array('option1'), array('option2'))
+            ->willReturnOnConsecutiveCalls('value1', 'value2');
 
         $this->assertEquals('value1', $model->getEffectiveConfig('option1'));
         $this->assertEquals('value1', $model->getEffectiveConfig('option1')); // from cache
@@ -744,8 +744,8 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->expectExceptionMessage('test message');
 
         $model = $this->getModel([
-                'Database\Table\ClientConfig' => $clientConfig,
-                'Model\Package\PackageManager' => $packageManager,
+            'Database\Table\ClientConfig' => $clientConfig,
+            'Model\Package\PackageManager' => $packageManager,
         ]);
         $model->Id = 1;
 
@@ -758,9 +758,9 @@ class ClientTest extends \Model\Test\AbstractTest
 
         $itemManager = $this->createMock('Model\Client\ItemManager');
         $itemManager->expects($this->once())
-                    ->method('getItems')
-                    ->with('type', array('Client' => 42), null, null)
-                    ->willReturn($result);
+            ->method('getItems')
+            ->with('type', array('Client' => 42), null, null)
+            ->willReturn($result);
 
         /** @var MockObject|ServiceLocatorInterface */
         $serviceManager = $this->createMock(ServiceLocatorInterface::class);
@@ -779,9 +779,9 @@ class ClientTest extends \Model\Test\AbstractTest
 
         $itemManager = $this->createMock('Model\Client\ItemManager');
         $itemManager->expects($this->once())
-                    ->method('getItems')
-                    ->with('type', array('filter' => 'arg', 'Client' => 42), 'order', 'direction')
-                    ->willReturn($result);
+            ->method('getItems')
+            ->with('type', array('filter' => 'arg', 'Client' => 42), 'order', 'direction')
+            ->willReturn($result);
 
         /** @var MockObject|ServiceLocatorInterface */
         $serviceManager = $this->createMock(ServiceLocatorInterface::class);
@@ -849,12 +849,12 @@ class ClientTest extends \Model\Test\AbstractTest
         /** @var Stub|ServiceLocatorInterface */
         $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
-                       ->willReturnMap(
-                           array(
-                               array('Database\Table\GroupMemberships', $groupMemberships),
-                               array('Model\Group\GroupManager', $groupManager),
-                           )
-                       );
+            ->willReturnMap(
+                array(
+                    array('Database\Table\GroupMemberships', $groupMemberships),
+                    array('Model\Group\GroupManager', $groupManager),
+                )
+            );
 
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
@@ -918,12 +918,12 @@ class ClientTest extends \Model\Test\AbstractTest
         /** @var Stub|ServiceLocatorInterface */
         $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
-                       ->willReturnMap(
-                           array(
-                               array('Database\Table\GroupMemberships', $groupMemberships),
-                               array('Model\Group\GroupManager', $groupManager),
-                           )
-                       );
+            ->willReturnMap(
+                array(
+                    array('Database\Table\GroupMemberships', $groupMemberships),
+                    array('Model\Group\GroupManager', $groupManager),
+                )
+            );
 
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
@@ -970,8 +970,8 @@ class ClientTest extends \Model\Test\AbstractTest
         $groupMemberships->expects($this->once())->method('update')->with(
             array('static' => $newMembership),
             array(
-             'hardware_id' => 42,
-             'group_id' => 1,
+                'hardware_id' => 42,
+                'group_id' => 1,
             )
         );
         $groupMemberships->expects($this->never())->method('delete');
@@ -987,12 +987,12 @@ class ClientTest extends \Model\Test\AbstractTest
         /** @var Stub|ServiceLocatorInterface */
         $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
-                       ->willReturnMap(
-                           array(
-                               array('Database\Table\GroupMemberships', $groupMemberships),
-                               array('Model\Group\GroupManager', $groupManager),
-                           )
-                       );
+            ->willReturnMap(
+                array(
+                    array('Database\Table\GroupMemberships', $groupMemberships),
+                    array('Model\Group\GroupManager', $groupManager),
+                )
+            );
 
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
@@ -1048,12 +1048,12 @@ class ClientTest extends \Model\Test\AbstractTest
         /** @var Stub|ServiceLocatorInterface */
         $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
-                       ->willReturnMap(
-                           array(
-                               array('Database\Table\GroupMemberships', $groupMemberships),
-                               array('Model\Group\GroupManager', $groupManager),
-                           )
-                       );
+            ->willReturnMap(
+                array(
+                    array('Database\Table\GroupMemberships', $groupMemberships),
+                    array('Model\Group\GroupManager', $groupManager),
+                )
+            );
 
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
@@ -1102,12 +1102,12 @@ class ClientTest extends \Model\Test\AbstractTest
         /** @var Stub|ServiceLocatorInterface */
         $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
-                       ->willReturnMap(
-                           array(
-                               array('Database\Table\GroupMemberships', $groupMemberships),
-                               array('Model\Group\GroupManager', $groupManager),
-                           )
-                       );
+            ->willReturnMap(
+                array(
+                    array('Database\Table\GroupMemberships', $groupMemberships),
+                    array('Model\Group\GroupManager', $groupManager),
+                )
+            );
 
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
@@ -1133,9 +1133,9 @@ class ClientTest extends \Model\Test\AbstractTest
         /** @var Stub|ServiceLocatorInterface */
         $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
-                       ->willReturnMap(
-                           array(array('Model\Group\GroupManager', $groupManager))
-                       );
+            ->willReturnMap(
+                array(array('Model\Group\GroupManager', $groupManager))
+            );
 
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
@@ -1240,9 +1240,9 @@ class ClientTest extends \Model\Test\AbstractTest
         // DomDocument constructor must be preserved. Otherwise setting the
         // formatOutput property would have no effect for whatever reason.
         $inventoryRequest = $this->getMockBuilder(\Protocol\Message\InventoryRequest::class)
-                                 ->setConstructorArgs(
-                                     [$this->createStub(\Protocol\Message\InventoryRequest\Content::class)]
-                                 )->getMock();
+            ->setConstructorArgs(
+                [$this->createStub(\Protocol\Message\InventoryRequest\Content::class)]
+            )->getMock();
         $inventoryRequest->expects($this->once())->method('loadClient')->with($model);
 
         $serviceManager->method('get')->with('Protocol\Message\InventoryRequest')->willReturn($inventoryRequest);

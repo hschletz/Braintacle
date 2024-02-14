@@ -3,7 +3,7 @@
 /**
  * Application configuration
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -97,7 +97,7 @@ namespace Model;
  * @property integer $inventoryInterval  Default days between inventory. 0=always, -1=never. Default: 0
  * @property integer $packageDeployment  Default for enabling/disabling package deployment on agents. Default: false
  * @property bool $scanSnmp  Default SNMP usage for network scanning. Default: true
-*/
+ */
 class Config
 {
     /**

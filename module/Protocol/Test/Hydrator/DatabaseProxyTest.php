@@ -3,7 +3,7 @@
 /**
  * Tests for DatabaseProxy hydrator
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -37,9 +37,9 @@ class DatabaseProxyTest extends \PHPUnit\Framework\TestCase
         $object = new \ArrayObject();
         $hydrator = $this->createMock(\Laminas\Hydrator\HydratorInterface::class);
         $hydrator->expects($this->once())
-                 ->method('hydrate')
-                 ->with(array('key1' => 'value1', 'key2' => 'value2'))
-                 ->willReturn($object);
+            ->method('hydrate')
+            ->with(array('key1' => 'value1', 'key2' => 'value2'))
+            ->willReturn($object);
         $proxy = new \Protocol\Hydrator\DatabaseProxy($hydrator);
         $this->assertSame($object, $proxy->hydrate($data, $object));
     }
@@ -49,9 +49,9 @@ class DatabaseProxyTest extends \PHPUnit\Framework\TestCase
         $object = new \ArrayObject();
         $hydrator = $this->createMock(\Laminas\Hydrator\HydratorInterface::class);
         $hydrator->expects($this->once())
-                 ->method('extract')
-                 ->with($object)
-                 ->willReturn(array('key1' => 'value1', 'key2' => 'value2'));
+            ->method('extract')
+            ->with($object)
+            ->willReturn(array('key1' => 'value1', 'key2' => 'value2'));
         $proxy = new \Protocol\Hydrator\DatabaseProxy($hydrator);
         $this->assertSame(array('KEY1' => 'value1', 'KEY2' => 'value2'), $proxy->extract($object));
     }

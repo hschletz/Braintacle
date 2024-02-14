@@ -3,7 +3,7 @@
 /**
  * Subnet manager
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -156,7 +156,7 @@ EOT;
 
         $select = $this->_subnets->getSql()->select();
         $select->columns(array('netid', 'mask', 'name'))
-               ->where(array('netid' => $address, 'mask' => $mask));
+            ->where(array('netid' => $address, 'mask' => $mask));
         $subnet = $this->_subnets->selectWith($select)->current();
         if (!$subnet) {
             // Construct new Subnet object

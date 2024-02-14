@@ -3,7 +3,7 @@
 /**
  * Form for display/setting of 'filters' preferences
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -44,7 +44,7 @@ class Filters extends AbstractForm
 
         $limitInventoryInterval = new \Laminas\Form\Element\Text('limitInventoryInterval');
         $limitInventoryInterval->setLabel('Seconds between inventory processing')
-                               ->setAttribute('size', 5);
+            ->setAttribute('size', 5);
         $preferences->add($limitInventoryInterval);
         $validatorChain = new \Laminas\Validator\ValidatorChain();
         $validatorChain->attachByName(

@@ -3,7 +3,7 @@
 /**
  * Tests for Model\Client\ClientManager
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -480,14 +480,14 @@ class ClientManagerTest extends \Model\Test\AbstractTest
             ),
             array(
                 array('Id'),
-                 'Id',
-                 'asc',
-                 'CustomFields.type_date',
-                 '2015-08-02 12:34:56',
-                 'lt',
-                 true,
-                 false,
-                 $client2
+                'Id',
+                'asc',
+                'CustomFields.type_date',
+                '2015-08-02 12:34:56',
+                'lt',
+                true,
+                false,
+                $client2
             ),
             array(
                 array('Id'),
@@ -745,13 +745,13 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
         $resultSetPrototype = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSetPrototype->expects($this->once())
-                           ->method('initialize')
-                           ->with(
-                               $this->callback(function ($dataSource) use (&$result) {
-                                $result = iterator_to_array($dataSource);
-                                return true;
-                               })
-                           )->willReturnSelf();
+            ->method('initialize')
+            ->with(
+                $this->callback(function ($dataSource) use (&$result) {
+                    $result = iterator_to_array($dataSource);
+                    return true;
+                })
+            )->willReturnSelf();
 
         $hydrator = $this->createMock('Database\Hydrator\Clients');
         $hydrator->method('getExtractorMap')->willReturn($this->_map);
@@ -845,13 +845,13 @@ class ClientManagerTest extends \Model\Test\AbstractTest
 
         $resultSetPrototype = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSetPrototype->expects($this->once())
-                           ->method('initialize')
-                           ->with(
-                               $this->callback(function ($dataSource) use (&$result) {
-                                $result = iterator_to_array($dataSource);
-                                return true;
-                               })
-                           )->willReturnSelf();
+            ->method('initialize')
+            ->with(
+                $this->callback(function ($dataSource) use (&$result) {
+                    $result = iterator_to_array($dataSource);
+                    return true;
+                })
+            )->willReturnSelf();
 
         $hydrator = $this->createMock('Database\Hydrator\Clients');
         $hydrator->method('getExtractorMap')->willReturn($this->_map);
@@ -900,13 +900,13 @@ class ClientManagerTest extends \Model\Test\AbstractTest
     {
         $resultSetPrototype = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSetPrototype->expects($this->once())
-                           ->method('initialize')
-                           ->with(
-                               $this->callback(function ($dataSource) use (&$result) {
-                                $result = iterator_to_array($dataSource);
-                                return true;
-                               })
-                           )->willReturnSelf();
+            ->method('initialize')
+            ->with(
+                $this->callback(function ($dataSource) use (&$result) {
+                    $result = iterator_to_array($dataSource);
+                    return true;
+                })
+            )->willReturnSelf();
 
         $hydrator = $this->createMock('Database\Hydrator\Clients');
         $hydrator->method('getExtractorMap')->willReturn($this->_map);
@@ -1308,9 +1308,9 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $url = vfsStream::newFile('test.txt')->withContent($content)->at($root)->url();
         $model = $this->createPartialMock(ClientManager::class, ['importClient']);
         $model->expects($this->once())
-              ->method('importClient')
-              ->with($content)
-              ->willReturn('response');
+            ->method('importClient')
+            ->with($content)
+            ->willReturn('response');
         $this->assertEquals('response', $model->importFile($url));
     }
 
@@ -1330,9 +1330,9 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $httpClient->expects($this->once())->method('setMethod')->with('POST')->willReturnSelf();
         $httpClient->expects($this->once())->method('setUri')->with($uri)->willReturnSelf();
         $httpClient->expects($this->once())
-                   ->method('setHeaders')
-                   ->with(['Content-Type' => 'application/x-compress'])
-                   ->willReturnSelf();
+            ->method('setHeaders')
+            ->with(['Content-Type' => 'application/x-compress'])
+            ->willReturnSelf();
         $httpClient->expects($this->once())->method('setRawBody')->with($content)->willReturnSelf();
         $httpClient->expects($this->once())->method('send')->willReturn($response);
 

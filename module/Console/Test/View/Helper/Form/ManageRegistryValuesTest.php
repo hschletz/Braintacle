@@ -3,7 +3,7 @@
 /**
  * Tests for the ManageRegistryValues Helper
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -104,8 +104,8 @@ class ManageRegistryValuesTest extends \Library\Test\View\Helper\AbstractTest
 
         $fieldsetHelper = $this->createMock(FieldsetHelper::class);
         $fieldsetHelper->method('renderFieldsetElement')
-                       ->with($fieldsetExisting, '<ROW1><ERRORS1><ROW2><ERRORS2>')
-                       ->willReturn('<fieldset_existing>');
+            ->with($fieldsetExisting, '<ROW1><ERRORS1><ROW2><ERRORS2>')
+            ->willReturn('<fieldset_existing>');
         $fieldsetHelper->method('render')->with($fieldsetNewValue)->willReturn('<fieldset_new>');
 
         $view = $this->createMock(PhpRenderer::class);

@@ -3,7 +3,7 @@
 /**
  * Tests for the Table helper
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -111,8 +111,8 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         )->makePartial();
         $table->shouldReceive('headerRow')->with($this->_headers, [], [])->andReturn('<header>');
         $table->shouldReceive('dataRows')
-              ->with($this->_data, ['column1', 'column2'], [], [], null)
-              ->andReturn('<data>');
+            ->with($this->_data, ['column1', 'column2'], [], [], null)
+            ->andReturn('<data>');
         $table->shouldReceive('tag')->with('<header><data>')->andReturn('table_tag');
 
         $this->assertEquals('table_tag', $table($this->_data, $this->_headers));
@@ -129,8 +129,8 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
         )->makePartial();
         $table->shouldReceive('headerRow')
-              ->with($this->_headers, ['sorting'], ['columnClasses'])
-              ->andReturn('<header>');
+            ->with($this->_headers, ['sorting'], ['columnClasses'])
+            ->andReturn('<header>');
         $table->shouldReceive('dataRows')->with(
             $this->_data,
             ['column1', 'column2'],
@@ -156,8 +156,8 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
     public function testTag()
     {
         $this->_htmlElement->method('__invoke')
-                           ->with('table', 'table_content', ['class' => 'alternating'])
-                           ->willReturn('table_tag');
+            ->with('table', 'table_content', ['class' => 'alternating'])
+            ->willReturn('table_tag');
 
         $class = static::getHelperClass();
         $table = new $class($this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat);
@@ -198,11 +198,11 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
         )->makePartial();
         $table->shouldReceive('row')
-              ->with(['column1' => '1a', 'column2' => '2a'], false, [], null)
-              ->andReturn('<row1>');
+            ->with(['column1' => '1a', 'column2' => '2a'], false, [], null)
+            ->andReturn('<row1>');
         $table->shouldReceive('row')
-              ->with(['column1' => '1b', 'column2' => '2b'], false, [], null)
-              ->andReturn('<row2>');
+            ->with(['column1' => '1b', 'column2' => '2b'], false, [], null)
+            ->andReturn('<row2>');
 
         $this->assertEquals('<row1><row2>', $table->dataRows($this->_data, ['column1', 'column2']));
     }
@@ -216,11 +216,11 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
         )->makePartial();
         $table->shouldReceive('row')
-              ->with(['column1' => '1a', 'column2' => '2a'], false, ['column1' => 'class'], null)
-              ->andReturn('<row1>');
+            ->with(['column1' => '1a', 'column2' => '2a'], false, ['column1' => 'class'], null)
+            ->andReturn('<row1>');
         $table->shouldReceive('row')
-              ->with(['column1' => '1b', 'column2' => '2b'], false, ['column1' => 'class'], null)
-              ->andReturn('<row2>');
+            ->with(['column1' => '1b', 'column2' => '2b'], false, ['column1' => 'class'], null)
+            ->andReturn('<row2>');
 
         $this->assertEquals(
             '<row1><row2>',
@@ -237,11 +237,11 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
         )->makePartial();
         $table->shouldReceive('row')
-              ->with(['column1' => '1a', 'column2' => '2a'], false, [], 'VALUE1A')
-              ->andReturn('<row1>');
+            ->with(['column1' => '1a', 'column2' => '2a'], false, [], 'VALUE1A')
+            ->andReturn('<row1>');
         $table->shouldReceive('row')
-              ->with(['column1' => '1b', 'column2' => '2b'], false, [], 'VALUE1B')
-              ->andReturn('<row2>');
+            ->with(['column1' => '1b', 'column2' => '2b'], false, [], 'VALUE1B')
+            ->andReturn('<row2>');
 
         $rowClassCallback = function ($rowData) {
             $this->assertContains($rowData, $this->_data);
@@ -256,8 +256,8 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
         $date = $this->createMock('DateTime');
 
         $this->_dateFormat->method('__invoke')
-                          ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
-                          ->willReturn('date_formatted');
+            ->with($date, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
+            ->willReturn('date_formatted');
 
         $this->_escapeHtml->method('__invoke')->with('date_formatted')->willReturn('escaped_date');
 
@@ -266,8 +266,8 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
         )->makePartial();
         $table->shouldReceive('row')
-              ->with(['column1' => 'escaped_date'], false, [], null)
-              ->andReturn('<row>');
+            ->with(['column1' => 'escaped_date'], false, [], null)
+            ->andReturn('<row>');
 
         $this->assertEquals('<row>', $table->dataRows([['column1' => $date]], ['column1']));
     }
@@ -285,8 +285,8 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
         )->makePartial();
         $table->shouldReceive('row')
-              ->with(['column1' => 'callback_return'], false, [], null)
-              ->andReturn('<row>');
+            ->with(['column1' => 'callback_return'], false, [], null)
+            ->andReturn('<row>');
         $table->shouldReceive('getView')->andReturn($view);
 
         $renderCallback = function ($view2, $rowData, $key) use ($view, $date) {
@@ -332,13 +332,13 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
     {
         // Arrow indicator up, link sorts descending
         $this->_consoleUrl->expects($this->once())
-                          ->method('__invoke')
-                          ->with(null, null, array('order' => 'Key', 'direction' => 'desc'), true)
-                          ->will($this->returnValue('ConsoleUrlMock'));
+            ->method('__invoke')
+            ->with(null, null, array('order' => 'Key', 'direction' => 'desc'), true)
+            ->will($this->returnValue('ConsoleUrlMock'));
         $this->_htmlElement->expects($this->once())
-                           ->method('__invoke')
-                           ->with('a', 'Label&uarr;', array('href' => 'ConsoleUrlMock'))
-                           ->will($this->returnValue('HtmlElementMock'));
+            ->method('__invoke')
+            ->with('a', 'Label&uarr;', array('href' => 'ConsoleUrlMock'))
+            ->will($this->returnValue('HtmlElementMock'));
         $helper = new \Console\View\Helper\Table(
             $this->_escapeHtml,
             $this->_htmlElement,
@@ -352,13 +352,13 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
     {
         // Arrow indicator down, link sorts ascending
         $this->_consoleUrl->expects($this->once())
-                          ->method('__invoke')
-                          ->with(null, null, array('order' => 'Key', 'direction' => 'asc'), true)
-                          ->will($this->returnValue('ConsoleUrlMock'));
+            ->method('__invoke')
+            ->with(null, null, array('order' => 'Key', 'direction' => 'asc'), true)
+            ->will($this->returnValue('ConsoleUrlMock'));
         $this->_htmlElement->expects($this->once())
-                           ->method('__invoke')
-                           ->with('a', 'Label&darr;', array('href' => 'ConsoleUrlMock'))
-                           ->will($this->returnValue('HtmlElementMock'));
+            ->method('__invoke')
+            ->with('a', 'Label&darr;', array('href' => 'ConsoleUrlMock'))
+            ->will($this->returnValue('HtmlElementMock'));
         $helper = new \Console\View\Helper\Table(
             $this->_escapeHtml,
             $this->_htmlElement,
@@ -372,13 +372,13 @@ class TableTest extends \Library\Test\View\Helper\AbstractTest
     {
         // No arrow indicator, link sorts ascending
         $this->_consoleUrl->expects($this->once())
-                          ->method('__invoke')
-                          ->with(null, null, array('order' => 'Key', 'direction' => 'asc'), true)
-                          ->will($this->returnValue('ConsoleUrlMock'));
+            ->method('__invoke')
+            ->with(null, null, array('order' => 'Key', 'direction' => 'asc'), true)
+            ->will($this->returnValue('ConsoleUrlMock'));
         $this->_htmlElement->expects($this->once())
-                           ->method('__invoke')
-                           ->with('a', 'Label', array('href' => 'ConsoleUrlMock'))
-                           ->will($this->returnValue('HtmlElementMock'));
+            ->method('__invoke')
+            ->with('a', 'Label', array('href' => 'ConsoleUrlMock'))
+            ->will($this->returnValue('HtmlElementMock'));
         $helper = new \Console\View\Helper\Table(
             $this->_escapeHtml,
             $this->_htmlElement,

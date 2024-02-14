@@ -3,7 +3,7 @@
 /**
  * Form for display/setting of 'system' preferences
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -54,19 +54,19 @@ class System extends AbstractForm
 
         $lockValidity = new \Laminas\Form\Element\Text('lockValidity');
         $lockValidity->setLabel('Maximum seconds to lock a client')
-                     ->setAttribute('size', 5);
+            ->setAttribute('size', 5);
         $preferences->add($lockValidity);
         $inputFilter->add($this->getIntegerFilter('lockValidity'));
 
         $sessionValidity = new \Laminas\Form\Element\Text('sessionValidity');
         $sessionValidity->setLabel('Maximum duration of an agent session in seconds')
-                        ->setAttribute('size', 5);
+            ->setAttribute('size', 5);
         $preferences->add($sessionValidity);
         $inputFilter->add($this->getIntegerFilter('sessionValidity'));
 
         $sessionCleanupInterval = new \Laminas\Form\Element\Text('sessionCleanupInterval');
         $sessionCleanupInterval->setLabel('Interval in seconds to cleanup sessions')
-                               ->setAttribute('size', 5);
+            ->setAttribute('size', 5);
         $preferences->add($sessionCleanupInterval);
         $inputFilter->add($this->getIntegerFilter('sessionCleanupInterval'));
 
@@ -76,7 +76,7 @@ class System extends AbstractForm
 
         $logLevel = new \Library\Form\Element\SelectSimple('logLevel');
         $logLevel->setLabel('Log level')
-                 ->setValueOptions(array(0, 1, 2));
+            ->setValueOptions(array(0, 1, 2));
         $preferences->add($logLevel);
 
         $validateXml = new \Laminas\Form\Element\Checkbox('validateXml');

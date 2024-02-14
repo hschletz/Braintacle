@@ -3,7 +3,7 @@
 /**
  * Tests for the main menu
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -56,16 +56,16 @@ class MainMenuTest extends \Laminas\Test\PHPUnit\Controller\AbstractHttpControll
         // Mock AuthenticationService to provide an identity
         $auth = $this->createMock('Model\Operator\AuthenticationService');
         $auth->expects($this->any())
-             ->method('hasIdentity')
-             ->will($this->returnValue(true));
+            ->method('hasIdentity')
+            ->will($this->returnValue(true));
         $auth->expects($this->any())
-             ->method('getIdentity')
-             ->will($this->returnValue('test'));
+            ->method('getIdentity')
+            ->will($this->returnValue('test'));
 
         $model = $this->createMock('Model\SoftwareManager');
         $model->expects($this->any())
-              ->method('getNumManualProductKeys')
-              ->will($this->returnValue(0));
+            ->method('getNumManualProductKeys')
+            ->will($this->returnValue(0));
 
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setService('Laminas\Authentication\AuthenticationService', $auth);

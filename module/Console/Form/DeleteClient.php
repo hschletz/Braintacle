@@ -3,7 +3,7 @@
 /**
  * Confirmation for deleting clients
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -40,7 +40,7 @@ class DeleteClient extends Form
 
         $deleteInterfaces = new \Laminas\Form\Element\Checkbox('DeleteInterfaces');
         $deleteInterfaces->setLabel('Delete interfaces from network listing')
-                         ->setChecked($this->getOption('config')->defaultDeleteInterfaces);
+            ->setChecked($this->getOption('config')->defaultDeleteInterfaces);
         $this->add($deleteInterfaces);
 
         $yes = new \Library\Form\Element\Submit('yes');

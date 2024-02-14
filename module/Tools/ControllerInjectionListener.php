@@ -3,7 +3,7 @@
 /**
  * Listener for injection of the controller service
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -42,7 +42,7 @@ use Symfony\Component\Console\Event\ConsoleCommandEvent;
  * global "list" command will instantiate all commands to read their
  * configuration. The mentioned side effects may cause failure where the
  * provided functionality is not even needed.
-*/
+ */
 class ControllerInjectionListener
 {
     /**

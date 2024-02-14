@@ -3,7 +3,7 @@
 /**
  * Tests for the FormYesNo helper
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -59,16 +59,16 @@ class FormYesNoTest extends AbstractTest
         /** @var MockObject|HtmlElement */
         $htmlElement = $this->createMock(HtmlElement::class);
         $htmlElement->expects($this->once())
-                    ->method('__invoke')
-                    ->with(
-                        'input',
-                        null,
-                        array(
-                            'type' => 'hidden',
-                            'name' => 'hiddenName',
-                            'value' => 'hiddenValue',
-                        )
-                    )->willReturn('<input type="hidden" name="hiddenName" value="hiddenValue">');
+            ->method('__invoke')
+            ->with(
+                'input',
+                null,
+                array(
+                    'type' => 'hidden',
+                    'name' => 'hiddenName',
+                    'value' => 'hiddenValue',
+                )
+            )->willReturn('<input type="hidden" name="hiddenName" value="hiddenValue">');
         $htmlElement->method('htmlAttribs')->with($attributesUpdated)->willReturn(' method="_method"');
 
         $helper = new \Library\View\Helper\FormYesNo($translate, $htmlElement);

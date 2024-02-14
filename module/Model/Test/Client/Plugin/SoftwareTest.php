@@ -3,7 +3,7 @@
 /**
  * Tests for Model\Client\Plugin\Software
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -56,9 +56,9 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
 
         /** @var MockObject$Software */
         $model = $this->getMockBuilder(Software::class)
-                      ->setConstructorArgs([$table])
-                      ->onlyMethods(['getIsAndroidExpression'])
-                      ->getMock();
+            ->setConstructorArgs([$table])
+            ->onlyMethods(['getIsAndroidExpression'])
+            ->getMock();
         $model->method('getIsAndroidExpression')->willReturn('isAndroid');
 
         $model->columns();

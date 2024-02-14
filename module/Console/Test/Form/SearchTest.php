@@ -3,7 +3,7 @@
 /**
  * Tests for Search form
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -75,23 +75,23 @@ class SearchTest extends \Console\Test\AbstractFormTest
 
         $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
         $this->_registryManager->expects($this->once())
-                               ->method('getValueDefinitions')
-                               ->willReturn($resultSet);
+            ->method('getValueDefinitions')
+            ->willReturn($resultSet);
 
         $this->_customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $this->_customFieldManager->expects($this->once())
-                            ->method('getFields')
-                            ->will(
-                                $this->returnValue(
-                                    array(
-                                        'TAG' => 'text',
-                                        'Clob' => 'clob',
-                                        'Integer' => 'integer',
-                                        'Float' => 'float',
-                                        'Date' => 'date',
-                                    )
-                                )
-                            );
+            ->method('getFields')
+            ->will(
+                $this->returnValue(
+                    array(
+                        'TAG' => 'text',
+                        'Clob' => 'clob',
+                        'Integer' => 'integer',
+                        'Float' => 'float',
+                        'Date' => 'date',
+                    )
+                )
+            );
         parent::setUp();
     }
 

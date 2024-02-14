@@ -3,7 +3,7 @@
 /**
  * Tests for AddToGroup form
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -52,9 +52,9 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         $resultSet = new \Laminas\Db\ResultSet\ResultSet();
         $resultSet->initialize($groups);
         $this->_groupManager->expects($this->once())
-                            ->method('getGroups')
-                            ->with(null, null, 'Name')
-                            ->willReturn($resultSet);
+            ->method('getGroups')
+            ->with(null, null, 'Name')
+            ->willReturn($resultSet);
         $form = new \Console\Form\AddToGroup(
             null,
             array('GroupManager' => $this->_groupManager)
@@ -248,15 +248,15 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
     {
         $group = $this->createMock('Model\Group\Group');
         $group->expects($this->once())
-              ->method('setMembersFromQuery')
-              ->with('what', 'filter', 'search', 'operator', 'invert');
+            ->method('setMembersFromQuery')
+            ->with('what', 'filter', 'search', 'operator', 'invert');
         $this->_groupManager->expects($this->once())
-                            ->method('createGroup')
-                            ->with('name', 'description');
+            ->method('createGroup')
+            ->with('name', 'description');
         $this->_groupManager->expects($this->once())
-                            ->method('getGroup')
-                            ->with('name')
-                            ->willReturn($group);
+            ->method('getGroup')
+            ->with('name')
+            ->willReturn($group);
         $data = array(
             'What' => 'what',
             'Where' => 'new',
@@ -265,8 +265,8 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         );
         $form = $this->createPartialMock(AddToGroup::class, ['getData']);
         $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue($data));
+            ->method('getData')
+            ->will($this->returnValue($data));
         $form->setOption('GroupManager', $this->_groupManager);
         $this->assertEquals($group, $form->process('filter', 'search', 'operator', 'invert'));
     }
@@ -275,13 +275,13 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
     {
         $group = $this->createMock('Model\Group\Group');
         $group->expects($this->once())
-              ->method('setMembersFromQuery')
-              ->with('what', 'filter', 'search', 'operator', 'invert');
+            ->method('setMembersFromQuery')
+            ->with('what', 'filter', 'search', 'operator', 'invert');
         $this->_groupManager->expects($this->never())->method('createGroup');
         $this->_groupManager->expects($this->once())
-                            ->method('getGroup')
-                            ->with('name')
-                            ->willReturn($group);
+            ->method('getGroup')
+            ->with('name')
+            ->willReturn($group);
         $data = array(
             'What' => 'what',
             'Where' => 'existing',
@@ -289,8 +289,8 @@ class AddToGroupTest extends \Console\Test\AbstractFormTest
         );
         $form = $this->createPartialMock(AddToGroup::class, ['getData']);
         $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue($data));
+            ->method('getData')
+            ->will($this->returnValue($data));
         $form->setOption('GroupManager', $this->_groupManager);
         $this->assertEquals($group, $form->process('filter', 'search', 'operator', 'invert'));
     }

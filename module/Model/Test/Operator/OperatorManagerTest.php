@@ -3,7 +3,7 @@
 /**
  * Tests for Model\Operator\OperatorManager
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -283,7 +283,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
                 $this->getConnection()->createQueryTable(
                     'operators',
                     'SELECT id, firstname, lastname, passwd, password_version, comments, email from operators ' .
-                    'ORDER BY id DESC'
+                        'ORDER BY id DESC'
                 )
             );
         }

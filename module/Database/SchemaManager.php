@@ -3,7 +3,7 @@
 /**
  * Schema management class
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -150,12 +150,12 @@ class SchemaManager
                     $customFieldConfig = $this->_serviceLocator->get('Database\Table\CustomFieldConfig');
                     $select = $customFieldConfig->getSql()->select();
                     $select->columns(array('id'))
-                           ->where(
-                               array(
-                                    'name_accountinfo' => null, // exclude system columns (TAG)
-                                    'account_type' => 'SNMP'
-                                )
-                           );
+                        ->where(
+                            array(
+                                'name_accountinfo' => null, // exclude system columns (TAG)
+                                'account_type' => 'SNMP'
+                            )
+                        );
                     foreach ($customFieldConfig->selectWith($select) as $field) {
                         $preserveColumns[] = "fields_$field[id]";
                     }
@@ -241,7 +241,7 @@ class SchemaManager
                     if ($columnObj->getNotNull() != $column['notnull']) {
                         $logger->info(
                             ($column['notnull'] ? 'Setting' : 'Removing') .
-                            " NOT NULL constraint on column $tableName.$column[name]..."
+                                " NOT NULL constraint on column $tableName.$column[name]..."
                         );
                         $columnObj->setNotNull($column['notnull']);
                         $logger->info('done.');

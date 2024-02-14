@@ -3,7 +3,7 @@
 /**
  * Tests for ClientConfig form
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -122,9 +122,9 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
     public function testSetClientObjectClientNoNetworks()
     {
         $this->_client->expects($this->once())
-                      ->method('getItems')
-                      ->with('NetworkInterface', 'Subnet')
-                      ->willReturn(array());
+            ->method('getItems')
+            ->with('NetworkInterface', 'Subnet')
+            ->willReturn(array());
 
         $form = new ClientConfig();
         $form->init();
@@ -142,9 +142,9 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
             array('Subnet' => '0.0.0.0'),
         );
         $this->_client->expects($this->once())
-                      ->method('getItems')
-                      ->with('NetworkInterface', 'Subnet')
-                      ->willReturn($networks);
+            ->method('getItems')
+            ->with('NetworkInterface', 'Subnet')
+            ->willReturn($networks);
 
 
         $form = new ClientConfig();
@@ -166,9 +166,9 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
             array('Subnet' => '198.51.100.0'),
         );
         $this->_client->expects($this->once())
-                      ->method('getItems')
-                      ->with('NetworkInterface', 'Subnet')
-                      ->willReturn($networks);
+            ->method('getItems')
+            ->with('NetworkInterface', 'Subnet')
+            ->willReturn($networks);
 
         $form = new ClientConfig();
         $form->init();
@@ -454,9 +454,9 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
             )
         );
         $this->_client->expects($this->once())
-                      ->method('getItems')
-                      ->with('NetworkInterface', 'Subnet')
-                      ->willReturn(array(array('Subnet' => '192.0.2.0')));
+            ->method('getItems')
+            ->with('NetworkInterface', 'Subnet')
+            ->willReturn(array(array('Subnet' => '192.0.2.0')));
 
         $form = new ClientConfig();
         $form->init();
@@ -477,9 +477,9 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
             )
         );
         $this->_client->expects($this->once())
-                      ->method('getItems')
-                      ->with('NetworkInterface', 'Subnet')
-                      ->willReturn(array(array('Subnet' => '192.0.2.0')));
+            ->method('getItems')
+            ->with('NetworkInterface', 'Subnet')
+            ->willReturn(array(array('Subnet' => '192.0.2.0')));
 
         $form = new ClientConfig();
         $form->init();
@@ -510,20 +510,20 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
             )
         );
         $this->_group->expects($this->exactly(11))
-                     ->method('setConfig')
-                     ->withConsecutive(
-                         array('contactInterval', $this->identicalTo(1234)),
-                         array('inventoryInterval', $this->isNull()),
-                         array('downloadPeriodDelay', $this->identicalTo(1111)),
-                         array('downloadCycleDelay', $this->identicalTo(2222)),
-                         array('downloadFragmentDelay', $this->identicalTo(3333)),
-                         array('downloadMaxPriority', $this->identicalTo(4444)),
-                         array('downloadTimeout', $this->isNull()),
-                         array('packageDeployment', $this->identicalTo('1')),
-                         array('allowScan', $this->identicalTo('0')),
-                         array('scanThisNetwork', $this->isNull()),
-                         array('scanSnmp', $this->isNull())
-                     );
+            ->method('setConfig')
+            ->withConsecutive(
+                array('contactInterval', $this->identicalTo(1234)),
+                array('inventoryInterval', $this->isNull()),
+                array('downloadPeriodDelay', $this->identicalTo(1111)),
+                array('downloadCycleDelay', $this->identicalTo(2222)),
+                array('downloadFragmentDelay', $this->identicalTo(3333)),
+                array('downloadMaxPriority', $this->identicalTo(4444)),
+                array('downloadTimeout', $this->isNull()),
+                array('packageDeployment', $this->identicalTo('1')),
+                array('allowScan', $this->identicalTo('0')),
+                array('scanThisNetwork', $this->isNull()),
+                array('scanSnmp', $this->isNull())
+            );
 
         $form = new ClientConfig();
         $form->init();

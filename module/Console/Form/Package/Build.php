@@ -3,7 +3,7 @@
 /**
  * Form for creating a package
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -102,27 +102,27 @@ class Build extends \Console\Form\Form
         // Platform combobox
         $platform = new Element\Select('Platform');
         $platform->setLabel('Platform')
-                 ->setAttribute('type', 'select_untranslated')
-                 ->setValueOptions(
-                     array(
-                        'windows' => 'Windows',
-                        'linux' => 'Linux',
-                        'mac' => 'MacOS'
-                     )
-                 );
+            ->setAttribute('type', 'select_untranslated')
+            ->setValueOptions(
+                array(
+                    'windows' => 'Windows',
+                    'linux' => 'Linux',
+                    'mac' => 'MacOS'
+                )
+            );
         $this->add($platform);
 
         // Action combobox
         // Translate labels manually to let xgettext recognize them
         $action = new Element\Select('DeployAction');
         $action->setLabel('Action')
-               ->setValueOptions(
-                   array(
-                        'launch' => $this->_('Download package, execute command, retrieve result'),
-                        'execute' => $this->_('Optionally download package, execute command'),
-                        'store' => $this->_('Just download package to target path'),
-                   )
-               );
+            ->setValueOptions(
+                array(
+                    'launch' => $this->_('Download package, execute command, retrieve result'),
+                    'execute' => $this->_('Optionally download package, execute command'),
+                    'store' => $this->_('Just download package to target path'),
+                )
+            );
         $this->add($action);
 
         // Command line or target path for action
@@ -145,13 +145,13 @@ class Build extends \Console\Form\Form
         // Priority combobox
         $priority = new \Library\Form\Element\SelectSimple('Priority');
         $priority->setValueOptions(range(0, 10))
-                 ->setLabel('Priority (0: exclusive, 10: lowest)');
+            ->setLabel('Priority (0: exclusive, 10: lowest)');
         $this->add($priority);
 
         // Maximum fragment size.
         $maxFragmentSize = new Element\Text('MaxFragmentSize');
         $maxFragmentSize->setAttribute('size', '8')
-                        ->setLabel('Maximum fragment size (kB)');
+            ->setLabel('Maximum fragment size (kB)');
         $this->add($maxFragmentSize);
         $inputFilter->add(
             array(
@@ -199,7 +199,7 @@ class Build extends \Console\Form\Form
         // Countdown before installation starts automatically
         $warnCountdown = new Element\Text('WarnCountdown');
         $warnCountdown->setAttribute('size', '5')
-                      ->setLabel('Countdown (seconds)');
+            ->setLabel('Countdown (seconds)');
         $this->add($warnCountdown);
         $inputFilter->add(
             array(

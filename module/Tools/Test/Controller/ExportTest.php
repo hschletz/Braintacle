@@ -3,7 +3,7 @@
 /**
  * Tests for Export controller
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -105,11 +105,11 @@ class ExportTest extends \PHPUnit\Framework\TestCase
         $client3->expects($this->never())->method('offsetGet');
         $client3->expects($this->never())->method('toDomDocument');
 
-         /** @var ClientManager|MockObject */
-         $clientManager = $this->createMock(ClientManager::class);
-         $clientManager->method('getClients')
-                       ->with(null, 'IdString')
-                       ->willReturn([$client1, $client2, $client3]);
+        /** @var ClientManager|MockObject */
+        $clientManager = $this->createMock(ClientManager::class);
+        $clientManager->method('getClients')
+            ->with(null, 'IdString')
+            ->willReturn([$client1, $client2, $client3]);
 
         $input = $this->createMock(InputInterface::class);
         $input->method('getArgument')->with('directory')->willReturn($directory);

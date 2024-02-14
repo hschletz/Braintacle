@@ -3,7 +3,7 @@
 /**
  * Tests for the ClientConfig Helper
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -112,9 +112,9 @@ class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
     public function testRenderFieldset($object, $infoTrue, $infoFalse, $infoText)
     {
         $elements = "(LABEL_TRUE)<span>(ELEMENT_TRUE)(INFO_TRUE)</span>(ERRORS_TRUE)\n" .
-                    "(LABEL_FALSE)<span>(ELEMENT_FALSE)(INFO_FALSE)</span>(ERRORS_FALSE)\n" .
-                    "(LABEL_TEXT)<span>(ELEMENT_TEXT)(INFO_TEXT)</span>(ERRORS_TEXT)\n" .
-                    "(LABEL_NOINFO)<span>(ELEMENT_NOINFO)</span>(ERRORS_NOINFO)\n";
+            "(LABEL_FALSE)<span>(ELEMENT_FALSE)(INFO_FALSE)</span>(ERRORS_FALSE)\n" .
+            "(LABEL_TEXT)<span>(ELEMENT_TEXT)(INFO_TEXT)</span>(ERRORS_TEXT)\n" .
+            "(LABEL_NOINFO)<span>(ELEMENT_NOINFO)</span>(ERRORS_NOINFO)\n";
 
         $object->expects($this->exactly(3))->method('getDefaultConfig')->willReturnMap(
             array(

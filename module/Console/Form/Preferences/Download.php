@@ -3,7 +3,7 @@
 /**
  * Form for display/setting of 'download' preferences
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -106,30 +106,30 @@ class Download extends AbstractForm
 
         $downloadPeriodDelay = new \Laminas\Form\Element\Text('downloadPeriodDelay');
         $downloadPeriodDelay->setLabel('Delay (in seconds) between periods')
-                            ->setAttribute('size', 5);
+            ->setAttribute('size', 5);
         $preferences->add($downloadPeriodDelay);
         $inputFilter->add($this->getIntegerFilter('downloadPeriodDelay'));
 
         $downloadCycleDelay = new \Laminas\Form\Element\Text('downloadCycleDelay');
         $downloadCycleDelay->setLabel('Delay (in seconds) between cycles')
-                           ->setAttribute('size', 5);
+            ->setAttribute('size', 5);
         $preferences->add($downloadCycleDelay);
         $inputFilter->add($this->getIntegerFilter('downloadCycleDelay'));
 
         $downloadFragmentDelay = new \Laminas\Form\Element\Text('downloadFragmentDelay');
         $downloadFragmentDelay->setLabel('Delay (in seconds) between fragments')
-                              ->setAttribute('size', 5);
+            ->setAttribute('size', 5);
         $preferences->add($downloadFragmentDelay);
         $inputFilter->add($this->getIntegerFilter('downloadFragmentDelay'));
 
         $downloadMaxPriority = new \Library\Form\Element\SelectSimple('downloadMaxPriority');
         $downloadMaxPriority->setLabel('Maximum package priority (packages with higher value will not be downloaded)')
-                            ->setValueOptions(range(0, 10));
+            ->setValueOptions(range(0, 10));
         $preferences->add($downloadMaxPriority);
 
         $downloadTimeout = new \Laminas\Form\Element\Text('downloadTimeout');
         $downloadTimeout->setLabel('Timeout (in days)')
-                        ->setAttribute('size', 5);
+            ->setAttribute('size', 5);
         $preferences->add($downloadTimeout);
         $inputFilter->add($this->getIntegerFilter('downloadTimeout'));
 

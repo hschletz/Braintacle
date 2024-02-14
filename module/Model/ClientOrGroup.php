@@ -3,7 +3,7 @@
 /**
  * Base class for clients and groups
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -177,7 +177,7 @@ abstract class ClientOrGroup extends AbstractModel
         // Check if a lock already exists
         $select = $locks->getSql()->select();
         $select->columns(array('since'))
-               ->where(array('hardware_id' => $id));
+            ->where(array('hardware_id' => $id));
         $lock = $locks->selectWith($select)->current();
         if ($lock) {
             // A lock exists. Check its timestamp.
@@ -294,40 +294,40 @@ abstract class ClientOrGroup extends AbstractModel
         $packages = $this->_serviceLocator->get('Database\Table\Packages');
         $select = $packages->getSql()->select();
         $select->columns(array('name'))
-               ->join(
-                   // assigned packages
-                   'devices',
-                   new \Laminas\Db\Sql\Predicate\PredicateSet(
-                       array(
-                           new Operator('ivalue', '=', 'fileid', Operator::TYPE_IDENTIFIER, Operator::TYPE_IDENTIFIER),
-                           new \Laminas\Db\Sql\Predicate\Operator('devices.hardware_id', '=', $this['Id']),
-                           // "DOWNLOAD" is always present, eventual "DOWNLOAD_*" rows exist in addition to that.
-                           // The equality check is suficient here.
-                           new \Laminas\Db\Sql\Predicate\Operator('devices.name', '=', 'DOWNLOAD'),
-                       )
-                   ),
-                   array(),
-                   \Laminas\Db\Sql\Select::JOIN_LEFT
-               )
-               ->join(
-                   // packages from history
-                   'download_history',
-                   new \Laminas\Db\Sql\Predicate\PredicateSet(
-                       array(
-                           new Operator('pkg_id', '=', 'fileid', Operator::TYPE_IDENTIFIER, Operator::TYPE_IDENTIFIER),
-                           new \Laminas\Db\Sql\Predicate\Operator('download_history.hardware_id', '=', $this['Id']),
-                       )
-                   ),
-                   array(),
-                   \Laminas\Db\Sql\Select::JOIN_LEFT
-               )
-               ->where(
-                   // exclude rows containing data from joined tables
-                   array(
-                        new \Laminas\Db\Sql\Predicate\IsNull('devices.ivalue'),
-                        new \Laminas\Db\Sql\Predicate\IsNull('download_history.pkg_id'),
-                   )
-               )->order('download_available.name');
+            ->join(
+                // assigned packages
+                'devices',
+                new \Laminas\Db\Sql\Predicate\PredicateSet(
+                    array(
+                        new Operator('ivalue', '=', 'fileid', Operator::TYPE_IDENTIFIER, Operator::TYPE_IDENTIFIER),
+                        new \Laminas\Db\Sql\Predicate\Operator('devices.hardware_id', '=', $this['Id']),
+                        // "DOWNLOAD" is always present, eventual "DOWNLOAD_*" rows exist in addition to that.
+                        // The equality check is suficient here.
+                        new \Laminas\Db\Sql\Predicate\Operator('devices.name', '=', 'DOWNLOAD'),
+                    )
+                ),
+                array(),
+                \Laminas\Db\Sql\Select::JOIN_LEFT
+            )
+            ->join(
+                // packages from history
+                'download_history',
+                new \Laminas\Db\Sql\Predicate\PredicateSet(
+                    array(
+                        new Operator('pkg_id', '=', 'fileid', Operator::TYPE_IDENTIFIER, Operator::TYPE_IDENTIFIER),
+                        new \Laminas\Db\Sql\Predicate\Operator('download_history.hardware_id', '=', $this['Id']),
+                    )
+                ),
+                array(),
+                \Laminas\Db\Sql\Select::JOIN_LEFT
+            )
+            ->where(
+                // exclude rows containing data from joined tables
+                array(
+                    new \Laminas\Db\Sql\Predicate\IsNull('devices.ivalue'),
+                    new \Laminas\Db\Sql\Predicate\IsNull('download_history.pkg_id'),
+                )
+            )->order('download_available.name');
 
         $result = array();
         foreach ($packages->selectWith($select) as $package) {
@@ -436,9 +436,9 @@ abstract class ClientOrGroup extends AbstractModel
         $clientConfig = $this->_serviceLocator->get('Database\Table\ClientConfig');
         $select = $clientConfig->getSql()->select();
         $select->columns(array($column))
-               ->where(
-                   array('hardware_id' => $id, 'name' => $name)
-               );
+            ->where(
+                array('hardware_id' => $id, 'name' => $name)
+            );
         if (isset($ivalue)) {
             $select->where(array('ivalue' => $ivalue));
         }

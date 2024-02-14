@@ -3,7 +3,7 @@
 /**
  * Tests for NetworkDeviceTypes form
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -44,8 +44,8 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
     {
         $this->_deviceManager = $this->createMock('Model\Network\DeviceManager');
         $this->_deviceManager->expects($this->once())
-                             ->method('getTypeCounts')
-                             ->willReturn(array('name0' => 0, 'name1' => 1));
+            ->method('getTypeCounts')
+            ->willReturn(array('name0' => 0, 'name1' => 1));
         parent::setUp();
     }
 
@@ -326,7 +326,7 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
             1,
             Query::execute(
                 '//input[@name="name0"]/following-sibling::a' .
-                '[@href="/console/preferences/deletedevicetype/?name=name0"][text()="Löschen"]',
+                    '[@href="/console/preferences/deletedevicetype/?name=name0"][text()="Löschen"]',
                 $document
             )
         );
@@ -346,8 +346,8 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         /** @ver MockObject|FormElementErrors */
         $formElementErrors = $this->createMock(FormElementErrors::class);
         $formElementErrors->method('__invoke')
-                          ->with($this->isInstanceOf('Laminas\Form\ElementInterface'), array('class' => 'error'))
-                          ->willReturnCallback(array($this, 'formElementErrorsMock'));
+            ->with($this->isInstanceOf('Laminas\Form\ElementInterface'), array('class' => 'error'))
+            ->willReturnCallback(array($this, 'formElementErrorsMock'));
 
         $view = $this->createView();
         $view->getHelperPluginManager()->setService('formElementErrors', $formElementErrors);
@@ -386,8 +386,8 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         );
         $form = $this->createPartialMock(NetworkDeviceTypes::class, ['getData']);
         $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue($data));
+            ->method('getData')
+            ->will($this->returnValue($data));
         $form->setOption('DeviceManager', $deviceManager);
 
         $form->process();
@@ -407,8 +407,8 @@ class NetworkDeviceTypesTest extends \Console\Test\AbstractFormTest
         );
         $form = $this->createPartialMock(NetworkDeviceTypes::class, ['getData']);
         $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue($data));
+            ->method('getData')
+            ->will($this->returnValue($data));
         $form->setOption('DeviceManager', $deviceManager);
 
         $form->process();

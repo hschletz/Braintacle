@@ -3,7 +3,7 @@
 /**
  * Tests for Model\Client\DuplicatesManager
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -104,7 +104,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
             'assettag' => 'duplicate',
             'networkinterface_macaddr' => '00:00:5E:00:53:01',
         );
-        $client3 = array (
+        $client3 = array(
             'id' => '3',
             'name' => 'Name2',
             'lastcome' => '2013-12-23 13:03:33',
@@ -161,44 +161,44 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $sql = new \Laminas\Db\Sql\Sql(static::$serviceManager->get('Db'), 'clients');
 
         $select = $sql->select()
-                      ->columns(array('id', 'name', 'lastcome', 'ssn', 'assettag'))
-                      ->order(array($ordercolumns[$order] => $direction));
+            ->columns(array('id', 'name', 'lastcome', 'ssn', 'assettag'))
+            ->order(array($ordercolumns[$order] => $direction));
 
         /** @var MockObject|ClientManager */
         $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClients')
-                      ->with(
-                          array('Id', 'Name', 'LastContactDate', 'Serial', 'AssetTag'),
-                          $order,
-                          $direction,
-                          null,
-                          null,
-                          null,
-                          null,
-                          false,
-                          false,
-                          false
-                      )
-                      ->willReturn($select);
+            ->with(
+                array('Id', 'Name', 'LastContactDate', 'Serial', 'AssetTag'),
+                $order,
+                $direction,
+                null,
+                null,
+                null,
+                null,
+                false,
+                false,
+                false
+            )
+            ->willReturn($select);
 
         $clients = $this->createMock(Clients::class);
         $clients->method('getSql')->willReturn($sql);
         $clients->method('selectWith')
-                ->with(
-                    $this->callback(
-                        function ($select) use ($expectedOrder) {
-                            return $select->getRawState($select::ORDER) == $expectedOrder;
-                        }
-                    )
-                )
-                ->willReturnCallback(
-                    function ($select) use ($sql) {
-                        // Build simple result set to bypass hydrator
-                        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
-                        $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());
-                        return $resultSet;
+            ->with(
+                $this->callback(
+                    function ($select) use ($expectedOrder) {
+                        return $select->getRawState($select::ORDER) == $expectedOrder;
                     }
-                );
+                )
+            )
+            ->willReturnCallback(
+                function ($select) use ($sql) {
+                    // Build simple result set to bypass hydrator
+                    $resultSet = new \Laminas\Db\ResultSet\ResultSet();
+                    $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());
+                    return $resultSet;
+                }
+            );
 
         $duplicates = new DuplicatesManager(
             $clients,
@@ -319,8 +319,8 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         /** @var MockObject|ClientManager */
         $clientManager = $this->createMock(ClientManager::class);
         $clientManager->method('getClient')
-                      ->withConsecutive([1], [2])
-                      ->willReturnOnConsecutiveCalls($client1, $client2);
+            ->withConsecutive([1], [2])
+            ->willReturnOnConsecutiveCalls($client1, $client2);
         $clientManager->expects($this->never())->method('deleteClient');
 
         /** @var MockObject|DuplicatesManager */
@@ -383,10 +383,10 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
 
         $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClient')
-                      ->willReturnMap([[1, $client1], [2, $client2], [3, $client3]]);
+            ->willReturnMap([[1, $client1], [2, $client2], [3, $client3]]);
         $clientManager->expects($this->exactly(2))
-                      ->method('deleteClient')
-                      ->withConsecutive([$this->identicalTo($client1)], [$this->identicalTo($client2)]);
+            ->method('deleteClient')
+            ->withConsecutive([$this->identicalTo($client1)], [$this->identicalTo($client2)]);
 
         $connection = $this->createMock('Laminas\Db\Adapter\Driver\ConnectionInterface');
         $connection->expects($this->once())->method('beginTransaction');
@@ -455,7 +455,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
 
         $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClient')
-                      ->willReturnMap([[1, $client1], [2, $client2], [3, $client3]]);
+            ->willReturnMap([[1, $client1], [2, $client2], [3, $client3]]);
 
         $connection = $this->createMock('Laminas\Db\Adapter\Driver\ConnectionInterface');
 
@@ -536,8 +536,8 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         // correct group ID and size.
         $newestClient = $this->createMock('Model\Client\Client');
         $newestClient->expects($this->once())
-                     ->method('setGroupMemberships')
-                     ->with($this->logicalAnd($this->countOf(1), $this->arrayHasKey(1)));
+            ->method('setGroupMemberships')
+            ->with($this->logicalAnd($this->countOf(1), $this->arrayHasKey(1)));
 
         $client1 = $this->createMock('Model\Client\Client');
         $client1->method('getGroupMemberships')->with(\Model\Client\Client::MEMBERSHIP_MANUAL)->willReturn([
@@ -641,9 +641,9 @@ EOT
         /** @var MockObject|Client */
         $newestClient = $this->createMock('Model\Client\Client');
         $newestClient->expects($this->atLeastOnce())
-                     ->method('offsetGet')
-                     ->with('Windows')
-                     ->willReturn(['ManualProductKey' => null]);
+            ->method('offsetGet')
+            ->with('Windows')
+            ->willReturn(['ManualProductKey' => null]);
 
         $olderClients = [
             new Client(['Windows' => ['ManualProductKey' => 'key1']]), // never evaluated

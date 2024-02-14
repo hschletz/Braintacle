@@ -3,7 +3,7 @@
 /**
  * Class for managing duplicate clients
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -195,8 +195,8 @@ class DuplicatesManager
         }
         $select = $table->getSql()->select();
         $select->columns(array($column))
-               ->group($column)
-               ->having("COUNT($count) > 1");
+            ->group($column)
+            ->having("COUNT($count) > 1");
         if (isset($where)) {
             $select->where($where);
         }
@@ -265,7 +265,7 @@ class DuplicatesManager
             array('networkinterface_macaddr' => 'macaddr'),
             $select::JOIN_LEFT
         )
-        ->where(array(new \Laminas\Db\Sql\Predicate\In($column, $subQuery)));
+            ->where(array(new \Laminas\Db\Sql\Predicate\In($column, $subQuery)));
         if ($order != 'Name') {
             // Secondary ordering by name
             $select->order('name');

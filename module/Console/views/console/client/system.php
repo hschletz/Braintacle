@@ -3,7 +3,7 @@
 /**
  * Show RAM, controllers and slots
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -37,7 +37,7 @@ $headers = array(
     'Description' => $this->translate('Description'),
 );
 
-$renderCallbacks = array (
+$renderCallbacks = array(
     'Size' => function ($view, $memorySlot) {
         $size = $view->escapeHtml((string) $memorySlot['Size']);
         if ($size) {
@@ -96,7 +96,7 @@ $headers = array(
     'Status' => $this->translate('Status'),
 );
 
-$renderCallbacks = array (
+$renderCallbacks = array(
     'Name' => function ($view, $slot) {
         $name = $slot['Name'];
         if (isset($slot['SlotId'])) {

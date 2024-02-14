@@ -3,7 +3,7 @@
 /**
  * Tests for DomDocument
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -50,10 +50,10 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
     {
         $document = $this->createPartialMock(DomDocument::class, ['getSchemaFilename', 'relaxNGValidate']);
         $document->method('getSchemaFilename')
-                 ->willReturn('schema_file');
+            ->willReturn('schema_file');
         $document->method('relaxNGValidate')
-                 ->with('schema_file')
-                 ->willReturn(true);
+            ->with('schema_file')
+            ->willReturn(true);
         $this->assertTrue($document->isValid());
     }
 
@@ -61,8 +61,8 @@ class DomDocumentTest extends \PHPUnit\Framework\TestCase
     {
         $document = $this->createPartialMock(DomDocument::class, ['isValid']);
         $document->expects($this->once())
-                 ->method('isValid')
-                 ->willReturn(true);
+            ->method('isValid')
+            ->willReturn(true);
         $document->forceValid();
     }
 

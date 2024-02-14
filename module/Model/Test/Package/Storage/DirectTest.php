@@ -3,7 +3,7 @@
 /**
  * Tests for Model\Package\Storage\Direct
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -62,14 +62,14 @@ class DirectTest extends \Model\Test\AbstractTest
 
         $model = $this->createPartialMock(Direct::class, ['writeContent', 'writeMetadata', 'cleanup']);
         $model->expects($this->once())
-              ->method('writeContent')
-              ->with($data, $file, $deleteSource)
-              ->willReturn($numFragments);
+            ->method('writeContent')
+            ->with($data, $file, $deleteSource)
+            ->willReturn($numFragments);
         $model->expects($this->once())
-              ->method('writeMetadata')
-              ->with($data2);
+            ->method('writeMetadata')
+            ->with($data2);
         $model->expects($this->never())
-              ->method('cleanup');
+            ->method('cleanup');
         $this->assertEquals($numFragments, $model->write($data, $file, $deleteSource));
     }
 
@@ -83,16 +83,16 @@ class DirectTest extends \Model\Test\AbstractTest
 
         $model = $this->createPartialMock(Direct::class, ['writeContent', 'writeMetadata', 'cleanup']);
         $model->expects($this->once())
-              ->method('writeContent')
-              ->with($data, $file, $deleteSource)
-              ->willReturn($numFragments);
+            ->method('writeContent')
+            ->with($data, $file, $deleteSource)
+            ->willReturn($numFragments);
         $model->expects($this->once())
-              ->method('writeMetadata')
-              ->with($data2)
-              ->will($this->throwException(new \RuntimeException('test')));
+            ->method('writeMetadata')
+            ->with($data2)
+            ->will($this->throwException(new \RuntimeException('test')));
         $model->expects($this->once())
-              ->method('cleanup')
-              ->with(42);
+            ->method('cleanup')
+            ->with(42);
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test');
         $model->write($data, $file, $deleteSource);
@@ -106,14 +106,14 @@ class DirectTest extends \Model\Test\AbstractTest
 
         $model = $this->createPartialMock(Direct::class, ['writeContent', 'writeMetadata', 'cleanup']);
         $model->expects($this->once())
-              ->method('writeContent')
-              ->with($data, $file, $deleteSource)
-              ->will($this->throwException(new \RuntimeException('test')));
+            ->method('writeContent')
+            ->with($data, $file, $deleteSource)
+            ->will($this->throwException(new \RuntimeException('test')));
         $model->expects($this->never())
-              ->method('writeMetadata');
+            ->method('writeMetadata');
         $model->expects($this->once())
-              ->method('cleanup')
-              ->with(42);
+            ->method('cleanup')
+            ->with(42);
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test');
         $model->write($data, $file, $deleteSource);
@@ -278,15 +278,15 @@ class DirectTest extends \Model\Test\AbstractTest
         ];
     }
 
-   /**
-    * writeContent() test
-    *
-    * @param integer $fileSize File size
-    * @param integer $maxFragmentSize Maximum fragment size
-    * @param integer $expectedFragments Expected number of fragments
-    * @param bool $deleteSource Delete source file?
-    * @dataProvider writeContentProvider
-    */
+    /**
+     * writeContent() test
+     *
+     * @param integer $fileSize File size
+     * @param integer $maxFragmentSize Maximum fragment size
+     * @param integer $expectedFragments Expected number of fragments
+     * @param bool $deleteSource Delete source file?
+     * @dataProvider writeContentProvider
+     */
     public function testWriteContent($fileSize, $maxFragmentSize, $expectedFragments, $deleteSource)
     {
         $content = str_repeat('x', $fileSize);

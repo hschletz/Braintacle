@@ -3,7 +3,7 @@
 /**
  * Tests for PreferencesController
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -155,25 +155,25 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         );
         $form = $this->createMock(Packages::class);
         $form->method('get')
-             ->willReturn($preferences);
+            ->willReturn($preferences);
         $form->expects($this->once())
-             ->method('setData')
-             ->with($formData);
+            ->method('setData')
+            ->with($formData);
         $form->expects($this->never())
-             ->method('getData');
+            ->method('getData');
         $form->expects($this->never())
-             ->method('isValid');
+            ->method('isValid');
         $form->expects($this->once())
-             ->method('render')
-             ->willReturn('<form></form>');
+            ->method('render')
+            ->willReturn('<form></form>');
         $this->_formManager->expects($this->once())
-                           ->method('get')
-                           ->with("Console\Form\Preferences\Packages")
-                           ->will($this->returnValue($form));
+            ->method('get')
+            ->with("Console\Form\Preferences\Packages")
+            ->will($this->returnValue($form));
         $this->_config->method('__get')
-                      ->will($this->returnValueMap(array(array('pref1', 'value1'), array('pref2', 'value2'))));
+            ->will($this->returnValueMap(array(array('pref1', 'value1'), array('pref2', 'value2'))));
         $this->_config->expects($this->never())
-                      ->method('setOptions');
+            ->method('setOptions');
         $this->dispatch("/console/preferences/packages");
         $this->assertResponseStatusCode(200);
         $this->assertXPathQuery('//form');
@@ -195,28 +195,28 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         );
         $form = $this->createMock(Packages::class);
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->once())
-             ->method('getData')
-             ->willReturn($postData);
+            ->method('getData')
+            ->willReturn($postData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->willReturn(true);
+            ->method('isValid')
+            ->willReturn(true);
         $form->expects($this->never())
-             ->method('render');
+            ->method('render');
         $this->_formManager->expects($this->once())
-                           ->method('get')
-                           ->with("Console\Form\Preferences\Packages")
-                           ->will($this->returnValue($form));
+            ->method('get')
+            ->with("Console\Form\Preferences\Packages")
+            ->will($this->returnValue($form));
         $this->_config->expects($this->once())
-                      ->method('setOptions')
-                      ->with(
-                          $this->callback(function ($options) {
-                              $options = iterator_to_array($options);
-                              return ($options == array('pref1' => 'value1', 'pref2' => 'value2'));
-                          })
-                      );
+            ->method('setOptions')
+            ->with(
+                $this->callback(function ($options) {
+                    $options = iterator_to_array($options);
+                    return ($options == array('pref1' => 'value1', 'pref2' => 'value2'));
+                })
+            );
         $this->dispatch("/console/preferences/packages", 'POST', $postData);
         $this->assertRedirectTo("/console/preferences/packages/");
     }
@@ -327,25 +327,25 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         );
         $form = $this->createMock("Console\Form\Preferences\\$formClass");
         $form->method('get')
-             ->willReturn($preferences);
+            ->willReturn($preferences);
         $form->expects($this->once())
-             ->method('setData')
-             ->with($formData);
+            ->method('setData')
+            ->with($formData);
         $form->expects($this->never())
-             ->method('getData');
+            ->method('getData');
         $form->expects($this->never())
-             ->method('isValid');
+            ->method('isValid');
         $form->expects($this->once())
-             ->method('render')
-             ->willReturn('<form></form>');
+            ->method('render')
+            ->willReturn('<form></form>');
         $this->_formManager->expects($this->once())
-                           ->method('get')
-                           ->with("Console\Form\Preferences\\$formClass")
-                           ->will($this->returnValue($form));
+            ->method('get')
+            ->with("Console\Form\Preferences\\$formClass")
+            ->will($this->returnValue($form));
         $this->_config->method('__get')
-                      ->will($this->returnValueMap(array(array('pref1', 'value1'), array('pref2', 'value2'))));
+            ->will($this->returnValueMap(array(array('pref1', 'value1'), array('pref2', 'value2'))));
         $this->_config->expects($this->never())
-                      ->method('setOptions');
+            ->method('setOptions');
         $this->dispatch("/console/preferences/$action");
         $this->assertResponseStatusCode(200);
         $this->assertXPathQuery('//form');
@@ -364,22 +364,22 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         );
         $form = $this->createMock("Console\Form\Preferences\\$formClass");
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->never())
-             ->method('getData');
+            ->method('getData');
         $form->expects($this->once())
-             ->method('isValid')
-             ->willReturn(false);
+            ->method('isValid')
+            ->willReturn(false);
         $form->expects($this->once())
-             ->method('render')
-             ->willReturn('<form></form>');
+            ->method('render')
+            ->willReturn('<form></form>');
         $this->_formManager->expects($this->once())
-                           ->method('get')
-                           ->with("Console\Form\Preferences\\$formClass")
-                           ->will($this->returnValue($form));
+            ->method('get')
+            ->with("Console\Form\Preferences\\$formClass")
+            ->will($this->returnValue($form));
         $this->_config->expects($this->never())
-                      ->method('setOptions');
+            ->method('setOptions');
         $this->dispatch("/console/preferences/$action", 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertXPathQuery('//form');
@@ -398,28 +398,28 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         );
         $form = $this->createMock("Console\Form\Preferences\\$formClass");
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->once())
-             ->method('getData')
-             ->willReturn($postData);
+            ->method('getData')
+            ->willReturn($postData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->willReturn(true);
+            ->method('isValid')
+            ->willReturn(true);
         $form->expects($this->never())
-             ->method('render');
+            ->method('render');
         $this->_formManager->expects($this->once())
-                           ->method('get')
-                           ->with("Console\Form\Preferences\\$formClass")
-                           ->will($this->returnValue($form));
+            ->method('get')
+            ->with("Console\Form\Preferences\\$formClass")
+            ->will($this->returnValue($form));
         $this->_config->expects($this->once())
-                      ->method('setOptions')
-                      ->with(
-                          $this->callback(function ($options) {
-                              $options = iterator_to_array($options);
-                              return ($options == array('pref1' => 'value1', 'pref2' => 'value2'));
-                          })
-                      );
+            ->method('setOptions')
+            ->with(
+                $this->callback(function ($options) {
+                    $options = iterator_to_array($options);
+                    return ($options == array('pref1' => 'value1', 'pref2' => 'value2'));
+                })
+            );
         $this->dispatch("/console/preferences/$action", 'POST', $postData);
         $this->assertRedirectTo("/console/preferences/$action/");
     }
@@ -428,18 +428,18 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->createMock(DefineFields::class);
         $form->expects($this->never())
-             ->method('setData');
+            ->method('setData');
         $form->expects($this->never())
-             ->method('isValid');
+            ->method('isValid');
         $form->expects($this->never())
-             ->method('process');
+            ->method('process');
         $form->expects($this->once())
-             ->method('render')
-             ->will($this->returnValue('<form></form'));
+            ->method('render')
+            ->will($this->returnValue('<form></form'));
         $this->_formManager->expects($this->once())
-                           ->method('get')
-                           ->with('Console\Form\DefineFields')
-                           ->will($this->returnValue($form));
+            ->method('get')
+            ->with('Console\Form\DefineFields')
+            ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/customfields');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains('h1', "\nBenutzerdefinierte Felder verwalten\n");
@@ -451,20 +451,20 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array('key' => 'value');
         $form = $this->createMock(DefineFields::class);
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(false));
+            ->method('isValid')
+            ->will($this->returnValue(false));
         $form->expects($this->never())
-             ->method('process');
+            ->method('process');
         $form->expects($this->once())
-             ->method('render')
-             ->will($this->returnValue('<form></form'));
+            ->method('render')
+            ->will($this->returnValue('<form></form'));
         $this->_formManager->expects($this->once())
-                           ->method('get')
-                           ->with('Console\Form\DefineFields')
-                           ->will($this->returnValue($form));
+            ->method('get')
+            ->with('Console\Form\DefineFields')
+            ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/customfields', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertXPathQuery('//form');
@@ -475,19 +475,19 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array('key' => 'value');
         $form = $this->createMock(DefineFields::class);
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('process');
+            ->method('process');
         $form->expects($this->never())
-             ->method('render');
+            ->method('render');
         $this->_formManager->expects($this->once())
-                           ->method('get')
-                           ->with('Console\Form\DefineFields')
-                           ->will($this->returnValue($form));
+            ->method('get')
+            ->with('Console\Form\DefineFields')
+            ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/customfields', 'POST', $postData);
         $this->assertRedirectTo('/console/preferences/customfields/');
     }
@@ -518,18 +518,18 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->createMock(NetworkDeviceTypes::class);
         $form->expects($this->never())
-             ->method('setData');
+            ->method('setData');
         $form->expects($this->never())
-             ->method('isValid');
+            ->method('isValid');
         $form->expects($this->never())
-             ->method('process');
+            ->method('process');
         $form->expects($this->once())
-             ->method('render')
-             ->will($this->returnValue('<form></form>'));
+            ->method('render')
+            ->will($this->returnValue('<form></form>'));
         $this->_formManager->expects($this->once())
-                           ->method('get')
-                           ->with('Console\Form\NetworkDeviceTypes')
-                           ->will($this->returnValue($form));
+            ->method('get')
+            ->with('Console\Form\NetworkDeviceTypes')
+            ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/networkdevices');
         $this->assertResponseStatusCode(200);
         $this->assertQueryContentContains('h1', "\nGerätetypen verwalten\n");
@@ -541,20 +541,20 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array('key' => 'value');
         $form = $this->createMock(NetworkDeviceTypes::class);
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(false));
+            ->method('isValid')
+            ->will($this->returnValue(false));
         $form->expects($this->never())
-             ->method('process');
+            ->method('process');
         $form->expects($this->once())
-             ->method('render')
-             ->will($this->returnValue('<form></form>'));
+            ->method('render')
+            ->will($this->returnValue('<form></form>'));
         $this->_formManager->expects($this->once())
-                           ->method('get')
-                           ->with('Console\Form\NetworkDeviceTypes')
-                           ->will($this->returnValue($form));
+            ->method('get')
+            ->with('Console\Form\NetworkDeviceTypes')
+            ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/networkdevices', 'POST', $postData);
         $this->assertResponseStatusCode(200);
         $this->assertXPathQuery('//form');
@@ -565,19 +565,19 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array('key' => 'value');
         $form = $this->createMock(NetworkDeviceTypes::class);
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $form->expects($this->once())
-             ->method('process');
+            ->method('process');
         $form->expects($this->never())
-             ->method('render');
+            ->method('render');
         $this->_formManager->expects($this->once())
-                           ->method('get')
-                           ->with('Console\Form\NetworkDeviceTypes')
-                           ->will($this->returnValue($form));
+            ->method('get')
+            ->with('Console\Form\NetworkDeviceTypes')
+            ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/networkdevices', 'POST', $postData);
         $this->assertRedirectTo('/console/network/index/');
     }
@@ -608,18 +608,18 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
     {
         $form = $this->createMock(ManageRegistryValues::class);
         $form->expects($this->never())
-             ->method('process');
+            ->method('process');
 
         $this->_formManager->expects($this->once())
-                           ->method('get')
-                           ->with('Console\Form\ManageRegistryValues')
-                           ->will($this->returnValue($form));
+            ->method('get')
+            ->with('Console\Form\ManageRegistryValues')
+            ->will($this->returnValue($form));
 
         $formHelper = $this->createMock(FormManageRegistryValues::class);
         $formHelper->expects($this->once())->method('__invoke')->with($form);
         $this->getApplicationServiceLocator()
-             ->get('ViewHelperManager')
-             ->setService('consoleFormManageRegistryValues', $formHelper);
+            ->get('ViewHelperManager')
+            ->setService('consoleFormManageRegistryValues', $formHelper);
 
         $this->dispatch('/console/preferences/registryvalues/');
         $this->assertResponseStatusCode(200);
@@ -630,24 +630,24 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array('key' => 'value');
         $form = $this->createMock('Console\Form\ManageRegistryValues');
         $form->expects($this->never())
-             ->method('process');
+            ->method('process');
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(false));
+            ->method('isValid')
+            ->will($this->returnValue(false));
 
         $this->_formManager->expects($this->once())
-                           ->method('get')
-                           ->with('Console\Form\ManageRegistryValues')
-                           ->will($this->returnValue($form));
+            ->method('get')
+            ->with('Console\Form\ManageRegistryValues')
+            ->will($this->returnValue($form));
 
         $formHelper = $this->createMock(FormManageRegistryValues::class);
         $formHelper->expects($this->once())->method('__invoke')->with($form);
         $this->getApplicationServiceLocator()
-             ->get('ViewHelperManager')
-             ->setService('consoleFormManageRegistryValues', $formHelper);
+            ->get('ViewHelperManager')
+            ->setService('consoleFormManageRegistryValues', $formHelper);
 
         $this->dispatch('/console/preferences/registryvalues/', 'POST', $postData);
         $this->assertResponseStatusCode(200);
@@ -658,18 +658,18 @@ class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
         $postData = array('key' => 'value');
         $form = $this->createMock(ManageRegistryValues::class);
         $form->expects($this->once())
-             ->method('process');
+            ->method('process');
         $form->expects($this->once())
-             ->method('setData')
-             ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $form->expects($this->once())
-             ->method('isValid')
-             ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
 
         $this->_formManager->expects($this->once())
-                           ->method('get')
-                           ->with('Console\Form\ManageRegistryValues')
-                           ->will($this->returnValue($form));
+            ->method('get')
+            ->with('Console\Form\ManageRegistryValues')
+            ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/registryvalues/', 'POST', $postData);
         $this->assertRedirectTo('/console/preferences/registryvalues/');
     }

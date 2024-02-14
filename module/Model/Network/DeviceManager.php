@@ -3,7 +3,7 @@
 /**
  * Network device manager
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -86,7 +86,7 @@ class DeviceManager
     {
         $select = $this->_networkDevicesScanned->getSql()->select();
         $select->columns(array('ip', 'mac', 'name', 'date'))
-               ->where('mac NOT IN(SELECT macaddr FROM networks)');
+            ->where('mac NOT IN(SELECT macaddr FROM networks)');
 
         if (isset($filters['Type'])) {
             $filters['Identified'] = true;
@@ -147,13 +147,13 @@ class DeviceManager
         $macAddress = $macAddress->getAddress();
         $select = $this->_networkDevicesScanned->getSql()->select();
         $select->columns(array('ip', 'mac', 'name', 'date'))
-               ->join(
-                   'network_devices',
-                   'macaddr = mac',
-                   array('description', 'type'),
-                   \Laminas\Db\Sql\Select::JOIN_LEFT
-               )
-               ->where(array('mac' => $macAddress));
+            ->join(
+                'network_devices',
+                'macaddr = mac',
+                array('description', 'type'),
+                \Laminas\Db\Sql\Select::JOIN_LEFT
+            )
+            ->where(array('mac' => $macAddress));
         $device = $this->_networkDevicesScanned->selectWith($select)->current();
         if (!$device) {
             throw new RuntimeException('Unknown MAC address: ' . $macAddress);
@@ -232,8 +232,8 @@ class DeviceManager
             array(),
             \Laminas\Db\Sql\Select::JOIN_LEFT
         )
-        ->group('name')
-        ->order('name');
+            ->group('name')
+            ->order('name');
 
         $counts = array();
         foreach ($this->_networkDeviceTypes->selectWith($select) as $type) {

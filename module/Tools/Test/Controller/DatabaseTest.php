@@ -3,7 +3,7 @@
 /**
  * Tests for Database controller
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -56,11 +56,11 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         /** @var WriterInterface|MockObject */
         $writer = $this->createMock(WriterInterface::class);
         $writer->expects($this->once())
-               ->method('addFilter')
-               ->with('priority', ['priority' => 'log_level_filtered']);
+            ->method('addFilter')
+            ->with('priority', ['priority' => 'log_level_filtered']);
         $writer->expects($this->once())
-               ->method('setFormatter')
-               ->with('simple', ['format' => '%priorityName%: %message%']);
+            ->method('setFormatter')
+            ->with('simple', ['format' => '%priorityName%: %message%']);
 
         /** @var Logger|MockObject */
         $logger = $this->createMock(Logger::class);

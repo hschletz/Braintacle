@@ -3,7 +3,7 @@
 /**
  * Client/group configuration
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -51,13 +51,13 @@ class ClientConfig extends Form
 
         $contactInterval = new Element\Text('contactInterval');
         $contactInterval->setLabel('Agent contact interval (in hours)')
-                        ->setAttribute('size', '5');
+            ->setAttribute('size', '5');
         $agent->add($contactInterval);
         $inputFilterAgent->add($this->getIntegerFilter('contactInterval', 1));
 
         $inventoryInterval = new Element\Text('inventoryInterval');
         $inventoryInterval->setLabel('Inventory interval (in days, 0 = always, -1 = never)')
-                          ->setAttribute('size', '5');
+            ->setAttribute('size', '5');
         $agent->add($inventoryInterval);
         $inputFilterAgent->add($this->getIntegerFilter('inventoryInterval', -1));
 
@@ -76,31 +76,31 @@ class ClientConfig extends Form
 
         $downloadPeriodDelay = new Element\Text('downloadPeriodDelay');
         $downloadPeriodDelay->setLabel('Delay (in seconds) between periods')
-                            ->setAttribute('size', '5');
+            ->setAttribute('size', '5');
         $download->add($downloadPeriodDelay);
         $inputFilterDownload->add($this->getIntegerFilter('downloadPeriodDelay', 1));
 
         $downloadCycleDelay = new Element\Text('downloadCycleDelay');
         $downloadCycleDelay->setLabel('Delay (in seconds) between cycles')
-                            ->setAttribute('size', '5');
+            ->setAttribute('size', '5');
         $download->add($downloadCycleDelay);
         $inputFilterDownload->add($this->getIntegerFilter('downloadCycleDelay', 1));
 
         $downloadFragmentDelay = new Element\Text('downloadFragmentDelay');
         $downloadFragmentDelay->setLabel('Delay (in seconds) between fragments')
-                                ->setAttribute('size', '5');
+            ->setAttribute('size', '5');
         $download->add($downloadFragmentDelay);
         $inputFilterDownload->add($this->getIntegerFilter('downloadFragmentDelay', 1));
 
         $downloadMaxPriority = new Element\Text('downloadMaxPriority');
         $downloadMaxPriority->setLabel('Maximum package priority')
-                            ->setAttribute('size', '5');
+            ->setAttribute('size', '5');
         $download->add($downloadMaxPriority);
         $inputFilterDownload->add($this->getIntegerFilter('downloadMaxPriority', 1));
 
         $downloadTimeout = new Element\Text('downloadTimeout');
         $downloadTimeout->setLabel('Timeout (in days)')
-                        ->setAttribute('size', '5');
+            ->setAttribute('size', '5');
         $download->add($downloadTimeout);
         $inputFilterDownload->add($this->getIntegerFilter('downloadTimeout', 1));
 
@@ -119,7 +119,7 @@ class ClientConfig extends Form
 
         $subnets = new \Library\Form\Element\SelectSimple('scanThisNetwork');
         $subnets->setLabel('Always scan this network')
-                ->setEmptyOption('');
+            ->setEmptyOption('');
         $scan->add($subnets);
         $inputFilterScan->add(array('name' => 'scanThisNetwork', 'required' => false));
 
@@ -168,15 +168,15 @@ class ClientConfig extends Form
         $message = $dummyMinValueValidator->getMessageTemplates()[\Laminas\Validator\GreaterThan::NOT_GREATER_INCLUSIVE];
         $minValueValidator = new \Laminas\Validator\Callback();
         $minValueValidator->setCallback(array($this, 'validateMinValue'))
-                          ->setCallbackOptions($min)
-                          ->setMessage(
-                              str_replace(
-                                  '%min%',
-                                  (string) $min,
-                                  $minValueValidator->getTranslator()->translate($message)
-                              )
-                          )
-                          ->setTranslatorEnabled(false);
+            ->setCallbackOptions($min)
+            ->setMessage(
+                str_replace(
+                    '%min%',
+                    (string) $min,
+                    $minValueValidator->getTranslator()->translate($message)
+                )
+            )
+            ->setTranslatorEnabled(false);
         $validatorChain->attach($minValueValidator);
         return array(
             'name' => $name,
@@ -249,7 +249,7 @@ class ClientConfig extends Form
             }
         }
         $this->get('Scan')->get('scanThisNetwork')->setValueOptions($addresses)
-                                                  ->setAttribute('disabled', !$addresses);
+            ->setAttribute('disabled', !$addresses);
     }
 
     /**

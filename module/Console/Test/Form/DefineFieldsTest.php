@@ -3,7 +3,7 @@
 /**
  * Tests for DefineFields form
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -386,7 +386,7 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
             1,
             Query::execute(
                 '//input[@name="name0"]/following-sibling::span[2]/a' .
-                '[@href="/console/preferences/deletefield/?name=name0"][text()="Löschen"]',
+                    '[@href="/console/preferences/deletefield/?name=name0"][text()="Löschen"]',
                 $document
             )
         );
@@ -407,8 +407,8 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         /** @var MockObject|FormElementErrors */
         $formElementErrors = $this->createMock(FormElementErrors::class);
         $formElementErrors->method('__invoke')
-                          ->with($this->isInstanceOf('Laminas\Form\ElementInterface'), array('class' => 'error'))
-                          ->willReturnCallback(array($this, 'formElementErrorsMock'));
+            ->with($this->isInstanceOf('Laminas\Form\ElementInterface'), array('class' => 'error'))
+            ->willReturnCallback(array($this, 'formElementErrorsMock'));
 
         $view = $this->createView();
         $view->getHelperPluginManager()->setService('formElementErrors', $formElementErrors);
@@ -446,8 +446,8 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         );
         $form = $this->createPartialMock(DefineFields::class, ['getData']);
         $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue($data));
+            ->method('getData')
+            ->will($this->returnValue($data));
         $form->setOption('CustomFieldManager', $customFieldManager);
         $form->process();
     }
@@ -464,8 +464,8 @@ class DefineFieldsTest extends \Console\Test\AbstractFormTest
         );
         $form = $this->createPartialMock(DefineFields::class, ['getData']);
         $form->expects($this->once())
-             ->method('getData')
-             ->will($this->returnValue($data));
+            ->method('getData')
+            ->will($this->returnValue($data));
         $form->setOption('CustomFieldManager', $customFieldManager);
         $form->process();
     }

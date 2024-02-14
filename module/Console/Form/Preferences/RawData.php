@@ -3,7 +3,7 @@
 /**
  * Form for display/setting of 'raw data' preferences
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -44,12 +44,12 @@ class RawData extends AbstractForm
 
         $saveFormat = new \Laminas\Form\Element\Select('saveFormat');
         $saveFormat->setLabel('File format')
-                   ->setValueOptions(
-                       array(
-                        'XML' => $this->_('uncompressed XML'),
-                        'OCS' => $this->_('zlib compressed XML')
-                       )
-                   );
+            ->setValueOptions(
+                array(
+                    'XML' => $this->_('uncompressed XML'),
+                    'OCS' => $this->_('zlib compressed XML')
+                )
+            );
         $preferences->add($saveFormat);
         $inputFilter->add(
             array(

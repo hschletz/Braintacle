@@ -3,7 +3,7 @@
 /**
  * Tests for the ConsoleScript helper
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -59,8 +59,8 @@ class ConsoleScriptTest extends \Library\Test\View\Helper\AbstractTest
         $consoleScript->method('getIterator')->willReturn(new ArrayIterator(['script1', 'script2']));
         $consoleScript->method('__call')->with('getSeparator', [])->willReturn('_');
         $consoleScript->method('getHtml')
-                      ->withConsecutive(['script1'], ['script2'])
-                      ->willReturnOnConsecutiveCalls('html1', 'html2');
+            ->withConsecutive(['script1'], ['script2'])
+            ->willReturnOnConsecutiveCalls('html1', 'html2');
 
         $this->assertEquals('html1_html2', $consoleScript->toString());
     }

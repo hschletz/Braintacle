@@ -3,7 +3,7 @@
 /**
  * Tests for PackageController
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -113,23 +113,23 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
-                       ->willReturnMap(
-                           array(
-                               array('getMessagesFromNamespace', array('packageName'), array()),
-                               array('getSuccessMessages', array(), array()),
-                           )
-                       );
+            ->willReturnMap(
+                array(
+                    array('getMessagesFromNamespace', array('packageName'), array()),
+                    array('getSuccessMessages', array(), array()),
+                )
+            );
         $flashMessenger->expects($this->once())->method('render')->with('error')->willReturn('');
         $viewHelperManager->setService('flashMessenger', $flashMessenger);
 
         $dateFormat = $this->createMock(DateFormat::class);
         $dateFormat->expects($this->exactly(2))
-                   ->method('__invoke')
-                   ->withConsecutive(
-                       array($timestamp1, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT),
-                       array($timestamp2, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
-                   )
-                   ->will($this->onConsecutiveCalls('date1', 'date2'));
+            ->method('__invoke')
+            ->withConsecutive(
+                array($timestamp1, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT),
+                array($timestamp2, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
+            )
+            ->will($this->onConsecutiveCalls('date1', 'date2'));
         $viewHelperManager->setService('dateFormat', $dateFormat);
 
         $this->dispatch('/console/package/index/');
@@ -166,8 +166,8 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
 
         // Hyperlinks and classes for Num* columns
         $query = '//td[@class="textright"]/a[@href="/console/client/index/' .
-                 '?columns=Name,UserName,LastContactDate,InventoryDate&jumpto=software&filter=%s&search=%s' .
-                 '"][@class="%s"]';
+            '?columns=Name,UserName,LastContactDate,InventoryDate&jumpto=software&filter=%s&search=%s' .
+            '"][@class="%s"]';
 
         $this->assertXpathQueryContentContains(
             sprintf($query, 'PackagePending', 'name1', 'package_pending'),
@@ -207,19 +207,19 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
-                       ->willReturnMap(
-                           array(
-                               array('getMessagesFromNamespace', array('packageName'), array('<br>')),
-                               array('getSuccessMessages', array(), array('success')),
-                           )
-                       );
+            ->willReturnMap(
+                array(
+                    array('getMessagesFromNamespace', array('packageName'), array('<br>')),
+                    array('getSuccessMessages', array(), array('success')),
+                )
+            );
         $flashMessenger->expects($this->once())
-                       ->method('render')
-                       ->with('error')
-                       ->willReturn('<ul class="error"><li>error</li></ul>');
+            ->method('render')
+            ->with('error')
+            ->willReturn('<ul class="error"><li>error</li></ul>');
         $this->getApplicationServiceLocator()
-             ->get('ViewHelperManager')
-             ->setService('flashMessenger', $flashMessenger);
+            ->get('ViewHelperManager')
+            ->setService('flashMessenger', $flashMessenger);
 
         $this->_packageManager->expects($this->once())->method('getPackages')->willReturn(array());
         $this->disableTranslator();
@@ -267,12 +267,12 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
         $flashMessenger->method('__call')
-                       ->willReturnMap(
-                           array(
-                               array('getMessagesFromNamespace', array('packageName'), array('name1')),
-                               array('getSuccessMessages', array(), array()),
-                           )
-                       );
+            ->willReturnMap(
+                array(
+                    array('getMessagesFromNamespace', array('packageName'), array('name1')),
+                    array('getSuccessMessages', array(), array()),
+                )
+            );
         $flashMessenger->expects($this->once())->method('render')->with('error')->willReturn('');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
@@ -304,15 +304,15 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
             'PostInstMessage' => 'defaultPostInstMessage',
         );
         $this->_config->expects($this->exactly(11))
-                      ->method('__get')
-                      ->will($this->returnArgument(0));
+            ->method('__get')
+            ->will($this->returnArgument(0));
         $this->_buildForm->expects($this->once())
-                         ->method('setData')
-                         ->with($data);
+            ->method('setData')
+            ->with($data);
         $this->_buildForm->expects($this->never())
-                         ->method('getData');
+            ->method('getData');
         $this->_buildForm->expects($this->never())
-                         ->method('isValid');
+            ->method('isValid');
 
         $this->_packageManager->expects($this->never())->method('buildPackage');
 
@@ -333,13 +333,13 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array('Name' => 'packageName');
         $this->_buildForm->expects($this->once())
-                         ->method('setData')
-                         ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $this->_buildForm->expects($this->never())
-                         ->method('getData');
+            ->method('getData');
         $this->_buildForm->expects($this->once())
-                         ->method('isValid')
-                         ->willReturn(false);
+            ->method('isValid')
+            ->willReturn(false);
 
         $this->_packageManager->expects($this->never())->method('buildPackage');
 
@@ -379,14 +379,14 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->getRequest()->getFiles()->set('File', $fileSpec);
         $formData = $postData + array('File' => $fileSpec);
         $this->_buildForm->expects($this->once())
-                         ->method('setData')
-                         ->with($formData);
+            ->method('setData')
+            ->with($formData);
         $this->_buildForm->expects($this->once())
-                         ->method('getData')
-                         ->willReturn($formData);
+            ->method('getData')
+            ->willReturn($formData);
         $this->_buildForm->expects($this->once())
-                         ->method('isValid')
-                         ->willReturn(true);
+            ->method('isValid')
+            ->willReturn(true);
 
         $this->_packageManager->expects($this->once())->method('buildPackage')->with($packageData, true);
 
@@ -433,19 +433,19 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $this->getRequest()->getFiles()->set('File', $fileSpec);
 
         $this->_buildForm->expects($this->once())
-                         ->method('setData')
-                         ->with($formData);
+            ->method('setData')
+            ->with($formData);
         $this->_buildForm->expects($this->once())
-                         ->method('getData')
-                         ->willReturn($formData);
+            ->method('getData')
+            ->willReturn($formData);
         $this->_buildForm->expects($this->once())
-                         ->method('isValid')
-                         ->willReturn(true);
+            ->method('isValid')
+            ->willReturn(true);
 
         $this->_packageManager->expects($this->once())
-                              ->method('buildPackage')
-                              ->with($packageData, true)
-                              ->willThrowException(new \Model\Package\RuntimeException('build error'));
+            ->method('buildPackage')
+            ->with($packageData, true)
+            ->willThrowException(new \Model\Package\RuntimeException('build error'));
 
         $this->dispatch('/console/package/build', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');
@@ -501,9 +501,9 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
     public function testDeleteActionPostYesError()
     {
         $this->_packageManager->expects($this->once())
-                              ->method('deletePackage')
-                              ->with('Name')
-                              ->will($this->throwException(new \Model\Package\RuntimeException('delete error')));
+            ->method('deletePackage')
+            ->with('Name')
+            ->will($this->throwException(new \Model\Package\RuntimeException('delete error')));
 
         $this->dispatch('/console/package/delete/?name=Name', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/package/index/');
@@ -548,20 +548,20 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $formData += $packageData;
 
         $this->_config->expects($this->exactly(6))
-                      ->method('__get')
-                      ->will($this->returnArgument(0));
+            ->method('__get')
+            ->will($this->returnArgument(0));
         $this->_updateForm->expects($this->once())
-                          ->method('setData')
-                          ->with($formData);
+            ->method('setData')
+            ->with($formData);
         $this->_updateForm->expects($this->never())
-                          ->method('getData');
+            ->method('getData');
         $this->_updateForm->expects($this->never())
-                          ->method('isValid');
+            ->method('isValid');
 
         $this->_packageManager->expects($this->once())
-                              ->method('getPackage')
-                              ->with('oldName')
-                              ->willReturn($packageData);
+            ->method('getPackage')
+            ->with('oldName')
+            ->willReturn($packageData);
         $this->_packageManager->expects($this->never())->method('updatePackage');
 
         $viewModel = new ViewModel();
@@ -582,13 +582,13 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array('Name' => 'newName');
         $this->_updateForm->expects($this->once())
-                          ->method('setData')
-                          ->with($postData);
+            ->method('setData')
+            ->with($postData);
         $this->_updateForm->expects($this->never())
-                          ->method('getData');
+            ->method('getData');
         $this->_updateForm->expects($this->once())
-                          ->method('isValid')
-                          ->willReturn(false);
+            ->method('isValid')
+            ->willReturn(false);
 
         $this->_packageManager->expects($this->never())->method('updatePackage');
 
@@ -645,23 +645,23 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $oldPackage = $this->createMock('Model\Package\Package');
 
         $this->_updateForm->expects($this->once())
-                          ->method('setData')
-                          ->with($formData);
+            ->method('setData')
+            ->with($formData);
         $this->_updateForm->expects($this->once())
-                          ->method('getData')
-                          ->willReturn($formData);
+            ->method('getData')
+            ->willReturn($formData);
         $this->_updateForm->expects($this->once())
-                          ->method('isValid')
-                          ->willReturn(true);
+            ->method('isValid')
+            ->willReturn(true);
         $this->_updateForm->expects($this->never())
-                          ->method('render');
+            ->method('render');
         $this->_packageManager->expects($this->once())
-                              ->method('getPackage')
-                              ->with('oldName')
-                              ->willReturn($oldPackage);
+            ->method('getPackage')
+            ->with('oldName')
+            ->willReturn($oldPackage);
         $this->_packageManager->expects($this->once())
-                              ->method('updatePackage')
-                              ->with($oldPackage, $packageData, true, '1', '0', '1', '0', '1');
+            ->method('updatePackage')
+            ->with($oldPackage, $packageData, true, '1', '0', '1', '0', '1');
 
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');
@@ -720,24 +720,24 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $oldPackage = $this->createMock('Model\Package\Package');
 
         $this->_updateForm->expects($this->once())
-                          ->method('setData')
-                          ->with($formData);
+            ->method('setData')
+            ->with($formData);
         $this->_updateForm->expects($this->once())
-                          ->method('getData')
-                          ->willReturn($formData);
+            ->method('getData')
+            ->willReturn($formData);
         $this->_updateForm->expects($this->once())
-                          ->method('isValid')
-                          ->willReturn(true);
+            ->method('isValid')
+            ->willReturn(true);
         $this->_updateForm->expects($this->never())
-                          ->method('render');
+            ->method('render');
         $this->_packageManager->expects($this->once())
-                              ->method('getPackage')
-                              ->with('oldName')
-                              ->willReturn($oldPackage);
+            ->method('getPackage')
+            ->with('oldName')
+            ->willReturn($oldPackage);
         $this->_packageManager->expects($this->once())
-                              ->method('updatePackage')
-                              ->with($oldPackage, $packageData, true, '1', '0', '1', '0', '1')
-                              ->willThrowException(new \Model\Package\RuntimeException('error message'));
+            ->method('updatePackage')
+            ->with($oldPackage, $packageData, true, '1', '0', '1', '0', '1')
+            ->willThrowException(new \Model\Package\RuntimeException('error message'));
 
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');
@@ -761,17 +761,17 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
     {
         $postData = array('Name' => 'newName');
         $this->_updateForm->expects($this->never())
-                          ->method('setData');
+            ->method('setData');
         $this->_updateForm->expects($this->never())
-                          ->method('getData');
+            ->method('getData');
         $this->_updateForm->expects($this->never())
-                          ->method('isValid');
+            ->method('isValid');
         $this->_updateForm->expects($this->never())
-                          ->method('render');
+            ->method('render');
         $this->_packageManager->expects($this->once())
-                              ->method('getPackage')
-                              ->with('oldName')
-                              ->will($this->throwException(new \Model\Package\RuntimeException('getPackage() error')));
+            ->method('getPackage')
+            ->with('oldName')
+            ->will($this->throwException(new \Model\Package\RuntimeException('getPackage() error')));
         $this->_packageManager->expects($this->never())->method('updatePackage');
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');

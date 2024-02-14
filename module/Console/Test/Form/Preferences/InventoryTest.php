@@ -3,7 +3,7 @@
 /**
  * Tests for Inventory form
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -46,7 +46,7 @@ class InventoryTest extends \Console\Test\AbstractFormTest
             1,
             \Laminas\Dom\Document\Query::execute(
                 "//a[@href='/console/preferences/registryvalues/']" .
-                "[text()='\n[Inventarisierte Registry-Werte verwalten]\n']",
+                    "[text()='\n[Inventarisierte Registry-Werte verwalten]\n']",
                 $document
             )
         );

@@ -3,7 +3,7 @@
 /**
  * Tests for the Fieldset Helper
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -104,8 +104,8 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
         $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('__call')
-             ->with('htmlElement', array('fieldset', 'LABEL<div>CONTENT</div>', ['ATTRIBUTES']))
-             ->willReturn('FIELDSET');
+            ->with('htmlElement', array('fieldset', 'LABEL<div>CONTENT</div>', ['ATTRIBUTES']))
+            ->willReturn('FIELDSET');
 
         $helper = $this->createPartialMock(Fieldset::class, ['renderElements', 'renderLabel', 'getView']);
         $helper->expects($this->never())->method('renderElements');
@@ -123,8 +123,8 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
         $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('__call')
-             ->with('htmlElement', array('fieldset', 'LABEL<div>CONTENT</div>', ['ATTRIBUTES']))
-             ->willReturn('FIELDSET');
+            ->with('htmlElement', array('fieldset', 'LABEL<div>CONTENT</div>', ['ATTRIBUTES']))
+            ->willReturn('FIELDSET');
 
         $helper = $this->createPartialMock(Fieldset::class, ['renderElements', 'renderLabel', 'getView']);
         $helper->method('renderElements')->with($fieldset)->willReturn('CONTENT');
@@ -154,11 +154,11 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
 
         $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
         $view->method('__call')
-             ->withConsecutive(
-                 array('translate', array('LABEL')),
-                 array('escapeHtml', array('TRANSLATED'))
-             )
-             ->willReturnOnConsecutiveCalls('TRANSLATED', 'ESCAPED');
+            ->withConsecutive(
+                array('translate', array('LABEL')),
+                array('escapeHtml', array('TRANSLATED'))
+            )
+            ->willReturnOnConsecutiveCalls('TRANSLATED', 'ESCAPED');
 
         $helper = $this->createPartialMock(Fieldset::class, ['getView']);
         $helper->method('getView')->willReturn($view);

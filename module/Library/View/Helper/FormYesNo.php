@@ -3,7 +3,7 @@
 /**
  * Render a Yes/No form with caption
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -85,11 +85,11 @@ class FormYesNo extends \Laminas\View\Helper\AbstractHelper
         }
         return sprintf(
             "<div class='form_yesno'>\n" .
-            "<p>%s</p>\n" .
-            "<form%s>\n" .
-            "<p>\n%s<input type='submit' name='yes' value='%s'>&nbsp;\n" .
-            "<input type='submit' name='no' value='%s'>\n</p>\n" .
-            "</form>\n</div>\n",
+                "<p>%s</p>\n" .
+                "<form%s>\n" .
+                "<p>\n%s<input type='submit' name='yes' value='%s'>&nbsp;\n" .
+                "<input type='submit' name='no' value='%s'>\n</p>\n" .
+                "</form>\n</div>\n",
             $caption,
             $this->_htmlElement->htmlAttribs($attributes),
             $hiddenFields,

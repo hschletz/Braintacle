@@ -3,7 +3,7 @@
 /**
  * Tests for NetworkDevice form
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -33,7 +33,7 @@ class NetworkDeviceTest extends \Console\Test\AbstractFormTest
     {
         $this->_deviceManager = $this->createMock('Model\Network\DeviceManager');
         $this->_deviceManager->method('getTypes')
-                             ->will($this->returnValue(array()));
+            ->will($this->returnValue(array()));
         $form = new \Console\Form\NetworkDevice();
         $form->setOption('DeviceManager', $this->_deviceManager);
         $form->init();
@@ -44,7 +44,7 @@ class NetworkDeviceTest extends \Console\Test\AbstractFormTest
     {
         $deviceManager = $this->createMock('Model\Network\DeviceManager');
         $deviceManager->method('getTypes')
-                      ->will($this->returnValue(array('cat1', 'cat2')));
+            ->will($this->returnValue(array('cat1', 'cat2')));
         $form = new \Console\Form\NetworkDevice();
         $form->setOption('DeviceManager', $deviceManager);
         $form->init();

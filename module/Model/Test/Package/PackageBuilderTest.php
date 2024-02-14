@@ -3,7 +3,7 @@
 /**
  * Tests for PackageBuilder
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -380,23 +380,23 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 
         $archiveManager = $this->createMock(ArchiveManager::class);
         $archiveManager->expects($this->once())
-                       ->method('isSupported')
-                       ->with(ArchiveManager::ZIP)
-                       ->willReturn(true);
+            ->method('isSupported')
+            ->with(ArchiveManager::ZIP)
+            ->willReturn(true);
         $archiveManager->expects($this->once())
-                       ->method('isArchive')
-                       ->with(ArchiveManager::ZIP, $source)
-                       ->willReturn(false);
+            ->method('isArchive')
+            ->with(ArchiveManager::ZIP, $source)
+            ->willReturn(false);
         $archiveManager->expects($this->once())
-                       ->method('createArchive')
-                       ->with(ArchiveManager::ZIP, 'path/archive')
-                       ->willReturn($archiveObject);
+            ->method('createArchive')
+            ->with(ArchiveManager::ZIP, 'path/archive')
+            ->willReturn($archiveObject);
         $archiveManager->expects($this->once())
-                       ->method('addFile')
-                       ->with($archiveObject, $source, 'FileName');
+            ->method('addFile')
+            ->with($archiveObject, $source, 'FileName');
         $archiveManager->expects($this->once())
-                       ->method('closeArchive')
-                       ->with($archiveObject, false);
+            ->method('closeArchive')
+            ->with($archiveObject, false);
 
         $model = new PackageBuilder(
             $this->createStub(PackageManager::class),
@@ -417,23 +417,23 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 
         $archiveManager = $this->createMock(ArchiveManager::class);
         $archiveManager->expects($this->once())
-                       ->method('isSupported')
-                       ->with(ArchiveManager::ZIP)
-                       ->willReturn(true);
+            ->method('isSupported')
+            ->with(ArchiveManager::ZIP)
+            ->willReturn(true);
         $archiveManager->expects($this->once())
-                       ->method('isArchive')
-                       ->with(ArchiveManager::ZIP, $source)
-                       ->willReturn(false);
+            ->method('isArchive')
+            ->with(ArchiveManager::ZIP, $source)
+            ->willReturn(false);
         $archiveManager->expects($this->once())
-                       ->method('createArchive')
-                       ->with(ArchiveManager::ZIP, 'path/archive')
-                       ->willReturn($archiveObject);
+            ->method('createArchive')
+            ->with(ArchiveManager::ZIP, 'path/archive')
+            ->willReturn($archiveObject);
         $archiveManager->expects($this->once())
-                       ->method('addFile')
-                       ->with($archiveObject, $source, 'FileName');
+            ->method('addFile')
+            ->with($archiveObject, $source, 'FileName');
         $archiveManager->expects($this->once())
-                       ->method('closeArchive')
-                       ->with($archiveObject, false);
+            ->method('closeArchive')
+            ->with($archiveObject, false);
 
         $model = new PackageBuilder(
             $this->createStub(PackageManager::class),
@@ -453,17 +453,17 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 
         $archiveManager = $this->createMock(ArchiveManager::class);
         $archiveManager->expects($this->once())
-                       ->method('isSupported')
-                       ->with(ArchiveManager::ZIP)
-                       ->willReturn(true);
+            ->method('isSupported')
+            ->with(ArchiveManager::ZIP)
+            ->willReturn(true);
         $archiveManager->expects($this->once())
-                       ->method('isArchive')
-                       ->with(ArchiveManager::ZIP, $source)
-                       ->willReturn(false);
+            ->method('isArchive')
+            ->with(ArchiveManager::ZIP, $source)
+            ->willReturn(false);
         $archiveManager->expects($this->once())
-                       ->method('createArchive')
-                       ->with(ArchiveManager::ZIP, 'path/archive')
-                       ->will($this->throwException(new RuntimeException('createArchive')));
+            ->method('createArchive')
+            ->with(ArchiveManager::ZIP, 'path/archive')
+            ->will($this->throwException(new RuntimeException('createArchive')));
         $archiveManager->expects($this->never())->method('addFile');
         $archiveManager->expects($this->never())->method('closeArchive');
 
@@ -492,27 +492,27 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 
         $archiveManager = $this->createMock(ArchiveManager::class);
         $archiveManager->expects($this->once())
-                       ->method('isSupported')
-                       ->with(ArchiveManager::ZIP)
-                       ->willReturn(true);
+            ->method('isSupported')
+            ->with(ArchiveManager::ZIP)
+            ->willReturn(true);
         $archiveManager->expects($this->once())
-                       ->method('isArchive')
-                       ->with(ArchiveManager::ZIP, $source)
-                       ->willReturn(false);
+            ->method('isArchive')
+            ->with(ArchiveManager::ZIP, $source)
+            ->willReturn(false);
         $archiveManager->expects($this->once())
-                       ->method('createArchive')
-                       ->with(ArchiveManager::ZIP, $archivePath)
-                       ->willReturnCallback(function () use ($root, $archiveObject) {
-                           vfsStream::newFile('archive')->at($root)->url();
-                           return $archiveObject;
-                       });
+            ->method('createArchive')
+            ->with(ArchiveManager::ZIP, $archivePath)
+            ->willReturnCallback(function () use ($root, $archiveObject) {
+                vfsStream::newFile('archive')->at($root)->url();
+                return $archiveObject;
+            });
         $archiveManager->expects($this->once())
-                       ->method('addFile')
-                       ->with($archiveObject, $source, 'FileName')
-                       ->will($this->throwException(new RuntimeException('closeArchive')));
+            ->method('addFile')
+            ->with($archiveObject, $source, 'FileName')
+            ->will($this->throwException(new RuntimeException('closeArchive')));
         $archiveManager->expects($this->once())
-                       ->method('closeArchive')
-                       ->with($archiveObject, true);
+            ->method('closeArchive')
+            ->with($archiveObject, true);
 
         $model = new PackageBuilder(
             $this->createStub(PackageManager::class),
@@ -538,13 +538,13 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 
         $archiveManager = $this->createMock(ArchiveManager::class);
         $archiveManager->expects($this->once())
-                       ->method('isSupported')
-                       ->with(ArchiveManager::ZIP)
-                       ->willReturn(true);
+            ->method('isSupported')
+            ->with(ArchiveManager::ZIP)
+            ->willReturn(true);
         $archiveManager->expects($this->once())
-                       ->method('isArchive')
-                       ->with(ArchiveManager::ZIP, $source)
-                       ->willReturn(true);
+            ->method('isArchive')
+            ->with(ArchiveManager::ZIP, $source)
+            ->willReturn(true);
         $archiveManager->expects($this->never())->method('createArchive');
         $archiveManager->expects($this->never())->method('addFile');
         $archiveManager->expects($this->never())->method('closeArchive');

@@ -3,7 +3,7 @@
 /**
  * Configuration for Console module
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -51,7 +51,7 @@ return array(
         'factories' => array(
             'Console\Mvc\Controller\Plugin\GetOrder' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\Mvc\Controller\Plugin\SetActiveMenu' =>
-                'Console\Mvc\Controller\Plugin\Service\SetActiveMenuFactory',
+            'Console\Mvc\Controller\Plugin\Service\SetActiveMenuFactory',
             'Console\Mvc\Controller\Plugin\PrintForm' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             Translate::class => TranslateFactory::class,
         ),

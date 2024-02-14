@@ -3,7 +3,7 @@
 /**
  * Form for display/setting of 'agent' preferences
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -49,11 +49,11 @@ class Agent extends AbstractForm
 
         $contactInterval = new \Laminas\Form\Element\Text('contactInterval');
         $contactInterval->setLabel('Agent contact interval (in hours)')
-                        ->setAttribute('size', 5);
+            ->setAttribute('size', 5);
         $preferences->add($contactInterval);
         $validatorChain = new \Laminas\Validator\ValidatorChain();
         $validatorChain->attach($integerValidator, true)
-                       ->attachByName('GreaterThan', array('min' => 0));
+            ->attachByName('GreaterThan', array('min' => 0));
         $inputFilter->add(
             array(
                 'name' => 'contactInterval',
@@ -64,11 +64,11 @@ class Agent extends AbstractForm
 
         $inventoryInterval = new \Laminas\Form\Element\Text('inventoryInterval');
         $inventoryInterval->setLabel('Inventory interval (in days, 0 = always, -1 = never)')
-                          ->setAttribute('size', 5);
+            ->setAttribute('size', 5);
         $preferences->add($inventoryInterval);
         $validatorChain = new \Laminas\Validator\ValidatorChain();
         $validatorChain->attach($integerValidator, true)
-                       ->attachByName('GreaterThan', array('min' => -2));
+            ->attachByName('GreaterThan', array('min' => -2));
         $inputFilter->add(
             array(
                 'name' => 'inventoryInterval',

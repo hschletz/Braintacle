@@ -3,7 +3,7 @@
 /**
  * Tests for AccountsController
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -132,16 +132,16 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         $this->_operatorManager->expects($this->once())->method('createOperator')->with($data, 'topsecret');
 
         $this->_formAccountAdd->expects($this->once())
-                              ->method('setData')
-                              ->with($data);
+            ->method('setData')
+            ->with($data);
         $this->_formAccountAdd->expects($this->once())
-                              ->method('isValid')
-                              ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $this->_formAccountAdd->expects($this->once())
-                              ->method('getData')
-                              ->will($this->returnValue($data));
+            ->method('getData')
+            ->will($this->returnValue($data));
         $this->_formAccountAdd->expects($this->never())
-                              ->method('render');
+            ->method('render');
         $this->dispatch('/console/accounts/add/', 'POST', $data);
         $this->assertRedirectTo('/console/accounts/index/');
     }
@@ -152,16 +152,16 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         $this->_operatorManager->expects($this->never())->method('createOperator');
 
         $this->_formAccountAdd->expects($this->once())
-                              ->method('setData')
-                              ->with($data);
+            ->method('setData')
+            ->with($data);
         $this->_formAccountAdd->expects($this->once())
-                              ->method('isValid')
-                              ->will($this->returnValue(false));
+            ->method('isValid')
+            ->will($this->returnValue(false));
         $this->_formAccountAdd->expects($this->never())
-                              ->method('getData');
+            ->method('getData');
         $this->_formAccountAdd->expects($this->once())
-                              ->method('render')
-                              ->will($this->returnValue('<form></form>'));
+            ->method('render')
+            ->will($this->returnValue('<form></form>'));
         $this->dispatch('/console/accounts/add/', 'POST', $data);
         $this->assertResponseStatusCode(200);
         $this->assertQuery('form');
@@ -172,14 +172,14 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         $this->_operatorManager->expects($this->never())->method('createOperator');
 
         $this->_formAccountAdd->expects($this->never())
-                              ->method('setData');
+            ->method('setData');
         $this->_formAccountAdd->expects($this->never())
-                              ->method('isValid');
+            ->method('isValid');
         $this->_formAccountAdd->expects($this->never())
-                              ->method('getData');
+            ->method('getData');
         $this->_formAccountAdd->expects($this->once())
-                              ->method('render')
-                              ->will($this->returnValue('<form></form>'));
+            ->method('render')
+            ->will($this->returnValue('<form></form>'));
         $this->dispatch('/console/accounts/add/');
         $this->assertResponseStatusCode(200);
         $this->assertQuery('form');
@@ -193,15 +193,15 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         $this->_operatorManager->expects($this->once())->method('getOperator')->with('testId')->willReturn($operator);
 
         $this->_formAccountEdit->expects($this->once())
-                               ->method('setData')
-                               ->with(array('Id' => 'testId', 'OriginalId' => 'testId'));
+            ->method('setData')
+            ->with(array('Id' => 'testId', 'OriginalId' => 'testId'));
         $this->_formAccountEdit->expects($this->never())
-                               ->method('isValid');
+            ->method('isValid');
         $this->_formAccountEdit->expects($this->never())
-                               ->method('getData');
+            ->method('getData');
         $this->_formAccountEdit->expects($this->once())
-                               ->method('render')
-                               ->will($this->returnValue('<form></form>'));
+            ->method('render')
+            ->will($this->returnValue('<form></form>'));
         $this->dispatch('/console/accounts/edit/?id=testId');
         $this->assertResponseStatusCode(200);
         $this->assertQuery('form');
@@ -212,16 +212,16 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         $data = array('OriginalId' => 'testId');
         $this->_operatorManager->expects($this->never())->method('getOperator');
         $this->_formAccountEdit->expects($this->once())
-                               ->method('setData')
-                               ->with($data);
+            ->method('setData')
+            ->with($data);
         $this->_formAccountEdit->expects($this->once())
-                               ->method('isValid')
-                               ->will($this->returnValue(false));
+            ->method('isValid')
+            ->will($this->returnValue(false));
         $this->_formAccountEdit->expects($this->never())
-                               ->method('getData');
+            ->method('getData');
         $this->_formAccountEdit->expects($this->once())
-                               ->method('render')
-                               ->will($this->returnValue('<form></form>'));
+            ->method('render')
+            ->will($this->returnValue('<form></form>'));
         $this->dispatch('/console/accounts/edit/?id=testId', 'POST', $data);
         $this->assertResponseStatusCode(200);
         $this->assertQuery('form');
@@ -238,16 +238,16 @@ class AccountsControllerTest extends \Console\Test\AbstractControllerTest
         $this->_operatorManager->expects($this->once())->method('updateOperator')->with('testId', $data, 'topsecret');
 
         $this->_formAccountEdit->expects($this->once())
-                               ->method('setData')
-                               ->with($data);
+            ->method('setData')
+            ->with($data);
         $this->_formAccountEdit->expects($this->once())
-                               ->method('isValid')
-                               ->will($this->returnValue(true));
+            ->method('isValid')
+            ->will($this->returnValue(true));
         $this->_formAccountEdit->expects($this->once())
-                               ->method('getData')
-                               ->will($this->returnValue($data));
+            ->method('getData')
+            ->will($this->returnValue($data));
         $this->_formAccountEdit->expects($this->never())
-                               ->method('render');
+            ->method('render');
         $this->dispatch('/console/accounts/edit/?id=testId', 'POST', $data);
         $this->assertRedirectTo('/console/accounts/index/');
     }

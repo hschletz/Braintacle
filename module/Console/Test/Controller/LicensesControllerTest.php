@@ -3,7 +3,7 @@
 /**
  * Tests for LicensesController
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -61,8 +61,8 @@ class LicensesControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
         $this->assertXPathQueryContentContains(
             '//p/a[@href="/console/client/index/?' .
-            'columns=Name,OsName,Windows.ProductKey,Windows.ManualProductKey&' .
-            'filter=Windows.ManualProductKey&order=Name&direction=asc"]',
+                'columns=Name,OsName,Windows.ProductKey,Windows.ManualProductKey&' .
+                'filter=Windows.ManualProductKey&order=Name&direction=asc"]',
             "\n1\n"
         );
     }

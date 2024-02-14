@@ -3,7 +3,7 @@
 /**
  * Form for identifying a network device
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -42,7 +42,7 @@ class NetworkDevice extends Form
 
         $type = new \Library\Form\Element\SelectSimple('Type');
         $type->setLabel('Type')
-             ->setValueOptions($this->getOption('DeviceManager')->getTypes());
+            ->setValueOptions($this->getOption('DeviceManager')->getTypes());
         $this->add($type);
 
         $description = new \Laminas\Form\Element\Text('Description');

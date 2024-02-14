@@ -3,7 +3,7 @@
 /**
  * Tests for Model\Group\Group
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -79,38 +79,38 @@ class GroupTest extends AbstractGroupTest
     {
         $clientManager = $this->createMock(ClientManager::class);
         $clientManager->expects($this->once())
-                      ->method('getClients')
-                      ->with(
-                          array('Id'),
-                          null,
-                          null,
-                          'filter',
-                          'search',
-                          'operator',
-                          true,
-                          false,
-                          true,
-                          true
-                      )->willReturn(array(array('Id' => 1), array('Id' => 2), array('Id' => 3), array('Id' => 5)));
+            ->method('getClients')
+            ->with(
+                array('Id'),
+                null,
+                null,
+                'filter',
+                'search',
+                'operator',
+                true,
+                false,
+                true,
+                true
+            )->willReturn(array(array('Id' => 1), array('Id' => 2), array('Id' => 3), array('Id' => 5)));
 
         /** @var Stub|ServiceLocatorInterface */
         $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
-                       ->willReturnMap(
-                           array(
-                                array('Model\Client\ClientManager', $clientManager),
-                                array(
-                                    'Database\Table\GroupMemberships',
-                                    static::$serviceManager->get('Database\Table\GroupMemberships')
-                                )
-                           )
-                       );
+            ->willReturnMap(
+                array(
+                    array('Model\Client\ClientManager', $clientManager),
+                    array(
+                        'Database\Table\GroupMemberships',
+                        static::$serviceManager->get('Database\Table\GroupMemberships')
+                    )
+                )
+            );
 
         $model = $this->createPartialMock(Group::class, ['lock', 'unlock']);
         if ($simulateLockFailure) {
             $model->expects($this->exactly(2))
-                  ->method('lock')
-                  ->will($this->onConsecutiveCalls(false, true));
+                ->method('lock')
+                ->will($this->onConsecutiveCalls(false, true));
         } else {
             $model->expects($this->once())->method('lock')->willReturn(true);
         }
@@ -157,12 +157,12 @@ class GroupTest extends AbstractGroupTest
         /** @var Stub|ServiceLocatorInterface */
         $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
-                       ->willReturnMap(
-                           array(
-                                array('Model\Client\ClientManager', $clientManager),
-                                array('Database\Table\GroupMemberships', $groupMemberships)
-                           )
-                       );
+            ->willReturnMap(
+                array(
+                    array('Model\Client\ClientManager', $clientManager),
+                    array('Database\Table\GroupMemberships', $groupMemberships)
+                )
+            );
 
         $model = $this->createPartialMock(Group::class, ['lock', 'unlock']);
         $model->expects($this->once())->method('lock')->willReturn(true);
@@ -197,51 +197,52 @@ class GroupTest extends AbstractGroupTest
 
         $select = $this->createMock('Laminas\Db\Sql\Select');
         $select->expects($this->exactly(2))
-               ->method('getRawState')
-               ->willReturnMap(
-                   array(
-                        array(\Laminas\Db\Sql\Select::COLUMNS, array('id')),
-                        array(\Laminas\Db\Sql\Select::JOINS, $joins),
-                   )
-               );
+            ->method('getRawState')
+            ->willReturnMap(
+                array(
+                    array(\Laminas\Db\Sql\Select::COLUMNS, array('id')),
+                    array(\Laminas\Db\Sql\Select::JOINS, $joins),
+                )
+            );
         $select->method('getSqlString')->with($platform)->willReturn('query_new');
 
         $clientManager = $this->createMock(ClientManager::class);
         $clientManager->expects($this->once())
-                      ->method('getClients')
-                      ->with(
-                          array('Id'),
-                          null,
-                          null,
-                          'filter',
-                          'search',
-                          'operator',
-                          true,
-                          false,
-                          true,
-                          false
-                      )->willReturn($select);
+            ->method('getClients')
+            ->with(
+                array('Id'),
+                null,
+                null,
+                'filter',
+                'search',
+                'operator',
+                true,
+                false,
+                true,
+                false
+            )->willReturn($select);
 
         /** @var Stub|ServiceLocatorInterface */
         $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
-                       ->willReturnMap(
-                           array(
-                                array('Db', $adapter),
-                                array('Model\Client\ClientManager', $clientManager),
-                                array('Database\Table\GroupInfo', $this->_groupInfo
-                                )
-                            )
-                       );
+            ->willReturnMap(
+                array(
+                    array('Db', $adapter),
+                    array('Model\Client\ClientManager', $clientManager),
+                    array(
+                        'Database\Table\GroupInfo', $this->_groupInfo
+                    )
+                )
+            );
 
         $model = $this->createPartialMock(Group::class, ['update']);
         $model->expects($this->once())
-              ->method('update')
-              ->with(true)
-              ->willReturnCallback(function () use ($model) {
-                  // Verify that value is set before update() gets called
-                  $this->assertEquals('query_new', $model['DynamicMembersSql']);
-              });
+            ->method('update')
+            ->with(true)
+            ->willReturnCallback(function () use ($model) {
+                // Verify that value is set before update() gets called
+                $this->assertEquals('query_new', $model['DynamicMembersSql']);
+            });
         $model['Id'] = 10;
         $model->setServiceLocator($serviceManager);
 
@@ -269,15 +270,15 @@ class GroupTest extends AbstractGroupTest
         );
         $select = $this->createMock('Laminas\Db\Sql\Select');
         $select->expects($this->exactly(2))
-               ->method('getRawState')
-               ->will(
-                   $this->returnValueMap(
-                       array(
-                           array(\Laminas\Db\Sql\Select::COLUMNS, array('id')),
-                           array(\Laminas\Db\Sql\Select::JOINS, $joins),
-                       )
-                   )
-               );
+            ->method('getRawState')
+            ->will(
+                $this->returnValueMap(
+                    array(
+                        array(\Laminas\Db\Sql\Select::COLUMNS, array('id')),
+                        array(\Laminas\Db\Sql\Select::JOINS, $joins),
+                    )
+                )
+            );
         $select->expects($this->never())->method('getSqlString');
 
         $clientManager = $this->createMock('Model\Client\ClientManager');
@@ -331,22 +332,22 @@ class GroupTest extends AbstractGroupTest
         /** @var Stub|ServiceLocatorInterface */
         $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
-                       ->willReturnMap(
-                           array(
-                                array(
-                                    'Database\Table\Clients',
-                                    static::$serviceManager->get('Database\Table\Clients')
-                                ),
-                                array('Database\Table\GroupInfo', $this->_groupInfo),
-                                array(
-                                    'Database\Table\GroupMemberships',
-                                    static::$serviceManager->get('Database\Table\GroupMemberships')
-                                ),
-                                array('Library\Now', $now),
-                                array('Library\Random', $random),
-                                array('Model\Config', $config),
-                           )
-                       );
+            ->willReturnMap(
+                array(
+                    array(
+                        'Database\Table\Clients',
+                        static::$serviceManager->get('Database\Table\Clients')
+                    ),
+                    array('Database\Table\GroupInfo', $this->_groupInfo),
+                    array(
+                        'Database\Table\GroupMemberships',
+                        static::$serviceManager->get('Database\Table\GroupMemberships')
+                    ),
+                    array('Library\Now', $now),
+                    array('Library\Random', $random),
+                    array('Model\Config', $config),
+                )
+            );
 
         $model = $this->createPartialMock(Group::class, ['lock', 'unlock']);
         $model->method('lock')->willReturn($lockSuccess);

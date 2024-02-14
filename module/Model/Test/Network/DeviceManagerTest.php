@@ -3,7 +3,7 @@
 /**
  * Tests for Model\Network\DeviceManager
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -115,7 +115,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
         $device = $model->getDevice(new \Library\MacAddress('00:00:5E:00:53:03'));
         $this->assertInstanceOf('Model\Network\Device', $device);
         $this->assertEquals(
-            array (
+            array(
                 'IpAddress' => '192.0.2.3',
                 'MacAddress' => '00:00:5E:00:53:03',
                 'Hostname' => 'name3',
@@ -133,7 +133,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
         $device = $model->getDevice('00:00:5E:00:53:09');
         $this->assertInstanceOf('Model\Network\Device', $device);
         $this->assertEquals(
-            array (
+            array(
                 'IpAddress' => '192.0.2.9',
                 'MacAddress' => '00:00:5E:00:53:09',
                 'Hostname' => 'name9',

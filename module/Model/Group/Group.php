@@ -3,7 +3,7 @@
 /**
  * A group of clients
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -275,13 +275,13 @@ class Group extends \Model\ClientOrGroup
         $packages = $this->_serviceLocator->get('Database\Table\Packages');
         $select = $packages->getSql()->select();
         $select->columns(array('name'))
-               ->join('devices', 'ivalue = fileid', array())
-               ->where(
-                   array(
-                      'hardware_id' => $this['Id'],
-                      'devices.name' => 'DOWNLOAD',
-                   )
-               )->order(array('download_available.name' => $direction));
+            ->join('devices', 'ivalue = fileid', array())
+            ->where(
+                array(
+                    'hardware_id' => $this['Id'],
+                    'devices.name' => 'DOWNLOAD',
+                )
+            )->order(array('download_available.name' => $direction));
 
         return array_column($packages->selectWith($select)->toArray(), 'name');
     }

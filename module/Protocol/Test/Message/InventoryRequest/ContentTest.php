@@ -3,7 +3,7 @@
 /**
  * Tests for Content element
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -59,8 +59,8 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
             ]
         );
         $content->expects($this->exactly(2))
-                ->method('appendSystemSection')
-                ->withConsecutive([Content::SYSTEM_SECTION_HARDWARE], [Content::SYSTEM_SECTION_BIOS]);
+            ->method('appendSystemSection')
+            ->withConsecutive([Content::SYSTEM_SECTION_HARDWARE], [Content::SYSTEM_SECTION_BIOS]);
         $content->expects($this->once())->method('appendOsSpecificSection');
         $content->expects($this->once())->method('appendAccountinfoSection');
         $content->expects($this->once())->method('appendDownloadSection');

@@ -3,7 +3,7 @@
 /**
  * Form for display/setting of 'network scanning' preferences
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -36,7 +36,7 @@ class NetworkScanning extends AbstractForm
 
         $scannersPerSubnet = new \Laminas\Form\Element\Text('scannersPerSubnet');
         $scannersPerSubnet->setLabel('Number of scanning clients per subnet')
-                          ->setAttribute('size', 5);
+            ->setAttribute('size', 5);
         $preferences->add($scannersPerSubnet);
         $inputFilter->add($this->getIntegerFilter('scannersPerSubnet', -1));
 
@@ -46,19 +46,19 @@ class NetworkScanning extends AbstractForm
 
         $scannerMinDays = new \Laminas\Form\Element\Text('scannerMinDays');
         $scannerMinDays->setLabel('Minimum days before a scanning client is replaced')
-                       ->setAttribute('size', 5);
+            ->setAttribute('size', 5);
         $preferences->add($scannerMinDays);
         $inputFilter->add($this->getIntegerFilter('scannerMinDays', 0));
 
         $scannerMaxDays = new \Laminas\Form\Element\Text('scannerMaxDays');
         $scannerMaxDays->setLabel('Maximum days before a scanning client is replaced')
-                       ->setAttribute('size', 5);
+            ->setAttribute('size', 5);
         $preferences->add($scannerMaxDays);
         $inputFilter->add($this->getIntegerFilter('scannerMaxDays', 0));
 
         $scanArpDelay = new \Laminas\Form\Element\Text('scanArpDelay');
         $scanArpDelay->setLabel('Delay (in milliseconds) between ARP requests')
-                     ->setAttribute('size', 5);
+            ->setAttribute('size', 5);
         $preferences->add($scanArpDelay);
         $inputFilter->add($this->getIntegerFilter('scanArpDelay', 9));
 

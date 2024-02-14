@@ -3,7 +3,7 @@
 /**
  * Tests for DeleteClient
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -38,9 +38,9 @@ class DeleteClientTest extends \Console\Test\AbstractFormTest
         /** @var MockObject&Config */
         $config = $this->createMock(Config::class);
         $config->expects($this->once())
-               ->method('__get')
-               ->with('defaultDeleteInterfaces')
-               ->willReturn($defaultDeleteInterfaces);
+            ->method('__get')
+            ->with('defaultDeleteInterfaces')
+            ->willReturn($defaultDeleteInterfaces);
 
         return $config;
     }

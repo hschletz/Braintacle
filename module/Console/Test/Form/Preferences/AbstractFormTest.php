@@ -3,7 +3,7 @@
 /**
  * Tests for AbstractForm
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -127,9 +127,9 @@ EOT;
 EOT;
         $translator = $this->createMock('Laminas\I18n\Translator\Translator');
         $translator->method('translate')
-                   ->willReturnCallback(function ($string) {
-                       return "$string-translated";
-                   });
+            ->willReturnCallback(function ($string) {
+                return "$string-translated";
+            });
         $view = $this->createView();
         $view->plugin('translate')->setTranslator($translator);
         $view->plugin('FormRow')->setTranslatorEnabled(false);

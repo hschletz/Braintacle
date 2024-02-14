@@ -3,7 +3,7 @@
 /**
  * Tests for UserConfigFactory
  *
- * Copyright (C) 2011-2023 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -102,9 +102,9 @@ EOT;
         putenv('BRAINTACLE_CONFIG=' . $filename);
 
         $this->_container->expects($this->once())
-                         ->method('get')
-                         ->with('ApplicationConfig')
-                         ->willReturn(array());
+            ->method('get')
+            ->with('ApplicationConfig')
+            ->willReturn(array());
 
         $this->assertEquals($this->_iniContentParsed, $this->getFromFactory()->getArrayCopy());
     }
@@ -116,9 +116,9 @@ EOT;
         putenv('BRAINTACLE_CONFIG=ignored');
 
         $this->_container->expects($this->once())
-                         ->method('get')
-                         ->with('ApplicationConfig')
-                         ->willReturn(array('Library\UserConfig' => $filename));
+            ->method('get')
+            ->with('ApplicationConfig')
+            ->willReturn(array('Library\UserConfig' => $filename));
 
         $this->assertEquals($this->_iniContentParsed, $this->getFromFactory()->getArrayCopy());
     }
@@ -128,9 +128,9 @@ EOT;
         putenv('BRAINTACLE_CONFIG=ignored');
 
         $this->_container->expects($this->once())
-                         ->method('get')
-                         ->with('ApplicationConfig')
-                         ->willReturn(['Library\UserConfig' => new ArrayObject($this->_iniContentParsed)]);
+            ->method('get')
+            ->with('ApplicationConfig')
+            ->willReturn(['Library\UserConfig' => new ArrayObject($this->_iniContentParsed)]);
 
         $this->assertEquals($this->_iniContentParsed, $this->getFromFactory()->getArrayCopy());
     }
@@ -140,9 +140,9 @@ EOT;
         putenv('BRAINTACLE_CONFIG=');
 
         $this->_container->expects($this->once())
-                         ->method('get')
-                         ->with('ApplicationConfig')
-                         ->willReturn(array());
+            ->method('get')
+            ->with('ApplicationConfig')
+            ->willReturn(array());
 
         $reader = new \Laminas\Config\Reader\Ini();
         $iniContentParsed = $reader->fromFile(\Library\Application::getPath('config/braintacle.ini'));
@@ -155,9 +155,9 @@ EOT;
         putenv('BRAINTACLE_CONFIG');
 
         $this->_container->expects($this->once())
-                         ->method('get')
-                         ->with('ApplicationConfig')
-                         ->willReturn(array());
+            ->method('get')
+            ->with('ApplicationConfig')
+            ->willReturn(array());
 
         $reader = new \Laminas\Config\Reader\Ini();
         $iniContentParsed = $reader->fromFile(\Library\Application::getPath('config/braintacle.ini'));
