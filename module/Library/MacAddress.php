@@ -143,7 +143,7 @@ class MacAddress
             if (
                 $line == '' or
                 $line[0] == '#' or
-                !preg_match("/^(\H+)\t(\H+)\h*(# )?(.*)/", $line, $matches)
+                !preg_match("/^(\H+)\t+(\H+)\h*(# )?(.*)/", $line, $matches)
             ) {
                 continue;
             }

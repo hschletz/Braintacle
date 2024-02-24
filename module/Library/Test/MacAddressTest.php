@@ -44,60 +44,66 @@ class MacAddressTest extends \PHPUnit\Framework\TestCase
             "abcdef/24\tshort8", // explicit mask, pad to abcdef000000
             "deadbeef0000/40\tshort9", // explicit mask, zeroes part of prefix
             "12:34:00:00:00:00/17\tshort10", // unaligned mask
+            "00:00:5E\t\tshort11\t\tlong11", // multiple tabs
         );
 
-        $expected = array(
-            array(
+        $expected = [
+            [
                 'address' => '5e005300',
                 'mask' => 'ffffffffffff',
                 'vendor' => 'short1',
-            ),
-            array(
+            ],
+            [
                 'address' => '5e005301',
                 'mask' => 'ffffffffffff',
                 'vendor' => 'long2',
-            ),
-            array(
+            ],
+            [
                 'address' => '5e005302',
                 'mask' => 'ffffffffffff',
                 'vendor' => 'long3 ',
-            ),
-            array(
+            ],
+            [
                 'address' => '5e005303',
                 'mask' => 'ffffffffffff',
                 'vendor' => 'long4 ',
-            ),
-            array(
+            ],
+            [
                 'address' => '10200000000',
                 'mask' => 'ffff00000000',
                 'vendor' => 'short5',
-            ),
-            array(
+            ],
+            [
                 'address' => '102abcd0000',
                 'mask' => 'ffffffff0000',
                 'vendor' => 'short6',
-            ),
-            array(
+            ],
+            [
                 'address' => '123456000000',
                 'mask' => 'ffffff000000',
                 'vendor' => 'short7',
-            ),
-            array(
+            ],
+            [
                 'address' => 'abcdef000000',
                 'mask' => 'ffffff000000',
                 'vendor' => 'short8',
-            ),
-            array(
+            ],
+            [
                 'address' => 'deadbeef0000',
                 'mask' => 'ffffffffff00',
                 'vendor' => 'short9',
-            ),
-            array(
+            ],
+            [
                 'address' => '123400000000',
                 'mask' => 'ffff80000000',
                 'vendor' => 'short10',
-            ),
-        );
+            ],
+            [
+                'address' => '5e000000',
+                'mask' => 'ffffff000000',
+                'vendor' => 'long11',
+            ],
+        ];
 
         MacAddress::loadVendorDatabase($input);
 

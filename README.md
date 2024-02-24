@@ -77,6 +77,6 @@ This project contains some third party code:
   components](https://www.ocsinventory-ng.org/), licensed under the GNU General
   Public License v2) is included in the server/ directory.
 
-- The file module/Library/data/MacAddress/manuf is taken from the
+- The script development/make-manuf.py is taken from the
   [Wireshark](https://wireshark.org) project. GPLv2 and copyright information are
   contained at the top of this file.
