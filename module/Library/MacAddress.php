@@ -201,6 +201,10 @@ class MacAddress
      */
     public function getVendor()
     {
+        if ($this->_address == '00:00:00:00:00:00') {
+            return null;
+        }
+
         if (empty(self::$_vendorList)) {
             self::loadVendorDatabaseFromFile(\Library\Module::getPath('data/MacAddress/manuf'));
         }

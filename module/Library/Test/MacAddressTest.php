@@ -170,6 +170,14 @@ class MacAddressTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($addr->getVendor());
     }
 
+    public function testGetVendorReturnsNullForDummyAddresses()
+    {
+        $vendors = ["00:00:00:00:00:00\tshort"];
+        MacAddress::loadVendorDatabase($vendors);
+        $addr = new MacAddress('00:00:00:00:00:00');
+        $this->assertNull($addr->getVendor());
+    }
+
     public function testGetVendorLoadsDatabase()
     {
         // Reset database to force loading from file
