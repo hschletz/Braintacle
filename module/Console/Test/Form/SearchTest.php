@@ -23,6 +23,7 @@
 namespace Console\Test\Form;
 
 use Console\Form\Search;
+use DateTime;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Model\Client\CustomFieldManager;
 use Model\Registry\RegistryManager;
@@ -238,14 +239,14 @@ class SearchTest extends \Console\Test\AbstractFormTest
     {
         $data = array(
             'filter' => 'CustomFields.Date',
-            'search' => new \DateTime('2014-05-01'),
+            'search' => new DateTime('2024-03-22'),
         );
         $this->_form->setData($data);
-        $this->assertEquals('01.05.2014', $this->_form->get('search')->getValue());
+        $this->assertEquals('2024-03-22', $this->_form->get('search')->getValue());
 
-        $data['search'] = '2014-05-01';
+        $data['search'] = '2024-03-22';
         $this->_form->setData($data);
-        $this->assertEquals('01.05.2014', $this->_form->get('search')->getValue());
+        $this->assertEquals('2024-03-22', $this->_form->get('search')->getValue());
 
         $data['search'] = '05/01/2014';
         $this->_form->setData($data);
@@ -341,7 +342,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
     {
         $data = array(
             'filter' => 'CustomFields.Date',
-            'search' => ' 1.5.2014 ',
+            'search' => ' 2024-03-22 ',
             'operator' => 'eq',
             'invert' => '0',
             '_csrf' => $this->_form->get('_csrf')->getValue(),
@@ -349,7 +350,7 @@ class SearchTest extends \Console\Test\AbstractFormTest
 
         $this->_form->setData($data);
         $this->assertTrue($this->_form->isValid());
-        $this->assertEquals('2014-05-01', $this->_form->getData()['search']->format('Y-m-d'));
+        $this->assertEquals('2024-03-22', $this->_form->getData()['search']->format('Y-m-d'));
 
         $data['search'] = '2014-05-01';
         $this->_form->setData($data);

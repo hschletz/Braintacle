@@ -22,9 +22,9 @@
 
 namespace Console\Form;
 
-use IntlDateFormatter;
-use IntlDatePatternGenerator;
-use Laminas\Validator\Date;
+use DateTime;
+use DateTimeInterface;
+use Laminas\Validator\Date as DateValidator;
 
 /**
  * Base class for forms
@@ -182,18 +182,8 @@ class Form extends \Laminas\Form\Form
                 }
                 break;
             case 'date':
-                $formatter = new \IntlDateFormatter(
-                    \Locale::getDefault(),
-                    \IntlDateFormatter::MEDIUM,
-                    \IntlDateFormatter::NONE
-                );
-                if ($value instanceof \DateTime) {
-                    $value = $formatter->format($value);
-                } elseif (\Laminas\Validator\StaticValidator::execute($value, Date::class, ['strict' => true])) {
-                    $date = \DateTime::createFromFormat('Y-m-d', $value);
-                    if ($date) {
-                        $value = $formatter->format($date);
-                    }
+                if ($value instanceof DateTimeInterface) {
+                    $value = $value->format('Y-m-d');
                 }
                 break;
         }
@@ -243,45 +233,9 @@ class Form extends \Laminas\Form\Form
                 break;
             case 'date':
                 $value = trim($value ?? '');
-                $validator = new \Laminas\I18n\Validator\DateTime();
-                // @codeCoverageIgnoreStart
-                // Only one of these branches can be tested, depending on environment.
-                if (class_exists(IntlDatePatternGenerator::class)) {
-                    // IntlDateFormatter::SHORT may not match day/month without
-                    // leading zero. If IntlDatePatternGenerator is available
-                    // (since PHP 8.1), this will produce consistent results.
-                    $validator->setPattern(
-                        IntlDatePatternGenerator::create($validator->getLocale())->getBestPattern('yyyyMd')
-                    );
-                } else {
-                    // Fall back to IntlDateFormatter::SHORT which seems to work
-                    // on older systems.
-                    $validator->setDateType(IntlDateFormatter::SHORT);
-                }
-                // @codeCoverageIgnoreEnd
+                $validator = new DateValidator();
                 if ($validator->isValid($value)) {
-                    // Some systems accept invalid date separators, like '/'
-                    // with a de_DE locale which should accept only '.'.
-                    // An extra comparision of the locale-specific pattern and
-                    // the input string is necessary.
-                    // This also enforces 4-digit years to avoid any confusion
-                    // with 2-digit year input.
-                    $pattern = preg_quote($validator->getPattern(), '#');
-                    // Get the year part out of the way first.
-                    $pattern = preg_replace('/y+/', '§', $pattern);
-                    // Remaining letters are placeholders for digits.
-                    $pattern = preg_replace('/[a-zA-Z]+/', '\d+', $pattern);
-                    // Set the year pattern.
-                    $pattern = str_replace('§', '\d{4}', $pattern);
-                    if (preg_match("#^$pattern$#", $value)) {
-                        $formatter = new \IntlDateFormatter(
-                            \Locale::getDefault(),
-                            \IntlDateFormatter::SHORT,
-                            \IntlDateFormatter::NONE,
-                            'UTC'
-                        );
-                        $value = \DateTime::createFromFormat('U', $formatter->parse($value));
-                    }
+                    $value = DateTime::createFromFormat('Y-m-d', $value);
                 }
                 break;
         }

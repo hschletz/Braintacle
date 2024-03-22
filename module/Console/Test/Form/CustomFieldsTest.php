@@ -23,6 +23,7 @@
 namespace Console\Test\Form;
 
 use Laminas\Dom\Document\Query as Query;
+use Laminas\Form\Element\Date;
 use Model\Client\CustomFieldManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -88,7 +89,7 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
         $this->assertEquals('Float', $element->getLabel());
 
         $element = $fields->get('Date');
-        $this->assertInstanceOf('Laminas\Form\Element\Text', $element);
+        $this->assertInstanceOf(Date::class, $element);
         $this->assertEquals('Date', $element->getLabel());
     }
 
@@ -182,7 +183,8 @@ class CustomFieldsTest extends \Console\Test\AbstractFormTest
     {
         $html = $this->_form->renderFieldset($this->createView(), $this->_form);
         $document = new \Laminas\Dom\Document($html);
-        $this->assertCount(4, Query::execute('//input[@type="text"]', $document));
+        $this->assertCount(3, Query::execute('//input[@type="text"]', $document));
+        $this->assertCount(1, Query::execute('//input[@type="date"]', $document));
         $this->assertCount(1, Query::execute('//textarea', $document));
         $this->assertCount(1, Query::execute('//input[@type="submit"]', $document));
         // Check for manual translation

@@ -22,6 +22,8 @@
 
 namespace Console\Test;
 
+use DateTime;
+
 /**
  * Tests for form localization
  */
@@ -77,9 +79,9 @@ class FormLocalizationTest extends \PHPUnit\Framework\TestCase
 
     public function testLocalizeDateValid()
     {
-        $this->assertEquals('01.05.2014', $this->_form->localize(new \DateTime('2014-05-01 00:00:01'), 'date'));
-        $this->assertEquals('01.05.2014', $this->_form->localize(new \DateTime('2014-05-01 23:59:59'), 'date'));
-        $this->assertEquals('01.05.2014', $this->_form->localize('2014-05-01', 'date'));
+        $this->assertEquals('2024-03-22', $this->_form->localize(new DateTime('2024-03-22 00:00:01'), 'date'));
+        $this->assertEquals('2024-03-22', $this->_form->localize(new DateTime('2024-03-22 23:59:59'), 'date'));
+        $this->assertEquals('2024-03-22', $this->_form->localize('2024-03-22', 'date'));
     }
 
     public function testLocalizeDateInvalid()
@@ -137,22 +139,14 @@ class FormLocalizationTest extends \PHPUnit\Framework\TestCase
 
     public function testNormalizeDateValid()
     {
-        $date = $this->_form->normalize(' 2.5.2014 ', 'date');
-        $this->assertInstanceOf('DateTime', $date);
-        $this->assertEquals('2014-05-02', $date->format('Y-m-d'));
-
-        $date = $this->_form->normalize(' 02.05.2014 ', 'date');
-        $this->assertInstanceOf('DateTime', $date);
-        $this->assertEquals('2014-05-02', $date->format('Y-m-d'));
+        $date = $this->_form->normalize(' 2024-03-22 ', 'date');
+        $this->assertInstanceOf(DateTime::class, $date);
+        $this->assertEquals('2024-03-22', $date->format('Y-m-d'));
     }
 
     public function testNormalizeDateInvalid()
     {
         $this->assertEquals('31.2.2014', $this->_form->normalize(' 31.2.2014 ', 'date'));
-        $this->assertEquals('2.5.2014 17:25:23', $this->_form->normalize(' 2.5.2014 17:25:23 ', 'date'));
-        $this->assertEquals('2014-05-02', $this->_form->normalize(' 2014-05-02 ', 'date'));
-        $this->assertEquals('05/01/2014', $this->_form->normalize(' 05/01/2014 ', 'date'));
-        $this->assertEquals('05.01.14', $this->_form->normalize(' 05.01.14 ', 'date'));
         $this->assertEquals('', $this->_form->normalize(' ', 'date'));
     }
 

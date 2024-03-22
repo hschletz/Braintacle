@@ -2,14 +2,28 @@
  * Search form.
  */
 
- // Set options for "operators" element according to selected filter
- const filter = document.querySelector('.form_search [name=filter]')
- filter.addEventListener('change', () => {
-    const types = JSON.parse(filter.getAttribute('data-types')) // map of filters to ordinal types (text filters are not present in map)
-    const operatorElement = filter.form['operator']
+/**
+ * Set search element type according to selected filter.
+ */
+function setSearchValueType() {
+    searchForm['search'].type = (types[filterElement.value] == 'date') ? 'date' : 'text'
+}
+
+const searchForm = document.querySelector('.form_search')
+const filterElement = searchForm['filter']
+const types = JSON.parse(filterElement.getAttribute('data-types')) // map of filters to ordinal types (text filters are not present in map)
+
+// Initialize search value element according to filter.
+setSearchValueType()
+
+filterElement.addEventListener('change', () => {
+    // Update elements according to selected filter.
+    setSearchValueType()
+
+    const operatorElement = searchForm['operator']
     const operators = JSON.parse(
         operatorElement.getAttribute(
-            types.hasOwnProperty(filter.value) ? 'data-operators-ordinal' : 'data-operators-text'
+            types.hasOwnProperty(filterElement.value) ? 'data-operators-ordinal' : 'data-operators-text'
         )
     )
 

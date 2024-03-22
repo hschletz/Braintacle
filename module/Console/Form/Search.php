@@ -183,6 +183,8 @@ class Search extends Form
             ->setValue('Name'); // Default value
         $this->add($filter);
 
+        // This is created as a text input, but will be changed to date input by
+        // JS depending on the selected filter.
         $search = new Element\Text('search');
         $search->setLabel('Value');
         $this->add($search);

@@ -22,6 +22,8 @@
 
 namespace Console\Form;
 
+use Laminas\Form\Element\Date;
+
 /**
  * Display/set values of custom fields for a client
  *
@@ -54,6 +56,9 @@ class CustomFields extends Form
         foreach ($this->_types as $name => $type) {
             if ($type == 'clob') {
                 $element = new \Laminas\Form\Element\Textarea($name);
+            } elseif ($type == 'date') {
+                $element = new Date($name);
+                $element->setAttribute('step', 'any'); // Required to disable step validation which wouldn't work
             } else {
                 $element = new \Laminas\Form\Element\Text($name);
             }
