@@ -206,14 +206,13 @@ function parseTemplates(): Translations
 
     // Construct list of template files, ordered by relative path.
     $templates = [];
-    foreach (
-        new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator(
-                $templatePath,
-                RecursiveDirectoryIterator::CURRENT_AS_PATHNAME | RecursiveDirectoryIterator::SKIP_DOTS
-            )
-        ) as $path
-    ) {
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator(
+            $templatePath,
+            RecursiveDirectoryIterator::CURRENT_AS_PATHNAME | RecursiveDirectoryIterator::SKIP_DOTS
+        )
+    );
+    foreach ($iterator as $path) {
         $file = Path::makeRelative($path, $templatePath);
         $templates[$file] = $path;
     }
