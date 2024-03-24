@@ -1,8 +1,8 @@
 {* Software page *}
+
+{addScript form_software.js}
+
 {layout ../Layout.latte}
-
-{addScript('form_software.js')}
-
 {block mainContent}
     <form method="get">
         <input type="hidden" name="csrf" value="{$csrfToken}">

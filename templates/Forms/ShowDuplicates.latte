@@ -1,7 +1,8 @@
 {* Show duplicates and provide merge options. *}
-{layout '../Layout.latte'}
 
-{addScript('form_showduplicates.js')}
+{addScript form_showduplicates.js}
+
+{layout '../Layout.latte'}
 
 {* Generate link to allow duplicate criteria value *}
 {define allowLink, string $criteria, ?string $value}

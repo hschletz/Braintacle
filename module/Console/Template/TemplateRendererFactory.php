@@ -2,9 +2,9 @@
 
 namespace Console\Template;
 
+use Console\Template\Extensions\AssetLoaderExtension;
 use Console\Template\Filters\DateFormatFilter;
 use Console\Template\Filters\NumberFormatFilter;
-use Console\Template\Functions\AssetLoaderFunctions;
 use Console\Template\Functions\ConsoleUrlFunction;
 use Console\Template\Functions\TranslateFunction;
 use Console\View\Helper\ConsoleScript;
@@ -26,20 +26,25 @@ class TemplateRendererFactory implements FactoryInterface
         $consoleScript = $viewHelperManager->get(ConsoleScript::class);
         $consoleUrl = $viewHelperManager->get(ConsoleUrl::class);
 
-        $assetLoaderFunctions = new AssetLoaderFunctions($consoleScript);
         $consoleUrlFunction = new ConsoleUrlFunction($consoleUrl);
+
+        // Use custom function instead of TranslatorExtension to make strings
+        // easier to extract.
         $translateFunction = new TranslateFunction($translator);
 
         $dateFormatFilter = $container->get(DateFormatFilter::class);
         $numberFormatFilter = new NumberFormatFilter();
 
+        $assetLoaderExtension = new AssetLoaderExtension($consoleScript);
+
         $engine = new Engine();
-        $engine->addFunction('addScript', [$assetLoaderFunctions, 'addScript']);
         $engine->addFunction('consoleUrl', $consoleUrlFunction);
         $engine->addFunction('translate', $translateFunction);
 
         $engine->addFilter('dateFormat', $dateFormatFilter);
         $engine->addFilter('numberFormat', $numberFormatFilter);
+
+        $engine->addExtension($assetLoaderExtension);
 
         return new TemplateRenderer($engine);
     }

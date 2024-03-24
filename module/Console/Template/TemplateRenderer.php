@@ -37,7 +37,7 @@ class TemplateRenderer implements RendererInterface
     {
     }
 
-    public function render($nameOrModel, $values = null): string
+    public function render($nameOrModel, $values = []): string
     {
         if ($nameOrModel instanceof ViewModel) {
             $template = $nameOrModel->getTemplate();
@@ -57,14 +57,7 @@ class TemplateRenderer implements RendererInterface
             int $errline = 0,
             array $errContext = []
         ): ?bool {
-            // @codeCoverageIgnoreStart
-            // only one branch will be executed depending on PHP version.
-            if (PHP_MAJOR_VERSION < 8) {
-                $suppressed = 0;
-            } else {
-                $suppressed = E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR | E_RECOVERABLE_ERROR | E_PARSE;
-            }
-            // @codeCoverageIgnoreEnd
+            $suppressed = E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR | E_RECOVERABLE_ERROR | E_PARSE;
             if (error_reporting() != $suppressed) {
                 throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
             }

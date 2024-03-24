@@ -25,8 +25,12 @@ use Gettext\Generator\PoGenerator;
 use Gettext\Scanner\PhpScanner;
 use Gettext\Translation;
 use Gettext\Translations;
+use Latte\Compiler\Node;
+use Latte\Compiler\Nodes\Php\ArgumentNode;
+use Latte\Compiler\Nodes\Php\Expression\FunctionCallNode;
+use Latte\Compiler\Nodes\Php\Scalar\StringNode;
+use Latte\Compiler\NodeTraverser;
 use Latte\Engine;
-use Latte\Token;
 use Library\Application;
 use Library\FileObject;
 use Symfony\Component\Filesystem\Filesystem;
@@ -240,56 +244,28 @@ function parseTemplate(string $file, string $relativePath): Translations
 
     // Invoke Latte parser, assuming HTML content.
     $engine = new Engine();
-    $parser = $engine->getParser();
-    $parser->setContentType(Engine::CONTENT_HTML);
-    $tokens = $parser->parse($template);
-    foreach ($tokens as $token) {
-        if ($token->type != Token::MACRO_TAG) {
-            continue;
+    $nodes = $engine->parse($template);
+    $traverser = new NodeTraverser();
+    $traverser->traverse($nodes, function (Node $node) use ($translations, $relativePath) {
+        if (!$node instanceof FunctionCallNode) {
+            return;
         }
-        if ($token->name == '=') {
-            $message = parseSimpleTemplateExpression($token->value);
-        } else {
-            $message = parseComplexTemplateExpression($token->value);
+        if ($node->name != 'translate') {
+            return;
         }
-        if (!$message) {
-            continue;
+        $arg = $node->args[0];
+        if (!$arg instanceof ArgumentNode) {
+            return;
+        }
+        $value = $arg->value;
+        if (!$value instanceof StringNode) {
+            return;
         }
 
-        $translation = Translation::create(null, $message);
+        $translation = Translation::create(null, $value->value);
         $translation->getReferences()->add($relativePath);
         $translations->add($translation);
-    }
+    });
 
     return $translations;
-}
-
-/**
- * Parse simple Latte expression.
- */
-function parseSimpleTemplateExpression(string $expression): ?string
-{
-    // Thanks to Latte's PHP-like Syntax, use PHP's tokenizer for further
-    // analysis.
-    $tokens = PhpToken::tokenize('<?php ' . $expression);
-    if ($tokens[1] != 'translate') {
-        return null;
-    }
-    // Found translate(), extract first argument.
-    $token = $tokens[3];
-    if (!$token->is(T_CONSTANT_ENCAPSED_STRING)) {
-        throw new RuntimeException('Unexpected token: ' . $token->text);
-    }
-    // Use eval() to reliably remove and unescape quotes. This is safe because
-    // the token is guaranteed to be a string literal.
-    return eval("return {$token->text};");
-}
-
-/**
- * Parse complex expression with extended Latte syntax.
- */
-function parseComplexTemplateExpression(string $expression): ?string
-{
-    // Fall back to dumb regex parser and hope for the best.
-    return preg_match("/translate\('(.+?)'\)/", $expression, $matches) ? $matches[1] : null;
 }

@@ -50,7 +50,7 @@
         "laminas/laminas-uri": "^2.9",
         "laminas/laminas-validator": "^2.24",
         "laminas/laminas-view": "^2.22",
-        "latte/latte": "^2.11",
+        "latte/latte": "^3.0",
         "phpbench/dom": "^0.3.2",
         "symfony/console": "^6.4",
         "symfony/event-dispatcher": "^6.4",
