@@ -24,6 +24,7 @@
 namespace Console\Form;
 
 use Laminas\Form\Element;
+use Model\Client\DuplicatesManager;
 
 /**
  * Form for displaying duplicate clients by given criteria and selection of
@@ -43,13 +44,15 @@ class ShowDuplicates extends Form
     {
         parent::init();
 
+        // valueOptions don't have a label because labels are provided by the
+        // form template.
         $mergeOptions = new Element\MultiCheckbox('mergeOptions');
         $mergeOptions->setValueOptions([
-            ['value' => \Model\Client\DuplicatesManager::MERGE_CUSTOM_FIELDS],
-            ['value' => \Model\Client\DuplicatesManager::MERGE_CONFIG],
-            ['value' => \Model\Client\DuplicatesManager::MERGE_GROUPS],
-            ['value' => \Model\Client\DuplicatesManager::MERGE_PACKAGES],
-            ['value' => \Model\Client\DuplicatesManager::MERGE_PRODUCT_KEY,],
+            DuplicatesManager::MERGE_CUSTOM_FIELDS => '',
+            DuplicatesManager::MERGE_CONFIG => '',
+            DuplicatesManager::MERGE_GROUPS => '',
+            DuplicatesManager::MERGE_PACKAGES => '',
+            DuplicatesManager::MERGE_PRODUCT_KEY => '',
         ]);
         $this->add($mergeOptions);
 

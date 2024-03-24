@@ -24,6 +24,7 @@ namespace Tools;
 
 use Laminas\ServiceManager\ServiceManager;
 use Symfony\Component\Console\ConsoleEvents;
+use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -51,7 +52,7 @@ class Application extends \Symfony\Component\Console\Application
         $this->add(new Command\Import());
     }
 
-    protected function getDefaultInputDefinition()
+    protected function getDefaultInputDefinition(): InputDefinition
     {
         $definition = parent::getDefaultInputDefinition();
         $definition->addOption(new InputOption('config', 'c', InputOption::VALUE_REQUIRED, 'Alternative config file'));

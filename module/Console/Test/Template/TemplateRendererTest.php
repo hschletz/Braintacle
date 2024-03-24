@@ -104,10 +104,12 @@ class TemplateRendererTest extends TestCase
 
     public function testRenderWithViewModel()
     {
-        $engine = $this->createMock(Engine::class);
-        $engine->method('renderToString')->with('template', ['values'])->willReturn('content');
+        $variables = ['key' => 'value'];
 
-        $viewModel = new ViewModel(['values']);
+        $engine = $this->createMock(Engine::class);
+        $engine->method('renderToString')->with('template', $variables)->willReturn('content');
+
+        $viewModel = new ViewModel($variables);
         $viewModel->setTemplate('template');
 
         $templateRenderer = new TemplateRenderer($engine);

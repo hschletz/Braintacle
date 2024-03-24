@@ -9,6 +9,10 @@ without any warranty.
 CHANGES IN VERSION 1.11
 =======================
 
+Upgrading from previous versions:
+
+- Required: Braintacle 1.11 requires PHP 8.1 or later.
+
 Misc:
 
 - Console: Date fields are now entered wia a date input.

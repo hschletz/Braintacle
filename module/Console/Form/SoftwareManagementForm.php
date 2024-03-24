@@ -26,9 +26,7 @@ class SoftwareManagementForm
     }
 
     /**
-     * Accept/ignore software.
-     *
-     * @return array<string, array<string, string>> Validation messages
+     * @return array<array-key, array<array-key, string|array>>
      */
     public function getValidationMessages(array $formData): array
     {

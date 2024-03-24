@@ -38,7 +38,7 @@ class AssignPackagesForm
     /**
      * Assign packages to given target (client or group).
      *
-     * @return array<string, array<string, string>> Validation messages
+     * @return array<array-key, array<array-key, string|array>>
      */
     public function process(array $formData, ClientOrGroup $target): array
     {

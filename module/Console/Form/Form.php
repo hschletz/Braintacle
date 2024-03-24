@@ -24,6 +24,7 @@ namespace Console\Form;
 
 use DateTime;
 use DateTimeInterface;
+use Laminas\Form\Form as BaseForm;
 use Laminas\Validator\Date as DateValidator;
 
 /**
@@ -49,8 +50,10 @@ use Laminas\Validator\Date as DateValidator;
  * - Helper methods for dealing with localized integer, float and date formats.
  *
  * @deprecated Render forms via templates, use InputFilter directly
+ *
+ * @extends BaseForm<array>
  */
-class Form extends \Laminas\Form\Form
+class Form extends BaseForm
 {
     /** {@inheritdoc} */
     public function init()

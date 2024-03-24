@@ -23,13 +23,16 @@
 namespace Library\Filter;
 
 use DomainException;
+use Laminas\Filter\AbstractFilter;
 use Laminas\Log\Logger;
 
 /**
  * Convert log level descriptor strings (case insensitive) to Laminas\Log\Logger
  * constants
+ *
+ * @extends AbstractFilter<array>
  */
-class LogLevel extends \Laminas\Filter\AbstractFilter
+class LogLevel extends AbstractFilter
 {
     /**
      * Priority map

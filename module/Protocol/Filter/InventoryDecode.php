@@ -22,13 +22,17 @@
 
 namespace Protocol\Filter;
 
+use Laminas\Filter\AbstractFilter;
+
 /**
  * Decode compressed inventory data
  *
  * This filter decodes zlib compressed inventory data which some agents generate
  * instead of uncompressed XML.
+ *
+ * @extends AbstractFilter<array>
  */
-class InventoryDecode extends \Laminas\Filter\AbstractFilter
+class InventoryDecode extends AbstractFilter
 {
     /**
      * {@inheritdoc}

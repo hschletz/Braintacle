@@ -29,6 +29,7 @@ use Laminas\Mvc\MvcEvent;
 use Laminas\Router\Http\Segment;
 use Laminas\Router\Http\TreeRouteStack;
 use Laminas\Router\RouteMatch;
+use Laminas\Router\SimpleRouteStack;
 
 /**
  * Base class for controller plugin tests
@@ -98,6 +99,7 @@ abstract class AbstractTest extends \PHPUnit\Framework\TestCase
      */
     protected function getPlugin(): callable
     {
+        /** @var SimpleRouteStack declare parent class to overcome type mismatch in setRouter() */
         $router = new TreeRouteStack();
         $router->addRoute(
             'test',

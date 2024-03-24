@@ -22,10 +22,14 @@
 
 namespace Library\Filter;
 
+use Laminas\Filter\AbstractFilter;
+
 /**
  * Convert empty input to empty array
+ *
+ * @extends AbstractFilter<array>
  */
-class EmptyArray extends \Laminas\Filter\AbstractFilter
+class EmptyArray extends AbstractFilter
 {
     /** {@inheritdoc} */
     public function filter($value)

@@ -23,6 +23,7 @@
 namespace Console\Test\Form;
 
 use Console\Form\ShowDuplicates;
+use Model\Client\DuplicatesManager;
 
 class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
 {
@@ -64,18 +65,18 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
         ]);
 
         $expectedOptions = [
-            ['value' => 'mergeCustomFields'],
-            ['value' => 'mergeConfig'],
-            ['value' => 'mergeGroups'],
-            ['value' => 'mergePackages'],
-            ['value' => 'mergeProductKey'],
+            DuplicatesManager::MERGE_CUSTOM_FIELDS,
+            DuplicatesManager::MERGE_CONFIG,
+            DuplicatesManager::MERGE_GROUPS,
+            DuplicatesManager::MERGE_PACKAGES,
+            DuplicatesManager::MERGE_PRODUCT_KEY,
         ];
 
         $form = new ShowDuplicates();
         $form->setOption('config', $config);
         $form->init();
 
-        $this->assertEquals($expectedOptions, $form->get('mergeOptions')->getValueOptions());
+        $this->assertEquals($expectedOptions, array_keys($form->get('mergeOptions')->getValueOptions()));
     }
 
     public function testInputFilterClients()

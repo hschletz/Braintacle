@@ -22,6 +22,8 @@
 
 namespace Library\Filter;
 
+use Laminas\Filter\AbstractFilter;
+
 /**
  * Fix effects of incorrect charset conversion by old agents
  *
@@ -36,8 +38,10 @@ namespace Library\Filter;
  * UTF-8 strings, even if it's not affected by the bug.
  *
  * @deprecated Don't care about those very, very outdated agents.
+ *
+ * @extends AbstractFilter<array>
  */
-class FixEncodingErrors extends \Laminas\Filter\AbstractFilter
+class FixEncodingErrors extends AbstractFilter
 {
     /**
      * UTF-8 sequences of characters to replace

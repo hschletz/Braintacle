@@ -24,6 +24,7 @@ namespace Console\View\Helper;
 
 use Laminas\Uri\Uri;
 use Laminas\Uri\UriInterface;
+use Laminas\View\Helper\Placeholder\Container\AbstractStandalone;
 use Library\Application;
 use LogicException;
 
@@ -33,8 +34,10 @@ use LogicException;
  * This is similar to the HeadScript helper. If invoked with a script name, the
  * given script from /public/js will be appended to the head section. Scripts
  * are loaded as modules.
+ *
+ * @extends AbstractStandalone<array-key, string>
  */
-class ConsoleScript extends \Laminas\View\Helper\Placeholder\Container\AbstractStandalone
+class ConsoleScript extends AbstractStandalone
 {
     public function __invoke(string $script = null): self
     {
