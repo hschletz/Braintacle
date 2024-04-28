@@ -25,4 +25,13 @@ session_cache_limiter('nocache'); // Default headers to prevent caching
 
 require_once('../vendor/autoload.php');
 
+// Laminas\Mvc\Application::init() triggers a warning. This seems to be caused
+// by inconsistent Container interface usage througout the Laminas code and
+// cannot be fixed here. Suppress the warning via a custom error handler - any
+// temporary suppression measure won't work.
+set_error_handler(
+    fn (int $errno, string $errstr) => str_starts_with($errstr, 'Laminas\ServiceManager\AbstractPluginManager::__construct now expects a '),
+    E_USER_DEPRECATED
+);
+
 \Library\Application::init('Console')->run();
