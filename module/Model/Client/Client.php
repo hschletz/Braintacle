@@ -206,7 +206,7 @@ class Client extends \Model\ClientOrGroup
     /**
      * Internal OS version number
      */
-    public string $osVersionNumber;
+    public ?string $osVersionNumber;
 
     /**
      * OS version (Service pack, kernel version etc...)
