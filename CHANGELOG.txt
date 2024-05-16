@@ -13,6 +13,11 @@ Upgrading from previous versions:
 
 - Required: Braintacle 1.11 requires PHP 8.1 or later.
 
+Fixed bugs:
+
+- Console: Fixed display of software for UNIX clients that don't
+  report package size.
+
 Misc:
 
 - Console: Date fields are now entered wia a date input.

@@ -1889,6 +1889,30 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXpathQuery("//tr[2]/td[3][@class='textright'][normalize-space(text())='42\xC2\xA0kB']");
     }
 
+    public function testSoftwareActionUnixWithNullSize()
+    {
+        $hydrator = new ObjectPropertyHydrator();
+        $software1 = $hydrator->hydrate([
+            'name' => 'name1',
+            'version' => 'version1',
+            'size' => null,
+        ], new Software());
+
+        /** @var MockObject|Client */
+        $client = $this->createMock(Client::class);
+        $client->id = 1;
+        $client->name = 'test';
+        $client->expects($this->once())
+            ->method('getItems')
+            ->with('Software')
+            ->willReturn([$software1]);
+        $this->_clientManager->method('getClient')->willReturn($client);
+
+        $this->dispatch('/console/client/software/?id=1');
+        $this->assertResponseStatusCode(200);
+        $this->assertXpathQuery("//tr[2]/td[3][@class='textright'][normalize-space(text())='']");
+    }
+
     public function testSoftwareActionAndroid()
     {
         $hydrator = new ObjectPropertyHydrator();

@@ -26,7 +26,11 @@
             <td>{$software['publisher']}</td>
             <td>{$software['installLocation']}</td>
         {else}
-            <td class="textright">{$software['size']|numberFormat:0}&nbsp;kB</td>
+            <td class="textright">
+                {if $software['size'] !== null}
+                    {$software['size']|numberFormat:0}&nbsp;kB
+                {/if}
+            </td>
         {/if}
         {if $client->windows}
             <td>
