@@ -22,6 +22,8 @@
 
 namespace Library\Test\View\Helper;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Base class for view helper tests
  *
@@ -29,7 +31,7 @@ namespace Library\Test\View\Helper;
  * functions. Additionally, the testHelperInterface() test is executed for all
  * derived tests.
  */
-abstract class AbstractTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
+abstract class AbstractTestCase extends TestCase
 {
     /**
      * Service manager

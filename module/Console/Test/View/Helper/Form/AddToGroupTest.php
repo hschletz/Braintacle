@@ -25,10 +25,15 @@ namespace Console\Test\View\Helper\Form;
 use Console\Form\AddToGroup as AddToGroupForm;
 use Console\View\Helper\Form\AddToGroup as AddToGroupHelper;
 use Laminas\View\Renderer\PhpRenderer;
+use Library\Test\View\Helper\AbstractTestCase;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class AddToGroupTest extends \Library\Test\View\Helper\AbstractTest
+class AddToGroupTest extends AbstractTestCase
 {
+    use MockeryPHPUnitIntegration;
+
     protected function getHelperName()
     {
         return 'consoleFormAddToGroup';
@@ -38,11 +43,9 @@ class AddToGroupTest extends \Library\Test\View\Helper\AbstractTest
     {
         $form = $this->createStub(AddToGroupForm::class);
 
-        $view = $this->createMock(PhpRenderer::class);
-        $view->expects($this->exactly(2))->method('__call')->withConsecutive(
-            ['consoleScript', ['form_addtogroup.js']],
-            ['consoleForm', [$form]]
-        )->willReturnOnConsecutiveCalls($this->returnSelf(), 'rendered form');
+        $view = Mockery::mock(PhpRenderer::class);
+        $view->shouldReceive('consoleScript')->once()->with('form_addtogroup.js');
+        $view->shouldReceive('consoleForm')->once()->with($form)->andReturn('rendered form');
 
         /** @var MockObject|AddToGroupHelper|callable */
         $helper = $this->createPartialMock(AddToGroupHelper::class, ['getView']);

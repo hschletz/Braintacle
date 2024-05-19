@@ -31,6 +31,7 @@ $cmd = [
     '-n', // suppress warnings
     '--report-width=120',
     '--standard=PSR12',
+    '--exclude=Generic.NamingConventions.UpperCaseConstantName',
     '--extensions=php',
     \Library\Application::getPath('development'),
     \Library\Application::getPath('module'),

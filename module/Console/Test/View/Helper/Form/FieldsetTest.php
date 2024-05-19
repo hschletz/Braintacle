@@ -30,12 +30,16 @@ use Laminas\Form\FormInterface;
 use Laminas\Form\View\Helper\FormElementErrors;
 use Laminas\Form\View\Helper\FormRow;
 use Laminas\View\Renderer\PhpRenderer;
+use Library\Test\View\Helper\AbstractTestCase;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 
-class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
+class FieldsetTest extends AbstractTestCase
 {
-    /** {@inheritdoc} */
+    use MockeryPHPUnitIntegration;
+
     protected function getHelperName()
     {
         return 'consoleFormFieldset';
@@ -152,13 +156,9 @@ class FieldsetTest extends \Library\Test\View\Helper\AbstractTest
         $fieldset = $this->createStub(FieldsetInterface::class);
         $fieldset->method('getLabel')->willReturn('LABEL');
 
-        $view = $this->createMock('Laminas\View\Renderer\PhpRenderer');
-        $view->method('__call')
-            ->withConsecutive(
-                array('translate', array('LABEL')),
-                array('escapeHtml', array('TRANSLATED'))
-            )
-            ->willReturnOnConsecutiveCalls('TRANSLATED', 'ESCAPED');
+        $view = Mockery::mock(PhpRenderer::class);
+        $view->shouldReceive('translate')->once()->with('LABEL')->andReturn('TRANSLATED');
+        $view->shouldReceive('escapeHtml')->once()->with('TRANSLATED')->andReturn('ESCAPED');
 
         $helper = $this->createPartialMock(Fieldset::class, ['getView']);
         $helper->method('getView')->willReturn($view);

@@ -25,10 +25,15 @@ namespace Console\Test\View\Helper\Form;
 use Console\Form\Search as SearchForm;
 use Console\View\Helper\Form\Search as SearchHelper;
 use Laminas\View\Renderer\PhpRenderer;
+use Library\Test\View\Helper\AbstractTestCase;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class SearchTest extends \Library\Test\View\Helper\AbstractTest
+class SearchTest extends AbstractTestCase
 {
+    use MockeryPHPUnitIntegration;
+
     protected function getHelperName()
     {
         return 'consoleFormSearch';
@@ -38,11 +43,9 @@ class SearchTest extends \Library\Test\View\Helper\AbstractTest
     {
         $form = $this->createStub(SearchForm::class);
 
-        $view = $this->createMock(PhpRenderer::class);
-        $view->expects($this->exactly(2))->method('__call')->withConsecutive(
-            ['consoleScript', ['form_search.js']],
-            ['consoleForm', [$form]]
-        )->willReturnOnConsecutiveCalls($this->returnSelf(), 'rendered form');
+        $view = Mockery::mock(PhpRenderer::class);
+        $view->shouldReceive('consoleScript')->once()->with('form_search.js');
+        $view->shouldReceive('consoleForm')->once()->with($form)->andReturn('rendered form');
 
         /** @var MockObject|SearchHelper|callable */
         $helper = $this->createPartialMock(SearchHelper::class, ['getView']);

@@ -24,7 +24,6 @@ namespace Library\Test\Mvc\Controller\Plugin;
 
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\Mvc\Controller\Plugin\PluginInterface;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\Http\Segment;
 use Laminas\Router\Http\TreeRouteStack;
@@ -38,7 +37,7 @@ use Laminas\Router\SimpleRouteStack;
  * convenience functions. Additionally, the testPluginInterface() test is
  * executed for all derived tests.
  */
-abstract class AbstractTest extends \PHPUnit\Framework\TestCase
+abstract class AbstractTestCase extends \PHPUnit\Framework\TestCase
 {
     /**
      * Service manager

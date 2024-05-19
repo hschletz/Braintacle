@@ -26,8 +26,9 @@ use Console\View\Helper\Form\Form as FormHelper;
 use Laminas\Form\Form;
 use Laminas\Form\FormInterface;
 use Laminas\View\Renderer\PhpRenderer;
+use Library\Test\View\Helper\AbstractTestCase;
 
-class FormTest extends \Library\Test\View\Helper\AbstractTest
+class FormTest extends AbstractTestCase
 {
     protected $_postBackup;
     protected $_filesBackup;
@@ -55,7 +56,7 @@ class FormTest extends \Library\Test\View\Helper\AbstractTest
         return 'consoleForm';
     }
 
-    public function postMaxSizeExceededProvider()
+    public static function postMaxSizeExceededProvider()
     {
         return array(
             array(array(), array(), array('REQUEST_METHOD' => 'GET')),

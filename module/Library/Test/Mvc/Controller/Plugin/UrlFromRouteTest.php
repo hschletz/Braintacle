@@ -22,49 +22,38 @@
 
 namespace Library\Test\Mvc\Controller\Plugin;
 
+use Laminas\Mvc\Controller\Plugin\Url as UrlPlugin;
+use Library\Mvc\Controller\Plugin\UrlFromRoute as UrlFromRoutePlugin;
+use PHPUnit\Framework\Attributes\DataProvider;
+
 /**
  * Tests for UrlFromRoute controller plugin
  */
-class UrlFromRouteTest extends AbstractTest
+class UrlFromRouteTest extends AbstractTestCase
 {
-    /**
-     * Tests combinations of default/given arguments, query parameters and
-     * encoding.
-     */
-    public function testInvoke()
+    public static function invokeProvider()
     {
-        $plugin = $this->getPlugin();
+        return [
+            [null, null, [], []],
+            [null, '_action', [], ['action' => '_action']],
+            ['_controller', null, [], ['controller' => '_controller']],
+            ['_controller', '_action', [], ['controller' => '_controller', 'action' => '_action']],
+            ['con/troller', 'ac/tion', [], ['controller' => 'con%2Ftroller', 'action' => 'ac%2Ftion']],
+            [null, null, ['key' => 'value'], []],
+        ];
+    }
 
-        $this->assertEquals(
-            '/module/defaultcontroller/defaultaction/',
-            $plugin(null, null)
-        );
+    #[DataProvider('invokeProvider')]
+    public function testInvoke(?string $controller, ?string $action, array $query, array $expectedParams)
+    {
+        $urlPlugin = $this->createMock(UrlPlugin::class);
+        $urlPlugin->method('fromRoute')->with(
+            null,
+            $expectedParams,
+            ['query' => $query],
+        )->willReturn('url');
 
-        $this->assertEquals(
-            '/module/defaultcontroller/testedaction/',
-            $plugin(null, 'testedaction')
-        );
-
-        $this->assertEquals(
-            '/module/testedcontroller/defaultaction/',
-            $plugin('testedcontroller', null)
-        );
-
-        $this->assertEquals(
-            '/module/testedcontroller/testedaction/',
-            $plugin('testedcontroller', 'testedaction')
-        );
-
-        $this->assertEquals(
-            '/module/tested%2Fcontroller/tested%2Faction/?tested/key=tested/value&tested%26key=tested%26value',
-            $plugin(
-                'tested/controller',
-                'tested/action',
-                array(
-                    'tested/key' => 'tested/value', // not encoded
-                    'tested&key' => 'tested&value', // encoded to %26
-                )
-            )
-        );
+        $urlFromRoutePlugin = new UrlFromRoutePlugin($urlPlugin);
+        $this->assertEquals('url', $urlFromRoutePlugin($controller, $action, $query));
     }
 }

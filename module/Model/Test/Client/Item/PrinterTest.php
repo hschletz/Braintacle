@@ -22,7 +22,9 @@
 
 namespace Model\Test\Client\Item;
 
-class PrinterTest extends \Model\Test\AbstractTest
+use Model\Test\AbstractTestCase;
+
+class PrinterTest extends AbstractTestCase
 {
     public function getDataSet()
     {

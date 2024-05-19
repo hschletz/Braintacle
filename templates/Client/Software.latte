@@ -17,7 +17,7 @@
     </tr>
 
     <tr n:foreach="$list as $software">
-        <td n:attr="title: @$software['comment']">
+        <td n:attr="title: $software['comment'] ?? null">
             {$software['name']}
             <span n:if="$software['count'] > 1" class="duplicate">({$software['count']})</span>
         </td>

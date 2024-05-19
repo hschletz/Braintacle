@@ -31,7 +31,7 @@ use stdClass;
 
 class SoftwareTest extends \PHPUnit\Framework\TestCase
 {
-    public function hydrateProvider()
+    public static function hydrateProvider()
     {
         $hydratedWindows = [
             'name' => 'NameHydrated',
@@ -129,7 +129,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($hydrated, get_object_vars($object));
     }
 
-    public function extractProvider()
+    public static function extractProvider()
     {
         $hydratedWindows = [
             'name' => 'Name',
@@ -222,7 +222,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($extracted, $hydrator->extract($object));
     }
 
-    public function hydrateNameProvider()
+    public static function hydrateNameProvider()
     {
         return [
             ['name', 'name'],
@@ -256,7 +256,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         $hydrator->hydrateName('invalid');
     }
 
-    public function extractNameProvider()
+    public static function extractNameProvider()
     {
         return [
             ['name', 'name'],
@@ -296,7 +296,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         $hydrator->extractName('Invalid');
     }
 
-    public function hydrateValueProvider()
+    public static function hydrateValueProvider()
     {
         return [
             ['name', "\xC2\x99", "\xE2\x84\xA2"],
@@ -324,7 +324,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($hydrated, $hydrator->hydrateValue($name, $extracted));
     }
 
-    public function extractValueProvider()
+    public static function extractValueProvider()
     {
         return array(
             array('is_hotfix', true, '0'),

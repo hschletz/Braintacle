@@ -23,9 +23,10 @@
 namespace Console\Test\Form;
 
 use Console\Form\ShowDuplicates;
+use Console\Test\AbstractFormTestCase;
 use Model\Client\DuplicatesManager;
 
-class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
+class ShowDuplicatesTest extends AbstractFormTestCase
 {
     /** {@inheritdoc} */
     protected function getForm()
@@ -41,7 +42,7 @@ class ShowDuplicatesTest extends \Console\Test\AbstractFormTest
         $this->assertInstanceOf('\Laminas\Form\Element\MultiCheckbox', $mergeOptions);
     }
 
-    public function initMergeOptionsProvider()
+    public static function initMergeOptionsProvider()
     {
         return [
             ['mergeConfig'],

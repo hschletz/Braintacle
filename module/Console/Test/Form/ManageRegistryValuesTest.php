@@ -23,14 +23,19 @@
 namespace Console\Test\Form;
 
 use Console\Form\ManageRegistryValues;
+use Console\Test\AbstractFormTestCase;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\Registry\RegistryManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for ManageRegistryValues
  */
-class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
+class ManageRegistryValuesTest extends AbstractFormTestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * RegistryManager mock object
      * @var MockObject|RegistryManager
@@ -239,14 +244,10 @@ class ManageRegistryValuesTest extends \Console\Test\AbstractFormTest
         $value1 = ['Name' => 'Test1'];
         $value2 = ['Name' => 'Test2'];
 
-        $registryManager = $this->createMock('Model\Registry\RegistryManager');
-        $registryManager->expects($this->never())->method('addValueDefinition');
-        $registryManager->expects($this->exactly(2))
-            ->method('renameValueDefinition')
-            ->withConsecutive(
-                array('Test1', 'Test1_new'),
-                array('Test2', 'Test2')
-            );
+        $registryManager = Mockery::mock(RegistryManager::class);
+        $registryManager->shouldNotReceive('addValueDefinition');
+        $registryManager->shouldReceive('renameValueDefinition')->once()->with('Test1', 'Test1_new');
+        $registryManager->shouldReceive('renameValueDefinition')->once()->with('Test2', 'Test2');
 
         $form = $this->createPartialMock(ManageRegistryValues::class, ['getData', 'getOption', 'getDefinedValues']);
         $form->expects($this->once())->method('getData')->willReturn($data);

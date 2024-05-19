@@ -22,9 +22,11 @@
 
 namespace Database\Test\Hydrator\Strategy\DisplayControllers;
 
-class CurrentResolutionTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
+use Database\Test\Hydrator\Strategy\AbstractStrategyTestCase;
+
+class CurrentResolutionTest extends AbstractStrategyTestCase
 {
-    public function hydrateProvider()
+    public static function hydrateProvider()
     {
         return array(
             array('0 x 0', null),
@@ -32,7 +34,7 @@ class CurrentResolutionTest extends \Database\Test\Hydrator\Strategy\AbstractStr
         );
     }
 
-    public function extractProvider()
+    public static function extractProvider()
     {
         return array(
             array('0', '0'),

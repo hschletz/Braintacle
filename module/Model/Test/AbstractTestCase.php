@@ -23,6 +23,7 @@
 namespace Model\Test;
 
 use PHPUnit\DbUnit\Database\Connection;
+use PHPUnit\DbUnit\TestCase;
 
 /**
  * Base class for model tests
@@ -30,7 +31,7 @@ use PHPUnit\DbUnit\Database\Connection;
  * Tables that are given in $_tables are automatically set up, the fixture is
  * loaded and the service is automatically tested.
  */
-abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
+abstract class AbstractTestCase extends TestCase
 {
     /**
      * Array of tables to set up (table class names without Database\Table prefix)

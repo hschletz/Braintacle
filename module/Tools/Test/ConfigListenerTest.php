@@ -61,25 +61,21 @@ class ConfigListenerTest extends \PHPUnit\Framework\TestCase
         $event = $this->createStub(ConsoleCommandEvent::class);
         $event->method('getInput')->willReturn($input);
 
-        /** @var ServiceManager|MockObject */
-        $serviceManager = $this->createMock(ServiceManager::class);
-        $serviceManager->method('get')->willReturn(['key' => 'value']);
-        $serviceManager->method('getAllowOverride')->willReturn('initialAllowOverride');
-        $serviceManager->expects($this->exactly(2))
-            ->method('setAllowOverride')
-            ->withConsecutive([true], ['initialAllowOverride']);
-        $serviceManager->expects($this->once())
-            ->method('setService')
-            ->with(
-                'ApplicationConfig',
-                [
-                    'key' => 'value',
-                    'Library\UserConfig' => $configOption,
-                ]
-            );
+        $serviceManager = new ServiceManager([
+            'services' => [
+                'ApplicationConfig' => ['key' => 'value'],
+            ],
+        ]);
+        $allowOverride = $serviceManager->getAllowOverride();
 
         $configListener = new ConfigListener($serviceManager);
         $configListener($event);
+
+        $this->assertSame($allowOverride, $serviceManager->getAllowOverride());
+        $this->assertEquals([
+            'key' => 'value',
+            'Library\UserConfig' => $configOption,
+        ], $serviceManager->get('ApplicationConfig'));
     }
 
     public function testInvokeOverridingExistingConfigThrowsException()

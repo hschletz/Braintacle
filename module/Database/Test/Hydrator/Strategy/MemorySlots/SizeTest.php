@@ -22,9 +22,11 @@
 
 namespace Database\Test\Hydrator\Strategy\MemorySlots;
 
-class SizeTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
+use Database\Test\Hydrator\Strategy\AbstractStrategyTestCase;
+
+class SizeTest extends AbstractStrategyTestCase
 {
-    public function hydrateProvider()
+    public static function hydrateProvider()
     {
         return array(
             array('128', 128),
@@ -37,7 +39,7 @@ class SizeTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
         );
     }
 
-    public function extractProvider()
+    public static function extractProvider()
     {
         return array(
             array('128', '128'),

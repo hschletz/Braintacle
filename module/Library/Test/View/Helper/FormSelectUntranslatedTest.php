@@ -25,7 +25,7 @@ namespace Library\Test\View\Helper;
 /**
  * Tests for the FormSelectUntranslated helper
  */
-class FormSelectUntranslatedTest extends AbstractTest
+class FormSelectUntranslatedTest extends AbstractTestCase
 {
     public function testFormElementHelperIntegration()
     {

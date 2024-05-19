@@ -21,11 +21,11 @@
  */
 
 use Library\Application;
-use Library\Test\View\Helper\AbstractTest;
+use Library\Test\View\Helper\AbstractTestCase;
 
 error_reporting(-1);
 ini_set('memory_limit', '400M');
 date_default_timezone_set('Europe/Berlin');
 Locale::setDefault('de');
 
-AbstractTest::$serviceManager = Application::init('Console')->getServiceManager();
+AbstractTestCase::$serviceManager = Application::init('Console')->getServiceManager();

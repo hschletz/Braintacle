@@ -22,7 +22,7 @@
 
 namespace Database\Test\Table;
 
-class RegistryValueDefinitionsTest extends AbstractTest
+class RegistryValueDefinitionsTest extends AbstractTestCase
 {
     public function getDataSet()
     {

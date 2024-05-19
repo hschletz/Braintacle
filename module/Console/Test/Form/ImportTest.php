@@ -22,12 +22,13 @@
 
 namespace Console\Test\Form;
 
+use Console\Test\AbstractFormTestCase;
 use Laminas\InputFilter\FileInput;
 
 /**
  * Tests for Import form
  */
-class ImportTest extends \Console\Test\AbstractFormTest
+class ImportTest extends AbstractFormTestCase
 {
     public function testInit()
     {

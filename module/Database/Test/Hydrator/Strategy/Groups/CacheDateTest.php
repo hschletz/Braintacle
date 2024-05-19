@@ -22,9 +22,11 @@
 
 namespace Database\Test\Hydrator\Strategy\Groups;
 
-class CacheDateTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
+use Database\Test\Hydrator\Strategy\AbstractStrategyTestCase;
+
+class CacheDateTest extends AbstractStrategyTestCase
 {
-    public function hydrateProvider()
+    public static function hydrateProvider()
     {
         return array(
             array('', null),
@@ -34,7 +36,7 @@ class CacheDateTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTes
         );
     }
 
-    public function extractProvider()
+    public static function extractProvider()
     {
         return array(
             array(null, 0),

@@ -23,9 +23,10 @@
 namespace Library\Test\Hydrator;
 
 use Model\AbstractModel;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
-abstract class AbstractHydratorTest extends \PHPUnit\Framework\TestCase
+abstract class AbstractHydratorTestCase extends TestCase
 {
     protected function getHydrator()
     {

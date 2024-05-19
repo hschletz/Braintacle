@@ -22,12 +22,13 @@
 
 namespace Console\Test\Form;
 
+use Console\Test\AbstractFormTestCase;
 use Laminas\Form\Element\Text;
 
 /**
  * Tests for Login form
  */
-class LoginTest extends \Console\Test\AbstractFormTest
+class LoginTest extends AbstractFormTestCase
 {
     public function testInit()
     {

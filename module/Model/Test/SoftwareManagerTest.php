@@ -22,7 +22,7 @@
 
 namespace Model\Test;
 
-class SoftwareManagerTest extends AbstractTest
+class SoftwareManagerTest extends AbstractTestCase
 {
     /** {@inheritdoc} */
     protected static $_tables = [
@@ -34,7 +34,7 @@ class SoftwareManagerTest extends AbstractTest
         'WindowsInstallations',
     ];
 
-    public function getSoftwareProvider()
+    public static function getSoftwareProvider()
     {
         $accepted = array('name' => 'accepted', 'num_clients' => '2');
         $acceptedOs = array('name' => 'accepted', 'num_clients' => '1');
@@ -66,7 +66,7 @@ class SoftwareManagerTest extends AbstractTest
         $this->assertEquals($expected, iterator_to_array($software));
     }
 
-    public function getSoftwareInvalidArgumentsProvider()
+    public static function getSoftwareInvalidArgumentsProvider()
     {
         return array(
             array(array('Os' => 'invalid'), 'name', 'Invalid OS filter: invalid'),
@@ -111,7 +111,7 @@ class SoftwareManagerTest extends AbstractTest
         $this->assertEquals(2, $model->getNumManualProductKeys());
     }
 
-    public function setProductKeyProvider()
+    public static function setProductKeyProvider()
     {
         return array(
             array(1, null, 'Empty'),

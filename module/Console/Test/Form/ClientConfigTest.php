@@ -23,6 +23,9 @@
 namespace Console\Test\Form;
 
 use Console\Form\ClientConfig;
+use Console\Test\AbstractFormTestCase;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\Client\Client;
 use Model\Group\Group;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -30,8 +33,10 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Tests for ClientConfig form
  */
-class ClientConfigTest extends \Console\Test\AbstractFormTest
+class ClientConfigTest extends AbstractFormTestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * Client mock
      * @var MockObject|Client
@@ -509,26 +514,24 @@ class ClientConfigTest extends \Console\Test\AbstractFormTest
                 'scanSnmp' => '1',
             )
         );
-        $this->_group->expects($this->exactly(11))
-            ->method('setConfig')
-            ->withConsecutive(
-                array('contactInterval', $this->identicalTo(1234)),
-                array('inventoryInterval', $this->isNull()),
-                array('downloadPeriodDelay', $this->identicalTo(1111)),
-                array('downloadCycleDelay', $this->identicalTo(2222)),
-                array('downloadFragmentDelay', $this->identicalTo(3333)),
-                array('downloadMaxPriority', $this->identicalTo(4444)),
-                array('downloadTimeout', $this->isNull()),
-                array('packageDeployment', $this->identicalTo('1')),
-                array('allowScan', $this->identicalTo('0')),
-                array('scanThisNetwork', $this->isNull()),
-                array('scanSnmp', $this->isNull())
-            );
+
+        $group = Mockery::mock(Group::class);
+        $group->shouldReceive('setConfig')->once()->with('contactInterval', Mockery::on(fn ($value) => $value === 1234));
+        $group->shouldReceive('setConfig')->once()->with('inventoryInterval', Mockery::on(fn ($value) => $value === null));
+        $group->shouldReceive('setConfig')->once()->with('downloadPeriodDelay', Mockery::on(fn ($value) => $value === 1111));
+        $group->shouldReceive('setConfig')->once()->with('downloadCycleDelay', Mockery::on(fn ($value) => $value === 2222));
+        $group->shouldReceive('setConfig')->once()->with('downloadFragmentDelay', Mockery::on(fn ($value) => $value === 3333));
+        $group->shouldReceive('setConfig')->once()->with('downloadMaxPriority', Mockery::on(fn ($value) => $value === 4444));
+        $group->shouldReceive('setConfig')->once()->with('downloadTimeout', Mockery::on(fn ($value) => $value === null));
+        $group->shouldReceive('setConfig')->once()->with('packageDeployment', Mockery::on(fn ($value) => $value === '1'));
+        $group->shouldReceive('setConfig')->once()->with('allowScan', Mockery::on(fn ($value) => $value === '0'));
+        $group->shouldReceive('setConfig')->once()->with('scanThisNetwork', Mockery::on(fn ($value) => $value === null));
+        $group->shouldReceive('setConfig')->once()->with('scanSnmp', Mockery::on(fn ($value) => $value === null));
 
         $form = new ClientConfig();
         $form->init();
         $form->setValidationGroup(['Agent', 'Download', 'Scan']);
-        $form->setClientObject($this->_group);
+        $form->setClientObject($group);
         $form->setData($data);
         $this->assertTrue($form->isValid());
         $form->process();

@@ -31,8 +31,9 @@ use Laminas\Form\Fieldset;
 use Laminas\Form\FormInterface;
 use Laminas\Stdlib\PriorityList;
 use Laminas\View\Renderer\PhpRenderer;
+use Library\Test\View\Helper\AbstractTestCase;
 
-class ManageRegistryValuesTest extends \Library\Test\View\Helper\AbstractTest
+class ManageRegistryValuesTest extends AbstractTestCase
 {
     /** {@inheritdoc} */
     protected function getHelperName()

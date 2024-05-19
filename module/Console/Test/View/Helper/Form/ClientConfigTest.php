@@ -29,11 +29,14 @@ use Laminas\Form\Element;
 use Laminas\Form\Fieldset;
 use Laminas\Stdlib\PriorityList;
 use Laminas\View\Renderer\PhpRenderer;
+use Library\Test\View\Helper\AbstractTestCase;
+use Model\Client\Client;
 use Model\ClientOrGroup;
+use Model\Group\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 
-class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
+class ClientConfigTest extends AbstractTestCase
 {
     /** {@inheritdoc} */
     protected function getHelperName()
@@ -79,50 +82,46 @@ class ClientConfigTest extends \Library\Test\View\Helper\AbstractTest
         $this->assertEquals('ElementFieldset', $helper->renderContent($form));
     }
 
-    public function renderFieldsetProvider()
+    public static function renderFieldsetProvider()
     {
-        $group = $this->createMock('Model\Group\Group');
-
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('getEffectiveConfig')->willReturnMap(
-            array(
-                array('default_true', 0),
-                array('default_false', 1),
-                array('text', 'effective_text'),
-            )
-        );
-
-        return array(
-            array(
-                $group,
+        return [
+            [
+                Group::class,
                 '(DEFAULT: YES)',
                 '(DEFAULT: NO)',
                 '(DEFAULT: DEFAULT_TEXT)',
-            ),
-            array(
-                $client,
+            ],
+            [
+                Client::class,
                 '(DEFAULT: YES, EFFECTIVE: NO)',
                 '(DEFAULT: NO, EFFECTIVE: YES)',
                 '(DEFAULT: DEFAULT_TEXT, EFFECTIVE: effective_text)',
-            ),
-        );
+            ],
+        ];
     }
 
     /** @dataProvider renderFieldsetProvider */
-    public function testRenderFieldset($object, $infoTrue, $infoFalse, $infoText)
+    public function testRenderFieldset(string $class, string $infoTrue, string $infoFalse, string $infoText)
     {
         $elements = "(LABEL_TRUE)<span>(ELEMENT_TRUE)(INFO_TRUE)</span>(ERRORS_TRUE)\n" .
             "(LABEL_FALSE)<span>(ELEMENT_FALSE)(INFO_FALSE)</span>(ERRORS_FALSE)\n" .
             "(LABEL_TEXT)<span>(ELEMENT_TEXT)(INFO_TEXT)</span>(ERRORS_TEXT)\n" .
             "(LABEL_NOINFO)<span>(ELEMENT_NOINFO)</span>(ERRORS_NOINFO)\n";
 
-        $object->expects($this->exactly(3))->method('getDefaultConfig')->willReturnMap(
-            array(
-                array('default_true', 1),
-                array('default_false', 0),
-                array('text', 'DEFAULT_TEXT'),
-            )
-        );
+        /** @var MockObject|ClientOrGroup */
+        $object = $this->createMock($class);
+        $object->expects($this->exactly(3))->method('getDefaultConfig')->willReturnMap([
+            ['default_true', 1],
+            ['default_false', 0],
+            ['text', 'DEFAULT_TEXT'],
+        ]);
+        if ($class == Client::class) {
+            $object->method('getEffectiveConfig')->willReturnMap([
+                ['default_true', 0],
+                ['default_false', 1],
+                ['text', 'effective_text'],
+            ]);
+        }
 
         $elementDisabled = $this->createMock('Laminas\Form\Element');
         $elementDisabled->method('getAttribute')->with('disabled')->willReturn(true);

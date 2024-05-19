@@ -23,11 +23,12 @@
 namespace Console\Test\View\Helper;
 
 use Laminas\View\Helper\Url;
+use Library\Test\View\Helper\AbstractTestCase;
 
 /**
  * Tests for the ConsoleUrl helper
  */
-class ConsoleUrlTest extends \Library\Test\View\Helper\AbstractTest
+class ConsoleUrlTest extends AbstractTestCase
 {
     protected $_helper;
 

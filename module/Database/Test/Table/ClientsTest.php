@@ -22,7 +22,7 @@
 
 namespace Database\Test\Table;
 
-class ClientsTest extends AbstractTest
+class ClientsTest extends AbstractTestCase
 {
     public static function setUpBeforeClass(): void
     {

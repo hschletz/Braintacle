@@ -22,10 +22,12 @@
 
 namespace Console\Test\Form;
 
+use Console\Test\AbstractFormTestCase;
+
 /**
  * Tests for Subnet form
  */
-class SubnetTest extends \Console\Test\AbstractFormTest
+class SubnetTest extends AbstractFormTestCase
 {
     public function testInit()
     {

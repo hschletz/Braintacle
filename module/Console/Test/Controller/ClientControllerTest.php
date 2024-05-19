@@ -28,10 +28,12 @@ use Console\Form\ProductKey;
 use Console\Form\Search as SearchForm;
 use Console\Mvc\Controller\Plugin\PrintForm;
 use Console\Template\Filters\DateFormatFilter;
+use Console\Test\AbstractControllerTestCase;
 use Console\View\Helper\Form\ClientConfig;
 use Console\View\Helper\Form\Search as SearchHelper;
 use DateTime;
 use EmptyIterator;
+use IntlDateFormatter;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Text;
@@ -54,7 +56,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Tests for ClientController
  */
-class ClientControllerTest extends \Console\Test\AbstractControllerTest
+class ClientControllerTest extends AbstractControllerTestCase
 {
     /**
      * @var MockObject|ClientManager
@@ -791,14 +793,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
     {
         $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
-        $flashMessenger->method('__call')
-            ->withConsecutive(
-                array('getMessagesFromNamespace', array('error')),
-                array('getMessagesFromNamespace', array('success'))
-            )->willReturnOnConsecutiveCalls(
-                ['error'],
-                ['success']
-            );
+        $flashMessenger->method('__call')->willReturnMap([
+            ['getMessagesFromNamespace', ['error'], ['error']],
+            ['getMessagesFromNamespace', ['success'], ['success']],
+        ]);
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
         $this->_clientManager->expects($this->once())->method('getClients')->willReturn(array());
@@ -815,13 +813,10 @@ class ClientControllerTest extends \Console\Test\AbstractControllerTest
 
         /** @var MockObject|DateFormatFilter */
         $dateFormat = $this->createMock(DateFormatFilter::class);
-        $dateFormat->expects($this->exactly(2))
-            ->method('__invoke')
-            ->withConsecutive(
-                array($inventoryDate, \IntlDateFormatter::FULL, \IntlDateFormatter::LONG),
-                array($lastContactDate, \IntlDateFormatter::FULL, \IntlDateFormatter::LONG)
-            )
-            ->willReturnOnConsecutiveCalls('inventory_date', 'last_contact_date');
+        $dateFormat->method('__invoke')->willReturnMap([
+            [$inventoryDate, IntlDateFormatter::FULL, IntlDateFormatter::LONG, 'inventory_date'],
+            [$lastContactDate, IntlDateFormatter::FULL, IntlDateFormatter::LONG, 'last_contact_date'],
+        ]);
         $this->getApplicationServiceLocator()->setService(DateFormatFilter::class, $dateFormat);
 
         /** @var MockObject|Client */

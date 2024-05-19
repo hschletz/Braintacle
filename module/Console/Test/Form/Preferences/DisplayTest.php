@@ -22,7 +22,9 @@
 
 namespace Console\Test\Form\Preferences;
 
-class DisplayTest extends \Console\Test\AbstractFormTest
+use Console\Test\AbstractFormTestCase;
+
+class DisplayTest extends AbstractFormTestCase
 {
     public function testInit()
     {

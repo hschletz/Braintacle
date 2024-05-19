@@ -22,9 +22,11 @@
 
 namespace Database\Test\Hydrator;
 
-class ControllersTest extends \Library\Test\Hydrator\AbstractHydratorTest
+use Library\Test\Hydrator\AbstractHydratorTestCase;
+
+class ControllersTest extends AbstractHydratorTestCase
 {
-    public function hydrateProvider()
+    public static function hydrateProvider()
     {
         $windowsAgent = array(
             'type' => '_type',
@@ -62,7 +64,7 @@ class ControllersTest extends \Library\Test\Hydrator\AbstractHydratorTest
         );
     }
 
-    public function extractProvider()
+    public static function extractProvider()
     {
         $windowsHydrated = [
             'type' => '_type',

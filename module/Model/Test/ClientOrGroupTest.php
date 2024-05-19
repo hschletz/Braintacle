@@ -25,10 +25,11 @@ namespace Model\Test;
 use Database\Table\ClientConfig;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Mockery;
+use Mockery\Mock;
 use Model\ClientOrGroup;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ClientOrGroupTest extends AbstractTest
+class ClientOrGroupTest extends AbstractTestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -138,7 +139,7 @@ class ClientOrGroupTest extends AbstractTest
         $this->assertLocksTableEquals(null);
     }
 
-    public function lockWithDatabaseTimeProvider()
+    public static function lockWithDatabaseTimeProvider()
     {
         return array(
             array(42, 60, true, 'LockNew'),
@@ -165,7 +166,8 @@ class ClientOrGroupTest extends AbstractTest
             )
         );
 
-        $model = $this->composeMock();
+        /** @var Mock|ClientOrGroup */
+        $model = Mockery::mock(ClientOrGroup::class)->makePartial();
         $model->setServiceLocator($serviceManager);
         $model['Id'] = $id;
 
@@ -247,6 +249,7 @@ class ClientOrGroupTest extends AbstractTest
             )
         );
 
+        /** @var MockObject|ClientOrGroup */
         $model = $this->composeMock(['__destruct', 'isLocked']);
         $model->expects($this->once())->method('isLocked')->willReturn(true);
         $model->setServiceLocator($serviceManager);
@@ -258,12 +261,20 @@ class ClientOrGroupTest extends AbstractTest
         $expire->setAccessible(true);
         $expire->setValue($model, $current);
 
+        $message = null;
+        /** @psalm-suppress InvalidArgument */
+        set_error_handler(function (int $errno, string $errstr) use (&$message) {
+            $message = $errstr;
+        });
         try {
             $model->unlock();
-            $this->fail('Expected exception was not thrown.');
-        } catch (\PHPUnit\Framework\Error\Warning $e) {
-            $this->assertEquals('Lock expired prematurely. Increase lock lifetime.', $e->getMessage());
+        } finally {
+            restore_error_handler();
         }
+        if ($message != 'Lock expired prematurely. Increase lock lifetime.') {
+            $this->fail('Expected exception was not thrown.');
+        }
+
         $this->assertLocksTableEquals(null);
         $this->assertNull($expire->getValue($model));
     }
@@ -276,7 +287,8 @@ class ClientOrGroupTest extends AbstractTest
 
     public function testIsLockedTrue()
     {
-        $model = $this->composeMock();
+        /** @var Mock|ClientOrGroup */
+        $model = Mockery::mock(ClientOrGroup::class)->makePartial();
 
         $expire = new \ReflectionProperty($model, '_lockNestCount');
         $expire->setAccessible(true);
@@ -320,7 +332,7 @@ class ClientOrGroupTest extends AbstractTest
         $this->assertEquals(array('package1', 'package3'), $model->getAssignablePackages());
     }
 
-    public function assignPackageProvider()
+    public static function assignPackageProvider()
     {
         return array(
             array('package1', 1, 'AssignPackage'),
@@ -407,7 +419,7 @@ class ClientOrGroupTest extends AbstractTest
         );
     }
 
-    public function getConfigProvider()
+    public static function getConfigProvider()
     {
         return array(
             array(10, 'packageDeployment', 0),
@@ -461,7 +473,7 @@ class ClientOrGroupTest extends AbstractTest
         $this->assertEquals('value', $model->getConfig('option'));
     }
 
-    public function setConfigProvider()
+    public static function setConfigProvider()
     {
         return array(
             array(10, 'inventoryInterval', 'FREQUENCY', null, null, null, 'SetConfigRegularDelete'),
@@ -573,7 +585,7 @@ class ClientOrGroupTest extends AbstractTest
         $model->setConfig('allowScan', null);
     }
 
-    public function getAllConfigProvider()
+    public static function getAllConfigProvider()
     {
         return [
             [null, 0, 0, 1, 0, 0],

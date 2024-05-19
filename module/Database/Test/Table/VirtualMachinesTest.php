@@ -22,7 +22,7 @@
 
 namespace Database\Test\Table;
 
-class VirtualMachinesTest extends AbstractTest
+class VirtualMachinesTest extends AbstractTestCase
 {
     public function getDataSet()
     {

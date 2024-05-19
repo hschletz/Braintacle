@@ -22,13 +22,14 @@
 
 namespace Console\Test\Controller;
 
+use Console\Test\AbstractControllerTestCase;
 use Model\SoftwareManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for LicensesController
  */
-class LicensesControllerTest extends \Console\Test\AbstractControllerTest
+class LicensesControllerTest extends AbstractControllerTestCase
 {
     /**
      * Software manager mock

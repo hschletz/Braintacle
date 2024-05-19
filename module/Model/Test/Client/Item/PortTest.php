@@ -22,7 +22,9 @@
 
 namespace Model\Test\Client\Item;
 
-class PortTest extends \Model\Test\AbstractTest
+use Model\Test\AbstractTestCase;
+
+class PortTest extends AbstractTestCase
 {
     public function getDataSet()
     {

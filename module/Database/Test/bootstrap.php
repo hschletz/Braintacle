@@ -20,6 +20,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Database\Test\Table\AbstractTestCase;
+
 error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
 
@@ -30,5 +32,5 @@ $serviceManager->setService(
         'database' => json_decode(getenv('BRAINTACLE_TEST_DATABASE'), true),
     )
 );
-\Database\Test\Table\AbstractTest::$serviceManager = $serviceManager;
+AbstractTestCase::$serviceManager = $serviceManager;
 unset($serviceManager);

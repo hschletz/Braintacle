@@ -23,8 +23,9 @@
 namespace Model\Test\Client\Item;
 
 use Model\Client\Item\Software;
+use Model\Test\AbstractTestCase;
 
-class SoftwareTest extends \Model\Test\AbstractTest
+class SoftwareTest extends AbstractTestCase
 {
     public function getDataSet()
     {

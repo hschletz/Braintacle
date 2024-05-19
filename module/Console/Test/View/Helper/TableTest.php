@@ -27,6 +27,7 @@ use Console\View\Helper\Table;
 use Laminas\I18n\View\Helper\DateFormat;
 use Laminas\View\Helper\EscapeHtml;
 use Laminas\View\Renderer\PhpRenderer;
+use Library\Test\View\Helper\AbstractTestCase;
 use Library\View\Helper\HtmlElement;
 use Mockery;
 use Mockery\MockInterface;
@@ -35,7 +36,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Tests for the Table helper
  */
-class TableTest extends \Library\Test\View\Helper\AbstractTest
+class TableTest extends AbstractTestCase
 {
     /**
      * EscapeHtml mock

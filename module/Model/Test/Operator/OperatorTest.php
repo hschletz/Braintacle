@@ -22,10 +22,12 @@
 
 namespace Model\Test\Operator;
 
+use Model\Test\AbstractTestCase;
+
 /**
  * Tests for Model\Operator\Operator
  */
-class OperatorTest extends \Model\Test\AbstractTest
+class OperatorTest extends AbstractTestCase
 {
     public function getDataSet()
     {

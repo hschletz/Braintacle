@@ -25,7 +25,7 @@ namespace Database\Test\Table;
 /**
  * Tests for the Packages table
  */
-class PackagesTest extends AbstractTest
+class PackagesTest extends AbstractTestCase
 {
     public function getDataSet()
     {

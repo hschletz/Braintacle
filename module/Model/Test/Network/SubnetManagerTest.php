@@ -26,12 +26,13 @@ use Database\Table\Subnets;
 use InvalidArgumentException;
 use Library\Validator\IpNetworkAddress;
 use Model\Network\SubnetManager;
+use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for Model\Network\SubnetManager
  */
-class SubnetManagerTest extends \Model\Test\AbstractTest
+class SubnetManagerTest extends AbstractTestCase
 {
     /** {@inheritdoc} */
     protected static $_tables = array(
@@ -96,7 +97,7 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
         );
     }
 
-    public function getSubnetsOrderingProvider()
+    public static function getSubnetsOrderingProvider()
     {
         return array(
             array('NumInventoried', 'invalid', array(0, 0, 1, 1)), // becomes 'ASC'
@@ -168,7 +169,7 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
         $this->assertContainsOnlyInstancesOf('Model\Network\Subnet', $subnets);
     }
 
-    public function getSubnetProvider()
+    public static function getSubnetProvider()
     {
         return array(
             array('203.0.113.0', '255.255.255.128', null), // Does not exist
@@ -221,7 +222,7 @@ class SubnetManagerTest extends \Model\Test\AbstractTest
         $model->getSubnet('address', 'mask');
     }
 
-    public function saveSubnetProvider()
+    public static function saveSubnetProvider()
     {
         return array(
             array('192.0.2.0', '255.255.255.0', 'new_name', 'SaveSubnetInsertWithName'),

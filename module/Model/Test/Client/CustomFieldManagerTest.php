@@ -28,13 +28,14 @@ use InvalidArgumentException;
 use Laminas\Hydrator\HydratorInterface;
 use Model\Client\CustomFieldManager;
 use Model\Client\CustomFields;
+use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 
 /**
  * Tests for Model\Client\CustomFieldManager
  */
-class CustomFieldManagerTest extends \Model\Test\AbstractTest
+class CustomFieldManagerTest extends AbstractTestCase
 {
     /** {@inheritdoc} */
     protected static $_tables = array('CustomFields');
@@ -135,7 +136,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         }
     }
 
-    public function renameFieldProvider()
+    public static function renameFieldProvider()
     {
         return array(
             array('Field1'), // Just change case of existing name
@@ -174,7 +175,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals(array($newName => 'column1', 'field2' => 'column2'), $model->getColumnMap());
     }
 
-    public function renameFieldExceptionProvider()
+    public static function renameFieldExceptionProvider()
     {
         return array(
             array('TAG', 'field2', 'System column "TAG" cannot be renamed.'),
@@ -262,7 +263,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals(array('field2' => 'column2'), $model->getColumnMap());
     }
 
-    public function deleteFieldExceptionProvider()
+    public static function deleteFieldExceptionProvider()
     {
         return array(
             array('TAG', 'Cannot delete system column "TAG".'),
@@ -370,7 +371,7 @@ class CustomFieldManagerTest extends \Model\Test\AbstractTest
         $model->readRaw(42, ['tag']);
     }
 
-    public function writeProvider()
+    public static function writeProvider()
     {
         return [
             [new CustomFields(['hydrated_name' => 'hydrated_value'])],

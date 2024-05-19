@@ -25,7 +25,7 @@ namespace Console\Test;
 /**
  * Tests for the error page
  */
-class ErrorPageTest extends AbstractControllerTest
+class ErrorPageTest extends AbstractControllerTestCase
 {
     /**
      * Test 404 case

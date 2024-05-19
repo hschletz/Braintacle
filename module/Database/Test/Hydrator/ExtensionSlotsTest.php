@@ -22,9 +22,11 @@
 
 namespace Database\Test\Hydrator;
 
-class ExtensionSlotsTest extends \Library\Test\Hydrator\AbstractHydratorTest
+use Library\Test\Hydrator\AbstractHydratorTestCase;
+
+class ExtensionSlotsTest extends AbstractHydratorTestCase
 {
-    public function hydrateProvider()
+    public static function hydrateProvider()
     {
         $windowsOldAgent = array(
             'name' => 'ignored',
@@ -68,7 +70,7 @@ class ExtensionSlotsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         );
     }
 
-    public function extractProvider()
+    public static function extractProvider()
     {
         $windowsHydrated = [
             'name' => '_name',

@@ -22,7 +22,9 @@
 
 namespace Model\Test\Client\Item;
 
-class ControllerTest extends \Model\Test\AbstractTest
+use Model\Test\AbstractTestCase;
+
+class ControllerTest extends AbstractTestCase
 {
     public function getDataSet()
     {

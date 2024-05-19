@@ -22,7 +22,7 @@
 
 namespace Database\Test\Table;
 
-class DisplaysTest extends AbstractTest
+class DisplaysTest extends AbstractTestCase
 {
     public function getDataSet()
     {

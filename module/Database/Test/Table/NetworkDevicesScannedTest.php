@@ -26,7 +26,7 @@ use Database\Hydrator\NamingStrategy\MapNamingStrategy;
 use Laminas\Hydrator\Strategy\DateTimeFormatterStrategy;
 use Library\Hydrator\Strategy\MacAddress;
 
-class NetworkDevicesScannedTest extends AbstractTest
+class NetworkDevicesScannedTest extends AbstractTestCase
 {
     public function getDataSet()
     {

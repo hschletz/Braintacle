@@ -28,16 +28,21 @@ use DateTime;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\Db\ResultSet\AbstractResultSet;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\Client\Client;
 use Model\Client\CustomFieldManager;
 use Model\Client\CustomFields;
 use Model\Group\GroupManager;
 use Model\Package\Assignment;
+use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 
-class ClientTest extends \Model\Test\AbstractTest
+class ClientTest extends AbstractTestCase
 {
+    use MockeryPHPUnitIntegration;
+
     protected static $_tables = [
         'AndroidInstallations',
         'ClientsAndGroups',
@@ -187,7 +192,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertEquals('something', $model['Registry.Something']);
     }
 
-    public function offsetGetBlacklistedProvider()
+    public static function offsetGetBlacklistedProvider()
     {
         return array(
             array('IsSerialBlacklisted', 'Serial', 'serial_good', false),
@@ -227,7 +232,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertEquals('items', $model['ItemType']); // cached result
     }
 
-    public function getDefaultConfigProvider()
+    public static function getDefaultConfigProvider()
     {
         // All options have a default, so the global value can never be NULL.
         return array(
@@ -296,10 +301,10 @@ class ClientTest extends \Model\Test\AbstractTest
     public function testGetDefaultConfigCache()
     {
         $config = $this->createMock('Model\Config');
-        $config->expects($this->exactly(2))
-            ->method('__get')
-            ->withConsecutive(array('option1'), array('option2'))
-            ->willReturnOnConsecutiveCalls('value1', 'value2');
+        $config->expects($this->exactly(2))->method('__get')->willReturnMap([
+            ['option1', 'value1'],
+            ['option2', 'value2'],
+        ]);
 
         /** @var MockObject|ServiceLocatorInterface */
         $serviceManager = $this->createMock(ServiceLocatorInterface::class);
@@ -430,7 +435,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertSame([], $model->getExplicitConfig());
     }
 
-    public function getEffectiveConfigProvider()
+    public static function getEffectiveConfigProvider()
     {
         return array(
             array('contactInterval', 1, null, 1),
@@ -479,7 +484,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertSame($expectedValue, $model->getEffectiveConfig($option));
     }
 
-    public function getEffectiveConfigForInventoryIntervalProvider()
+    public static function getEffectiveConfigForInventoryIntervalProvider()
     {
         return array(
             array(-1, array(1), 1, -1), // global value -1 always precedes
@@ -530,17 +535,17 @@ class ClientTest extends \Model\Test\AbstractTest
     {
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getConfig']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
-        $model->expects($this->exactly(2))
-            ->method('getConfig')
-            ->withConsecutive(array('option1'), array('option2'))
-            ->willReturnOnConsecutiveCalls('value1', 'value2');
+        $model->expects($this->exactly(2))->method('getConfig')->willReturnMap([
+            ['option1', 'value1'],
+            ['option2', 'value2'],
+        ]);
 
         $this->assertEquals('value1', $model->getEffectiveConfig('option1'));
         $this->assertEquals('value1', $model->getEffectiveConfig('option1')); // from cache
         $this->assertEquals('value2', $model->getEffectiveConfig('option2')); // non-cached value
     }
 
-    public function getPackageAssignmentsProvider()
+    public static function getPackageAssignmentsProvider()
     {
         $package1 = [
             'packageName' => 'package1',
@@ -614,7 +619,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertEquals(array(1, 2), $model->getDownloadedPackageIds());
     }
 
-    public function resetPackageProvider()
+    public static function resetPackageProvider()
     {
         return array(
             array(1, 'resetPackageNotResetYet'),
@@ -794,7 +799,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertSame($result, $model->getItems('type', 'order', 'direction', array('filter' => 'arg')));
     }
 
-    public function setGroupMembershipsNoActionProvider()
+    public static function setGroupMembershipsNoActionProvider()
     {
         return array(
             array(
@@ -869,7 +874,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertEquals('cache', $cache->getValue($model));
     }
 
-    public function setGroupMembershipsInsertProvider()
+    public static function setGroupMembershipsInsertProvider()
     {
         return array(
             array(
@@ -938,7 +943,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertNull($cache->getValue($model));
     }
 
-    public function setGroupMembershipsUpdateProvider()
+    public static function setGroupMembershipsUpdateProvider()
     {
         return array(
             array(
@@ -1007,7 +1012,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $this->assertNull($cache->getValue($model));
     }
 
-    public function setGroupMembershipsDeleteProvider()
+    public static function setGroupMembershipsDeleteProvider()
     {
         return array(
             array(\Model\Client\Client::MEMBERSHIP_ALWAYS),
@@ -1070,25 +1075,19 @@ class ClientTest extends \Model\Test\AbstractTest
 
     public function testSetGroupMembershipsMixedKeys()
     {
-        $groupMemberships = $this->createMock(GroupMemberships::class);
-        $groupMemberships->expects($this->exactly(2))->method('insert')->withConsecutive(
-            array(
-                array(
-                    'hardware_id' => 42,
-                    'group_id' => 1,
-                    'static' => \Model\Client\Client::MEMBERSHIP_ALWAYS,
-                )
-            ),
-            array(
-                array(
-                    'hardware_id' => 42,
-                    'group_id' => 3,
-                    'static' => \Model\Client\Client::MEMBERSHIP_NEVER,
-                )
-            )
-        );
-        $groupMemberships->expects($this->never())->method('update');
-        $groupMemberships->expects($this->never())->method('delete');
+        $groupMemberships = Mockery::mock(GroupMemberships::class);
+        $groupMemberships->shouldReceive('insert')->once()->with([
+            'hardware_id' => 42,
+            'group_id' => 1,
+            'static' => Client::MEMBERSHIP_ALWAYS,
+        ]);
+        $groupMemberships->shouldReceive('insert')->once()->with([
+            'hardware_id' => 42,
+            'group_id' => 3,
+            'static' => Client::MEMBERSHIP_NEVER,
+        ]);
+        $groupMemberships->shouldNotReceive('update');
+        $groupMemberships->shouldNotReceive('delete');
 
         $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->method('getGroups')->with()->willReturn(
@@ -1147,7 +1146,7 @@ class ClientTest extends \Model\Test\AbstractTest
         $model->setGroupMemberships(array('group1' => 23));
     }
 
-    public function getGroupMembershipsProvider()
+    public static function getGroupMembershipsProvider()
     {
         return array(
             array(

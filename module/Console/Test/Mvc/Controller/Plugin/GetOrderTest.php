@@ -22,10 +22,12 @@
 
 namespace Console\Test\Mvc\Controller\Plugin;
 
+use Library\Test\Mvc\Controller\Plugin\AbstractTestCase;
+
 /**
  * Tests for GetOrder controller plugin
  */
-class GetOrderTest extends \Library\Test\Mvc\Controller\Plugin\AbstractTest
+class GetOrderTest extends AbstractTestCase
 {
     /**
      * Invoke plugin and test various combinations of request and plugin parameters

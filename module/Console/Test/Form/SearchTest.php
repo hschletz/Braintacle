@@ -23,6 +23,7 @@
 namespace Console\Test\Form;
 
 use Console\Form\Search;
+use Console\Test\AbstractFormTestCase;
 use DateTime;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Model\Client\CustomFieldManager;
@@ -32,7 +33,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Tests for Search form
  */
-class SearchTest extends \Console\Test\AbstractFormTest
+class SearchTest extends AbstractFormTestCase
 {
     /**
      * Translator mock object

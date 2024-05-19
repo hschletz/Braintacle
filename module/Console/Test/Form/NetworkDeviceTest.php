@@ -22,10 +22,12 @@
 
 namespace Console\Test\Form;
 
+use Console\Test\AbstractFormTestCase;
+
 /**
  * Tests for NetworkDevice form
  */
-class NetworkDeviceTest extends \Console\Test\AbstractFormTest
+class NetworkDeviceTest extends AbstractFormTestCase
 {
     protected $_deviceManager;
 

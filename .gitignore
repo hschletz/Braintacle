@@ -12,7 +12,8 @@ doc/CodeCoverage/*
 vendor/
 
 # generated and managed by PHPUnit
-.phpunit.result.cache
+module/*/.phpunit.cache
+module/*/.phpunit.result.cache
 
 # managed by PHIVE
 tools/

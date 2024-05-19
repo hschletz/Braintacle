@@ -22,15 +22,13 @@
 
 namespace Library\Test\View\Helper;
 
-use Laminas\View\Renderer\PhpRenderer;
 use Library\View\Helper\HtmlElement;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\Stub;
 
 /**
  * Tests for the HtmlElement helper
  */
-class HtmlElementTest extends AbstractTest
+class HtmlElementTest extends AbstractTestCase
 {
     public function testInvokeNewline()
     {
@@ -72,7 +70,7 @@ class HtmlElementTest extends AbstractTest
         );
     }
 
-    public function invokeEmptyElementsProvider()
+    public static function invokeEmptyElementsProvider()
     {
         return [
             ['a', '<a></a>'],

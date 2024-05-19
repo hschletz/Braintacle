@@ -22,7 +22,9 @@
 
 namespace Model\Test\Client\Item;
 
-class DisplayTest extends \Model\Test\AbstractTest
+use Model\Test\AbstractTestCase;
+
+class DisplayTest extends AbstractTestCase
 {
     public function getDataSet()
     {

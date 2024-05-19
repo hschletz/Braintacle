@@ -29,6 +29,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Protocol\Message\InventoryRequest;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tools\Controller\Export;
 
@@ -64,14 +65,14 @@ class ExportTest extends \PHPUnit\Framework\TestCase
         $input->method('getArgument')->with('directory')->willReturn($directory);
         $input->method('getOption')->with('validate')->willReturn(false);
 
-        $output = $this->createMock(OutputInterface::class);
-        $output->expects($this->exactly(2))->method('writeln')->withConsecutive(
-            ['Exporting client1'],
-            ['Exporting client2']
-        );
+        $output = new BufferedOutput();
 
         $controller = new Export($clientManager);
         $this->assertSame(Command::SUCCESS, $controller($input, $output));
+        $this->assertEquals([
+            'Exporting client1',
+            'Exporting client2',
+        ], explode(PHP_EOL, trim($output->fetch())));
     }
 
     public function testInvokeWithValidation()
@@ -115,18 +116,18 @@ class ExportTest extends \PHPUnit\Framework\TestCase
         $input->method('getArgument')->with('directory')->willReturn($directory);
         $input->method('getOption')->with('validate')->willReturn(true);
 
-        $output = $this->createMock(OutputInterface::class);
-        $output->expects($this->exactly(3))->method('writeln')->withConsecutive(
-            ['Exporting client1'],
-            ['Exporting client2'],
-            ['Validation failed for client2.']
-        );
+        $output = new BufferedOutput();
 
         $controller = new Export($clientManager);
         $this->assertEquals(11, $controller($input, $output));
+        $this->assertEquals([
+            'Exporting client1',
+            'Exporting client2',
+            'Validation failed for client2.',
+        ], explode(PHP_EOL, trim($output->fetch())));
     }
 
-    public function invalidDirectoryProvider()
+    public static function invalidDirectoryProvider()
     {
         return [
             [vfsStream::newDirectory('test', 0000)], // not writable

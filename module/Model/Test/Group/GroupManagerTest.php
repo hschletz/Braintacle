@@ -34,14 +34,14 @@ use Model\Group\Group;
 use Model\Group\GroupManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class GroupManagerTest extends AbstractGroupTest
+class GroupManagerTest extends AbstractGroupTestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /** {@inheritdoc} */
     protected static $_tables = array('ClientConfig', 'ClientsAndGroups', 'GroupMemberships');
 
-    public function getGroupsProvider()
+    public static function getGroupsProvider()
     {
         $group1 = array(
             'Id' => '1',
@@ -144,7 +144,7 @@ class GroupManagerTest extends AbstractGroupTest
         $group = $model->getGroup('');
     }
 
-    public function createGroupProvider()
+    public static function createGroupProvider()
     {
         return array(
             array('description', 'description'),

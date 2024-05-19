@@ -4,13 +4,13 @@ namespace Console\Test\Mvc\Controller\Plugin;
 
 use Console\Mvc\Controller\Plugin\Translate;
 use Laminas\Mvc\I18n\Translator;
-use Library\Test\Mvc\Controller\Plugin\AbstractTest;
+use Library\Test\Mvc\Controller\Plugin\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for Translate controller plugin
  */
-class TranslateTest extends AbstractTest
+class TranslateTest extends AbstractTestCase
 {
     public function testInvoke()
     {

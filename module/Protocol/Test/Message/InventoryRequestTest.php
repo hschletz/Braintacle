@@ -22,6 +22,8 @@
 
 namespace Protocol\Test\Message;
 
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\Client\Client;
 use PhpBench\Dom\Element;
 use Protocol\Message\InventoryRequest;
@@ -30,6 +32,8 @@ use ReflectionProperty;
 
 class InventoryRequestTest extends \PHPUnit\Framework\TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     public function testGetSchemaFilename()
     {
         $document = new InventoryRequest($this->createStub(Content::class));
@@ -48,12 +52,10 @@ class InventoryRequestTest extends \PHPUnit\Framework\TestCase
         $content->expects($this->once())->method('setClient')->with($client);
         $content->expects($this->once())->method('appendSections');
 
-        $request = $this->createMock(Element::class);
-        $request->expects($this->exactly(2))->method('appendElement')->withConsecutive(
-            ['DEVICEID', 'id_string', true],
-            ['QUERY', 'INVENTORY']
-        );
-        $request->method('appendChild')->with($content);
+        $request = Mockery::mock(Element::class);
+        $request->shouldReceive('appendElement')->once()->with('DEVICEID', 'id_string', true);
+        $request->shouldReceive('appendElement')->once()->with('QUERY', 'INVENTORY');
+        $request->shouldReceive('appendChild')->once()->with($content);
 
         $document = $this->createPartialMock(InventoryRequest::class, ['createRoot']);
         $document->method('createRoot')->with('REQUEST')->willReturn($request);

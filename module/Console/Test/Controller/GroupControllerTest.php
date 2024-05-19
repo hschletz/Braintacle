@@ -25,9 +25,11 @@ namespace Console\Test\Controller;
 use Console\Form\AddToGroup as FormAddToGroup;
 use Console\Form\ClientConfig;
 use Console\Form\Package\AssignPackagesForm;
+use Console\Test\AbstractControllerTestCase;
 use Console\View\Helper\Form\AddToGroup;
 use Console\View\Helper\Form\ClientConfig as FormClientConfig;
 use Console\View\Helper\GroupHeader;
+use IntlDateFormatter;
 use Laminas\I18n\View\Helper\DateFormat;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Model\Client\ClientManager;
@@ -38,7 +40,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Tests for GroupController
  */
-class GroupControllerTest extends \Console\Test\AbstractControllerTest
+class GroupControllerTest extends AbstractControllerTestCase
 {
     /**
      * Group manager mock
@@ -162,11 +164,10 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
 
         $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
-        $flashMessenger->method('__call')
-            ->withConsecutive(
-                array('getMessagesFromNamespace', array('error')),
-                array('getMessagesFromNamespace', array('success'))
-            )->willReturnOnConsecutiveCalls(array('error'), array('success'));
+        $flashMessenger->method('__call')->willReturnMap([
+            ['getMessagesFromNamespace', ['error'], ['error']],
+            ['getMessagesFromNamespace', ['success'], ['success']],
+        ]);
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
         $this->disableTranslator();
@@ -258,14 +259,11 @@ class GroupControllerTest extends \Console\Test\AbstractControllerTest
             ->willReturn($clients);
 
         $dateFormat = $this->createMock(DateFormat::class);
-        $dateFormat->expects($this->exactly(3))
-            ->method('__invoke')
-            ->withConsecutive(
-                array($cacheCreationDate, \IntlDateFormatter::FULL, \IntlDateFormatter::MEDIUM),
-                array($cacheExpirationDate, \IntlDateFormatter::FULL, \IntlDateFormatter::MEDIUM),
-                array($inventoryDate, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
-            )
-            ->will($this->onConsecutiveCalls('date_create', 'date_expire', 'date_client'));
+        $dateFormat->method('__invoke')->willReturnMap([
+            [$cacheCreationDate, IntlDateFormatter::FULL, IntlDateFormatter::MEDIUM, null, null, 'date_create'],
+            [$cacheExpirationDate, IntlDateFormatter::FULL, IntlDateFormatter::MEDIUM, null, null, 'date_expire'],
+            [$inventoryDate, IntlDateFormatter::SHORT, IntlDateFormatter::SHORT, null, null, 'date_client'],
+        ]);
         $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');
         $viewHelperManager->setService('dateFormat', $dateFormat);
 

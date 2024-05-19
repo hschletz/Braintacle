@@ -22,6 +22,7 @@
 
 namespace Console\Test\Form;
 
+use Console\Test\AbstractFormTestCase;
 use Laminas\Dom\Document\Query as Query;
 use Laminas\Form\Element\Date;
 use Model\Client\CustomFieldManager;
@@ -30,7 +31,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Tests for CustomFields form
  */
-class CustomFieldsTest extends \Console\Test\AbstractFormTest
+class CustomFieldsTest extends AbstractFormTestCase
 {
     /**
      * CustomFields mock object

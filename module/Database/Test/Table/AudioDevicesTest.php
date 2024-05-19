@@ -22,7 +22,7 @@
 
 namespace Database\Test\Table;
 
-class AudioDevicesTest extends AbstractTest
+class AudioDevicesTest extends AbstractTestCase
 {
     public function getDataSet()
     {

@@ -23,7 +23,6 @@
 namespace Protocol\Test\Message\InventoryRequest;
 
 use ArrayObject;
-use DateTime;
 use Laminas\Db\ResultSet\ResultSet;
 use Model\Client\AndroidInstallation;
 use Model\Client\Client;
@@ -48,28 +47,19 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 
     public function testAppendSections()
     {
-        $content = $this->createPartialMock(
-            Content::class,
-            [
-                'appendSystemSection',
-                'appendOsSpecificSection',
-                'appendAccountinfoSection',
-                'appendDownloadSection',
-                'appendAllItemSections'
-            ]
-        );
-        $content->expects($this->exactly(2))
-            ->method('appendSystemSection')
-            ->withConsecutive([Content::SYSTEM_SECTION_HARDWARE], [Content::SYSTEM_SECTION_BIOS]);
-        $content->expects($this->once())->method('appendOsSpecificSection');
-        $content->expects($this->once())->method('appendAccountinfoSection');
-        $content->expects($this->once())->method('appendDownloadSection');
-        $content->expects($this->once())->method('appendAllItemSections');
+        /** @var Mock|Content */
+        $content = Mockery::mock(Content::class)->makePartial();
+        $content->shouldReceive('appendSystemSection')->once()->with(Content::SYSTEM_SECTION_HARDWARE);
+        $content->shouldReceive('appendSystemSection')->once()->with(Content::SYSTEM_SECTION_BIOS);
+        $content->shouldReceive('appendOsSpecificSection')->once();
+        $content->shouldReceive('appendAccountinfoSection')->once();
+        $content->shouldReceive('appendDownloadSection')->once();
+        $content->shouldReceive('appendAllItemSections')->once();
 
         $content->appendSections($this->createStub(Client::class));
     }
 
-    public function appendSystemSectionProvider()
+    public static function appendSystemSectionProvider()
     {
         return [
             [Content::SYSTEM_SECTION_HARDWARE, Hydrator\ClientsHardware::class],
@@ -161,18 +151,15 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $client = $this->createMock(Client::class);
         $client->method('offsetGet')->with('CustomFields')->willReturn($data);
 
-        /** @var MockObject|Content */
-        $content = $this->createPartialMock(Content::class, ['appendSection']);
-        $content->expects($this->exactly(2))->method('appendSection')->withConsecutive(
-            [
-                'ACCOUNTINFO',
-                ['KEYNAME' => 'name1', 'KEYVALUE' => 'value1'],
-            ],
-            [
-                'ACCOUNTINFO',
-                ['KEYNAME' => 'name4', 'KEYVALUE' => '2020-12-27'],
-
-            ]
+        /** @var Mock|Content */
+        $content = Mockery::mock(Content::class)->makePartial();
+        $content->shouldReceive('appendSection')->once()->with(
+            'ACCOUNTINFO',
+            ['KEYNAME' => 'name1', 'KEYVALUE' => 'value1'],
+        );
+        $content->shouldReceive('appendSection')->once()->with(
+            'ACCOUNTINFO',
+            ['KEYNAME' => 'name4', 'KEYVALUE' => '2020-12-27'],
         );
 
         $content->setClient($client);
@@ -221,30 +208,27 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 
     public function testAppendAllItemSections()
     {
-        $args = [
-            ['controller', 'CONTROLLERS'],
-            ['cpu', 'CPUS'],
-            ['filesystem', 'DRIVES'],
-            ['inputdevice', 'INPUTS'],
-            ['memoryslot', 'MEMORIES'],
-            ['modem', 'MODEMS'],
-            ['display', 'MONITORS'],
-            ['networkinterface', 'NETWORKS'],
-            ['msofficeproduct', 'OFFICEPACK'],
-            ['port', 'PORTS'],
-            ['printer', 'PRINTERS'],
-            ['registrydata', 'REGISTRY'],
-            ['sim', 'SIM'],
-            ['extensionslot', 'SLOTS'],
-            ['software', 'SOFTWARES'],
-            ['audiodevice', 'SOUNDS'],
-            ['storagedevice', 'STORAGES'],
-            ['displaycontroller', 'VIDEOS'],
-            ['virtualmachine', 'VIRTUALMACHINES'],
-        ];
-
-        $content = $this->createPartialMock(Content::class, ['appendItemSections']);
-        $content->expects($this->exactly(count($args)))->method('appendItemSections')->withConsecutive(...$args);
+        /** @var Mock|Content */
+        $content = Mockery::mock(Content::class)->makePartial();
+        $content->shouldReceive('appendItemSections')->once()->with('controller', 'CONTROLLERS');
+        $content->shouldReceive('appendItemSections')->once()->with('cpu', 'CPUS');
+        $content->shouldReceive('appendItemSections')->once()->with('filesystem', 'DRIVES');
+        $content->shouldReceive('appendItemSections')->once()->with('inputdevice', 'INPUTS');
+        $content->shouldReceive('appendItemSections')->once()->with('memoryslot', 'MEMORIES');
+        $content->shouldReceive('appendItemSections')->once()->with('modem', 'MODEMS');
+        $content->shouldReceive('appendItemSections')->once()->with('display', 'MONITORS');
+        $content->shouldReceive('appendItemSections')->once()->with('networkinterface', 'NETWORKS');
+        $content->shouldReceive('appendItemSections')->once()->with('msofficeproduct', 'OFFICEPACK');
+        $content->shouldReceive('appendItemSections')->once()->with('port', 'PORTS');
+        $content->shouldReceive('appendItemSections')->once()->with('printer', 'PRINTERS');
+        $content->shouldReceive('appendItemSections')->once()->with('registrydata', 'REGISTRY');
+        $content->shouldReceive('appendItemSections')->once()->with('sim', 'SIM');
+        $content->shouldReceive('appendItemSections')->once()->with('extensionslot', 'SLOTS');
+        $content->shouldReceive('appendItemSections')->once()->with('software', 'SOFTWARES');
+        $content->shouldReceive('appendItemSections')->once()->with('audiodevice', 'SOUNDS');
+        $content->shouldReceive('appendItemSections')->once()->with('storagedevice', 'STORAGES');
+        $content->shouldReceive('appendItemSections')->once()->with('displaycontroller', 'VIDEOS');
+        $content->shouldReceive('appendItemSections')->once()->with('virtualmachine', 'VIRTUALMACHINES');
 
         $content->appendAllItemSections();
     }

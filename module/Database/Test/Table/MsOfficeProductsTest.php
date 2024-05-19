@@ -22,7 +22,7 @@
 
 namespace Database\Test\Table;
 
-class MsOfficeProductsTest extends AbstractTest
+class MsOfficeProductsTest extends AbstractTestCase
 {
     public function getDataSet()
     {

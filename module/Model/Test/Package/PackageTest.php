@@ -22,7 +22,9 @@
 
 namespace Model\Test\Package;
 
-class PackageTest extends \Model\Test\AbstractTest
+use Model\Test\AbstractTestCase;
+
+class PackageTest extends AbstractTestCase
 {
     public function getDataSet()
     {

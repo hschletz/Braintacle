@@ -22,7 +22,9 @@
 
 namespace Model\Test\Registry;
 
-class ValueTest extends \Model\Test\AbstractTest
+use Model\Test\AbstractTestCase;
+
+class ValueTest extends AbstractTestCase
 {
     public function getDataSet()
     {

@@ -23,11 +23,12 @@
 namespace Model\Test\Operator;
 
 use Model\Operator\AuthenticationService;
+use Model\Test\AbstractTestCase;
 
 /**
  * Tests for AuthenticationService
  */
-class AuthenticationServiceTest extends \Model\Test\AbstractTest
+class AuthenticationServiceTest extends AbstractTestCase
 {
     /** {@inheritdoc} */
     protected static $_tables = array('Operators');

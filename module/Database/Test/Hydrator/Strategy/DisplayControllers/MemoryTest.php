@@ -22,9 +22,11 @@
 
 namespace Database\Test\Hydrator\Strategy\DisplayControllers;
 
-class MemoryTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
+use Database\Test\Hydrator\Strategy\AbstractStrategyTestCase;
+
+class MemoryTest extends AbstractStrategyTestCase
 {
-    public function hydrateProvider()
+    public static function hydrateProvider()
     {
         return array(
             array('0', null),
@@ -33,7 +35,7 @@ class MemoryTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
         );
     }
 
-    public function extractProvider()
+    public static function extractProvider()
     {
         return array(
             array('128', '128'),

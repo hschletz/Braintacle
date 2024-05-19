@@ -22,9 +22,11 @@
 
 namespace Database\Test\Hydrator\Strategy\MemorySlots;
 
-class ClockTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
+use Database\Test\Hydrator\Strategy\AbstractStrategyTestCase;
+
+class ClockTest extends AbstractStrategyTestCase
 {
-    public function hydrateProvider()
+    public static function hydrateProvider()
     {
         return array(
             array('800', 800),
@@ -37,7 +39,7 @@ class ClockTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
         );
     }
 
-    public function extractProvider()
+    public static function extractProvider()
     {
         return array(
             array('800', '800'),

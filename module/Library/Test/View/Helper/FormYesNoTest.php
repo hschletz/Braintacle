@@ -31,9 +31,9 @@ use PHPUnit\Framework\MockObject\Stub;
 /**
  * Tests for the FormYesNo helper
  */
-class FormYesNoTest extends AbstractTest
+class FormYesNoTest extends AbstractTestCase
 {
-    public function invokeAttributesProvider()
+    public static function invokeAttributesProvider()
     {
         return array(
             array(array(), array('method' => 'post')),

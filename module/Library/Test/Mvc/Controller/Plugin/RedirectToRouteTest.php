@@ -22,26 +22,28 @@
 
 namespace Library\Test\Mvc\Controller\Plugin;
 
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\Plugin\Redirect as RedirectPlugin;
+use Library\Mvc\Controller\Plugin\RedirectToRoute as RedirectToRoutePlugin;
+use Library\Mvc\Controller\Plugin\UrlFromRoute as UrlFromRoutePlugin;
+
 /**
  * Tests for RedirectToRoute controller plugin
  */
-class RedirectToRouteTest extends AbstractTest
+class RedirectToRouteTest extends AbstractTestCase
 {
-    /**
-     * Invoke the plugin and test the response for expected HTTP redirection
-     *
-     * Not all possible parameter combinations are tested - this is done by the
-     * tests for the underlying UrlFromRoute plugin.
-     */
     public function testInvoke()
     {
-        $plugin = $this->getPlugin();
-        $response = $plugin('testedcontroller', 'testedaction');
-        $this->assertInstanceOf('Laminas\Http\Response', $response);
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals(
-            '/module/testedcontroller/testedaction/',
-            $response->getHeaders()->get('Location')->getFieldValue()
-        );
+        $response = new Response();
+
+        $redirectPlugin = $this->createMock(RedirectPlugin::class);
+        $redirectPlugin->method('toUrl')->with('url')->willReturn($response);
+
+        $urlFromRoutePlugin = $this->createMock(UrlFromRoutePlugin::class);
+        $urlFromRoutePlugin->method('__invoke')->with('controller', 'action', ['key' => 'value'])->willReturn('url');
+
+        $redirectToRoutePlugin = new RedirectToRoutePlugin($redirectPlugin, $urlFromRoutePlugin);
+
+        $this->assertSame($response, $redirectToRoutePlugin('controller', 'action', ['key' => 'value']));
     }
 }

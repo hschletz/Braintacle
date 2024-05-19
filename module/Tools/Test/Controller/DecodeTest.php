@@ -98,7 +98,7 @@ class DecodeTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function invalidInputFileProvider()
+    public static function invalidInputFileProvider()
     {
         return [
             [vfsStream::newDirectory('test'), []], // not a file

@@ -22,7 +22,9 @@
 
 namespace Model\Test\Client\Item;
 
-class FilesystemTest extends \Model\Test\AbstractTest
+use Model\Test\AbstractTestCase;
+
+class FilesystemTest extends AbstractTestCase
 {
     public function getDataSet()
     {

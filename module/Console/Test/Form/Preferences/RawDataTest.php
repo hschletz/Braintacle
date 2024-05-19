@@ -22,10 +22,11 @@
 
 namespace Console\Test\Form\Preferences;
 
+use Console\Test\AbstractFormTestCase;
 use org\bovigo\vfs\vfsStream;
 use Laminas\Dom\Document\Query;
 
-class RawDataTest extends \Console\Test\AbstractFormTest
+class RawDataTest extends AbstractFormTestCase
 {
     public function testInit()
     {

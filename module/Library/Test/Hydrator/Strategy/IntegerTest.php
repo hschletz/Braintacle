@@ -26,7 +26,7 @@ use stdClass;
 
 class IntegerTest extends \PHPUnit\Framework\TestCase
 {
-    public function hydrateProvider()
+    public static function hydrateProvider()
     {
         return array(
             array(0, 0),
@@ -46,7 +46,7 @@ class IntegerTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($expected, $strategy->hydrate($value, null));
     }
 
-    public function hydrateInvalidDatatypeProvider()
+    public static function hydrateInvalidDatatypeProvider()
     {
         return array(
             array(true),
@@ -68,7 +68,7 @@ class IntegerTest extends \PHPUnit\Framework\TestCase
         $strategy->hydrate($value, null);
     }
 
-    public function hydrateInvalidContentProvider()
+    public static function hydrateInvalidContentProvider()
     {
         return array(
             array(''),

@@ -25,7 +25,7 @@ namespace Database\Test\Table;
 /**
  * Tests for the Operators table
  */
-class OperatorsTest extends AbstractTest
+class OperatorsTest extends AbstractTestCase
 {
     public function getDataSet()
     {

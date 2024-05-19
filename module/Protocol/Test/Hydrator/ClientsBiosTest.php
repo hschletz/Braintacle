@@ -22,11 +22,12 @@
 
 namespace Protocol\Test\Hydrator;
 
+use Library\Test\Hydrator\AbstractHydratorTestCase;
 use Model\AbstractModel;
 
-class ClientsBiosTest extends \Library\Test\Hydrator\AbstractHydratorTest
+class ClientsBiosTest extends AbstractHydratorTestCase
 {
-    protected $_extracted = array(
+    private static $extracted = [
         'ASSETTAG' => 'asset tag',
         'BDATE' => 'bios date',
         'BMANUFACTURER' => 'bios manufacturer',
@@ -35,9 +36,9 @@ class ClientsBiosTest extends \Library\Test\Hydrator\AbstractHydratorTest
         'SMODEL' => 'model',
         'SSN' => 'serial',
         'TYPE' => 'type',
-    );
+    ];
 
-    protected $_hydrated = [
+    private static $hydrated = [
         'assetTag' => 'asset tag',
         'biosDate' => 'bios date',
         'biosManufacturer' => 'bios manufacturer',
@@ -49,9 +50,14 @@ class ClientsBiosTest extends \Library\Test\Hydrator\AbstractHydratorTest
         'idString' => 'ignored',
     ];
 
-    public function hydrateProvider()
+    public static function hydrateProvider()
     {
-        return array(array($this->_extracted + array('IGNORED' => 'ignored'), $this->_hydrated));
+        return [
+            [
+                static::$extracted + ['IGNORED' => 'ignored'],
+                static::$hydrated
+            ],
+        ];
     }
 
     /**
@@ -82,8 +88,10 @@ class ClientsBiosTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $this->assertEquals($expected, $object->getArrayCopy());
     }
 
-    public function extractProvider()
+    public static function extractProvider()
     {
-        return array(array($this->_hydrated, $this->_extracted));
+        return [
+            [static::$hydrated, static::$extracted],
+        ];
     }
 }

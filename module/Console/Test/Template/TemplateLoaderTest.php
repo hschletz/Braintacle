@@ -10,7 +10,7 @@ use Symfony\Component\Filesystem\Path;
 
 class TemplateLoaderTest extends TestCase
 {
-    public function getContentProvider()
+    public static function getContentProvider()
     {
         return [
             [-10], // past

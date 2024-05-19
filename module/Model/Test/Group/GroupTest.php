@@ -33,7 +33,7 @@ use Model\Group\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 
-class GroupTest extends AbstractGroupTest
+class GroupTest extends AbstractGroupTestCase
 {
     /** {@inheritdoc} */
     protected static $_tables = array(
@@ -45,7 +45,7 @@ class GroupTest extends AbstractGroupTest
         'Packages',
     );
 
-    public function getDefaultConfigProvider()
+    public static function getDefaultConfigProvider()
     {
         return array(
             array('allowScan', 0, 'scannersPerSubnet', 0),
@@ -64,7 +64,7 @@ class GroupTest extends AbstractGroupTest
         $this->assertSame($expectedValue, $model->getDefaultConfig($option));
     }
 
-    public function setMembersFromQueryProvider()
+    public static function setMembersFromQueryProvider()
     {
         return array(
             array(\Model\Client\Client::MEMBERSHIP_ALWAYS, false, 'SetMembersFromQueryStatic'),
@@ -175,7 +175,7 @@ class GroupTest extends AbstractGroupTest
         $model->setMembersFromQuery(\Model\Client\Client::MEMBERSHIP_ALWAYS, 'filter', 'search', 'operator', true);
     }
 
-    public function setMembersFromQueryDynamicProvider()
+    public static function setMembersFromQueryDynamicProvider()
     {
         return array(
             array(array()),
@@ -298,7 +298,7 @@ class GroupTest extends AbstractGroupTest
         );
     }
 
-    public function updateProvider()
+    public static function updateProvider()
     {
         return array(
             array(true, false, null, true, null), // force update, but no query

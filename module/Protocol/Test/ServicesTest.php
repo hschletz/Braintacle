@@ -34,7 +34,7 @@ class ServicesTest extends \PHPUnit\Framework\TestCase
         static::$_serviceManager = $application->getServiceManager();
     }
 
-    public function servicesProvider()
+    public static function servicesProvider()
     {
         return array(
             array('Protocol\Hydrator\AudioDevices', 'Protocol\Hydrator\DatabaseProxy'),

@@ -22,7 +22,9 @@
 
 namespace Model\Test\Client;
 
-class AndroidInstallationTest extends \Model\Test\AbstractTest
+use Model\Test\AbstractTestCase;
+
+class AndroidInstallationTest extends AbstractTestCase
 {
     public function getDataSet()
     {

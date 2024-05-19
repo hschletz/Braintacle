@@ -22,22 +22,24 @@
 
 namespace Console\Test\View\Helper;
 
+use Library\Test\View\Helper\AbstractTestCase;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\Network\Subnet;
-use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for the FilterDescription helper
  */
-class FilterDescriptionTest extends \Library\Test\View\Helper\AbstractTest
+class FilterDescriptionTest extends AbstractTestCase
 {
+    use MockeryPHPUnitIntegration;
+
     public function testInterfaceInSubnet()
     {
-        /** @var MockObject|Subnet */
-        $subnet = $this->createMock(Subnet::class);
-        $subnet->expects($this->exactly(2))
-            ->method('offsetSet')
-            ->withConsecutive(['Address', 'address1'], ['Mask', 'mask1']);
-        $subnet->method('offsetGet')->with('CidrAddress')->willReturn('<cidrAddress1>');
+        $subnet = Mockery::mock(Subnet::class);
+        $subnet->shouldReceive('offsetSet')->once()->with('Address', 'address1');
+        $subnet->shouldReceive('offsetSet')->once()->with('Mask', 'mask1');
+        $subnet->shouldReceive('offsetGet')->with('CidrAddress')->andReturn('<cidrAddress1>');
 
         $helper = new \Console\View\Helper\FilterDescription($subnet);
         $helper->setView(static::$serviceManager->get('Laminas\View\Renderer\PhpRenderer'));

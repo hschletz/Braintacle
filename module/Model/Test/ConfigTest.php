@@ -25,7 +25,7 @@ namespace Model\Test;
 /**
  * Tests for Model\Config
  */
-class ConfigTest extends AbstractTest
+class ConfigTest extends AbstractTestCase
 {
     /** {@inheritdoc} */
     protected static $_tables = array('Config');

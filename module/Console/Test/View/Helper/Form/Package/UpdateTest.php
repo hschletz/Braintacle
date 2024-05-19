@@ -33,8 +33,9 @@ use Laminas\Form\FormInterface;
 use Laminas\Form\View\Helper\FormElementErrors;
 use Laminas\Form\View\Helper\FormRow;
 use Laminas\View\Renderer\PhpRenderer;
+use Library\Test\View\Helper\AbstractTestCase;
 
-class UpdateTest extends \Library\Test\View\Helper\AbstractTest
+class UpdateTest extends AbstractTestCase
 {
     protected function getHelperName()
     {

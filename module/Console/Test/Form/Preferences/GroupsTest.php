@@ -22,7 +22,9 @@
 
 namespace Console\Test\Form\Preferences;
 
-class GroupsTest extends \Console\Test\AbstractFormTest
+use Console\Test\AbstractFormTestCase;
+
+class GroupsTest extends AbstractFormTestCase
 {
     public function testInit()
     {

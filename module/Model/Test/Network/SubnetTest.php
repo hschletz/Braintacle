@@ -22,7 +22,9 @@
 
 namespace Model\Test\Network;
 
-class SubnetTest extends \Model\Test\AbstractTest
+use Model\Test\AbstractTestCase;
+
+class SubnetTest extends AbstractTestCase
 {
     public function getDataSet()
     {
@@ -36,7 +38,7 @@ class SubnetTest extends \Model\Test\AbstractTest
         $this->assertTrue(method_exists($model, 'exchangeArray'));
     }
 
-    public function getCidrAddressProvider()
+    public static function getCidrAddressProvider()
     {
         return [
             ['192.0.2.0', '0.0.0.0', 0],

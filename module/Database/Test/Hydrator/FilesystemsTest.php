@@ -22,9 +22,11 @@
 
 namespace Database\Test\Hydrator;
 
-class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
+use Library\Test\Hydrator\AbstractHydratorTestCase;
+
+class FilesystemsTest extends AbstractHydratorTestCase
 {
-    public function hydrateProvider()
+    public static function hydrateProvider()
     {
         $windowsAgent = array(
             'letter' => 'C:/',
@@ -68,7 +70,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         );
     }
 
-    public function extractProvider()
+    public static function extractProvider()
     {
         $windowsFilesystem = array(
             'Letter' => 'C:',
@@ -112,7 +114,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         );
     }
 
-    public function hydrateNameProvider()
+    public static function hydrateNameProvider()
     {
         return array(
             array('letter', 'Letter'),
@@ -140,7 +142,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $hydrator->hydrateName('invalid');
     }
 
-    public function extractNameProvider()
+    public static function extractNameProvider()
     {
         return array(
             array('Letter', 'letter'),
@@ -172,7 +174,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $hydrator->extractName('Invalid');
     }
 
-    public function hydrateValueProvider()
+    public static function hydrateValueProvider()
     {
         return array(
             array('Letter', 'C:/', 'C:'),
@@ -193,7 +195,7 @@ class FilesystemsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         $this->assertEquals($hydrated, $hydrator->hydrateValue($name, $extracted));
     }
 
-    public function extractValueProvider()
+    public static function extractValueProvider()
     {
         return array(
             array('letter', 'C:', 'C:'),

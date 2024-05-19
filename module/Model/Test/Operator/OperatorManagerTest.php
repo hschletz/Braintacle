@@ -25,12 +25,13 @@ namespace Model\Test\Operator;
 use Database\Table\Operators;
 use Model\Operator\AuthenticationService;
 use Model\Operator\OperatorManager;
+use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for Model\Operator\OperatorManager
  */
-class OperatorManagerTest extends \Model\Test\AbstractTest
+class OperatorManagerTest extends AbstractTestCase
 {
     /** {@inheritdoc} */
     protected static $_tables = array('Operators');
@@ -200,7 +201,7 @@ class OperatorManagerTest extends \Model\Test\AbstractTest
         );
     }
 
-    public function updateOperatorProvider()
+    public static function updateOperatorProvider()
     {
         return array(
             array(

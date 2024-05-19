@@ -18,19 +18,12 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
-<phpunit
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
     bootstrap="Test/bootstrap.php"
-    convertDeprecationsToExceptions="true"
+    cacheDirectory=".phpunit.cache"
 >
-  <coverage processUncoveredFiles="true">
-    <include>
-      <directory suffix=".php">.</directory>
-    </include>
-    <exclude>
-      <directory>Test</directory>
-    </exclude>
+  <coverage>
     <report>
       <text outputFile="php://stdout" showOnlySummary="true"/>
     </report>
@@ -41,7 +34,12 @@ this program; if not, write to the Free Software Foundation, Inc.,
     </testsuite>
   </testsuites>
   <logging/>
-  <listeners>
-    <listener class="\Mockery\Adapter\Phpunit\TestListener"></listener>
-  </listeners>
+  <source>
+    <include>
+      <directory suffix=".php">.</directory>
+    </include>
+    <exclude>
+      <directory>Test</directory>
+    </exclude>
+  </source>
 </phpunit>

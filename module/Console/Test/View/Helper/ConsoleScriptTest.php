@@ -27,11 +27,17 @@ use Console\View\Helper\ConsoleScript;
 use Laminas\Uri\UriInterface;
 use Laminas\View\Helper\Placeholder\Container\AbstractContainer;
 use Laminas\View\Renderer\PhpRenderer;
+use Library\Test\View\Helper\AbstractTestCase;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery\Mock;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ConsoleScriptTest extends \Library\Test\View\Helper\AbstractTest
+class ConsoleScriptTest extends AbstractTestCase
 {
+    use MockeryPHPUnitIntegration;
+
     public function testInvokeNoArgs()
     {
         /** @var MockObject|ConsoleScript|callable */
@@ -55,12 +61,12 @@ class ConsoleScriptTest extends \Library\Test\View\Helper\AbstractTest
 
     public function testToString()
     {
-        $consoleScript = $this->createPartialMock(ConsoleScript::class, ['getIterator', '__call', 'getHtml']);
-        $consoleScript->method('getIterator')->willReturn(new ArrayIterator(['script1', 'script2']));
-        $consoleScript->method('__call')->with('getSeparator', [])->willReturn('_');
-        $consoleScript->method('getHtml')
-            ->withConsecutive(['script1'], ['script2'])
-            ->willReturnOnConsecutiveCalls('html1', 'html2');
+        /** @var Mock|ConsoleScript */
+        $consoleScript = Mockery::mock(ConsoleScript::class)->makePartial();
+        $consoleScript->shouldReceive('getIterator')->andReturn(new ArrayIterator(['script1', 'script2']));
+        $consoleScript->shouldReceive('getSeparator')->andReturn('_');
+        $consoleScript->shouldReceive('getHtml')->with('script1')->andReturn('html1');
+        $consoleScript->shouldReceive('getHtml')->with('script2')->andReturn('html2');
 
         $this->assertEquals('html1_html2', $consoleScript->toString());
     }

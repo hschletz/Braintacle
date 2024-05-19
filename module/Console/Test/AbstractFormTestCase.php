@@ -24,6 +24,7 @@ namespace Console\Test;
 
 use Laminas\Validator\Translator\TranslatorInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Abstract form test case
@@ -31,7 +32,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  * This base class performs common setup and tests for all forms derived from
  * \Console\Form\Form.
  */
-abstract class AbstractFormTest extends \PHPUnit\Framework\TestCase
+abstract class AbstractFormTestCase extends TestCase
 {
     /**
      * HTML header to declare document encoding

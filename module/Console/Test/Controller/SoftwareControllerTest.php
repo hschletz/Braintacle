@@ -24,15 +24,20 @@ namespace Console\Test\Controller;
 
 use Console\Form\SoftwareManagementForm;
 use Console\Mvc\Controller\Plugin\GetOrder;
+use Console\Test\AbstractControllerTestCase;
 use Laminas\Session\Container;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\SoftwareManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for SoftwareController
  */
-class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
+class SoftwareControllerTest extends AbstractControllerTestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var MockObject|SoftwareManager
      */
@@ -100,7 +105,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertResponseStatusCode(200);
     }
 
-    public function indexActionFilterProvider()
+    public static function indexActionFilterProvider()
     {
         return [
             ['accepted'],
@@ -169,7 +174,7 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
         $this->assertXpathQuery('//tr[3]/td[3]/a[normalize-space(text())="2"][contains(@href, "search=%3Cname%3E")]');
     }
 
-    public function confirmActionValidProvider()
+    public static function confirmActionValidProvider()
     {
         return [
             ['accept', true, 'Die folgende Software wird als bekannt und akzeptiert markiert. Fortfahren?'],
@@ -249,13 +254,19 @@ class SoftwareControllerTest extends \Console\Test\AbstractControllerTest
 
     public function testManageActionPostYesNonEmptyList()
     {
-        $this->_softwareManager->expects($this->exactly(2))
-            ->method('setDisplay')
-            ->withConsecutive(array('name1'), array('name2'));
+        $softwareManager = Mockery::mock(SoftwareManager::class);
+        $softwareManager->shouldReceive('setDisplay')->once()->with('name1', true);
+        $softwareManager->shouldReceive('setDisplay')->once()->with('name2', true);
+
+        $serviceManager = $this->getApplicationServiceLocator();
+        $allowOverride = $serviceManager->getAllowOverride();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService(SoftwareManager::class, $softwareManager);
+        $serviceManager->setAllowOverride($allowOverride);
 
         $this->_session['filter'] = 'FILTER';
         $this->_session['software'] = array('name1', 'name2');
-        $this->_session['display'] = 'DISPLAY';
+        $this->_session['display'] = true;
 
         $this->dispatch('/console/software/manage/', 'POST', array('yes' => 'Yes'));
 

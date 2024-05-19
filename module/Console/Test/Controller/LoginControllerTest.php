@@ -23,13 +23,14 @@
 namespace Console\Test\Controller;
 
 use Console\Form\Login;
+use Console\Test\AbstractControllerTestCase;
 use Model\Operator\AuthenticationService;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for LoginController
  */
-class LoginControllerTest extends \Console\Test\AbstractControllerTest
+class LoginControllerTest extends AbstractControllerTestCase
 {
     /**
      * @var MockObject|AuthenticationService

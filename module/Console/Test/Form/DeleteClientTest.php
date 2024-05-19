@@ -23,6 +23,7 @@
 namespace Console\Test\Form;
 
 use Console\Form\DeleteClient;
+use Console\Test\AbstractFormTestCase;
 use Laminas\Dom\Document\Query as Query;
 use Laminas\Form\Element\Checkbox;
 use Model\Config;
@@ -31,7 +32,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Tests for DeleteClient
  */
-class DeleteClientTest extends \Console\Test\AbstractFormTest
+class DeleteClientTest extends AbstractFormTestCase
 {
     private function createConfig(int $defaultDeleteInterfaces): Config
     {

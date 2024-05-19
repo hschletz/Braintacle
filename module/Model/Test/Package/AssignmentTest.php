@@ -24,12 +24,13 @@ namespace Model\Test\Package;
 
 use DateTime;
 use Model\Package\Assignment;
+use Model\Test\AbstractTestCase;
 use PHPUnit\DbUnit\DataSet\DefaultDataSet;
 
 /**
  * Tests for Model\Package\Assignment
  */
-class AssignmentTest extends \Model\Test\AbstractTest
+class AssignmentTest extends AbstractTestCase
 {
     public function getDataSet()
     {

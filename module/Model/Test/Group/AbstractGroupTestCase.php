@@ -23,9 +23,10 @@
 namespace Model\Test\Group;
 
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\Stub;
 
-abstract class AbstractGroupTest extends \Model\Test\AbstractTest
+abstract class AbstractGroupTestCase extends AbstractTestCase
 {
     protected $_config;
 

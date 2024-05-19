@@ -22,12 +22,12 @@
 
 namespace Console\Test\Form\Package;
 
-use Laminas\Dom\Document\Query;
+use Console\Test\AbstractFormTestCase;
 
 /**
  * Tests for Update form
  */
-class UpdateTest extends \Console\Test\AbstractFormTest
+class UpdateTest extends AbstractFormTestCase
 {
     protected function getForm()
     {

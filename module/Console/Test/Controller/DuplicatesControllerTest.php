@@ -23,6 +23,7 @@
 namespace Console\Test\Controller;
 
 use Console\Form\ShowDuplicates;
+use Console\Test\AbstractControllerTestCase;
 use DateTime;
 use Laminas\Form\Element\Csrf;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
@@ -34,7 +35,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Tests for DuplicatesController
  */
-class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
+class DuplicatesControllerTest extends AbstractControllerTestCase
 {
     /**
      * @var MockObject|DuplicatesManager
@@ -107,16 +108,11 @@ class DuplicatesControllerTest extends \Console\Test\AbstractControllerTest
     {
         $flashMessenger = $this->createMock(FlashMessenger::class);
         $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
-        $flashMessenger->method('__call')
-            ->withConsecutive(
-                array('getMessagesFromNamespace', array('error')),
-                array('getMessagesFromNamespace', array('info')),
-                array('getMessagesFromNamespace', array('success'))
-            )->willReturnOnConsecutiveCalls(
-                [],
-                ['info message'],
-                ["success message"]
-            );
+        $flashMessenger->method('__call')->willReturnMap([
+            ['getMessagesFromNamespace', ['error'], []],
+            ['getMessagesFromNamespace', ['info'], ['info message']],
+            ['getMessagesFromNamespace', ['success'], ['success message']]
+        ]);
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
         $this->_duplicates->method('count')

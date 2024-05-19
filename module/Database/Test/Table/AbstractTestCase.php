@@ -30,7 +30,7 @@ use PHPUnit\DbUnit\Database\Connection;
  * The table, class and fixture are automatically set up and the service is
  * automatically tested.
  */
-abstract class AbstractTest extends \PHPUnit\DbUnit\TestCase
+abstract class AbstractTestCase extends \PHPUnit\DbUnit\TestCase
 {
     /**
      * Service manager

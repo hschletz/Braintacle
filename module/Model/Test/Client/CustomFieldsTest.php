@@ -22,7 +22,9 @@
 
 namespace Model\Test\Client;
 
-class CustomFieldsTest extends \Model\Test\AbstractTest
+use Model\Test\AbstractTestCase;
+
+class CustomFieldsTest extends AbstractTestCase
 {
     public function getDataSet()
     {

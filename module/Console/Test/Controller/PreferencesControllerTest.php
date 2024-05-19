@@ -26,6 +26,7 @@ use Console\Form\DefineFields;
 use Console\Form\ManageRegistryValues;
 use Console\Form\NetworkDeviceTypes;
 use Console\Form\Preferences\Packages;
+use Console\Test\AbstractControllerTestCase;
 use Console\View\Helper\Form\ManageRegistryValues as FormManageRegistryValues;
 use Laminas\Form\FormElementManager;
 use Model\Client\CustomFieldManager;
@@ -37,7 +38,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Tests for PreferencesController
  */
-class PreferencesControllerTest extends \Console\Test\AbstractControllerTest
+class PreferencesControllerTest extends AbstractControllerTestCase
 {
     /**
      * @var MockObject|FormElementManager

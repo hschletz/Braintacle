@@ -24,7 +24,7 @@ namespace Database\Test\Table;
 
 use Database\Table\Software;
 
-class SoftwareTest extends AbstractTest
+class SoftwareTest extends AbstractTestCase
 {
     public function getDataSet()
     {

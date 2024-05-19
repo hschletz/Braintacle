@@ -23,11 +23,12 @@
 namespace Model\Test\Package;
 
 use Model\Package\Metadata;
+use Model\Test\AbstractTestCase;
 
 /**
  * Tests for Model\Package\Metadata
  */
-class MetadataTest extends \Model\Test\AbstractTest
+class MetadataTest extends AbstractTestCase
 {
     /** {@inheritdoc} */
     public function getDataSet()
@@ -72,7 +73,7 @@ class MetadataTest extends \Model\Test\AbstractTest
         $this->assertEquals('rien', $node->getAttribute('GARDEFOU'));
     }
 
-    public function packageDataActionParamsProvider()
+    public static function packageDataActionParamsProvider()
     {
         return array(
             array('store', 'STORE', 'action_param', '', ''),
@@ -117,7 +118,7 @@ class MetadataTest extends \Model\Test\AbstractTest
         $this->assertEquals($command, $node->getAttribute('COMMAND'));
     }
 
-    public function setPackageDataBooleanValuesProvider()
+    public static function setPackageDataBooleanValuesProvider()
     {
         return array(
             array('', '0'),
@@ -162,7 +163,7 @@ class MetadataTest extends \Model\Test\AbstractTest
         $this->assertSame($expected, $node->getAttribute('NOTIFY_CAN_DELAY'));
     }
 
-    public function setPackageDataPostinstMessageProvider()
+    public static function setPackageDataPostinstMessageProvider()
     {
         $messageEscaped = '&quot;<br><br>';
         $messageUnescaped = "\"\n\r\r\n";
@@ -275,7 +276,7 @@ class MetadataTest extends \Model\Test\AbstractTest
         $this->assertEquals('0', $result['WarnAllowDelay']);
     }
 
-    public function packageDataPostinstMessageProvider()
+    public static function packageDataPostinstMessageProvider()
     {
         $messageEscaped = '&quot;<br><br/><br /><BR>';
         $messageUnescaped = "\"\n\n\n\n";

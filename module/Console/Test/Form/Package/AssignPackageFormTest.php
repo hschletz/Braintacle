@@ -10,6 +10,8 @@ use Laminas\Validator\InArray;
 use Laminas\Validator\NotEmpty;
 use Latte\Engine;
 use Library\Test\DomMatcherTrait;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\ClientOrGroup;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -20,6 +22,7 @@ use PHPUnit\Framework\TestCase;
 class AssignPackageFormTest extends TestCase
 {
     use DomMatcherTrait;
+    use MockeryPHPUnitIntegration;
 
     private function createTarget(array $assignablePackages)
     {
@@ -33,7 +36,7 @@ class AssignPackageFormTest extends TestCase
     private function renderToString(array $values): string
     {
         $engine = new Engine();
-        $engine->addFunction('translate', fn($message) => '_' . $message . '_');
+        $engine->addFunction('translate', fn ($message) => '_' . $message . '_');
         $renderer = new TemplateRenderer($engine);
         $content = $renderer->render('Forms/AssignPackage.latte', $values);
 
@@ -55,8 +58,10 @@ class AssignPackageFormTest extends TestCase
             'packages' => ['package1', 'package2'],
         ];
 
-        $target = $this->createTarget(['package1', 'package2', 'package3']);
-        $target->expects($this->exactly(2))->method('assignPackage')->withConsecutive(['package1'], ['package2']);
+        $target = Mockery::mock(ClientOrGroup::class);
+        $target->shouldReceive('getAssignablePackages')->andReturn(['package1', 'package2', 'package3']);
+        $target->shouldReceive('assignPackage')->once()->with('package1');
+        $target->shouldReceive('assignPackage')->once()->with('package2');
 
         $form = new AssignPackagesForm();
         $form->process($formData, $target);

@@ -28,11 +28,12 @@ use Laminas\Authentication\Result;
 use LogicException;
 use Mockery;
 use Model\Operator\AuthenticationAdapter;
+use Model\Test\AbstractTestCase;
 
 /**
  * Tests for AuthenticationAdapter
  */
-class AuthenticationAdapterTest extends \Model\Test\AbstractTest
+class AuthenticationAdapterTest extends AbstractTestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -335,7 +336,7 @@ class AuthenticationAdapterTest extends \Model\Test\AbstractTest
         );
     }
 
-    public function generateHashProvider()
+    public static function generateHashProvider()
     {
         // The hash function's behavior for multibyte character sets and other
         // edge cases is poorly documented. These tests ensure that we are

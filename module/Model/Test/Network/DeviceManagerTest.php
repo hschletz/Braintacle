@@ -22,10 +22,12 @@
 
 namespace Model\Test\Network;
 
+use Model\Test\AbstractTestCase;
+
 /**
  * Tests for Model\Network\DeviceManager
  */
-class DeviceManagerTest extends \Model\Test\AbstractTest
+class DeviceManagerTest extends AbstractTestCase
 {
     /** {@inheritdoc} */
     protected static $_tables = array(
@@ -153,7 +155,7 @@ class DeviceManagerTest extends \Model\Test\AbstractTest
         $device = $model->getDevice('00:00:5E:00:53:00');
     }
 
-    public function saveDeviceProvider()
+    public static function saveDeviceProvider()
     {
         return array(
             array('00:00:5E:00:53:07', 'SaveDeviceUpdate'),

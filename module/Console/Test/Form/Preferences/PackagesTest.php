@@ -22,12 +22,13 @@
 
 namespace Console\Test\Form\Preferences;
 
+use Console\Test\AbstractFormTestCase;
 use Laminas\Dom\Document\Query;
 
 /**
  * Tests for Packages form
  */
-class PackagesTest extends \Console\Test\AbstractFormTest
+class PackagesTest extends AbstractFormTestCase
 {
     /**
      * Dummy data for Deploy fieldset
@@ -137,6 +138,8 @@ class PackagesTest extends \Console\Test\AbstractFormTest
         $this->_form->setValidationGroup(['Preferences']);
         $this->_form->setData(array('Preferences' => $preferences));
         $this->assertFalse($this->_form->isValid());
+
+        /** @var array */
         $messages = $this->_form->getMessages()['Preferences'];
         $this->assertCount(2, $messages);
         $this->assertArrayHasKey('defaultMaxFragmentSize', $messages);

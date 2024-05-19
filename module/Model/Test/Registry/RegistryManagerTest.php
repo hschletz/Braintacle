@@ -26,13 +26,14 @@ use Database\Table\RegistryData;
 use Database\Table\RegistryValueDefinitions;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Model\Registry\RegistryManager;
+use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 
 /**
  * Tests for Model\RegistryManager
  */
-class RegistryManagerTest extends \Model\Test\AbstractTest
+class RegistryManagerTest extends AbstractTestCase
 {
     /** {@inheritdoc} */
     protected static $_tables = array('RegistryData', 'RegistryValueDefinitions');

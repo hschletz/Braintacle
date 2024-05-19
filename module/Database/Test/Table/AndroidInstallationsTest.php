@@ -22,7 +22,7 @@
 
 namespace Database\Test\Table;
 
-class AndroidInstallationsTest extends AbstractTest
+class AndroidInstallationsTest extends AbstractTestCase
 {
     public function getDataSet()
     {

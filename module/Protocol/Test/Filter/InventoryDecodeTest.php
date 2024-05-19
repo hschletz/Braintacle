@@ -29,7 +29,7 @@ class InventoryDecodeTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf('Laminas\Filter\AbstractFilter', new \Protocol\Filter\InventoryDecode());
     }
 
-    public function filterProvider()
+    public static function filterProvider()
     {
         return array(
             array('small'),

@@ -32,7 +32,7 @@ class LogLevelTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf('Laminas\Filter\AbstractFilter', new \Library\Filter\LogLevel());
     }
 
-    public function filterProvider()
+    public static function filterProvider()
     {
         return array(
             array('Emerg', Logger::EMERG),

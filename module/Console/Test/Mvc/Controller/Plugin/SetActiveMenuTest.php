@@ -22,10 +22,12 @@
 
 namespace Console\Test\Mvc\Controller\Plugin;
 
+use Library\Test\Mvc\Controller\Plugin\AbstractTestCase;
+
 /**
  * Tests for SetActiveMenu controller plugin
  */
-class SetActiveMenuTest extends \Library\Test\Mvc\Controller\Plugin\AbstractTest
+class SetActiveMenuTest extends AbstractTestCase
 {
     /**
      * Invoke plugin and test various valid and invalid parameter sets

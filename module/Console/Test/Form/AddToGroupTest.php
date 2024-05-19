@@ -23,13 +23,14 @@
 namespace Console\Test\Form;
 
 use Console\Form\AddToGroup;
+use Console\Test\AbstractFormTestCase;
 use Model\Group\GroupManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for AddToGroup form
  */
-class AddToGroupTest extends \Console\Test\AbstractFormTest
+class AddToGroupTest extends AbstractFormTestCase
 {
     /**
      * @var MockObject|GroupManager

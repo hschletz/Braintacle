@@ -22,7 +22,7 @@
 
 namespace Database\Test\Table;
 
-class SubnetsTest extends AbstractTest
+class SubnetsTest extends AbstractTestCase
 {
     public function getDataSet()
     {

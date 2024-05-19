@@ -22,7 +22,7 @@
 
 namespace Database\Test\Table;
 
-class ModemsTest extends AbstractTest
+class ModemsTest extends AbstractTestCase
 {
     public function getDataSet()
     {

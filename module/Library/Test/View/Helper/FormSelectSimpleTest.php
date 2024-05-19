@@ -25,7 +25,7 @@ namespace Library\Test\View\Helper;
 /**
  * Tests for the FormSelectSimple helper
  */
-class FormSelectSimpleTest extends AbstractTest
+class FormSelectSimpleTest extends AbstractTestCase
 {
     public function testFormElementHelperIntegration()
     {

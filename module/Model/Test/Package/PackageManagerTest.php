@@ -31,13 +31,14 @@ use Model\Package\Package;
 use Model\Package\PackageBuilder;
 use Model\Package\PackageManager;
 use Model\Package\Storage\Direct;
+use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 
 /**
  * Tests for Model\Package\PackageManager
  */
-class PackageManagerTest extends \Model\Test\AbstractTest
+class PackageManagerTest extends AbstractTestCase
 {
     /** {@inheritdoc} */
     protected static $_tables = array('Config', 'Packages', 'PackageDownloadInfo', 'ClientConfig', 'GroupInfo');
@@ -116,7 +117,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         $model->getPackage('package1');
     }
 
-    public function getPackagesProvider()
+    public static function getPackagesProvider()
     {
         $package1 =  array(
             'Timestamp' => new \DateTime('@1415958319'),
@@ -298,7 +299,7 @@ class PackageManagerTest extends \Model\Test\AbstractTest
         );
     }
 
-    public function updateAssignmentsProvider()
+    public static function updateAssignmentsProvider()
     {
         return array(
             array('UpdateNoFilters', true, true, true, true, true),

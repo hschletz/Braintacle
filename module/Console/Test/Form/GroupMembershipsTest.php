@@ -23,13 +23,14 @@
 namespace Console\Test\Form;
 
 use Console\Form\GroupMemberships;
+use Console\Test\AbstractFormTestCase;
 use Laminas\Dom\Document\Query;
 use Laminas\Form\FieldsetInterface;
 
 /**
  * Tests for GroupMemberships form
  */
-class GroupMembershipsTest extends \Console\Test\AbstractFormTest
+class GroupMembershipsTest extends AbstractFormTestCase
 {
     public function testInit()
     {

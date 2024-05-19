@@ -22,10 +22,12 @@
 
 namespace Console\Test\Form\Account;
 
+use Console\Test\AbstractFormTestCase;
+
 /**
  * Tests for Edit form
  */
-class EditTest extends \Console\Test\AbstractFormTest
+class EditTest extends AbstractFormTestCase
 {
     protected $_operatorManager;
 

@@ -23,6 +23,7 @@
 namespace Console\Test\Form;
 
 use Console\Form\DefineFields;
+use Console\Test\AbstractFormTestCase;
 use Laminas\Dom\Document\Query as Query;
 use Laminas\Form\FieldsetInterface;
 use Laminas\Form\View\Helper\FormElementErrors;
@@ -32,7 +33,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Tests for DefineFields form
  */
-class DefineFieldsTest extends \Console\Test\AbstractFormTest
+class DefineFieldsTest extends AbstractFormTestCase
 {
     /**
      * CustomFieldManager mock object

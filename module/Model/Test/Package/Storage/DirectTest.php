@@ -26,6 +26,7 @@ use Mockery;
 use Model\Config;
 use Model\Package\Storage\Direct;
 use Model\Package\Metadata;
+use Model\Test\AbstractTestCase;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\MockObject\MockObject;
 use RuntimeException;
@@ -33,7 +34,7 @@ use RuntimeException;
 /**
  * Tests for Model\Package\Storage\Direct
  */
-class DirectTest extends \Model\Test\AbstractTest
+class DirectTest extends AbstractTestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -260,7 +261,7 @@ class DirectTest extends \Model\Test\AbstractTest
         $this->assertSame(0, $model->writeContent($data, '', false));
     }
 
-    public function writeContentProvider()
+    public static function writeContentProvider()
     {
         return [
             [0, 10, 1, true], // Empty file, ignore maxFragmentSize

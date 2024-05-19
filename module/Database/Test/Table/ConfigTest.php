@@ -25,7 +25,7 @@ namespace Database\Test\Table;
 /**
  * Tests for the Config class
  */
-class ConfigTest extends AbstractTest
+class ConfigTest extends AbstractTestCase
 {
     /**
      * Tests for getDbIdentifier()

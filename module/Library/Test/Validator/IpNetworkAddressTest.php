@@ -29,7 +29,7 @@ use Library\Validator\IpNetworkAddress;
  */
 class IpNetworkAddressTest extends \PHPUnit\Framework\TestCase
 {
-    public function validAddressProvider()
+    public static function validAddressProvider()
     {
         return [
             ['192.0.2.0/0.0.0.0'],
@@ -51,7 +51,7 @@ class IpNetworkAddressTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($validator->isValid($value));
     }
 
-    public function invalidAddressProvider()
+    public static function invalidAddressProvider()
     {
         return [
             ['192.0.2.0', IpNetworkAddress::FORMAT],

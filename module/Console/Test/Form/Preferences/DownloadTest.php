@@ -22,9 +22,10 @@
 
 namespace Console\Test\Form\Preferences;
 
+use Console\Test\AbstractFormTestCase;
 use org\bovigo\vfs\vfsStream;
 
-class DownloadTest extends \Console\Test\AbstractFormTest
+class DownloadTest extends AbstractFormTestCase
 {
     public function testInit()
     {

@@ -34,7 +34,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         $hydrator->hydrate([], new \stdClass());
     }
 
-    public function extractProvider()
+    public static function extractProvider()
     {
         return [
             ['2020-12-05', '2020/12/05'],

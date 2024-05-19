@@ -22,6 +22,7 @@
 
 namespace Console\Test\Form\Package;
 
+use Console\Test\AbstractFormTestCase;
 use Laminas\Form\Element\Checkbox;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
@@ -29,7 +30,7 @@ use Laminas\Form\Element\Text;
 /**
  * Tests for Build form
  */
-class BuildTest extends \Console\Test\AbstractFormTest
+class BuildTest extends AbstractFormTestCase
 {
     protected function getForm()
     {

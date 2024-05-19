@@ -22,9 +22,11 @@
 
 namespace Database\Test\Hydrator;
 
-class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
+use Library\Test\Hydrator\AbstractHydratorTestCase;
+
+class StorageDevicesTest extends AbstractHydratorTestCase
 {
-    public function hydrateProvider()
+    public static function hydrateProvider()
     {
         $windowsTypePrimaryExtracted = [
             'manufacturer' => 'ignored',
@@ -136,7 +138,7 @@ class StorageDevicesTest extends \Library\Test\Hydrator\AbstractHydratorTest
         ];
     }
 
-    public function extractProvider()
+    public static function extractProvider()
     {
         $windowsHydrated = [
             'type' => '_type',

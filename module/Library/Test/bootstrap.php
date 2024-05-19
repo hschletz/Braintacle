@@ -22,6 +22,8 @@
 
 namespace Library;
 
+use Library\Test\View\Helper\AbstractTestCase;
+
 error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
 \Locale::setDefault('de');
@@ -59,5 +61,5 @@ $serviceManager->setService(
         ),
     )
 );
-\Library\Test\View\Helper\AbstractTest::$serviceManager = $serviceManager;
+AbstractTestCase::$serviceManager = $serviceManager;
 unset($serviceManager);

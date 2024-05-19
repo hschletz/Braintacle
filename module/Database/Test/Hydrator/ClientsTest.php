@@ -26,11 +26,12 @@ use Database\AbstractTable;
 use Database\Table\WindowsInstallations;
 use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Library\Test\Hydrator\AbstractHydratorTestCase;
 use Model\Client\CustomFieldManager;
 use Model\Client\ItemManager;
 use PHPUnit\Framework\MockObject\Stub;
 
-class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
+class ClientsTest extends AbstractHydratorTestCase
 {
     protected function getHydrator()
     {
@@ -88,7 +89,7 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         return new \Database\Hydrator\Clients($serviceManager);
     }
 
-    public function hydrateProvider()
+    public static function hydrateProvider()
     {
         $extracted = array(
             'id' => 42,
@@ -169,7 +170,7 @@ class ClientsTest extends \Library\Test\Hydrator\AbstractHydratorTest
         return array(array($extracted, $hydrated));
     }
 
-    public function extractProvider()
+    public static function extractProvider()
     {
         $hydrated = array(
             'Id' => 42,

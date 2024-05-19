@@ -27,7 +27,7 @@ use Laminas\Hydrator\ArraySerializableHydrator;
 use Library\Hydrator\Strategy\MacAddress;
 use Model\Client\Item\NetworkInterface;
 
-class NetworkInterfacesTest extends AbstractTest
+class NetworkInterfacesTest extends AbstractTestCase
 {
     public function getDataSet()
     {

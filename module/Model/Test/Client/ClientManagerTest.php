@@ -47,11 +47,14 @@ use Model\Client\CustomFieldManager;
 use Model\Client\ItemManager;
 use Model\Config;
 use Model\Group\Group;
+use Model\Test\AbstractTestCase;
 use Nada\Column\AbstractColumn as Column;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use RuntimeException;
 
-class ClientManagerTest extends \Model\Test\AbstractTest
+class ClientManagerTest extends AbstractTestCase
 {
     protected static $_tables = array(
         'ClientsAndGroups',
@@ -132,7 +135,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         parent::tearDownAfterClass();
     }
 
-    public function getClientsProvider()
+    public static function getClientsProvider()
     {
         $client1 = array(array('id' => 1));
         $client2 = array(array('id' => 2));
@@ -802,7 +805,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals($expected, $result);
     }
 
-    public function getClientsGroupFilterProvider()
+    public static function getClientsGroupFilterProvider()
     {
         return array(
             array('MemberOf', 'Id', 'asc', 1, false, array(array('id' => 1))),
@@ -872,7 +875,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals($expected, $result);
     }
 
-    public function getClientsDistinctProvider()
+    public static function getClientsDistinctProvider()
     {
         return array(
             array(
@@ -929,7 +932,7 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $this->assertEquals($expected, $result);
     }
 
-    public function getClientsExceptionsProvider()
+    public static function getClientsExceptionsProvider()
     {
         return array(
             array('Id', 'invalid', '', 'InvalidArgumentException', 'Invalid filter: invalid'),
@@ -1061,29 +1064,28 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $model->getClient(42);
     }
 
-    public function deleteClientNoDeleteInterfacesProvider()
+    public static function deleteClientNoDeleteInterfacesProvider()
     {
-        $connection1 = $this->createMock(ConnectionInterface::class);
-        $connection1->expects($this->once())->method('beginTransaction');
-        $connection1->expects($this->once())->method('commit');
-        $connection1->expects($this->never())->method('rollback');
-
-        $connection2 = $this->createMock(ConnectionInterface::class);
-        $connection2->expects($this->once())->method('beginTransaction')->willThrowException(new \RuntimeException());
-        $connection2->expects($this->never())->method('commit');
-        $connection2->expects($this->never())->method('rollback');
-
-        return array(
-            array($connection1),
-            array($connection2),
-        );
+        return [
+            [false],
+            [true],
+        ];
     }
 
-    /**
-     * @dataProvider deleteClientNoDeleteInterfacesProvider
-     */
-    public function testDeleteClientNoDeleteInterfaces($connection)
+    #[DataProvider('deleteClientNoDeleteInterfacesProvider')]
+    public function testDeleteClientNoDeleteInterfaces(bool $throwOnBeginTransaction)
     {
+        $connection = $this->createMock(ConnectionInterface::class);
+        if ($throwOnBeginTransaction) {
+            $connection->expects($this->once())->method('beginTransaction')->willThrowException(new RuntimeException());
+            $connection->expects($this->never())->method('commit');
+            $connection->expects($this->never())->method('rollback');
+        } else {
+            $connection->expects($this->once())->method('beginTransaction');
+            $connection->expects($this->once())->method('commit');
+            $connection->expects($this->never())->method('rollback');
+        }
+
         /** @var MockObject|Client */
         $client = $this->createMock('Model\Client\Client');
         $client->expects($this->once())->method('lock')->willReturn(true);
@@ -1248,30 +1250,28 @@ class ClientManagerTest extends \Model\Test\AbstractTest
         $clientManager->deleteClient($client, false);
     }
 
-
-    public function deleteClientExceptionProvider()
+    public static function deleteClientExceptionProvider()
     {
-        $connection1 = $this->createMock(ConnectionInterface::class);
-        $connection1->expects($this->once())->method('beginTransaction');
-        $connection1->expects($this->never())->method('commit');
-        $connection1->expects($this->once())->method('rollback');
-
-        $connection2 = $this->createMock(ConnectionInterface::class);
-        $connection2->expects($this->once())->method('beginTransaction')->willThrowException(new \RuntimeException());
-        $connection2->expects($this->never())->method('commit');
-        $connection2->expects($this->never())->method('rollback');
-
-        return array(
-            array($connection1),
-            array($connection2),
-        );
+        return [
+            [false],
+            [true],
+        ];
     }
 
-    /**
-     * @dataProvider deleteClientExceptionProvider
-     */
-    public function testDeleteClientException($connection)
+    #[DataProvider('deleteClientExceptionProvider')]
+    public function testDeleteClientException(bool $throwOnBeginTransaction)
     {
+        $connection = $this->createMock(ConnectionInterface::class);
+        if ($throwOnBeginTransaction) {
+            $connection->expects($this->once())->method('beginTransaction')->willThrowException(new RuntimeException());
+            $connection->expects($this->never())->method('commit');
+            $connection->expects($this->never())->method('rollback');
+        } else {
+            $connection->expects($this->once())->method('beginTransaction');
+            $connection->expects($this->never())->method('commit');
+            $connection->expects($this->once())->method('rollback');
+        }
+
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('message');
 

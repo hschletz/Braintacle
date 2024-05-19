@@ -36,17 +36,18 @@ use Model\Client\Client;
 use Model\Client\ClientManager;
 use Model\Client\DuplicatesManager;
 use Model\SoftwareManager;
+use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use RuntimeException;
 
 /**
  * Tests for Model\Client\DuplicatesManager
  */
-class DuplicatesManagerTest extends \Model\Test\AbstractTest
+class DuplicatesManagerTest extends AbstractTestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    protected $_allOptions = [
+    private static $allOptions = [
         \Model\Client\DuplicatesManager::MERGE_CONFIG,
         \Model\Client\DuplicatesManager::MERGE_CUSTOM_FIELDS,
         \Model\Client\DuplicatesManager::MERGE_GROUPS,
@@ -94,7 +95,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $duplicates->count('invalid');
     }
 
-    public function findProvider()
+    public static function findProvider()
     {
         $client2 = array(
             'id' => '2',
@@ -223,7 +224,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $this->getModel()->find('invalid');
     }
 
-    public function mergeNoneWithLessThan2ClientsProvider()
+    public static function mergeNoneWithLessThan2ClientsProvider()
     {
         return [
             [[]],
@@ -245,7 +246,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $model->expects($this->never())->method('mergePackages');
         $model->expects($this->never())->method('mergeProductKey');
 
-        $model->merge($clientIds, $this->_allOptions);
+        $model->merge($clientIds, static::$allOptions);
     }
 
     public function testMergeLockingError()
@@ -287,7 +288,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $model->expects($this->never())->method('mergePackages');
         $model->expects($this->never())->method('mergeProductKey');
 
-        $model->merge([2, 3], $this->_allOptions);
+        $model->merge([2, 3], static::$allOptions);
     }
 
     public function testMergeThrowsOnIdenticalTimestamps()
@@ -318,9 +319,10 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
 
         /** @var MockObject|ClientManager */
         $clientManager = $this->createMock(ClientManager::class);
-        $clientManager->method('getClient')
-            ->withConsecutive([1], [2])
-            ->willReturnOnConsecutiveCalls($client1, $client2);
+        $clientManager->method('getClient')->willReturnMap([
+            [1, $client1],
+            [2, $client2],
+        ]);
         $clientManager->expects($this->never())->method('deleteClient');
 
         /** @var MockObject|DuplicatesManager */
@@ -343,10 +345,10 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $duplicatesManager->expects($this->never())->method('mergePackages');
         $duplicatesManager->expects($this->never())->method('mergeProductKey');
 
-        $duplicatesManager->merge([1, 2], $this->_allOptions);
+        $duplicatesManager->merge([1, 2], static::$allOptions);
     }
 
-    public function mergeWithoutMergingAttributesProvider()
+    public static function mergeWithoutMergingAttributesProvider()
     {
         return [
             [[1, 2, 3]],
@@ -381,12 +383,12 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $client3->method('offsetGet')->with('LastContactDate')->willReturn($dateTime3);
         $client3->expects($this->once())->method('unlock');
 
-        $clientManager = $this->createMock('Model\Client\ClientManager');
-        $clientManager->method('getClient')
-            ->willReturnMap([[1, $client1], [2, $client2], [3, $client3]]);
-        $clientManager->expects($this->exactly(2))
-            ->method('deleteClient')
-            ->withConsecutive([$this->identicalTo($client1)], [$this->identicalTo($client2)]);
+        $clientManager = Mockery::mock(ClientManager::class);
+        $clientManager->shouldReceive('getClient')->once()->with(1)->andReturn($client1);
+        $clientManager->shouldReceive('getClient')->once()->with(2)->andReturn($client2);
+        $clientManager->shouldReceive('getClient')->once()->with(3)->andReturn($client3);
+        $clientManager->shouldReceive('deleteClient')->once()->with($client1, false);
+        $clientManager->shouldReceive('deleteClient')->once()->with($client2, false);
 
         $connection = $this->createMock('Laminas\Db\Adapter\Driver\ConnectionInterface');
         $connection->expects($this->once())->method('beginTransaction');
@@ -418,7 +420,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
         $model->merge($clientIds, []);
     }
 
-    public function mergeWithMergingAttributesProvider()
+    public static function mergeWithMergingAttributesProvider()
     {
         return [
             [[\Model\Client\DuplicatesManager::MERGE_CONFIG]],
@@ -426,7 +428,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
             [[\Model\Client\DuplicatesManager::MERGE_GROUPS]],
             [[\Model\Client\DuplicatesManager::MERGE_PACKAGES]],
             [[\Model\Client\DuplicatesManager::MERGE_PRODUCT_KEY]],
-            [$this->_allOptions]
+            [static::$allOptions]
         ];
     }
 
@@ -476,7 +478,7 @@ class DuplicatesManagerTest extends \Model\Test\AbstractTest
             ]
         )->makePartial();
 
-        foreach ($this->_allOptions as $option) {
+        foreach (static::$allOptions as $option) {
             if (in_array($option, $options)) {
                 $model->shouldReceive($option)->once()->with($client3, [$client1, $client2]);
             } else {
@@ -599,7 +601,7 @@ EOT
         );
     }
 
-    public function mergeProductKeyProvider()
+    public static function mergeProductKeyProvider()
     {
         $clientNoWindows = ['Windows' => null];
         $clientWindowsManualKey1 = ['Windows' => ['ManualProductKey' => 'key1']];

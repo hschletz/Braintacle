@@ -22,11 +22,12 @@
 
 namespace Database\Test\Hydrator\Strategy\Packages;
 
+use Database\Test\Hydrator\Strategy\AbstractStrategyTestCase;
 use DomainException;
 
-class PlatformTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
+class PlatformTest extends AbstractStrategyTestCase
 {
-    public function hydrateProvider()
+    public static function hydrateProvider()
     {
         return array(
             array('WINDOWS', 'windows'),
@@ -35,7 +36,7 @@ class PlatformTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
         );
     }
 
-    public function extractProvider()
+    public static function extractProvider()
     {
         return array(
             array('windows', 'WINDOWS'),

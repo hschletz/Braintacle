@@ -22,7 +22,9 @@
 
 namespace Model\Test\Client\Item;
 
-class MemorySlotTest extends \Model\Test\AbstractTest
+use Model\Test\AbstractTestCase;
+
+class MemorySlotTest extends AbstractTestCase
 {
     public function getDataSet()
     {

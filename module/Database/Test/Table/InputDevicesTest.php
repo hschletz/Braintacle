@@ -22,7 +22,7 @@
 
 namespace Database\Test\Table;
 
-class InputDevicesTest extends AbstractTest
+class InputDevicesTest extends AbstractTestCase
 {
     public function getDataSet()
     {

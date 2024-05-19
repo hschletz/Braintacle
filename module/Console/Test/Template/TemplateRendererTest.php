@@ -7,21 +7,22 @@ use Console\Template\TemplateRenderer;
 use Console\Template\TemplateRendererFactory;
 use Console\View\Helper\ConsoleScript;
 use Console\View\Helper\ConsoleUrl;
-use ErrorException;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\I18n\Translator;
 use Laminas\View\HelperPluginManager;
-use Laminas\View\Model\ViewModel;
 use Latte\Engine;
 use Latte\Loaders\FileLoader;
 use Library\Application;
-use PHPUnit\Framework\Error\Warning;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Throwable;
 
+/**
+ * Tests for TemplateRenderer except render()
+ *
+ * The render() method should be tested in TemplateRendererRenderTest.
+ */
 class TemplateRendererTest extends TestCase
 {
     public function testFactory()
@@ -85,82 +86,5 @@ class TemplateRendererTest extends TestCase
         $loader = $templateRenderer->getEngine()->getLoader();
         $this->assertInstanceOf(FileLoader::class, $loader);
         $this->assertEquals(Application::getPath('templates'), rtrim($loader->getUniqueId(''), '/'));
-    }
-
-    public function testRenderWithName()
-    {
-        $engine = $this->createMock(Engine::class);
-        $engine->method('renderToString')->with('template', ['values'])->willReturn('content');
-
-        $templateRenderer = new TemplateRenderer($engine);
-        $this->assertEquals('content', $templateRenderer->render('template', ['values']));
-
-        try {
-            trigger_error('handler restored', E_USER_WARNING);
-        } catch (Warning $warning) {
-            $this->assertEquals('handler restored', $warning->getMessage());
-        }
-    }
-
-    public function testRenderWithViewModel()
-    {
-        $variables = ['key' => 'value'];
-
-        $engine = $this->createMock(Engine::class);
-        $engine->method('renderToString')->with('template', $variables)->willReturn('content');
-
-        $viewModel = new ViewModel($variables);
-        $viewModel->setTemplate('template');
-
-        $templateRenderer = new TemplateRenderer($engine);
-        $this->assertEquals('content', $templateRenderer->render($viewModel));
-
-        try {
-            trigger_error('handler restored', E_USER_WARNING);
-        } catch (Warning $warning) {
-            $this->assertEquals('handler restored', $warning->getMessage());
-        }
-    }
-
-    public function testRenderThrowsExceptionOnWarning()
-    {
-        $engine = $this->createStub(Engine::class);
-        $engine->method('renderToString')->willReturnCallback(function () {
-            trigger_error('warning', E_USER_WARNING);
-        });
-
-        $templateRenderer = new TemplateRenderer($engine);
-        try {
-            $templateRenderer->render('template');
-        } catch (ErrorException $exception) {
-            $this->assertEquals('warning', $exception->getMessage());
-            $this->assertEquals(E_USER_WARNING, $exception->getSeverity());
-        } catch (Throwable $throwable) {
-            $this->fail('Expected ErrorException was not thrown');
-        }
-
-        try {
-            trigger_error('handler restored', E_USER_WARNING);
-        } catch (Warning $warning) {
-            $this->assertEquals('handler restored', $warning->getMessage());
-        }
-    }
-
-    public function testRenderAcceptsSuppressedWarning()
-    {
-        $engine = $this->createStub(Engine::class);
-        $engine->method('renderToString')->willReturnCallback(function () {
-            @trigger_error('warning', E_USER_WARNING);
-            return 'success';
-        });
-
-        $templateRenderer = new TemplateRenderer($engine);
-        $this->assertEquals('success', $templateRenderer->render('template'));
-
-        try {
-            trigger_error('handler restored', E_USER_WARNING);
-        } catch (Warning $warning) {
-            $this->assertEquals('handler restored', $warning->getMessage());
-        }
     }
 }

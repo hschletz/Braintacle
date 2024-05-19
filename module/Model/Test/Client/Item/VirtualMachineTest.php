@@ -22,7 +22,9 @@
 
 namespace Model\Test\Client\Item;
 
-class VirtualMachineTest extends \Model\Test\AbstractTest
+use Model\Test\AbstractTestCase;
+
+class VirtualMachineTest extends AbstractTestCase
 {
     public function getDataSet()
     {

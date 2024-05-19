@@ -24,8 +24,10 @@ namespace Console\Test\Controller;
 
 use Console\Form\Package\Update as PackageUpdate;
 use Console\Mvc\Controller\Plugin\PrintForm;
+use Console\Test\AbstractControllerTestCase;
 use Console\View\Helper\Form\Package\Build;
 use Console\View\Helper\Form\Package\Update;
+use IntlDateFormatter;
 use Laminas\I18n\View\Helper\DateFormat;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Laminas\View\Model\ViewModel;
@@ -36,7 +38,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Tests for PackageController
  */
-class PackageControllerTest extends \Console\Test\AbstractControllerTest
+class PackageControllerTest extends AbstractControllerTestCase
 {
     /**
      * @var MockObject|PackageManager
@@ -123,13 +125,10 @@ class PackageControllerTest extends \Console\Test\AbstractControllerTest
         $viewHelperManager->setService('flashMessenger', $flashMessenger);
 
         $dateFormat = $this->createMock(DateFormat::class);
-        $dateFormat->expects($this->exactly(2))
-            ->method('__invoke')
-            ->withConsecutive(
-                array($timestamp1, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT),
-                array($timestamp2, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
-            )
-            ->will($this->onConsecutiveCalls('date1', 'date2'));
+        $dateFormat->method('__invoke')->willReturnMap([
+            [$timestamp1, IntlDateFormatter::SHORT, IntlDateFormatter::SHORT, null, null, 'date1'],
+            [$timestamp2, IntlDateFormatter::SHORT, IntlDateFormatter::SHORT, null, null, 'date2'],
+        ]);
         $viewHelperManager->setService('dateFormat', $dateFormat);
 
         $this->dispatch('/console/package/index/');

@@ -48,7 +48,7 @@ class ClientsHardwareTest extends TestCase
         return new \Protocol\Hydrator\ClientsHardware($this->_windowsInstallation);
     }
 
-    public function hydrateProvider()
+    public static function hydrateProvider()
     {
         $extracted = array(
             'CHECKSUM' => 65535,
@@ -137,7 +137,7 @@ class ClientsHardwareTest extends TestCase
         $this->assertEquals($objectData, get_object_vars($object));
     }
 
-    public function extractProvider()
+    public static function extractProvider()
     {
         $hydrated = [
             'inventoryDiff' => 65535,

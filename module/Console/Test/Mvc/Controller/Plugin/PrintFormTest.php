@@ -32,12 +32,13 @@ use Laminas\View\HelperPluginManager;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
 use Laminas\View\Resolver\TemplateMapResolver;
+use Library\Test\Mvc\Controller\Plugin\AbstractTestCase;
 use LogicException;
 
 /**
  * Tests for PrintForm controller plugin
  */
-class PrintFormTest extends \Library\Test\Mvc\Controller\Plugin\AbstractTest
+class PrintFormTest extends AbstractTestCase
 {
     public function testViewModelWithoutHelper()
     {

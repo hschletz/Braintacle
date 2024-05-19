@@ -22,7 +22,9 @@
 
 namespace Model\Test\Client\Item;
 
-class InputDeviceTest extends \Model\Test\AbstractTest
+use Model\Test\AbstractTestCase;
+
+class InputDeviceTest extends AbstractTestCase
 {
     public function getDataSet()
     {

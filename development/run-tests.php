@@ -209,9 +209,15 @@ class Run
         $cmd[] = __DIR__ . "/../module/$module/phpunit.xml";
         $cmd[] = '--colors=always';
         $cmd[] = '--disallow-test-output';
+        $cmd[] = '--display-deprecations';
+        $cmd[] = '--display-notices';
+        $cmd[] = '--display-warnings';
         if ($coverage) {
             $cmd[] = '--coverage-html=';
             $cmd[] = __DIR__ . "/../doc/CodeCoverage/$module";
+        } else {
+            // Avoid warning about unset xdebug mode because of coverage options in XML config.
+            $cmd[] = '--no-coverage';
         }
         if ($filter) {
             $cmd[] = '--filter';

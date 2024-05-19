@@ -298,7 +298,7 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $model->getFileHash($file, 'SHA1');
     }
 
-    public function writeToStorageProvider()
+    public static function writeToStorageProvider()
     {
         return [
             ['filename', false, false],

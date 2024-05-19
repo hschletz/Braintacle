@@ -71,7 +71,7 @@ class NotInArrayTest extends \PHPUnit\Framework\TestCase
         $validator = new NotInArray(array('caseSensitivity' => true));
     }
 
-    public function validationProvider()
+    public static function validationProvider()
     {
         return array(
             array('three', NotInArray::CASE_SENSITIVE, true),

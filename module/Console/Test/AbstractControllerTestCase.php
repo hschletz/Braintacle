@@ -23,6 +23,7 @@
 namespace Console\Test;
 
 use Laminas\Mvc\MvcEvent;
+use Laminas\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 use Library\Application;
 
 /**
@@ -30,7 +31,7 @@ use Library\Application;
  *
  * This base class performs common setup for all controller tests.
  */
-abstract class AbstractControllerTest extends \Laminas\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
+abstract class AbstractControllerTestCase extends AbstractHttpControllerTestCase
 {
     /**
      * Set up application config

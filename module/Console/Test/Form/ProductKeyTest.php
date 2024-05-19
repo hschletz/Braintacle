@@ -22,10 +22,12 @@
 
 namespace Console\Test\Form;
 
+use Console\Test\AbstractFormTestCase;
+
 /**
  * Tests for ProductKey form
  */
-class ProductKeyTest extends \Console\Test\AbstractFormTest
+class ProductKeyTest extends AbstractFormTestCase
 {
     public function testInit()
     {

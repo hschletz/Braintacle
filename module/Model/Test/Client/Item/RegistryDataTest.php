@@ -22,7 +22,9 @@
 
 namespace Model\Test\Client\Item;
 
-class RegistryDataTest extends \Model\Test\AbstractTest
+use Model\Test\AbstractTestCase;
+
+class RegistryDataTest extends AbstractTestCase
 {
     public function getDataSet()
     {

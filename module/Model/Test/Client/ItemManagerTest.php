@@ -22,7 +22,9 @@
 
 namespace Model\Test\Client;
 
-class ItemManagerTest extends \Model\Test\AbstractTest
+use Model\Test\AbstractTestCase;
+
+class ItemManagerTest extends AbstractTestCase
 {
     protected static $_tables = array(
         'ClientsAndGroups',
@@ -92,7 +94,7 @@ class ItemManagerTest extends \Model\Test\AbstractTest
         $this->getModel()->getTable('invalid');
     }
 
-    public function getItemsProvider()
+    public static function getItemsProvider()
     {
         return array(
             array('AudioDevice', null, 'id', 'asc', array('name1', 'name2'), 'Name'),

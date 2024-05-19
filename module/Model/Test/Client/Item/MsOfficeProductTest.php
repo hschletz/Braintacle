@@ -22,7 +22,9 @@
 
 namespace Model\Test\Client\Item;
 
-class MsOfficeProductTest extends \Model\Test\AbstractTest
+use Model\Test\AbstractTestCase;
+
+class MsOfficeProductTest extends AbstractTestCase
 {
     public function getDataSet()
     {

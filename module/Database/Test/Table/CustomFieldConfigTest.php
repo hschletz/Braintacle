@@ -29,7 +29,7 @@ use Nada\Column\AbstractColumn as Column;
 /**
  * Tests for the CustomFieldConfig class
  */
-class CustomFieldConfigTest extends AbstractTest
+class CustomFieldConfigTest extends AbstractTestCase
 {
     protected static $_nada;
 
@@ -91,14 +91,14 @@ class CustomFieldConfigTest extends AbstractTest
         $this->assertEquals($fields, static::$_table->getFields());
     }
 
-    public function addFieldProvider()
+    public static function addFieldProvider()
     {
         return array(
-            array('text', Column::TYPE_VARCHAR, $this->equalTo(255), CustomFieldConfig::INTERNALTYPE_TEXT),
-            array('integer', Column::TYPE_INTEGER, $this->anything(), CustomFieldConfig::INTERNALTYPE_TEXT),
-            array('float', Column::TYPE_FLOAT, $this->anything(), CustomFieldConfig::INTERNALTYPE_TEXT),
-            array('date', Column::TYPE_DATE, $this->anything(), CustomFieldConfig::INTERNALTYPE_DATE),
-            array('clob', Column::TYPE_CLOB, $this->anything(), CustomFieldConfig::INTERNALTYPE_TEXTAREA),
+            array('text', Column::TYPE_VARCHAR, static::equalTo(255), CustomFieldConfig::INTERNALTYPE_TEXT),
+            array('integer', Column::TYPE_INTEGER, static::anything(), CustomFieldConfig::INTERNALTYPE_TEXT),
+            array('float', Column::TYPE_FLOAT, static::anything(), CustomFieldConfig::INTERNALTYPE_TEXT),
+            array('date', Column::TYPE_DATE, static::anything(), CustomFieldConfig::INTERNALTYPE_DATE),
+            array('clob', Column::TYPE_CLOB, static::anything(), CustomFieldConfig::INTERNALTYPE_TEXTAREA),
         );
     }
 

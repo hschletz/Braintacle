@@ -24,7 +24,7 @@ namespace Library\Test;
 
 class RandomTest extends \PHPUnit\Framework\TestCase
 {
-    public function getIntegerProvider()
+    public static function getIntegerProvider()
     {
         return array(
             array(true),

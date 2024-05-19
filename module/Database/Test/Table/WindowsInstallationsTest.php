@@ -22,7 +22,7 @@
 
 namespace Database\Test\Table;
 
-class WindowsInstallationsTest extends AbstractTest
+class WindowsInstallationsTest extends AbstractTestCase
 {
     public static function setUpBeforeClass(): void
     {

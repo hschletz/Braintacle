@@ -22,7 +22,9 @@
 
 namespace Console\Test\Form\Preferences;
 
-class NetworkScanningTest extends \Console\Test\AbstractFormTest
+use Console\Test\AbstractFormTestCase;
+
+class NetworkScanningTest extends AbstractFormTestCase
 {
     public function testInit()
     {

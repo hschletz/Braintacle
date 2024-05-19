@@ -24,6 +24,7 @@ namespace Console\Test\Controller;
 
 use Console\Form\Account\Add;
 use Console\Form\Account\Edit;
+use Console\Test\AbstractControllerTestCase;
 use Model\Operator\Operator;
 use Model\Operator\OperatorManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -31,7 +32,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Tests for AccountsController
  */
-class AccountsControllerTest extends \Console\Test\AbstractControllerTest
+class AccountsControllerTest extends AbstractControllerTestCase
 {
     /**
      * @var MockObject|OperatorManager

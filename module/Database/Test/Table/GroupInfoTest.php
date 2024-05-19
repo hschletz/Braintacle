@@ -26,7 +26,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Model\Config;
 use PHPUnit\Framework\MockObject\Stub;
 
-class GroupInfoTest extends AbstractTest
+class GroupInfoTest extends AbstractTestCase
 {
     public static function setUpBeforeClass(): void
     {

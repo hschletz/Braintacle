@@ -62,9 +62,7 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
             ->method('setFormatter')
             ->with('simple', ['format' => '%priorityName%: %message%']);
 
-        /** @var Logger|MockObject */
-        $logger = $this->createMock(Logger::class);
-        $logger->expects($this->once())->method('addWriter')->with($writer);
+        $logger = new Logger();
 
         /** @var SchemaManager|MockObject */
         $schemaManager = $this->createMock(SchemaManager::class);
@@ -97,8 +95,7 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         /** @var WriterInterface|Stub */
         $writer = $this->createStub(WriterInterface::class);
 
-        /** @var Logger|Stub */
-        $logger = $this->createStub(Logger::class);
+        $logger = new Logger();
 
         /** @var SchemaManager|MockObject */
         $schemaManager = $this->createMock(SchemaManager::class);

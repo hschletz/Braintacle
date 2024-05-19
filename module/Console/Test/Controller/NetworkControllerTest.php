@@ -24,6 +24,7 @@ namespace Console\Test\Controller;
 
 use Console\Form\NetworkDevice;
 use Console\Form\Subnet;
+use Console\Test\AbstractControllerTestCase;
 use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Text;
 use Laminas\I18n\View\Helper\DateFormat;
@@ -36,7 +37,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * Tests for NetworkController
  */
-class NetworkControllerTest extends \Console\Test\AbstractControllerTest
+class NetworkControllerTest extends AbstractControllerTestCase
 {
     /**
      * @var MockObject|DeviceManager

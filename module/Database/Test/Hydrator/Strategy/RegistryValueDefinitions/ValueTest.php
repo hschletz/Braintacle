@@ -22,9 +22,11 @@
 
 namespace Database\Test\Hydrator\Strategy\RegistryValueDefinitions;
 
-class ValueTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
+use Database\Test\Hydrator\Strategy\AbstractStrategyTestCase;
+
+class ValueTest extends AbstractStrategyTestCase
 {
-    public function hydrateProvider()
+    public static function hydrateProvider()
     {
         return array(
             array('test', 'test'),
@@ -32,7 +34,7 @@ class ValueTest extends \Database\Test\Hydrator\Strategy\AbstractStrategyTest
         );
     }
 
-    public function extractProvider()
+    public static function extractProvider()
     {
         return array(
             array('test', 'test'),

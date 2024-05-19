@@ -27,10 +27,15 @@ use Console\View\Helper\Form\Package\Build as BuildHelper;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
 use Laminas\View\Renderer\PhpRenderer;
+use Library\Test\View\Helper\AbstractTestCase;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class BuildTest extends \Library\Test\View\Helper\AbstractTest
+class BuildTest extends AbstractTestCase
 {
+    use MockeryPHPUnitIntegration;
+
     protected function getHelperName()
     {
         return 'consoleFormPackageBuild';
@@ -40,11 +45,9 @@ class BuildTest extends \Library\Test\View\Helper\AbstractTest
     {
         $form = $this->createStub(BuildForm::class);
 
-        $view = $this->createMock(PhpRenderer::class);
-        $view->expects($this->exactly(2))->method('__call')->withConsecutive(
-            ['consoleScript', ['form_package.js']],
-            ['consoleForm', [$form]]
-        )->willReturnOnConsecutiveCalls(null, 'rendered form');
+        $view = Mockery::mock(PhpRenderer::class);
+        $view->shouldReceive('consoleScript')->once()->with('form_package.js');
+        $view->shouldReceive('consoleForm')->once()->with($form)->andReturn('rendered form');
 
         /** @var MockObject|BuildHelper|callable */
         $helper = $this->createPartialMock(BuildHelper::class, ['getView', 'initLabels']);
@@ -54,7 +57,7 @@ class BuildTest extends \Library\Test\View\Helper\AbstractTest
         $this->assertEquals('rendered form', $helper($form));
     }
 
-    public function initLabelsProvider()
+    public static function initLabelsProvider()
     {
         return [
             ['launch', 'Command line'],

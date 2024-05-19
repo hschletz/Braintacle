@@ -22,7 +22,9 @@
 
 namespace Console\Test\Form\Preferences;
 
-class InventoryTest extends \Console\Test\AbstractFormTest
+use Console\Test\AbstractFormTestCase;
+
+class InventoryTest extends AbstractFormTestCase
 {
     public function testInit()
     {
