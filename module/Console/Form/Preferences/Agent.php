@@ -22,6 +22,8 @@
 
 namespace Console\Form\Preferences;
 
+use Laminas\Validator\Callback as CallbackValidator;
+
 /**
  * Form for display/setting of 'agent' preferences
  */
@@ -40,12 +42,10 @@ class Agent extends AbstractForm
                 'callback_params' => 'integer',
             )
         );
-        $integerValidator = new \Laminas\Validator\Callback(
-            array(
-                'callback' => array($this, 'validateType'),
-                'callbackOptions' => 'integer',
-            )
-        );
+        $integerValidator = new CallbackValidator([
+            'callback' => $this->validateType(...),
+            'callbackOptions' => ['integer'],
+        ]);
 
         $contactInterval = new \Laminas\Form\Element\Text('contactInterval');
         $contactInterval->setLabel('Agent contact interval (in hours)')
