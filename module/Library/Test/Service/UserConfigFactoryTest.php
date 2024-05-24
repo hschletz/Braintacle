@@ -22,36 +22,22 @@
 
 namespace Library\Test\Service;
 
+use ArrayAccess;
 use ArrayObject;
+use Braintacle\AppConfig;
 use Laminas\ServiceManager\ServiceManager;
+use Library\Service\UserConfigFactory;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class UserConfigFactoryTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * Per-test factory instance
-     * @var \Library\Service\UserConfigFactory
-     */
-    protected $_factory;
+    private const ServiceName = 'Library\UserConfig';
 
     /**
-     * Per-Test container instance
-     * @var MockObject|ServiceManager
+     * Sample INI file content matching $iniContentParsed.
      */
-    protected $_container;
-
-    /**
-     * Backup of the BRAINTACLE_CONFIG envirinment variable
-     * @var mixed
-     */
-    protected $_envBackup;
-
-    /**
-     * Sample INI file content matching $_iniContentParsed
-     * @var string
-     */
-    protected $_iniContentString = <<<'EOT'
+    private $iniContentString = <<<'EOT'
 [section1]
 key1 = value1
 key2 = value2
@@ -60,108 +46,63 @@ key1 = value1a
 EOT;
 
     /**
-     * Sample parsed content matching $_iniContentString
-     * @var array
+     * Sample parsed content matching $iniContentString
      */
-    protected $_iniContentParsed = array(
-        'section1' => array(
+    private $iniContentParsed = array(
+        'section1' => [
             'key1' => 'value1',
             'key2' => 'value2',
-        ),
-        'section2' => array(
+        ],
+        'section2' => [
             'key1' => 'value1a',
-        ),
+        ],
     );
 
-    public function setUp(): void
+    private function assertConfigProvided(ServiceManager $container): void
     {
-        $this->_envBackup = getenv('BRAINTACLE_CONFIG');
-
-        $this->_factory = new \Library\Service\UserConfigFactory();
-        $this->_container = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        $factory = new UserConfigFactory();
+        $config = $factory($container, static::ServiceName);
+        $this->assertInstanceOf(ArrayAccess::class, $config);
+        $this->assertEquals($this->iniContentParsed, $config->getArrayCopy());
     }
 
-    public function tearDown(): void
+    public function testExistingConfig()
     {
-        if ($this->_envBackup === false) {
-            putenv('BRAINTACLE_CONFIG');
-        } else {
-            putenv('BRAINTACLE_CONFIG=' . $this->_envBackup);
-        }
+        $container = new ServiceManager();
+        $container->setService('ApplicationConfig', [static::ServiceName => new ArrayObject($this->iniContentParsed)]);
+
+        $this->assertConfigProvided($container);
     }
 
-    private function getFromFactory()
-    {
-        return ($this->_factory)($this->_container, 'foo');
-    }
-
-    public function testFilenameFromEnvironment()
+    public function testConfigFromFile()
     {
         $root = vfsStream::setup('root');
-        $filename = vfsStream::newFile('test.ini')->withContent($this->_iniContentString)->at($root)->url();
-        putenv('BRAINTACLE_CONFIG=' . $filename);
+        $fileName = vfsStream::newFile('test.ini')->withContent($this->iniContentString)->at($root)->url();
 
-        $this->_container->expects($this->once())
-            ->method('get')
-            ->with('ApplicationConfig')
-            ->willReturn(array());
+        $container = new ServiceManager();
+        $container->setService('ApplicationConfig', [static::ServiceName => $fileName]);
 
-        $this->assertEquals($this->_iniContentParsed, $this->getFromFactory()->getArrayCopy());
+        $this->assertConfigProvided($container);
     }
 
-    public function testFilenameFromApplicationConfig()
+    public static function applicationConfigProvider()
     {
-        $root = vfsStream::setup('root');
-        $filename = vfsStream::newFile('test.ini')->withContent($this->_iniContentString)->at($root)->url();
-        putenv('BRAINTACLE_CONFIG=ignored');
-
-        $this->_container->expects($this->once())
-            ->method('get')
-            ->with('ApplicationConfig')
-            ->willReturn(array('Library\UserConfig' => $filename));
-
-        $this->assertEquals($this->_iniContentParsed, $this->getFromFactory()->getArrayCopy());
+        return [
+            [[]],
+            [[static::ServiceName => '']],
+        ];
     }
 
-    public function testArrayFromApplicationConfig()
+    #[DataProvider('applicationConfigProvider')]
+    public function testConfigFromAppConfig(array $applicationConfig)
     {
-        putenv('BRAINTACLE_CONFIG=ignored');
+        $appConfig = $this->createMock(AppConfig::class);
+        $appConfig->method('getAll')->willReturn($this->iniContentParsed);
 
-        $this->_container->expects($this->once())
-            ->method('get')
-            ->with('ApplicationConfig')
-            ->willReturn(['Library\UserConfig' => new ArrayObject($this->_iniContentParsed)]);
+        $container = new ServiceManager();
+        $container->setService('ApplicationConfig', $applicationConfig);
+        $container->setService(AppConfig::class, $appConfig);
 
-        $this->assertEquals($this->_iniContentParsed, $this->getFromFactory()->getArrayCopy());
-    }
-
-    public function testFallbackWhenEnvironmentEmpty()
-    {
-        putenv('BRAINTACLE_CONFIG=');
-
-        $this->_container->expects($this->once())
-            ->method('get')
-            ->with('ApplicationConfig')
-            ->willReturn(array());
-
-        $reader = new \Laminas\Config\Reader\Ini();
-        $iniContentParsed = $reader->fromFile(\Library\Application::getPath('config/braintacle.ini'));
-
-        $this->assertEquals($iniContentParsed, $this->getFromFactory()->getArrayCopy());
-    }
-
-    public function testFallbackWhenEnvironmentNotSet()
-    {
-        putenv('BRAINTACLE_CONFIG');
-
-        $this->_container->expects($this->once())
-            ->method('get')
-            ->with('ApplicationConfig')
-            ->willReturn(array());
-
-        $reader = new \Laminas\Config\Reader\Ini();
-        $iniContentParsed = $reader->fromFile(\Library\Application::getPath('config/braintacle.ini'));
-
-        $this->assertEquals($iniContentParsed, $this->getFromFactory()->getArrayCopy());
+        $this->assertConfigProvided($container);
     }
 }

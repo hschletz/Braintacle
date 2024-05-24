@@ -1,37 +1,53 @@
 <?php
 
-/**
- * All interaction with the user agent starts with this script.
- *
- * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the Free
- * Software Foundation; either version 2 of the License, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
+use Braintacle\AppConfig;
+use Braintacle\Http\ErrorHandlingMiddleware;
+use Braintacle\Legacy\ApplicationBridge;
+use DI\Container;
+use Laminas\Config\Reader\Ini as IniReader;
+use Laminas\Log\Formatter\Simple as SimpleFormatter;
+use Laminas\Log\Logger;
+use Laminas\Log\Processor\PsrPlaceholder;
+use Laminas\Log\PsrLoggerAdapter;
+use Laminas\Log\Writer\Stream as StreamWriter;
+use Laminas\Mvc\Application as MvcApplication;
+use Library\Application;
+use Nyholm\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
+use Slim\Factory\AppFactory;
+use Slim\Handlers\Strategies\RequestHandler;
+
+use function DI\create;
+use function DI\factory;
+use function DI\get;
 
 error_reporting(-1);
-session_cache_limiter('nocache'); // Default headers to prevent caching
 
 require_once('../vendor/autoload.php');
 
-// Laminas\Mvc\Application::init() triggers a warning. This seems to be caused
-// by inconsistent Container interface usage througout the Laminas code and
-// cannot be fixed here. Suppress the warning via a custom error handler - any
-// temporary suppression measure won't work.
-set_error_handler(
-    fn (int $errno, string $errstr) => str_starts_with($errstr, 'Laminas\ServiceManager\AbstractPluginManager::__construct now expects a '),
-    E_USER_DEPRECATED
-);
+$writer = new StreamWriter(STDERR);
+$writer->setFormatter(new SimpleFormatter('%timestamp% Braintacle %priorityName%: %message% %extra%'));
+$logger = new Logger();
+$logger->addProcessor(new PsrPlaceholder());
+$logger->addWriter($writer);
 
-\Library\Application::init('Console')->run();
+$container = new Container([
+    AppConfig::class => create(AppConfig::class)->constructor(
+        new IniReader(),
+        getenv('BRAINTACLE_CONFIG') ?: null
+    ),
+    LoggerInterface::class => create(PsrLoggerAdapter::class)->constructor($logger),
+    MvcApplication::class => factory(Application::init(...))->parameter('module', 'Console'),
+    ResponseInterface::class => get(Response::class),
+]);
+
+$app = AppFactory::createFromContainer($container);
+$app->getRouteCollector()->setDefaultInvocationStrategy(new RequestHandler());
+
+$app->addRoutingMiddleware();
+$app->add(ErrorHandlingMiddleware::class);
+
+$app->any('{path:.*}', ApplicationBridge::class); // Catch-all route: forward to MVC application
+
+$app->run();

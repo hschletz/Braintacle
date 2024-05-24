@@ -95,6 +95,7 @@ class Run
     protected function getModules(?string $modulesOption): array
     {
         $modulesAvailable = [
+            'Main',
             'Library',
             'Database',
             'Model',
@@ -206,7 +207,11 @@ class Run
         // Avoid vendor/bin/phpunit for Windows compatibility
         $cmd[] = __DIR__ . '/../vendor/phpunit/phpunit/phpunit';
         $cmd[] = '-c';
-        $cmd[] = __DIR__ . "/../module/$module/phpunit.xml";
+        if ($module == 'Main') {
+            $cmd[] = __DIR__ . '/../phpunit.xml';
+        } else {
+            $cmd[] = __DIR__ . "/../module/$module/phpunit.xml";
+        }
         $cmd[] = '--colors=always';
         $cmd[] = '--disallow-test-output';
         $cmd[] = '--display-deprecations';

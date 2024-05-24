@@ -23,6 +23,8 @@
 namespace Library\Service;
 
 use ArrayObject;
+use Braintacle\AppConfig;
+use Laminas\Config\Reader\Ini as IniReader;
 
 /**
  * Factory for user config from INI file
@@ -54,13 +56,13 @@ class UserConfigFactory implements \Laminas\ServiceManager\Factory\FactoryInterf
                 return $userConfig;
             }
         }
-        if (!$userConfig) {
-            $userConfig = getenv('BRAINTACLE_CONFIG');
+        if ($userConfig) {
+            $reader = new IniReader();
+            $userConfig = $reader->fromFile($userConfig);
+        } else {
+            $userConfig = $container->get(AppConfig::class)->getAll();
         }
-        if (!$userConfig) {
-            $userConfig = \Library\Application::getPath('config/braintacle.ini');
-        }
-        $reader = new \Laminas\Config\Reader\Ini();
-        return new ArrayObject($reader->fromFile($userConfig));
+
+        return new ArrayObject($userConfig);
     }
 }

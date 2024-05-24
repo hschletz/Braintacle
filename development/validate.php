@@ -36,6 +36,8 @@ $cmd = [
     \Library\Application::getPath('development'),
     \Library\Application::getPath('module'),
     \Library\Application::getPath('public'),
+    \Library\Application::getPath('src'),
+    \Library\Application::getPath('tests'),
 ];
 $process = new \Symfony\Component\Process\Process($cmd);
 $process->start();
