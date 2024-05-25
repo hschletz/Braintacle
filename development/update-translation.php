@@ -21,6 +21,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Console\Template\Extensions\AssetLoaderExtension;
+use Console\View\Helper\ConsoleScript;
 use Gettext\Generator\PoGenerator;
 use Gettext\Scanner\PhpScanner;
 use Gettext\Translation;
@@ -244,6 +246,7 @@ function parseTemplate(string $file, string $relativePath): Translations
 
     // Invoke Latte parser, assuming HTML content.
     $engine = new Engine();
+    $engine->addExtension(new AssetLoaderExtension(new ConsoleScript()));
     $nodes = $engine->parse($template);
     $traverser = new NodeTraverser();
     $traverser->traverse($nodes, function (Node $node) use ($translations, $relativePath) {
