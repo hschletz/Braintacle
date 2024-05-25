@@ -50,7 +50,7 @@ class ErrorHandlingMiddlewareTest extends TestCase
 
         $exception = new Exception('>message', 418); // code should be ignored
         $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects($this->once())->method('error')->with('Braintacle error', ['exception' => $exception]);
+        $logger->expects($this->once())->method('error')->with('', ['exception' => $exception]);
 
         $middleware = new ErrorHandlingMiddleware($this->response, $appConfig, $logger);
 
