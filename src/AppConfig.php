@@ -4,7 +4,6 @@ namespace Braintacle;
 
 use InvalidArgumentException;
 use Laminas\Config\Reader\ReaderInterface;
-use Library\Application;
 
 /**
  * Application config file content.
@@ -19,11 +18,8 @@ class AppConfig
 {
     private array $config;
 
-    public function __construct(ReaderInterface $reader, ?string $fileName)
+    public function __construct(ReaderInterface $reader, string $fileName)
     {
-        if (!$fileName) {
-            $fileName = Application::getPath('config/braintacle.ini');
-        }
         $this->config = $reader->fromFile($fileName);
     }
 

@@ -35,7 +35,7 @@ $logger->addWriter($writer);
 $container = new Container([
     AppConfig::class => create(AppConfig::class)->constructor(
         new IniReader(),
-        getenv('BRAINTACLE_CONFIG') ?: null
+        getenv('BRAINTACLE_CONFIG') ?: Application::getPath('config/braintacle.ini')
     ),
     LoggerInterface::class => create(PsrLoggerAdapter::class)->constructor($logger),
     MvcApplication::class => factory(Application::init(...))->parameter('module', 'Console'),
