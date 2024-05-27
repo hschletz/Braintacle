@@ -29,3 +29,6 @@ date_default_timezone_set('Europe/Berlin');
 Locale::setDefault('de');
 
 AbstractTestCase::$serviceManager = Application::init('Console')->getServiceManager();
+// Inject dummy config to prevent failure on some tests. Tests that evaluate
+// config set up their own.
+AbstractTestCase::$serviceManager->setService('Library\UserConfig', []);
