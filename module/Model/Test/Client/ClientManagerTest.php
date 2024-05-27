@@ -746,6 +746,7 @@ class ClientManagerTest extends AbstractTestCase
             )
         );
 
+        $result = null;
         $resultSetPrototype = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSetPrototype->expects($this->once())
             ->method('initialize')
@@ -846,6 +847,7 @@ class ClientManagerTest extends AbstractTestCase
         $group->method('offsetGet')->with('Id')->willReturn($groupId);
         $group->expects($this->once())->method('update');
 
+        $result = null;
         $resultSetPrototype = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSetPrototype->expects($this->once())
             ->method('initialize')
@@ -901,6 +903,7 @@ class ClientManagerTest extends AbstractTestCase
      */
     public function testGetClientsDistinct($distinct, $expected)
     {
+        $result = null;
         $resultSetPrototype = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
         $resultSetPrototype->expects($this->once())
             ->method('initialize')
