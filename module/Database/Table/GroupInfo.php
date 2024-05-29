@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Config as ConfigModel;
+use Model\Group\Group;
+
 /**
  * "groups" table
  */
@@ -60,7 +63,7 @@ class GroupInfo extends \Database\AbstractTable
         );
 
         $dateTimeFormatter = new \Laminas\Hydrator\Strategy\DateTimeFormatterStrategy(
-            $this->_serviceLocator->get('Database\Nada')->timestampFormatPhp()
+            $this->container->get('Database\Nada')->timestampFormatPhp()
         );
         $this->_hydrator->addStrategy('CreationDate', $dateTimeFormatter);
         $this->_hydrator->addStrategy('lastdate', $dateTimeFormatter);
@@ -70,14 +73,14 @@ class GroupInfo extends \Database\AbstractTable
         $this->_hydrator->addStrategy('create_time', $cacheCreationDateStrategy);
 
         $cacheExpirationDateStrategy = new \Database\Hydrator\Strategy\Groups\CacheDate(
-            $this->_serviceLocator->get('Model\Config')->groupCacheExpirationInterval
+            $this->container->get(ConfigModel::class)->groupCacheExpirationInterval
         );
         $this->_hydrator->addStrategy('CacheExpirationDate', $cacheExpirationDateStrategy);
         $this->_hydrator->addStrategy('revalidate_from', $cacheExpirationDateStrategy);
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $this->_serviceLocator->get('Model\Group\Group')
+            $this->container->get(Group::class)
         );
 
         parent::initialize();

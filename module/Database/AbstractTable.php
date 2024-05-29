@@ -23,22 +23,13 @@
 namespace Database;
 
 use Laminas\Hydrator\HydratorInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Base class for table objects
- *
- * Table objects should be pulled from the service manager which provides the
- * Database\Table\ClassName services which will create and set up object
- * instances.
  */
 abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGateway
 {
-    /**
-     * Service manager
-     * @var \Laminas\ServiceManager\ServiceLocatorInterface
-     */
-    protected $_serviceLocator;
-
     /**
      * Hydrator
      */
@@ -47,28 +38,26 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
     /**
      * Constructor
      *
-     * @param \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator Service manager instance
+     * @param \Laminas\ServiceManager\ServiceLocatorInterface $container Service manager instance
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(protected ContainerInterface $container)
     {
-        $this->_serviceLocator = $serviceLocator;
         if (!$this->table) {
             // If not set explicitly, derive table name from class name.
             // Uppercase letters cause an underscore to be inserted, except at
             // the beginning of the string.
             $this->table = strtolower(preg_replace('/(.)([A-Z])/', '$1_$2', $this->getClassName()));
         }
-        $this->adapter = $serviceLocator->get('Db');
+        $this->adapter = $container->get('Db');
     }
 
     /**
-     * Get service locator.
      * @codeCoverageIgnore
      */
-    public function getServiceLocator(): \Laminas\ServiceManager\ServiceLocatorInterface
+    public function getContainer(): ContainerInterface
     {
-        return $this->_serviceLocator;
+        return $this->container;
     }
 
     /**
@@ -114,11 +103,11 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      */
     public function updateSchema($prune = false)
     {
-        $logger = $this->_serviceLocator->get('Library\Logger');
+        $logger = $this->container->get('Library\Logger');
         $schema = \Laminas\Config\Factory::fromFile(
             Module::getPath('data/Tables/' . $this->getClassName() . '.json')
         );
-        $database = $this->_serviceLocator->get('Database\Nada');
+        $database = $this->container->get('Database\Nada');
 
         $this->preSetSchema($logger, $schema, $database, $prune);
         $this->setSchema($logger, $schema, $database, $prune);

@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Database\Hydrator\Clients as ClientsHydrator;
+use Model\Client\Client;
+
 /**
  * "clients" view
  *
@@ -37,10 +40,10 @@ class Clients extends \Database\AbstractTable
      */
     public function initialize()
     {
-        $this->_hydrator = new \Database\Hydrator\Clients($this->_serviceLocator);
+        $this->_hydrator = new ClientsHydrator($this->container);
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $this->_serviceLocator->get('Model\Client\Client')
+            $this->container->get(Client::class)
         );
 
         parent::initialize();
@@ -53,11 +56,11 @@ class Clients extends \Database\AbstractTable
     public function updateSchema($prune = false)
     {
         // Reimplementation to provide a view
-        $logger = $this->_serviceLocator->get('Library\Logger');
-        $database = $this->_serviceLocator->get('Database\Nada');
+        $logger = $this->container->get('Library\Logger');
+        $database = $this->container->get('Database\Nada');
         if (!in_array('clients', $database->getViewNames())) {
             $logger->info("Creating view 'clients'");
-            $sql = $this->_serviceLocator->get('Database\Table\ClientsAndGroups')->getSql();
+            $sql = $this->container->get(ClientsAndGroups::class)->getSql();
             $select = $sql->select();
             $select->columns(
                 array(

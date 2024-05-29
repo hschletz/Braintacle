@@ -181,7 +181,7 @@ class CustomFieldConfigTest extends AbstractTestCase
         $useTransactionProperty->setAccessible(true);
         $useTransactionProperty->setValue($table, true);
 
-        $serviceLocatorProperty = new \ReflectionProperty(get_class($table), '_serviceLocator');
+        $serviceLocatorProperty = new \ReflectionProperty(get_class($table), 'container');
         $serviceLocatorProperty->setAccessible(true);
         $serviceLocatorProperty->setValue($table, $serviceManager);
 

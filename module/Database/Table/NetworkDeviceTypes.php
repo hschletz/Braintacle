@@ -22,6 +22,8 @@
 
 namespace Database\Table;
 
+use Model\Network\DeviceManager;
+
 /**
  * "devicetype" table
  */
@@ -50,7 +52,7 @@ class NetworkDeviceTypes extends \Database\AbstractTable
                 $type = $type['type'];
                 if (!in_array($type, $definedTypes)) {
                     $logger->notice(sprintf('Creating undefined network device type "%s"', $type));
-                    $this->_serviceLocator->get('Model\Network\DeviceManager')->addType($type);
+                    $this->container->get(DeviceManager::class)->addType($type);
                 }
             }
         }

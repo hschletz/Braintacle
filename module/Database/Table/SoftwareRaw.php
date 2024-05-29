@@ -48,7 +48,7 @@ class SoftwareRaw extends \Database\AbstractTable
     public function preSetSchema($logger, $schema, $database, $prune)
     {
         // Create/update softwareDefinitions table first because this table depends on it.
-        $softwareDefinitions = $this->_serviceLocator->get('Database\Table\SoftwareDefinitions');
+        $softwareDefinitions = $this->container->get(SoftwareDefinitions::class);
         $softwareDefinitions->updateSchema($prune);
 
         // Extra transitions on already existing table. Not necessary on table creation.

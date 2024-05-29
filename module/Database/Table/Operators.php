@@ -24,6 +24,7 @@ namespace Database\Table;
 
 use Laminas\Db\Sql\Predicate\Operator;
 use Laminas\Db\Sql\Where;
+use Model\Operator\OperatorManager;
 
 /**
  * "operators" table
@@ -120,7 +121,7 @@ class Operators extends \Database\AbstractTable
         $logger->debug('Checking for existing account.');
         if ($this->select()->count() == 0) {
             // No account exists yet, create a default account.
-            $this->_serviceLocator->get('Model\Operator\OperatorManager')->createOperator(
+            $this->container->get(OperatorManager::class)->createOperator(
                 array('Id' => 'admin'),
                 'admin'
             );

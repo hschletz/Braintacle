@@ -99,7 +99,7 @@ class CustomFieldConfig extends \Database\AbstractTable
      */
     public function getFields()
     {
-        $columns = $this->_serviceLocator->get('Database\Nada')->getTable('accountinfo')->getColumns();
+        $columns = $this->container->get('Database\Nada')->getTable('accountinfo')->getColumns();
         $select = $this->getSql()->select();
         $select->columns(array('id', 'type', 'name'))
             ->where(array('account_type' => 'COMPUTERS'))

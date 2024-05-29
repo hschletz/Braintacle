@@ -52,7 +52,7 @@ class Software extends \Database\AbstractTable
     public function delete($where)
     {
         // This is a view. Forward operation to underlying table.
-        return $this->getServiceLocator()->get('Database\Table\SoftwareRaw')->delete($where);
+        return $this->getContainer()->get(SoftwareRaw::class)->delete($where);
     }
 
     /**
@@ -64,11 +64,11 @@ class Software extends \Database\AbstractTable
         // Reimplementation to provide a view
 
         // Create/update softwareRaw table first because this view depends on it.
-        $softwareRaw = $this->_serviceLocator->get('Database\Table\SoftwareRaw');
+        $softwareRaw = $this->container->get(SoftwareRaw::class);
         $softwareRaw->updateSchema($prune);
 
-        $logger = $this->_serviceLocator->get('Library\Logger');
-        $database = $this->_serviceLocator->get('Database\Nada');
+        $logger = $this->container->get('Library\Logger');
+        $database = $this->container->get('Database\Nada');
         if (!in_array('software_installations', $database->getViewNames())) {
             $logger->info("Creating view 'software_installations'");
             $sql = $softwareRaw->getSql();

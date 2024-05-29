@@ -49,8 +49,8 @@ class SoftwareTest extends AbstractTestCase
         $serviceLocator = $this->createMock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
         $serviceLocator->method('get')->with('Database\Table\SoftwareRaw')->willReturn($softwareRaw);
 
-        $table = $this->createPartialMock(Software::class, ['getServiceLocator']);
-        $table->method('getServiceLocator')->willReturn($serviceLocator);
+        $table = $this->createPartialMock(Software::class, ['getContainer']);
+        $table->method('getContainer')->willReturn($serviceLocator);
 
         $this->assertEquals(42, $table->delete('_where'));
     }

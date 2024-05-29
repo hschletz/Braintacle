@@ -49,14 +49,14 @@ class PackageDownloadInfo extends \Database\AbstractTable
     {
         // Reimplementation to provide a view instead of previous table
 
-        $logger = $this->_serviceLocator->get('Library\Logger');
-        $database = $this->_serviceLocator->get('Database\Nada');
+        $logger = $this->container->get('Library\Logger');
+        $database = $this->container->get('Database\Nada');
 
         if (in_array('download_enable', $database->getTableNames())) {
             // Use value of "fileid" column instead of obsolete "id" for package assignments
             $logger->info('Transforming package assignment IDs...');
             $where = new \Laminas\Db\Sql\Where();
-            $this->_serviceLocator->get('Database\Table\ClientConfig')->update(
+            $this->container->get(ClientConfig::class)->update(
                 array(
                     'ivalue' => new \Laminas\Db\Sql\Expression(
                         sprintf(
@@ -79,7 +79,7 @@ class PackageDownloadInfo extends \Database\AbstractTable
             $typeText = $database->getNativeDatatype(Column::TYPE_VARCHAR, 255, true);
             $typeInt = $database->getNativeDatatype(Column::TYPE_INTEGER, 32, true);
             $null = 'CAST(NULL AS %s)';
-            $sql = $this->_serviceLocator->get('Database\Table\Packages')->getSql();
+            $sql = $this->container->get(Packages::class)->getSql();
             $select = $sql->select();
             $select->columns(
                 array(
