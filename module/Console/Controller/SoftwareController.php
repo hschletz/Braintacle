@@ -40,13 +40,6 @@ class SoftwareController extends \Laminas\Mvc\Controller\AbstractActionControlle
 
     private SoftwareManagementForm $softwareManagementForm;
 
-    /**
-     * Constructor
-     *
-     * @param \Model\SoftwareManager $softwareManager
-     * @param \Laminas\Form\FormElementManager $formManager
-     * @param \Library\Filter\FixEncodingErrors $fixEncodingErrors
-     */
     public function __construct(
         \Model\SoftwareManager $softwareManager,
         SoftwareManagementForm $softwareManagementForm

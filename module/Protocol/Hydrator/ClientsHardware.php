@@ -39,13 +39,6 @@ class ClientsHardware implements \Laminas\Hydrator\HydratorInterface
     protected $_windowsInstallationPrototype;
 
     /**
-     * Filter for hydration of "OsName"
-     *
-     * @var \Library\Filter\FixEncodingErrors
-     */
-    protected $_encodingFilter;
-
-    /**
      * UTC time zone
      *
      * @var \DateTimeZone
@@ -142,7 +135,6 @@ class ClientsHardware implements \Laminas\Hydrator\HydratorInterface
     public function __construct(\Model\Client\WindowsInstallation $windowsInstallationPrototype)
     {
         $this->_windowsInstallationPrototype = $windowsInstallationPrototype;
-        $this->_encodingFilter = new \Library\Filter\FixEncodingErrors();
         $this->_utcTimeZone = new \DateTimeZone('UTC');
     }
 
@@ -249,9 +241,6 @@ class ClientsHardware implements \Laminas\Hydrator\HydratorInterface
             case 'inventoryDate':
             case 'lastContactDate':
                 $value = \DateTime::createFromFormat('Y-m-d H:i:s', $value, $this->_utcTimeZone);
-                break;
-            case 'osName':
-                $value = $this->_encodingFilter->filter($value);
                 break;
         }
         return $value;

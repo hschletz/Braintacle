@@ -340,33 +340,6 @@ class ClientControllerTest extends AbstractControllerTestCase
         );
     }
 
-    public function testIndexActionWithBuiltinSoftwareFilter()
-    {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->never())
-            ->method('setData');
-        $this->_clientManager->expects($this->once())
-            ->method('getClients')
-            ->with(
-                $this->_defaultColumns,
-                'InventoryDate',
-                'desc',
-                'Software',
-                "\xc2\x99", // Incorrect representation of TM symbol
-                null,
-                null,
-                true,
-                false
-            )
-            ->willReturn($this->_sampleClients);
-        $this->dispatch('/console/client/index/?filter=Software&search=%C2%99');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains(
-            '//p[@class="textcenter"]',
-            "\n2 Clients, auf denen die Software '\xe2\x84\xa2' installiert ist\n"
-        ); // Corrected representation of TM symbol
-    }
-
     public function testIndexActionWithBuiltinDistinctFilter()
     {
         $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');

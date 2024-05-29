@@ -32,21 +32,6 @@ use Model\AbstractModel;
 class Software implements \Laminas\Hydrator\HydratorInterface
 {
     /**
-     * Filter for hydration of "Name"
-     *
-     * @var \Library\Filter\FixEncodingErrors
-     */
-    protected $_nameFilter;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->_nameFilter = new \Library\Filter\FixEncodingErrors();
-    }
-
-    /**
      * Map for hydrateName()
      *
      * @var string[]
@@ -208,10 +193,6 @@ class Software implements \Laminas\Hydrator\HydratorInterface
     public function hydrateValue($name, $value)
     {
         switch ($name) {
-            case 'name':
-                // One-way correction of characters improperly encoded by old agents
-                $value = $this->_nameFilter->filter($value);
-                break;
             case 'installLocation':
                 if ($value == 'N/A') {
                     // One-way removal of pseudo-values

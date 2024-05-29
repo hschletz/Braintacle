@@ -189,9 +189,6 @@ if ($filter) {
             );
     } else {
         // For fixed filters, print a nicer description.
-        if ($filter == 'Software') {
-            $search = \Laminas\Filter\StaticFilter::execute($search, 'Library\FixEncodingErrors');
-        }
         $header = $this->filterDescription($filter, $search, $count);
     }
 } else {

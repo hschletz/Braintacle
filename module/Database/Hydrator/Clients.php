@@ -43,13 +43,6 @@ class Clients implements \Laminas\Hydrator\HydratorInterface
     protected $_serviceLocator;
 
     /**
-     * Filter for hydration of "OsName"
-     *
-     * @var \Library\Filter\FixEncodingErrors
-     */
-    protected $_encodingFilter;
-
-    /**
      * Database time zone
      *
      * @var \DateTimeZone
@@ -140,7 +133,6 @@ class Clients implements \Laminas\Hydrator\HydratorInterface
     public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->_serviceLocator = $serviceLocator;
-        $this->_encodingFilter = new \Library\Filter\FixEncodingErrors();
         $this->_databaseTimeZone = new \DateTimeZone('UTC');
     }
 
@@ -260,9 +252,6 @@ class Clients implements \Laminas\Hydrator\HydratorInterface
                         $value,
                         $this->_databaseTimeZone
                     );
-                    break;
-                case 'OsName':
-                    $value = $this->_encodingFilter->filter($value);
                     break;
             }
         } elseif ($name == 'Package.Status') {

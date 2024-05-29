@@ -63,7 +63,6 @@ class Module implements Feature\ConfigProviderInterface
             ),
             'filters' => array(
                 'aliases' => array(
-                    'Library\FixEncodingErrors' => 'Library\Filter\FixEncodingErrors',
                     'Library\LogLevel' => 'Library\Filter\LogLevel',
                 ),
             ),

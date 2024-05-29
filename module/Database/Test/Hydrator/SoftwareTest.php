@@ -299,7 +299,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
     public static function hydrateValueProvider()
     {
         return [
-            ['name', "\xC2\x99", "\xE2\x84\xA2"],
+            ['name', 'software_name', 'software_name'],
             ['installLocation', 'N/A', null],
             ['installLocation', 'a/b', 'a\b'],
             ['isHotfix', '0', true],

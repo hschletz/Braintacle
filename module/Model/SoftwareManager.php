@@ -87,11 +87,6 @@ class SoftwareManager
      *
      * Both filters can be combined.
      *
-     * The returned names may contain unprintable characters. For display
-     * purposes, they should be processed via \Library\Filter\FixEncodingErrors.
-     * For internal processing (like passing to setDisplay() or composing search
-     * queries), the untouched names should be used.
-     *
      * @param array $filters Associative array of filters. Default: none.
      * @param string $order One of "name" or "num_clients", default: "name"
      * @param string $direction Onde of "asc" or "desc", default: "asc"
