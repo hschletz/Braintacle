@@ -22,6 +22,7 @@
 
 namespace Tools\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -30,13 +31,11 @@ use Symfony\Component\Console\Input\InputArgument;
  *
  * @codeCoverageIgnore
  */
+#[AsCommand('import', 'Imports clients from compressed or uncompressed XML files')]
 class Import extends Command
 {
-    protected static $defaultName = 'import';
-
     protected function configure()
     {
-        $this->setDescription('Imports clients from compressed or uncompressed XML files');
         $this->addArgument('filename', InputArgument::REQUIRED, 'File to import');
     }
 }

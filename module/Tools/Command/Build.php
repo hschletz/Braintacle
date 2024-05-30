@@ -22,6 +22,7 @@
 
 namespace Tools\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -30,13 +31,11 @@ use Symfony\Component\Console\Input\InputArgument;
  *
  * @codeCoverageIgnore
  */
+#[AsCommand('build', 'Builds a package')]
 class Build extends Command
 {
-    protected static $defaultName = 'build';
-
     protected function configure()
     {
-        $this->setDescription('Builds a package');
         $this->addArgument('name', InputArgument::REQUIRED, 'package name');
         $this->addArgument('file', InputArgument::REQUIRED, 'file with package content');
     }

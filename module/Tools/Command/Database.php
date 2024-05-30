@@ -22,6 +22,7 @@
 
 namespace Tools\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -30,13 +31,11 @@ use Symfony\Component\Console\Input\InputOption;
  *
  * @codeCoverageIgnore
  */
+#[AsCommand('database', 'Updates the database')]
 class Database extends Command
 {
-    protected static $defaultName = 'database';
-
     protected function configure()
     {
-        $this->setDescription('Updates the database');
         $this->addOption(
             'loglevel',
             'l',

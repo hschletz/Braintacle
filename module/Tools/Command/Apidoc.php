@@ -22,6 +22,7 @@
 
 namespace Tools\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -32,15 +33,9 @@ use Symfony\Component\Process\Process;
  *
  * @codeCoverageIgnore
  */
+#[AsCommand('apidoc', 'Generates API documentation in the build/api directory')]
 class Apidoc extends Command
 {
-    protected static $defaultName = 'apidoc';
-
-    protected function configure()
-    {
-        $this->setDescription('Generates API documentation in the build/api directory');
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $process = new Process(['tools/phpDocumentor'], \Library\Application::getPath());

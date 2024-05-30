@@ -22,6 +22,7 @@
 
 namespace Tools\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -30,13 +31,11 @@ use Symfony\Component\Console\Input\InputArgument;
  *
  * @codeCoverageIgnore
  */
+#[AsCommand('decode', 'Decodes a compressed inventory file as created by agents')]
 class Decode extends Command
 {
-    protected static $defaultName = 'decode';
-
     protected function configure()
     {
-        $this->setDescription('Decodes a compressed inventory file as created by agents');
         $this->addArgument('input file', InputArgument::REQUIRED, 'compressed input file');
         $this->addArgument('output file', InputArgument::OPTIONAL, 'XML output file (default: print to STDOUT)');
     }

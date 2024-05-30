@@ -22,6 +22,7 @@
 
 namespace Tools\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -31,13 +32,11 @@ use Symfony\Component\Console\Input\InputOption;
  *
  * @codeCoverageIgnore
  */
+#[AsCommand('export', 'Exports all clients as XML')]
 class Export extends Command
 {
-    protected static $defaultName = 'export';
-
     protected function configure()
     {
-        $this->setDescription('Exports all clients as XML');
         $this->addArgument('directory', InputArgument::REQUIRED, 'output directory');
         $this->addOption('validate', null, InputOption::VALUE_NONE, 'validate output documents, abort on error');
     }
