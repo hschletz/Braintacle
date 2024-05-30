@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Client\Item\Controller;
+use Psr\Container\ContainerInterface;
+
 /**
  * "controllers" table
  */
@@ -31,15 +34,15 @@ class Controllers extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->_hydrator = new \Database\Hydrator\Controllers();
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\Item\Controller')
+            $container->get(Controller::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

@@ -22,6 +22,8 @@
 
 namespace Database\Table;
 
+use Psr\Container\ContainerInterface;
+
 /**
  * "temp_files" table
  */
@@ -41,10 +43,10 @@ class Attachments extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'temp_files';
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 
     /**

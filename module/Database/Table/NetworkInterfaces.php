@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Client\Item\NetworkInterface;
+use Psr\Container\ContainerInterface;
+
 /**
  * "networks" table
  */
@@ -31,7 +34,7 @@ class NetworkInterfaces extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'networks';
 
@@ -65,9 +68,9 @@ class NetworkInterfaces extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\Item\NetworkInterface')
+            $container->get(NetworkInterface::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

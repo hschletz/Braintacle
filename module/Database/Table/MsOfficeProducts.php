@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Client\Item\MsOfficeProduct;
+use Psr\Container\ContainerInterface;
+
 /**
  * "officepack" table
  */
@@ -31,7 +34,7 @@ class MsOfficeProducts extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'officepack';
 
@@ -53,9 +56,9 @@ class MsOfficeProducts extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\Item\MsOfficeProduct')
+            $container->get(MsOfficeProduct::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

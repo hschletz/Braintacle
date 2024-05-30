@@ -22,6 +22,8 @@
 
 namespace Database\Table;
 
+use Psr\Container\ContainerInterface;
+
 /**
  * "braintacle_windows" table
  * @deprecated Use only for setting manual_product_key. Use WindowsInstallations view for everything else.
@@ -32,9 +34,9 @@ class WindowsProductKeys extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'braintacle_windows';
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

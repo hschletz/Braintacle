@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Client\Item\DisplayController;
+use Psr\Container\ContainerInterface;
+
 /**
  * "videos" table
  */
@@ -31,7 +34,7 @@ class DisplayControllers extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'videos';
 
@@ -59,9 +62,9 @@ class DisplayControllers extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\Item\DisplayController')
+            $container->get(DisplayController::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

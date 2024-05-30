@@ -22,6 +22,8 @@
 
 namespace Database\Table;
 
+use Psr\Container\ContainerInterface;
+
 /**
  * "network_devices" table
  */
@@ -31,10 +33,10 @@ class NetworkDevicesIdentified extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'network_devices';
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 
     /**

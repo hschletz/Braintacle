@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Client\Item\Modem;
+use Psr\Container\ContainerInterface;
+
 /**
  * "modems" table
  */
@@ -31,7 +34,7 @@ class Modems extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
@@ -45,9 +48,9 @@ class Modems extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\Item\Modem')
+            $container->get(Modem::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

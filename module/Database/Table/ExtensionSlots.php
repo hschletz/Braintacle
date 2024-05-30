@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Client\Item\ExtensionSlot;
+use Psr\Container\ContainerInterface;
+
 /**
  * "slots" table
  */
@@ -31,7 +34,7 @@ class ExtensionSlots extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'slots';
 
@@ -39,9 +42,9 @@ class ExtensionSlots extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\Item\ExtensionSlot')
+            $container->get(ExtensionSlot::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

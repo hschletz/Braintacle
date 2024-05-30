@@ -23,6 +23,7 @@
 namespace Database\Table;
 
 use Model\Network\DeviceManager;
+use Psr\Container\ContainerInterface;
 
 /**
  * "devicetype" table
@@ -33,10 +34,10 @@ class NetworkDeviceTypes extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'devicetype';
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 
     /**

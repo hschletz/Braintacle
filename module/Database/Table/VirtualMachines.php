@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Client\Item\VirtualMachine;
+use Psr\Container\ContainerInterface;
+
 /**
  * "virtualmachines" table
  */
@@ -31,7 +34,7 @@ class VirtualMachines extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'virtualmachines';
 
@@ -52,9 +55,9 @@ class VirtualMachines extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\Item\VirtualMachine')
+            $container->get(VirtualMachine::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

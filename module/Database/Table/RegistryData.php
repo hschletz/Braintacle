@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Client\Item\RegistryData as RegistryDataItem;
+use Psr\Container\ContainerInterface;
+
 /**
  * "registry" table
  */
@@ -31,7 +34,7 @@ class RegistryData extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'registry';
 
@@ -47,9 +50,9 @@ class RegistryData extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\Item\RegistryData')
+            $container->get(RegistryDataItem::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

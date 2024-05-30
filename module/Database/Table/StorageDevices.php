@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Client\Item\StorageDevice;
+use Psr\Container\ContainerInterface;
+
 /**
  * "storages" table
  */
@@ -31,7 +34,7 @@ class StorageDevices extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'storages';
 
@@ -39,9 +42,9 @@ class StorageDevices extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\Item\StorageDevice')
+            $container->get(StorageDevice::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

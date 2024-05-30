@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Client\Item\AudioDevice;
+use Psr\Container\ContainerInterface;
+
 /**
  * "sounds" table
  */
@@ -31,7 +34,7 @@ class AudioDevices extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'sounds';
 
@@ -48,9 +51,9 @@ class AudioDevices extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\Item\AudioDevice')
+            $container->get(AudioDevice::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Package\Package;
+use Psr\Container\ContainerInterface;
+
 /**
  * "download_available" table
  *
@@ -33,7 +36,7 @@ class Packages extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'download_available';
 
@@ -62,8 +65,8 @@ class Packages extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Package\Package')
+            $container->get(Package::class)
         );
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

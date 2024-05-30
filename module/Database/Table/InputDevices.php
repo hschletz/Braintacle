@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Client\Item\InputDevice;
+use Psr\Container\ContainerInterface;
+
 /**
  * "inputs" table
  */
@@ -31,7 +34,7 @@ class InputDevices extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'inputs';
 
@@ -50,9 +53,9 @@ class InputDevices extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\Item\InputDevice')
+            $container->get(InputDevice::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

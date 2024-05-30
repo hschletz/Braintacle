@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Network\Subnet;
+use Psr\Container\ContainerInterface;
+
 /**
  * "subnet" table
  */
@@ -31,7 +34,7 @@ class Subnets extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'subnet';
 
@@ -56,9 +59,9 @@ class Subnets extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Network\Subnet')
+            $container->get(Subnet::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

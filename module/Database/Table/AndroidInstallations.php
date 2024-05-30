@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Client\AndroidInstallation;
+use Psr\Container\ContainerInterface;
+
 /**
  * "javainfos" table
  */
@@ -31,7 +34,7 @@ class AndroidInstallations extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'javainfos';
 
@@ -49,9 +52,9 @@ class AndroidInstallations extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\AndroidInstallation')
+            $container->get(AndroidInstallation::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

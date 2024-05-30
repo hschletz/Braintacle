@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Client\Item\Sim as SimItem;
+use Psr\Container\ContainerInterface;
+
 /**
  * "sim" table
  */
@@ -31,7 +34,7 @@ class Sim extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
@@ -48,9 +51,9 @@ class Sim extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\Item\Sim')
+            $container->get(SimItem::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

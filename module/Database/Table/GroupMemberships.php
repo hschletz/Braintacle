@@ -22,6 +22,8 @@
 
 namespace Database\Table;
 
+use Psr\Container\ContainerInterface;
+
 /**
  * "groups_cache" table
  */
@@ -31,9 +33,9 @@ class GroupMemberships extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'groups_cache';
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

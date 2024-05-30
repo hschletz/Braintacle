@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Client\Item\MemorySlot;
+use Psr\Container\ContainerInterface;
+
 /**
  * "memories" table
  */
@@ -31,7 +34,7 @@ class MemorySlots extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'memories';
 
@@ -56,9 +59,9 @@ class MemorySlots extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\Item\MemorySlot')
+            $container->get(MemorySlot::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

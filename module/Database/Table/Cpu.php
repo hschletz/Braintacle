@@ -22,6 +22,9 @@
 
 namespace Database\Table;
 
+use Model\Client\Item\Cpu as CpuItem;
+use Psr\Container\ContainerInterface;
+
 /**
  * "cpus" table
  */
@@ -31,7 +34,7 @@ class Cpu extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'cpus';
 
@@ -56,9 +59,9 @@ class Cpu extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\Item\Cpu')
+            $container->get(CpuItem::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }
