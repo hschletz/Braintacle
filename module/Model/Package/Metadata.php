@@ -59,7 +59,7 @@ class Metadata extends \Library\DomDocument
         $node->setAttribute('COMMAND', ($data['DeployAction'] == 'execute' ? $data['ActionParam'] : ''));
         $node->setAttribute('NOTIFY_USER', $data['Warn'] ? '1' : '0');
         $node->setAttribute('NOTIFY_TEXT', $this->escapeMessage($data['WarnMessage']));
-        $node->setAttribute('NOTIFY_COUNTDOWN', $data['WarnCountdown']);
+        $node->setAttribute('NOTIFY_COUNTDOWN', $data['WarnCountdown'] ?? '0');
         $node->setAttribute('NOTIFY_CAN_ABORT', $data['WarnAllowAbort'] ? '1' : '0');
         $node->setAttribute('NOTIFY_CAN_DELAY', $data['WarnAllowDelay'] ? '1' : '0');
         $node->setAttribute('NEED_DONE_ACTION', $data['PostInstMessage'] ? '1' : '0');
@@ -123,7 +123,7 @@ class Metadata extends \Library\DomDocument
      */
     protected function escapeMessage($message)
     {
-        $message = str_replace('"', '&quot;', $message);
+        $message = str_replace('"', '&quot;', $message ?? '');
         $message = str_replace(array("\r\n", "\n\r", "\n", "\r"), '<br>', $message);
         return $message;
     }

@@ -38,6 +38,7 @@ class MetadataTest extends AbstractTestCase
 
     public function testSetPackageData()
     {
+        // Some fields can never be NULL but must be filled for test zo pass.
         $data = array(
             'Id' => '12345678',
             'Priority' => '5',
@@ -71,6 +72,36 @@ class MetadataTest extends AbstractTestCase
         $this->assertEquals('warn_message&quot;<br><br>', $node->getAttribute('NOTIFY_TEXT'));
         $this->assertEquals('23', $node->getAttribute('NOTIFY_COUNTDOWN'));
         $this->assertEquals('rien', $node->getAttribute('GARDEFOU'));
+    }
+
+    public function testSetPackageDataWithNullValues()
+    {
+        $data = [
+            'Id' => '12345678',
+            'Priority' => 5,
+            'DeployAction' => 'action',
+            'HashType' => 'hash_type',
+            'Hash' => 'hash',
+            'NumFragments' => 1,
+            'Warn' => null,
+            'WarnMessage' => null,
+            'WarnCountdown' => null,
+            'WarnAllowAbort' => null,
+            'WarnAllowDelay' => null,
+            'PostInstMessage' => null,
+        ];
+        $model = new Metadata();
+        $model->setPackageData($data);
+
+        $this->assertEquals(1, $model->childNodes->length);
+        $node = $model->documentElement;
+
+        $this->assertEquals('', $node->getAttribute('NOTIFY_TEXT'));
+        $this->assertEquals('0', $node->getAttribute('NOTIFY_COUNTDOWN'));
+        $this->assertEquals('0', $node->getAttribute('NOTIFY_CAN_ABORT'));
+        $this->assertEquals('0', $node->getAttribute('NOTIFY_CAN_DELAY'));
+        $this->assertEquals('0', $node->getAttribute('NEED_DONE_ACTION'));
+        $this->assertEquals('', $node->getAttribute('NEED_DONE_ACTION_TEXT'));
     }
 
     public static function packageDataActionParamsProvider()
