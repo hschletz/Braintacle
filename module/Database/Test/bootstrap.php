@@ -20,17 +20,27 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Braintacle\Database\DatabaseFactory;
 use Database\Test\Table\AbstractTestCase;
+use Laminas\Db\Adapter\Adapter;
+use Nada\Factory;
 
 error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
 
-$serviceManager = \Library\Application::init('Database')->getServiceManager();
-$serviceManager->setService(
-    'Library\UserConfig',
-    array(
-        'database' => json_decode(getenv('BRAINTACLE_TEST_DATABASE'), true),
+$adapter = new Adapter(
+    json_decode(
+        getenv('BRAINTACLE_TEST_DATABASE'),
+        true
     )
 );
+$databaseFactory = new DatabaseFactory(new Factory(), $adapter);
+
+$serviceManager = \Library\Application::init('Database')->getServiceManager();
+$serviceManager->setService('Db', $adapter);
+$serviceManager->setService('Database\Nada', $databaseFactory());
 AbstractTestCase::$serviceManager = $serviceManager;
+
 unset($serviceManager);
+unset($databaseFactory);
+unset($adapter);

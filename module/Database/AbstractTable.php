@@ -50,6 +50,7 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
             $this->table = strtolower(preg_replace('/(.)([A-Z])/', '$1_$2', $this->getClassName()));
         }
         $this->adapter = $container->get('Db');
+        $this->initialize();
     }
 
     /**

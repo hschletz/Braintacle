@@ -3,10 +3,13 @@
 namespace Braintacle\Legacy;
 
 use Braintacle\AppConfig;
+use Laminas\Db\Adapter\Adapter;
 use Laminas\Http\Header\HeaderInterface;
 use Laminas\Http\Response as MvcResponse;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
+use Nada\Database\AbstractDatabase;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -20,16 +23,21 @@ class ApplicationBridge implements RequestHandlerInterface
 
     public function __construct(
         private ResponseInterface $response,
-        private AppConfig $appConfig,
+        private ContainerInterface $container,
         private Application $application,
     ) {
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        // Inject AppConfig to prevent double instantiation (and loading the
-        // config file twice).
-        $this->application->getServiceManager()->setService(AppConfig::class, $this->appConfig);
+        // Inject Services which are not provided by module's ServiceManager
+        // configuration.
+        $serviceManager = $this->application->getServiceManager();
+        $serviceManager->setService(AbstractDatabase::class, $this->container->get(AbstractDatabase::class));
+        $serviceManager->setService(Adapter::class, $this->container->get(Adapter::class));
+        $serviceManager->setService(AppConfig::class, $this->container->get(AppConfig::class));
+        $serviceManager->setAlias('Database\Nada', AbstractDatabase::class);
+        $serviceManager->setAlias('Db', Adapter::class);
 
         // Prevent the MVC application from generating output. Capture the MVC
         // response instead.

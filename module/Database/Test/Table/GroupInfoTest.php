@@ -60,7 +60,6 @@ class GroupInfoTest extends AbstractTestCase
         );
 
         $table = new \Database\Table\GroupInfo($serviceManager);
-        $table->initialize();
 
         $hydrator = $table->getHydrator();
         $this->assertInstanceOf(\Laminas\Hydrator\ArraySerializableHydrator::class, $hydrator);

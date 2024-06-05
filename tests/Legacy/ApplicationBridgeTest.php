@@ -5,11 +5,14 @@ namespace Braintacle\Test\Legacy;
 use Braintacle\AppConfig;
 use Braintacle\Legacy\ApplicationBridge;
 use Braintacle\Test\HttpHandlerTestTrait;
+use DI\Container;
+use Laminas\Db\Adapter\Adapter;
 use Laminas\EventManager\EventManager;
 use Laminas\Http\Response as MvcResponse;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
 use Laminas\ServiceManager\ServiceManager;
+use Nada\Database\AbstractDatabase;
 use PHPUnit\Framework\TestCase;
 
 class ApplicationBridgeTest extends TestCase
@@ -18,7 +21,13 @@ class ApplicationBridgeTest extends TestCase
 
     public function testHandler()
     {
-        $appConfig = $this->createMock(AppConfig::class);
+        $services = [
+            AbstractDatabase::class => $this->createStub(AbstractDatabase::class),
+            Adapter::class => $this->createStub(Adapter::class),
+            AppConfig::class => $this->createStub(AppConfig::class),
+        ];
+        $container = new Container($services);
+
         $serviceManager = new ServiceManager();
         $eventManager = new EventManager();
 
@@ -43,7 +52,7 @@ class ApplicationBridgeTest extends TestCase
             return $application;
         });
 
-        $applicationBridge = new ApplicationBridge($this->response, $appConfig, $application);
+        $applicationBridge = new ApplicationBridge($this->response, $container, $application);
         $response = $applicationBridge->handle($this->request);
 
         $this->assertResponseStatusCode(418, $response);
@@ -53,7 +62,10 @@ class ApplicationBridgeTest extends TestCase
         ], $response);
         $this->assertResponseContent('content', $response);
 
-        $this->assertTrue($serviceManager->has(AppConfig::class));
-        $this->assertSame($appConfig, $serviceManager->get(AppConfig::class));
+        $this->assertSame($services[AbstractDatabase::class], $serviceManager->get(AbstractDatabase::class));
+        $this->assertSame($services[AbstractDatabase::class], $serviceManager->get('Database\Nada'));
+        $this->assertSame($services[Adapter::class], $serviceManager->get(Adapter::class));
+        $this->assertSame($services[Adapter::class], $serviceManager->get('Db'));
+        $this->assertSame($services[AppConfig::class], $serviceManager->get(AppConfig::class));
     }
 }

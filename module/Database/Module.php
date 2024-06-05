@@ -22,7 +22,7 @@
 
 namespace Database;
 
-use Laminas\ModuleManager\Feature;
+use Laminas\ModuleManager\Feature\InitProviderInterface;
 
 /**
  * The Database module
@@ -32,28 +32,13 @@ use Laminas\ModuleManager\Feature;
  *
  * @codeCoverageIgnore
  */
-class Module implements
-    Feature\ConfigProviderInterface,
-    Feature\InitProviderInterface
+class Module implements InitProviderInterface
 {
     /** {@inheritdoc} */
     public function init(\Laminas\ModuleManager\ModuleManagerInterface $manager)
     {
         $manager->loadModule('Library');
         $manager->loadModule('Model');
-    }
-
-    /** {@inheritdoc} */
-    public function getConfig()
-    {
-        return array(
-            'service_manager' => array(
-                'abstract_factories' => array(
-                    'Database\Service\AbstractDatabaseFactory',
-                    'Database\Service\AbstractTableFactory',
-                ),
-            ),
-        );
     }
 
     /**

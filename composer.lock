@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e72b1dc57a9b22366e3456980002ee34",
+    "content-hash": "b336ee7a6cb07fe947f2efff0b8d241a",
     "packages": [
         {
             "name": "brick/varexporter",
@@ -205,16 +205,16 @@
         },
         {
             "name": "hschletz/nada",
-            "version": "v1.2.3",
+            "version": "v1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hschletz/NADA.git",
-                "reference": "1d41b37265fb582c2ad9b85eccac0794db23f2ca"
+                "reference": "cd5a6602a5cb87d839fd93bddfc8b82163a6b4f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hschletz/NADA/zipball/1d41b37265fb582c2ad9b85eccac0794db23f2ca",
-                "reference": "1d41b37265fb582c2ad9b85eccac0794db23f2ca",
+                "url": "https://api.github.com/repos/hschletz/NADA/zipball/cd5a6602a5cb87d839fd93bddfc8b82163a6b4f8",
+                "reference": "cd5a6602a5cb87d839fd93bddfc8b82163a6b4f8",
                 "shasum": ""
             },
             "require": {
@@ -240,9 +240,9 @@
             "homepage": "https://github.com/hschletz/NADA",
             "support": {
                 "issues": "https://github.com/hschletz/NADA/issues",
-                "source": "https://github.com/hschletz/NADA/tree/v1.2.3"
+                "source": "https://github.com/hschletz/NADA/tree/v1.2.4"
             },
-            "time": "2024-03-23T18:05:04+00:00"
+            "time": "2024-06-02T15:05:16+00:00"
         },
         {
             "name": "laminas/laminas-authentication",

@@ -35,6 +35,7 @@ use Model\Client\CustomFieldManager;
 use Model\Client\CustomFields;
 use Model\Group\GroupManager;
 use Model\Package\Assignment;
+use Model\Package\PackageManager;
 use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
@@ -637,13 +638,13 @@ class ClientTest extends AbstractTestCase
         $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getPackage')->with('packageName')->willReturn($package);
 
-        $model = $this->getModel(
-            array(
-                'Library\Now' => new \DateTime('2017-05-27T19:39:25'),
-                'Model\Package\PackageManager' => $packageManager,
-            )
-        );
-        $model->Id = 1;
+        $serviceManager = clone static::$serviceManager;
+        $serviceManager->setService('Library\Now', new DateTime('2017-05-27T19:39:25'));
+        $serviceManager->setService(PackageManager::class, $packageManager);
+
+        $model = new Client();
+        $model->setServiceLocator($serviceManager);
+        $model->id = 1;
 
         $model->resetPackage('packageName');
 
@@ -663,8 +664,12 @@ class ClientTest extends AbstractTestCase
         $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getPackage')->with('packageName')->willReturn($package);
 
-        $model = $this->getModel(array('Model\Package\PackageManager' => $packageManager));
-        $model->Id = 1;
+        $serviceManager = clone static::$serviceManager;
+        $serviceManager->setService(PackageManager::class, $packageManager);
+
+        $model = new Client();
+        $model->setServiceLocator($serviceManager);
+        $model->id = 1;
 
         try {
             $model->resetPackage('packageName');
@@ -1187,8 +1192,12 @@ class ClientTest extends AbstractTestCase
         $groupManager = $this->createMock(GroupManager::class);
         $groupManager->expects($this->once())->method('updateCache');
 
-        $model = $this->getModel(array('Model\Group\GroupManager' => $groupManager));
-        $model->Id = 1;
+        $serviceManager = clone static::$serviceManager;
+        $serviceManager->setService(GroupManager::class, $groupManager);
+
+        $model = new Client();
+        $model->id = 1;
+        $model->setServiceLocator($serviceManager);
 
         $this->assertSame($expected, $model->getGroupMemberships($type));
     }
