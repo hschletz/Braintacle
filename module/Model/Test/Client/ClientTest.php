@@ -180,9 +180,12 @@ class ClientTest extends AbstractTestCase
 
         $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $customFieldManager->expects($this->once())->method('read')->with(2)->willReturn($customFields);
+        static::$serviceManager->setService(CustomFieldManager::class, $customFieldManager);
 
-        $model = $this->getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
+        $model = new Client();
+        $model->setServiceLocator(static::$serviceManager);
         $model->id = 2;
+
         $this->assertEquals($customFields, $model->customFields);
         $this->assertEquals($customFields, $model->customFields); // cached result
     }
@@ -638,12 +641,11 @@ class ClientTest extends AbstractTestCase
         $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getPackage')->with('packageName')->willReturn($package);
 
-        $serviceManager = clone static::$serviceManager;
-        $serviceManager->setService('Library\Now', new DateTime('2017-05-27T19:39:25'));
-        $serviceManager->setService(PackageManager::class, $packageManager);
+        static::$serviceManager->setService('Library\Now', new DateTime('2017-05-27T19:39:25'));
+        static::$serviceManager->setService(PackageManager::class, $packageManager);
 
         $model = new Client();
-        $model->setServiceLocator($serviceManager);
+        $model->setServiceLocator(static::$serviceManager);
         $model->id = 1;
 
         $model->resetPackage('packageName');
@@ -664,11 +666,10 @@ class ClientTest extends AbstractTestCase
         $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getPackage')->with('packageName')->willReturn($package);
 
-        $serviceManager = clone static::$serviceManager;
-        $serviceManager->setService(PackageManager::class, $packageManager);
+        static::$serviceManager->setService(PackageManager::class, $packageManager);
 
         $model = new Client();
-        $model->setServiceLocator($serviceManager);
+        $model->setServiceLocator(static::$serviceManager);
         $model->id = 1;
 
         try {
@@ -717,13 +718,12 @@ class ClientTest extends AbstractTestCase
         $clientConfig->method('selectWith')->willReturn($resultSet);
         $clientConfig->method('getAdapter')->willReturn($adapter);
 
-        $model = $this->getModel(
-            array(
-                'Database\Table\ClientConfig' => $clientConfig,
-                'Model\Package\PackageManager' => $packageManager,
-            )
-        );
-        $model->Id = 1;
+        static::$serviceManager->setService(ClientConfig::class, $clientConfig);
+        static::$serviceManager->setService(PackageManager::class, $packageManager);
+
+        $model = new Client();
+        $model->setServiceLocator(static::$serviceManager);
+        $model->id = 1;
 
         $model->resetPackage('packageName');
     }
@@ -753,11 +753,12 @@ class ClientTest extends AbstractTestCase
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test message');
 
-        $model = $this->getModel([
-            'Database\Table\ClientConfig' => $clientConfig,
-            'Model\Package\PackageManager' => $packageManager,
-        ]);
-        $model->Id = 1;
+        static::$serviceManager->setService(ClientConfig::class, $clientConfig);
+        static::$serviceManager->setService(PackageManager::class, $packageManager);
+
+        $model = new Client();
+        $model->setServiceLocator(static::$serviceManager);
+        $model->id = 1;
 
         $model->resetPackage('packageName');
     }
@@ -1192,12 +1193,11 @@ class ClientTest extends AbstractTestCase
         $groupManager = $this->createMock(GroupManager::class);
         $groupManager->expects($this->once())->method('updateCache');
 
-        $serviceManager = clone static::$serviceManager;
-        $serviceManager->setService(GroupManager::class, $groupManager);
+        static::$serviceManager->setService(GroupManager::class, $groupManager);
 
         $model = new Client();
         $model->id = 1;
-        $model->setServiceLocator($serviceManager);
+        $model->setServiceLocator(static::$serviceManager);
 
         $this->assertSame($expected, $model->getGroupMemberships($type));
     }
@@ -1219,9 +1219,11 @@ class ClientTest extends AbstractTestCase
         $groupManager->expects($this->once())->method('getGroups')->with('Member', 42)->willReturn(
             new \ArrayIterator($groups)
         );
+        static::$serviceManager->setService(GroupManager::class, $groupManager);
 
-        $model = $this->getModel(array('Model\Group\GroupManager' => $groupManager));
-        $model->Id = 42;
+        $model = new Client();
+        $model->setServiceLocator(static::$serviceManager);
+        $model->id = 42;
 
         $this->assertEquals($groups, $model->getGroups());
         $this->assertEquals($groups, $model->getGroups()); // cached result
@@ -1229,13 +1231,17 @@ class ClientTest extends AbstractTestCase
 
     public function testSetCustomFields()
     {
+        $data = ['key' => 'value'];
+
         $customFieldManager = $this->createMock(CustomFieldManager::class);
-        $customFieldManager->expects($this->once())->method('write')->with(42, 'data');
+        $customFieldManager->expects($this->once())->method('write')->with(42, $data);
+        static::$serviceManager->setService(CustomFieldManager::class, $customFieldManager);
 
-        $model = $this->getModel(array('Model\Client\CustomFieldManager' => $customFieldManager));
-        $model->Id = 42;
+        $model = new Client();
+        $model->setServiceLocator(static::$serviceManager);
+        $model->id = 42;
 
-        $model->setCustomFields('data');
+        $model->setCustomFields($data);
     }
 
     public function testToDomDocument()

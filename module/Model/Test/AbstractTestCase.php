@@ -22,8 +22,19 @@
 
 namespace Model\Test;
 
+use Braintacle\Database\DatabaseFactory;
+use Laminas\Db\Adapter\Adapter;
+use Laminas\Di\Container\ServiceManager\AutowireFactory;
+use Laminas\Log\Logger;
+use Laminas\Log\Writer\Noop as NoopWriter;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
+use Library\Application;
+use Nada\Factory;
 use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\TestCase;
+use PHPUnit\Framework\Attributes\Before;
+use Psr\Container\ContainerInterface;
 
 /**
  * Base class for model tests
@@ -44,18 +55,63 @@ abstract class AbstractTestCase extends TestCase
      */
     private Connection $_db;
 
-    /**
-     * Service manager
-     * @var \Laminas\ServiceManager\ServiceManager
-     */
-    public static $serviceManager;
+    private static Adapter $adapter;
+
+    private static array $serviceManagerConfig;
+    protected static ServiceManager $serviceManager;
 
     public static function setUpBeforeClass(): void
     {
-        foreach (static::$_tables as $table) {
-            static::$serviceManager->get("Database\Table\\$table")->updateSchema(true);
-        }
         parent::setUpBeforeClass();
+
+        static::$adapter = new Adapter(
+            json_decode(
+                getenv('BRAINTACLE_TEST_DATABASE'),
+                true
+            )
+        );
+
+        // Extend module-generated service manager config with required entries.
+        $config = Application::init('Model')->getServiceManager()->get('config')['service_manager'];
+        $config['abstract_factories'][] = AutowireFactory::class;
+        $config['aliases'][ServiceLocatorInterface::class] = ContainerInterface::class;
+        $config['aliases'][ServiceManager::class] = ContainerInterface::class;
+        $config['services']['Library\Logger'] = new Logger(['writers' => [['name' => NoopWriter::class]]]);
+        $config['services']['Db'] = static::$adapter;
+        $config['services']['Database\Nada'] = (new DatabaseFactory(new Factory(), static::$adapter))();
+
+        // Store config for creation of temporary service manager instances.
+        static::$serviceManagerConfig = $config;
+
+        // Create necessary tables.
+        $serviceManager = static::createServiceManager();
+        foreach (static::$_tables as $table) {
+            $serviceManager->get("Database\Table\\$table")->updateSchema(true);
+        }
+    }
+
+    #[Before]
+    public function setupServiceManager(): void
+    {
+        // Set up a clean temporary service manager instance to be used by
+        // tests, which can inject their own service mocks without interfering
+        // with other tests.
+        static::$serviceManager = $this->createServiceManager();
+    }
+
+    /**
+     * Create new service manager instance.
+     *
+     * The instance is built from the stored config, without any leftover
+     * service instances from other tests.
+     */
+    protected static function createServiceManager(): ServiceManager
+    {
+        $serviceManager = new ServiceManager(static::$serviceManagerConfig);
+        $serviceManager->setService('config', static::$serviceManagerConfig);
+        $serviceManager->setService(ContainerInterface::class, $serviceManager);
+
+        return $serviceManager;
     }
 
     /**
@@ -64,7 +120,7 @@ abstract class AbstractTestCase extends TestCase
     public function getConnection(): Connection
     {
         if (!isset($this->_db)) {
-            $pdo = static::$serviceManager->get('Db')->getDriver()->getConnection()->getResource();
+            $pdo = static::$adapter->getDriver()->getConnection()->getResource();
             $this->_db = $this->createDefaultDBConnection($pdo, ':memory:');
         }
         return $this->_db;
@@ -120,7 +176,7 @@ abstract class AbstractTestCase extends TestCase
         $falseValue,
         $trueValue
     ) {
-        switch (static::$serviceManager->get('Db')->getPlatform()->getName()) {
+        switch (static::$adapter->getPlatform()->getName()) {
             case 'MySQL':
                 $falseReplacement = 0;
                 $trueReplacement = 1;
@@ -153,40 +209,12 @@ abstract class AbstractTestCase extends TestCase
     /**
      * Get new model instance via service manager
      *
-     * This method allows temporarily overriding services with manually supplied
-     * instances. This is useful for injecting mock objects which will be passed
-     * to the model's constructor by a factory. A clone of the service manager is
-     * used to avoid interference with other tests.
-     *
-     * @param array $overrideServices Optional associative array (name => instance) with services to override
      * @return object Model instance
      * @deprecated Create instance by constructor, by pulling from the container, or as partial mock
      */
-    protected function getModel(array $overrideServices = array())
+    protected function getModel()
     {
-        if (empty($overrideServices)) {
-            $serviceManager = static::$serviceManager;
-        } else {
-            // Create temporary service manager with identical configuration.
-            $config = static::$serviceManager->get('config');
-            $serviceManager = new \Laminas\ServiceManager\ServiceManager($config['service_manager']);
-            // Clone 'config' service
-            $serviceManager->setService('config', $config);
-            // If not explicitly overridden, copy database services to avoid
-            // expensive reconnect or table setup which has already been done.
-            if (!isset($overrideServices['Db'])) {
-                $serviceManager->setService('Db', static::$serviceManager->get('Db'));
-            }
-            if (!isset($overrideServices['Database\Nada'])) {
-                $serviceManager->setService('Database\Nada', static::$serviceManager->get('Database\Nada'));
-            }
-            // Override specified services
-            foreach ($overrideServices as $name => $service) {
-                $serviceManager->setService($name, $service);
-            }
-        }
-        // Always build a new instance.
-        return $serviceManager->build($this->getClass());
+        return static::createServiceManager()->build($this->getClass());
     }
 
     /**

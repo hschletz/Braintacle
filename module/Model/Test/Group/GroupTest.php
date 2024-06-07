@@ -29,6 +29,7 @@ use Laminas\Db\Adapter\Platform\AbstractPlatform;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Library\Random;
 use Model\Client\ClientManager;
+use Model\Config;
 use Model\Group\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
@@ -60,7 +61,11 @@ class GroupTest extends AbstractGroupTestCase
     {
         $config = $this->createMock('Model\Config');
         $config->expects($this->once())->method('__get')->with($globalOptionName)->willReturn($globalOptionValue);
-        $model = $this->getModel(array('Model\Config' => $config));
+        static::$serviceManager->setService(Config::class, $config);
+
+        $model = new Group();
+        $model->setServiceLocator(static::$serviceManager);
+
         $this->assertSame($expectedValue, $model->getDefaultConfig($option));
     }
 
@@ -283,8 +288,10 @@ class GroupTest extends AbstractGroupTestCase
 
         $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClients')->willReturn($select);
+        static::$serviceManager->setService(ClientManager::class, $clientManager);
 
-        $model = $this->getModel(array('Model\Client\ClientManager' => $clientManager));
+        $model = new Group();
+        $model->setServiceLocator(static::$serviceManager);
         $model->id = 10;
 
         $this->expectException('LogicException');

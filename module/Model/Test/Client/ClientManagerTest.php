@@ -115,7 +115,7 @@ class ClientManagerTest extends AbstractTestCase
         parent::setUpBeforeClass();
 
         // Add columns to CustomFields table
-        static::$_customFields = static::$serviceManager->get('Database\Nada')->getTable('accountinfo');
+        static::$_customFields = static::createServiceManager()->get('Database\Nada')->getTable('accountinfo');
         static::$_customFields->addColumn('col_text', Column::TYPE_VARCHAR, 255);
         static::$_customFields->addColumn('col_clob', Column::TYPE_CLOB);
         static::$_customFields->addColumn('col_integer', Column::TYPE_INTEGER, 32);
