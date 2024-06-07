@@ -25,6 +25,7 @@ namespace Model\Test\Client;
 use Database\Table\ClientConfig;
 use Database\Table\GroupMemberships;
 use DateTime;
+use DateTimeImmutable;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\Db\ResultSet\AbstractResultSet;
 use Laminas\ServiceManager\ServiceLocatorInterface;
@@ -39,6 +40,7 @@ use Model\Package\PackageManager;
 use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
+use Psr\Clock\ClockInterface;
 
 class ClientTest extends AbstractTestCase
 {
@@ -641,7 +643,10 @@ class ClientTest extends AbstractTestCase
         $packageManager = $this->createMock('Model\Package\PackageManager');
         $packageManager->method('getPackage')->with('packageName')->willReturn($package);
 
-        static::$serviceManager->setService('Library\Now', new DateTime('2017-05-27T19:39:25'));
+        $clock = $this->createStub(ClockInterface::class);
+        $clock->method('now')->willReturn(new DateTimeImmutable('2017-05-27T19:39:25'));
+
+        static::$serviceManager->setService(ClockInterface::class, $clock);
         static::$serviceManager->setService(PackageManager::class, $packageManager);
 
         $model = new Client();
@@ -718,7 +723,11 @@ class ClientTest extends AbstractTestCase
         $clientConfig->method('selectWith')->willReturn($resultSet);
         $clientConfig->method('getAdapter')->willReturn($adapter);
 
+        $clock = $this->createStub(ClockInterface::class);
+        $clock->method('now')->willReturn(new DateTimeImmutable('2024-06-05T20:08:21'));
+
         static::$serviceManager->setService(ClientConfig::class, $clientConfig);
+        static::$serviceManager->setService(ClockInterface::class, $clock);
         static::$serviceManager->setService(PackageManager::class, $packageManager);
 
         $model = new Client();

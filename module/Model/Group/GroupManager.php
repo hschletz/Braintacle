@@ -24,6 +24,7 @@ namespace Model\Group;
 
 use Countable;
 use Database\Table\GroupInfo;
+use Psr\Clock\ClockInterface;
 
 /**
  * Group manager
@@ -78,7 +79,7 @@ class GroupManager
                 $select->where(array('name' => $filterArg));
                 break;
             case 'Expired':
-                $now = $this->_serviceManager->get('Library\Now')->getTimestamp();
+                $now = $this->_serviceManager->get(ClockInterface::class)->now()->getTimestamp();
                 $select->where(
                     new \Laminas\Db\Sql\Predicate\Operator(
                         'revalidate_from',
@@ -153,7 +154,7 @@ class GroupManager
         if ($description == '') {
             $description = null;
         }
-        $now = $this->_serviceManager->get('Library\Now');
+        $now = $this->_serviceManager->get(ClockInterface::class)->now();
 
         $connection = $this->_serviceManager->get('Db')->getDriver()->getConnection();
         $connection->beginTransaction();

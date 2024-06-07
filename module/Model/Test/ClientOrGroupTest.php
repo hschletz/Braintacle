@@ -23,11 +23,14 @@
 namespace Model\Test;
 
 use Database\Table\ClientConfig;
+use DateTimeImmutable;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Mockery;
 use Mockery\Mock;
 use Model\ClientOrGroup;
+use Model\Package\PackageManager;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Clock\ClockInterface;
 
 class ClientOrGroupTest extends AbstractTestCase
 {
@@ -350,20 +353,15 @@ class ClientOrGroupTest extends AbstractTestCase
             ->with($name)
             ->willReturn(array('Id' => $id));
 
-        $now = $this->createMock('DateTime');
-        $now->method('format')->with('D M d H:i:s Y')->willReturn('current timestamp');
+        $clock = $this->createStub(ClockInterface::class);
+        $clock->method('now')->willReturn(new DateTimeImmutable('2024-06-05T19:58:21'));
 
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->willReturnMap(
-            array(
-                array(
-                    'Database\Table\ClientConfig',
-                    static::$serviceManager->get('Database\Table\ClientConfig')
-                ),
-                array('Library\Now', $now),
-                array('Model\Package\PackageManager', $packageManager),
-            )
-        );
+        $serviceManager->method('get')->willReturnMap([
+            [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
+            [ClockInterface::class, $clock],
+            [PackageManager::class, $packageManager],
+        ]);
 
         $model = $this->composeMock(['__destruct', 'getAssignablePackages']);
         $model->method('getAssignablePackages')->willReturn(array('package1', 'package3'));

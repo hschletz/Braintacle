@@ -93,14 +93,10 @@ class Module implements Feature\ConfigProviderInterface
                     'Library\Log\Writer\StdErr' => function () {
                         return new \Laminas\Log\Writer\Stream('php://stderr');
                     },
-                    'Library\Now' => function () {
-                        return new \DateTime();
-                    },
                     'Library\UserConfig' => 'Library\Service\UserConfigFactory',
                 ],
                 'shared' => [
                     'Library\HttpClient' => false,
-                    'Library\Now' => false,
                 ],
             ),
             'translator' => array(

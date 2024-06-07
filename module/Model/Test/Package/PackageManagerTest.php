@@ -25,7 +25,7 @@ namespace Model\Test\Package;
 use Database\Table\ClientConfig;
 use Database\Table\GroupInfo;
 use Database\Table\Packages;
-use DateTime;
+use DateTimeImmutable;
 use Laminas\ServiceManager\ServiceManager;
 use Model\Package\Package;
 use Model\Package\PackageBuilder;
@@ -34,6 +34,7 @@ use Model\Package\Storage\Direct;
 use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
+use Psr\Clock\ClockInterface;
 
 /**
  * Tests for Model\Package\PackageManager
@@ -288,7 +289,12 @@ class PackageManagerTest extends AbstractTestCase
 
     public function testUpdateAssignmentsNoMatch()
     {
-        $this->getModel()->updateAssignments(1415958320, 3, false, true, false, false, false);
+        $clock = $this->createStub(ClockInterface::class);
+        $clock->method('now')->willReturn(new DateTimeImmutable());
+        static::$serviceManager->setService(ClockInterface::class, $clock);
+
+        $model = new PackageManager(static::$serviceManager);
+        $model->updateAssignments(1415958320, 3, false, true, false, false, false);
 
         $this->assertTablesEqual(
             $this->loadDataSet()->getTable('devices'),
@@ -324,10 +330,13 @@ class PackageManagerTest extends AbstractTestCase
         $deployError,
         $deployGroups
     ) {
+        $clock = $this->createStub(ClockInterface::class);
+        $clock->method('now')->willReturn(new DateTimeImmutable('2015-02-08 14:17:29'));
+
         /** @var MockObject|ServiceManager */
         $serviceManager = $this->createMock(ServiceManager::class);
         $serviceManager->method('get')->willReturnMap([
-            ['Library\Now', new DateTime('2015-02-08 14:17:29')],
+            [ClockInterface::class, $clock],
             [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
             [GroupInfo::class, static::$serviceManager->get(GroupInfo::class)],
         ]);
@@ -357,16 +366,18 @@ class PackageManagerTest extends AbstractTestCase
     {
         $this->expectException('Model\Package\RuntimeException');
         $this->expectExceptionMessage('database error');
-        $data = array('Timestamp' => new \DateTime('@1415958319'));
+
         $clientConfig = $this->createMock('Database\Table\ClientConfig');
         $clientConfig->method('getSql')->will($this->throwException(new \RuntimeException('database error')));
 
-        /** @var MockObject|ServiceManager */
+        $clock = $this->createStub(ClockInterface::class);
+        $clock->method('now')->willReturn(new DateTimeImmutable());
+
         $serviceManager = $this->createMock(ServiceManager::class);
         $serviceManager->method('get')->willReturnMap([
             [ClientConfig::class, $clientConfig],
             [GroupInfo::class, static::$serviceManager->get(GroupInfo::class)],
-            ['Library\Now', static::$serviceManager->get('Library\Now')],
+            [ClockInterface::class, $clock],
         ]);
 
         $model = new PackageManager($serviceManager);

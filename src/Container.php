@@ -13,6 +13,7 @@ use Laminas\Mvc\Application as MvcApplication;
 use Library\Application;
 use Nada\Database\AbstractDatabase;
 use Nyholm\Psr7\Response;
+use Psr\Clock\ClockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
@@ -31,6 +32,7 @@ class Container extends DIContainer
                 new IniReader(),
                 getenv('BRAINTACLE_CONFIG') ?: InstalledVersions::getRootPackage()['install_path'] . '/config/braintacle.ini',
             ),
+            ClockInterface::class => get(Clock::class),
             LoggerInterface::class => factory(LoggerFactory::class),
             MvcApplication::class => factory(Application::init(...))->parameter('module', 'Console'),
             ResponseInterface::class => get(Response::class),

@@ -14,6 +14,7 @@ use Laminas\Mvc\MvcEvent;
 use Laminas\ServiceManager\ServiceManager;
 use Nada\Database\AbstractDatabase;
 use PHPUnit\Framework\TestCase;
+use Psr\Clock\ClockInterface;
 
 class ApplicationBridgeTest extends TestCase
 {
@@ -25,6 +26,7 @@ class ApplicationBridgeTest extends TestCase
             AbstractDatabase::class => $this->createStub(AbstractDatabase::class),
             Adapter::class => $this->createStub(Adapter::class),
             AppConfig::class => $this->createStub(AppConfig::class),
+            ClockInterface::class => $this->createStub(ClockInterface::class),
         ];
         $container = new Container($services);
 

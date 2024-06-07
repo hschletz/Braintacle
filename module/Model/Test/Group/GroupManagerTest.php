@@ -26,13 +26,15 @@ use Database\Table\ClientConfig;
 use Database\Table\ClientsAndGroups;
 use Database\Table\GroupInfo;
 use Database\Table\GroupMemberships;
-use DateTime;
+use DateTimeImmutable;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery;
+use Model\Config;
 use Model\Group\Group;
 use Model\Group\GroupManager;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Clock\ClockInterface;
 
 class GroupManagerTest extends AbstractGroupTestCase
 {
@@ -76,14 +78,15 @@ class GroupManagerTest extends AbstractGroupTestCase
      */
     public function testGetGroups($filter, $filterArg, $order, $direction, $expected, $updateCache)
     {
+        $clock = $this->createStub(ClockInterface::class);
+        $clock->method('now')->willReturn(new DateTimeImmutable('2015-02-08 19:36:29'));
+
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->willReturnMap(
-            array(
-                array('Database\Table\GroupInfo', $this->_groupInfo),
-                array('Library\Now', new \DateTime('2015-02-08 19:36:29')),
-                array('Model\Config', $this->_config),
-            )
-        );
+        $serviceManager->method('get')->willReturnMap([
+            [GroupInfo::class, $this->_groupInfo],
+            [ClockInterface::class, $clock],
+            [Config::class, $this->_config],
+        ]);
 
         $model = Mockery::mock(GroupManager::class, [$serviceManager])->makePartial();
         $model->shouldReceive('updateCache')->$updateCache();
@@ -157,10 +160,13 @@ class GroupManagerTest extends AbstractGroupTestCase
      */
     public function testCreateGroup($description, $expectedDescription)
     {
+        $clock = $this->createStub(ClockInterface::class);
+        $clock->method('now')->willReturn(new DateTimeImmutable('2015-02-12 22:07:00'));
+
         /** @var MockObject|ServiceManager */
         $serviceManager = $this->createMock(ServiceManager::class);
         $serviceManager->method('get')->willReturnMap([
-            ['Library\Now', new DateTime('2015-02-12 22:07:00')],
+            [ClockInterface::class, $clock],
             ['Database\Nada', static::$serviceManager->get('Database\Nada')],
             ['Db', static::$serviceManager->get('Db')],
             [ClientsAndGroups::class, static::$serviceManager->get(ClientsAndGroups::class)],
@@ -269,12 +275,14 @@ class GroupManagerTest extends AbstractGroupTestCase
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test message');
 
-        /** @var MockObject|ServiceManager */
+        $clock = $this->createStub(ClockInterface::class);
+        $clock->method('now')->willReturn(new DateTimeImmutable());
+
         $serviceManager = $this->createMock(ServiceManager::class);
         $serviceManager->method('get')->willReturnMap([
             ['Db', $adapter],
             ['Database\Nada', static::$serviceManager->get('Database\Nada')],
-            ['Library\Now', static::$serviceManager->get('Library\Now')],
+            [ClockInterface::class, $clock],
             [ClientsAndGroups::class, $clientsAndGroups],
         ]);
 

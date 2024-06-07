@@ -25,6 +25,7 @@ namespace Model\Group;
 use DateTimeInterface;
 use Laminas\Db\Sql\Literal;
 use Model\Client\Client;
+use Psr\Clock\ClockInterface;
 
 /**
  * A group of clients
@@ -194,7 +195,7 @@ class Group extends \Model\ClientOrGroup
             return; // Nothing to do if no SQL query is defined for this group
         }
 
-        $now = $this->_serviceLocator->get('Library\Now');
+        $now = $this->_serviceLocator->get(ClockInterface::class)->now();
         // Do nothing if cache has not expired yet and update is not forced.
         if (!$force and $this['CacheExpirationDate'] > $now) {
             return;
@@ -239,8 +240,7 @@ class Group extends \Model\ClientOrGroup
         $groupMemberships->insert($select);
 
         // Update CacheCreationDate and CacheExpirationDate
-        $minExpires = clone $now;
-        $minExpires->modify(
+        $minExpires = $now->modify(
             sprintf(
                 '+%d seconds',
                 $this->_serviceLocator->get('Library\Random')->getInteger(
@@ -259,9 +259,13 @@ class Group extends \Model\ClientOrGroup
 
         $this->unlock();
 
-        $minExpires->modify(sprintf('+%d seconds', $config->groupCacheExpirationInterval));
         $this->offsetSet('CacheCreationDate', $now);
-        $this->offsetSet('CacheExpirationDate', $minExpires);
+        $this->offsetSet(
+            'CacheExpirationDate',
+            $minExpires->modify(
+                sprintf('+%d seconds', $config->groupCacheExpirationInterval)
+            )
+        );
     }
 
     /**

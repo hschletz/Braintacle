@@ -22,7 +22,10 @@
 
 namespace Model\Test\Group;
 
+use Database\Table\Clients;
+use Database\Table\GroupInfo;
 use Database\Table\GroupMemberships;
+use DateTimeImmutable;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\Db\Adapter\Driver\DriverInterface;
 use Laminas\Db\Adapter\Platform\AbstractPlatform;
@@ -33,6 +36,7 @@ use Model\Config;
 use Model\Group\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
+use Psr\Clock\ClockInterface;
 
 class GroupTest extends AbstractGroupTestCase
 {
@@ -321,7 +325,10 @@ class GroupTest extends AbstractGroupTestCase
      */
     public function testUpdate($force, $setSql, $expires, $lockSuccess, $dataSet)
     {
-        $now = new \DateTime('2015-07-23 20:20:00');
+        $now = new DateTimeImmutable('2015-07-23 20:20:00');
+
+        $clock = $this->createStub(ClockInterface::class);
+        $clock->method('now')->willReturn($now);
 
         $random = $this->createMock(Random::class);
         $random->method('getInteger')->willReturn(42);
@@ -339,22 +346,14 @@ class GroupTest extends AbstractGroupTestCase
         /** @var Stub|ServiceLocatorInterface */
         $serviceManager = $this->createStub(ServiceLocatorInterface::class);
         $serviceManager->method('get')
-            ->willReturnMap(
-                array(
-                    array(
-                        'Database\Table\Clients',
-                        static::$serviceManager->get('Database\Table\Clients')
-                    ),
-                    array('Database\Table\GroupInfo', $this->_groupInfo),
-                    array(
-                        'Database\Table\GroupMemberships',
-                        static::$serviceManager->get('Database\Table\GroupMemberships')
-                    ),
-                    array('Library\Now', $now),
-                    array('Library\Random', $random),
-                    array('Model\Config', $config),
-                )
-            );
+            ->willReturnMap([
+                [Clients::class, static::$serviceManager->get(Clients::class)],
+                [GroupInfo::class, $this->_groupInfo],
+                [GroupMemberships::class, static::$serviceManager->get(GroupMemberships::class)],
+                [ClockInterface::class, $clock],
+                ['Library\Random', $random],
+                [Config::class, $config],
+            ]);
 
         $model = $this->createPartialMock(Group::class, ['lock', 'unlock']);
         $model->method('lock')->willReturn($lockSuccess);

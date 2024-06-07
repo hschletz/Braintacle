@@ -30,6 +30,7 @@ use Laminas\Db\Sql\Select;
 use Laminas\Hydrator\ObjectPropertyHydrator;
 use Laminas\Hydrator\Strategy\DateTimeFormatterStrategy;
 use Model\Package\Assignment;
+use Psr\Clock\ClockInterface;
 use ReturnTypeWillChange;
 
 /**
@@ -600,7 +601,7 @@ class Client extends \Model\ClientOrGroup
             $clientConfig->update(
                 array(
                     'tvalue' => \Model\Package\Assignment::PENDING,
-                    'comments' => $this->_serviceLocator->get('Library\Now')->format(
+                    'comments' => $this->_serviceLocator->get(ClockInterface::class)->now()->format(
                         \Model\Package\Assignment::DATEFORMAT
                     ),
                 ),

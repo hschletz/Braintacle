@@ -9,6 +9,7 @@ use Laminas\Http\Response as MvcResponse;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
 use Nada\Database\AbstractDatabase;
+use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -36,6 +37,7 @@ class ApplicationBridge implements RequestHandlerInterface
         $serviceManager->setService(AbstractDatabase::class, $this->container->get(AbstractDatabase::class));
         $serviceManager->setService(Adapter::class, $this->container->get(Adapter::class));
         $serviceManager->setService(AppConfig::class, $this->container->get(AppConfig::class));
+        $serviceManager->setService(ClockInterface::class, $this->container->get(ClockInterface::class));
         $serviceManager->setAlias('Database\Nada', AbstractDatabase::class);
         $serviceManager->setAlias('Db', Adapter::class);
 

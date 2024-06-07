@@ -24,6 +24,7 @@ namespace Model;
 
 use Laminas\Db\Sql\Predicate\Operator;
 use Nada\Column\AbstractColumn as Column;
+use Psr\Clock\ClockInterface;
 
 /**
  * Base class for clients and groups
@@ -353,7 +354,7 @@ abstract class ClientOrGroup extends AbstractModel
                     'name' => 'DOWNLOAD',
                     'ivalue' => $package['Id'],
                     'tvalue' => \Model\Package\Assignment::PENDING,
-                    'comments' => $this->_serviceLocator->get('Library\Now')->format(
+                    'comments' => $this->_serviceLocator->get(ClockInterface::class)->now()->format(
                         \Model\Package\Assignment::DATEFORMAT
                     ),
                 )

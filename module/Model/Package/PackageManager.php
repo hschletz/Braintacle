@@ -23,6 +23,7 @@
 namespace Model\Package;
 
 use Laminas\Db\Sql\Predicate;
+use Psr\Clock\ClockInterface;
 
 /**
  * Package manager
@@ -306,7 +307,7 @@ class PackageManager
             $where->addPredicate($filters);
         }
 
-        $now = $this->_serviceManager->get('Library\Now')->format(\Model\Package\Assignment::DATEFORMAT);
+        $now = $this->_serviceManager->get(ClockInterface::class)->now()->format(Assignment::DATEFORMAT);
         try {
             // Remove DOWNLOAD_* options from updated assignments
             $subquery = $clientConfig->getSql()
