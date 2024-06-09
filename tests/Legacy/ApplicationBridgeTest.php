@@ -11,10 +11,14 @@ use Laminas\EventManager\EventManager;
 use Laminas\Http\Response as MvcResponse;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
+use Model\Client\Client;
+use Model\Group\Group;
 use Nada\Database\AbstractDatabase;
 use PHPUnit\Framework\TestCase;
 use Psr\Clock\ClockInterface;
+use Psr\Container\ContainerInterface;
 
 class ApplicationBridgeTest extends TestCase
 {
@@ -26,7 +30,9 @@ class ApplicationBridgeTest extends TestCase
             AbstractDatabase::class => $this->createStub(AbstractDatabase::class),
             Adapter::class => $this->createStub(Adapter::class),
             AppConfig::class => $this->createStub(AppConfig::class),
+            Client::class => $this->createStub(Client::class),
             ClockInterface::class => $this->createStub(ClockInterface::class),
+            Group::class => $this->createStub(Group::class),
         ];
         $container = new Container($services);
 
@@ -69,5 +75,14 @@ class ApplicationBridgeTest extends TestCase
         $this->assertSame($services[Adapter::class], $serviceManager->get(Adapter::class));
         $this->assertSame($services[Adapter::class], $serviceManager->get('Db'));
         $this->assertSame($services[AppConfig::class], $serviceManager->get(AppConfig::class));
+        $this->assertSame($services[Client::class], $serviceManager->get(Client::class));
+        $this->assertSame($services[ClockInterface::class], $serviceManager->get(ClockInterface::class));
+        $this->assertSame($services[Group::class], $serviceManager->get(Group::class));
+        $this->assertSame($serviceManager, $serviceManager->get(ContainerInterface::class));
+
+        $this->assertSame($serviceManager, $container->get(ServiceLocatorInterface::class));
+        $this->assertSame($serviceManager, $container->get(ServiceManager::class));
+        $this->assertSame($services[AbstractDatabase::class], $container->get('Database\Nada'));
+        $this->assertSame($services[Adapter::class], $container->get('Db'));
     }
 }

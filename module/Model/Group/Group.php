@@ -22,9 +22,17 @@
 
 namespace Model\Group;
 
+use Database\Table\Clients;
+use Database\Table\GroupInfo;
+use Database\Table\GroupMemberships;
+use Database\Table\Packages;
 use DateTimeInterface;
+use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\Literal;
+use Laminas\Db\Sql\Sql;
 use Model\Client\Client;
+use Model\Client\ClientManager;
+use Model\Config;
 use Psr\Clock\ClockInterface;
 
 /**
@@ -75,7 +83,7 @@ class Group extends \Model\ClientOrGroup
     /** {@inheritdoc} */
     public function getDefaultConfig($option)
     {
-        $config = $this->_serviceLocator->get('Model\Config');
+        $config = $this->container->get(Config::class);
         if ($option == 'allowScan') {
             if ($config->scannersPerSubnet == 0) {
                 $value = 0;
@@ -108,7 +116,7 @@ class Group extends \Model\ClientOrGroup
     public function setMembersFromQuery($type, $filter, $search, $operator, $invert)
     {
         $id = $this['Id'];
-        $members = $this->_serviceLocator->get('Model\Client\ClientManager')->getClients(
+        $members = $this->container->get(ClientManager::class)->getClients(
             array('Id'),
             null,
             null,
@@ -129,9 +137,9 @@ class Group extends \Model\ClientOrGroup
             if ($numCols != 1) {
                 throw new \LogicException('Expected 1 column, got ' . $numCols);
             }
-            $sql = new \Laminas\Db\Sql\Sql($this->_serviceLocator->get('Db'));
+            $sql = new Sql($this->container->get(Adapter::class));
             $query = $sql->buildSqlString($members);
-            $this->_serviceLocator->get('Database\Table\GroupInfo')->update(
+            $this->container->get(GroupInfo::class)->update(
                 array('request' => $query),
                 array('hardware_id' => $id)
             );
@@ -144,7 +152,7 @@ class Group extends \Model\ClientOrGroup
             }
             // Get list of existing memberships
             $existingMemberships = array();
-            $groupMemberships = $this->_serviceLocator->get('Database\Table\GroupMemberships');
+            $groupMemberships = $this->container->get(GroupMemberships::class);
             $select = $groupMemberships->getSql()->select();
             $select->columns(array('hardware_id', 'static'))->where(array('group_id' => $id));
             foreach ($groupMemberships->selectWith($select) as $membership) {
@@ -195,7 +203,7 @@ class Group extends \Model\ClientOrGroup
             return; // Nothing to do if no SQL query is defined for this group
         }
 
-        $now = $this->_serviceLocator->get(ClockInterface::class)->now();
+        $now = $this->container->get(ClockInterface::class)->now();
         // Do nothing if cache has not expired yet and update is not forced.
         if (!$force and $this['CacheExpirationDate'] > $now) {
             return;
@@ -205,10 +213,10 @@ class Group extends \Model\ClientOrGroup
             return; // Another process is currently updating this group.
         }
 
-        $clients = $this->_serviceLocator->get('Database\Table\Clients');
-        $groupInfo = $this->_serviceLocator->get('Database\Table\GroupInfo');
-        $groupMemberships = $this->_serviceLocator->get('Database\Table\GroupMemberships');
-        $config = $this->_serviceLocator->get('Model\Config');
+        $clients = $this->container->get(Clients::class);
+        $groupInfo = $this->container->get(GroupInfo::class);
+        $groupMemberships = $this->container->get(GroupMemberships::class);
+        $config = $this->container->get(Config::class);
 
         // Remove dynamic memberships where client no longer meets the criteria
         $groupMemberships->delete(
@@ -243,7 +251,7 @@ class Group extends \Model\ClientOrGroup
         $minExpires = $now->modify(
             sprintf(
                 '+%d seconds',
-                $this->_serviceLocator->get('Library\Random')->getInteger(
+                $this->container->get('Library\Random')->getInteger(
                     0,
                     $config->groupCacheExpirationFuzz
                 )
@@ -276,7 +284,7 @@ class Group extends \Model\ClientOrGroup
      */
     public function getPackages($direction = 'asc')
     {
-        $packages = $this->_serviceLocator->get('Database\Table\Packages');
+        $packages = $this->container->get(Packages::class);
         $select = $packages->getSql()->select();
         $select->columns(array('name'))
             ->join('devices', 'ivalue = fileid', array())

@@ -23,12 +23,16 @@
 namespace Model\Test;
 
 use Database\Table\ClientConfig;
+use Database\Table\Locks;
 use DateTimeImmutable;
+use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Mockery;
 use Mockery\Mock;
 use Model\ClientOrGroup;
+use Model\Config;
 use Model\Package\PackageManager;
+use Nada\Database\AbstractDatabase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Clock\ClockInterface;
 
@@ -75,7 +79,7 @@ class ClientOrGroupTest extends AbstractTestCase
     /**
      * Compose a ClientOrGroup mock with stubs for the given methods.
      */
-    public function composeMock(array $mockedMethods = ['__destruct']): MockObject
+    public function composeMock(array $mockedMethods = ['__destruct']): MockObject & ClientOrGroup
     {
         return $this->getMockForAbstractClass(ClientOrGroup::class, [], '', false, true, true, $mockedMethods);
     }
@@ -123,17 +127,15 @@ class ClientOrGroupTest extends AbstractTestCase
         $config->method('__get')->with('lockValidity')->willReturn(42);
 
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->willReturnMap(
-            array(
-                array('Database\Nada', static::$serviceManager->get('Database\Nada')),
-                array('Database\Table\Locks', static::$serviceManager->get('Database\Table\Locks')),
-                array('Db', static::$serviceManager->get('Db')),
-                array('Model\Config', $config),
-            )
-        );
+        $serviceManager->method('get')->willReturnMap([
+            [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
+            [Locks::class, static::$serviceManager->get(Locks::class)],
+            [Adapter::class, static::$serviceManager->get(Adapter::class)],
+            [Config::class, $config],
+        ]);
 
         $model = $this->getMockBuilder($this->getClass())->getMockForAbstractClass();
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
         $model['Id'] = 23;
 
         $model->lock();
@@ -160,18 +162,16 @@ class ClientOrGroupTest extends AbstractTestCase
         $config->expects($this->once())->method('__get')->with('lockValidity')->willreturn($timeout);
 
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->willReturnMap(
-            array(
-                array('Database\Nada', static::$serviceManager->get('Database\Nada')),
-                array('Database\Table\Locks', static::$serviceManager->get('Database\Table\Locks')),
-                array('Db', static::$serviceManager->get('Db')),
-                array('Model\Config', $config),
-            )
-        );
+        $serviceManager->method('get')->willReturnMap([
+            [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
+            [Locks::class, static::$serviceManager->get(Locks::class)],
+            [Adapter::class, static::$serviceManager->get(Adapter::class)],
+            [Config::class, $config],
+        ]);
 
         /** @var Mock|ClientOrGroup */
         $model = Mockery::mock(ClientOrGroup::class)->makePartial();
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
         $model['Id'] = $id;
 
         $this->assertSame($success, $model->lock());
@@ -191,17 +191,15 @@ class ClientOrGroupTest extends AbstractTestCase
         $config = $this->createMock('Model\Config');
 
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->willReturnMap(
-            array(
-                array('Database\Nada', static::$serviceManager->get('Database\Nada')),
-                array('Database\Table\Locks', $locks),
-                array('Db', static::$serviceManager->get('Db')),
-                array('Model\Config', $config),
-            )
-        );
+        $serviceManager->method('get')->willReturnMap([
+            [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
+            [Locks::class, $locks],
+            [Adapter::class, static::$serviceManager->get(Adapter::class)],
+            [Config::class, $config],
+        ]);
 
         $model = $this->composeMock();
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
         $model['Id'] = 42;
 
         $this->assertFalse($model->lock());
@@ -217,17 +215,15 @@ class ClientOrGroupTest extends AbstractTestCase
     public function testUnlockWithReleasedLock()
     {
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->willReturnMap(
-            array(
-                array('Database\Nada', static::$serviceManager->get('Database\Nada')),
-                array('Database\Table\Locks', static::$serviceManager->get('Database\Table\Locks')),
-                array('Db', static::$serviceManager->get('Db')),
-            )
-        );
+        $serviceManager->method('get')->willReturnMap([
+            [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
+            [Locks::class, static::$serviceManager->get(Locks::class)],
+            [Adapter::class, static::$serviceManager->get(Adapter::class)],
+        ]);
 
         $model = $this->composeMock(['__destruct', 'isLocked']);
         $model->expects($this->once())->method('isLocked')->willReturn(true);
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
         $model['Id'] = 1;
 
         $current = clone $this->_currentTimestamp;
@@ -245,17 +241,15 @@ class ClientOrGroupTest extends AbstractTestCase
     public function testUnlockWithExpiredLock()
     {
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->willReturnMap(
-            array(
-                array('Database\Nada', static::$serviceManager->get('Database\Nada')),
-                array('Db', static::$serviceManager->get('Db')),
-            )
-        );
+        $serviceManager->method('get')->willReturnMap([
+            [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
+            [Adapter::class, static::$serviceManager->get(Adapter::class)],
+        ]);
 
         /** @var MockObject|ClientOrGroup */
         $model = $this->composeMock(['__destruct', 'isLocked']);
         $model->expects($this->once())->method('isLocked')->willReturn(true);
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $current = clone $this->_currentTimestamp;
         $current->sub(new \DateInterval('PT1S'));
@@ -306,17 +300,15 @@ class ClientOrGroupTest extends AbstractTestCase
         $config->method('__get')->with('lockValidity')->willReturn(42);
 
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
-        $serviceManager->method('get')->willReturnMap(
-            array(
-                array('Database\Nada', static::$serviceManager->get('Database\Nada')),
-                array('Database\Table\Locks', static::$serviceManager->get('Database\Table\Locks')),
-                array('Db', static::$serviceManager->get('Db')),
-                array('Model\Config', $config),
-            )
-        );
+        $serviceManager->method('get')->willReturnMap([
+            [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
+            [Locks::class, static::$serviceManager->get(Locks::class)],
+            [Adapter::class, static::$serviceManager->get(Adapter::class)],
+            [Config::class, $config],
+        ]);
 
         $model = $this->composeMock();
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
         $model['Id'] = 23;
 
         $this->assertTrue($model->lock());
@@ -330,7 +322,7 @@ class ClientOrGroupTest extends AbstractTestCase
     public function testGetAssignablePackages()
     {
         $model = $this->composeMock();
-        $model->setServiceLocator(static::$serviceManager);
+        $model->setContainer(static::$serviceManager);
         $model['Id'] = 1;
         $this->assertEquals(array('package1', 'package3'), $model->getAssignablePackages());
     }
@@ -365,7 +357,7 @@ class ClientOrGroupTest extends AbstractTestCase
 
         $model = $this->composeMock(['__destruct', 'getAssignablePackages']);
         $model->method('getAssignablePackages')->willReturn(array('package1', 'package3'));
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
         $model['Id'] = 1;
         $model->assignPackage($name);
 
@@ -403,7 +395,7 @@ class ClientOrGroupTest extends AbstractTestCase
         );
 
         $model = $this->composeMock();
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
         $model['Id'] = 1;
         $model->removePackage('package5');
 
@@ -453,7 +445,7 @@ class ClientOrGroupTest extends AbstractTestCase
         );
 
         $model = $this->composeMock();
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
         $model['Id'] = $id;
 
         $this->assertSame($value, $model->getConfig($option));
@@ -513,7 +505,7 @@ class ClientOrGroupTest extends AbstractTestCase
         } else {
             $model->expects($this->once())->method('getConfig')->with($option)->willReturn($oldValue);
         }
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
         $model['Id'] = $id;
 
         $model->setConfig($option, $value);
@@ -548,7 +540,7 @@ class ClientOrGroupTest extends AbstractTestCase
 
         $model = $this->composeMock(['__destruct', 'getConfig']);
         $model->expects($this->once())->method('getConfig')->with('inventoryInterval')->willReturn(23);
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
         $model['Id'] = 10;
 
         $model->setConfig('inventoryInterval', '23');
@@ -579,7 +571,7 @@ class ClientOrGroupTest extends AbstractTestCase
 
         $model = $this->composeMock(['offsetGet']);
         $model->method('offsetGet')->willReturn(1);
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
         $model->setConfig('allowScan', null);
     }
 

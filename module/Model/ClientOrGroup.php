@@ -22,9 +22,16 @@
 
 namespace Model;
 
+use Database\Table\ClientConfig;
+use Database\Table\Locks;
+use Database\Table\Packages;
+use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\Predicate\Operator;
+use Model\Package\PackageManager;
 use Nada\Column\AbstractColumn as Column;
+use Nada\Database\AbstractDatabase;
 use Psr\Clock\ClockInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Base class for clients and groups
@@ -50,11 +57,7 @@ abstract class ClientOrGroup extends AbstractModel
      */
     const SCAN_EXPLICIT = 2;
 
-    /**
-     * Service Locator
-     * @var \Laminas\ServiceManager\ServiceLocatorInterface
-     */
-    protected $_serviceLocator;
+    protected ContainerInterface $container;
 
     /**
      * Cache for getConfig() results
@@ -112,16 +115,9 @@ abstract class ClientOrGroup extends AbstractModel
         $this->unlock();
     }
 
-    /**
-     * Set service locator
-     *
-     * This should usually be called by a factory.
-     *
-     * @param \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator
-     */
-    public function setServiceLocator(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function setContainer(ContainerInterface $container)
     {
-        $this->_serviceLocator = $serviceLocator;
+        $this->container = $container;
     }
 
     /**
@@ -156,11 +152,11 @@ abstract class ClientOrGroup extends AbstractModel
         $currentTimestamp = new \Laminas\Db\Sql\Literal(
             sprintf(
                 'CAST(CURRENT_TIMESTAMP AS %s)',
-                $this->_serviceLocator->get('Database\Nada')->getNativeDatatype(Column::TYPE_TIMESTAMP, null, true)
+                $this->container->get(AbstractDatabase::class)->getNativeDatatype(Column::TYPE_TIMESTAMP, null, true)
             )
         );
         $current = new \DateTime(
-            $this->_serviceLocator->get('Db')->query(
+            $this->container->get(Adapter::class)->query(
                 sprintf('SELECT %s AS current', $currentTimestamp->getLiteral()),
                 \Laminas\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
             )->current()['current'],
@@ -170,10 +166,10 @@ abstract class ClientOrGroup extends AbstractModel
         $expireInterval = new \DateInterval(
             sprintf(
                 'PT%dS',
-                $this->_serviceLocator->get('Model\Config')->lockValidity
+                $this->container->get(Config::class)->lockValidity
             )
         );
-        $locks = $this->_serviceLocator->get('Database\Table\Locks');
+        $locks = $this->container->get(Locks::class);
 
         // Check if a lock already exists
         $select = $locks->getSql()->select();
@@ -242,10 +238,10 @@ abstract class ClientOrGroup extends AbstractModel
 
         // Query time from database for consistent reference across all operations
         $current = new \DateTime(
-            $this->_serviceLocator->get('Db')->query(
+            $this->container->get(Adapter::class)->query(
                 sprintf(
                     'SELECT CAST(CURRENT_TIMESTAMP AS %s) AS current',
-                    $this->_serviceLocator->get('Database\Nada')->getNativeDatatype(
+                    $this->container->get(AbstractDatabase::class)->getNativeDatatype(
                         Column::TYPE_TIMESTAMP,
                         null,
                         true
@@ -268,7 +264,7 @@ abstract class ClientOrGroup extends AbstractModel
             // @codeCoverageIgnoreStart
         } else {
             // @codeCoverageIgnoreEnd
-            $this->_serviceLocator->get('Database\Table\Locks')->delete(array('hardware_id' => $this['Id']));
+            $this->container->get(Locks::class)->delete(['hardware_id' => $this['Id']]);
         }
     }
 
@@ -292,7 +288,7 @@ abstract class ClientOrGroup extends AbstractModel
      */
     public function getAssignablePackages()
     {
-        $packages = $this->_serviceLocator->get('Database\Table\Packages');
+        $packages = $this->container->get(Packages::class);
         $select = $packages->getSql()->select();
         $select->columns(array('name'))
             ->join(
@@ -347,14 +343,14 @@ abstract class ClientOrGroup extends AbstractModel
     public function assignPackage($name)
     {
         if (in_array($name, $this->getAssignablePackages())) {
-            $package = $this->_serviceLocator->get('Model\Package\PackageManager')->getPackage($name);
-            $this->_serviceLocator->get('Database\Table\ClientConfig')->insert(
+            $package = $this->container->get(PackageManager::class)->getPackage($name);
+            $this->container->get(ClientConfig::class)->insert(
                 array(
                     'hardware_id' => $this['Id'],
                     'name' => 'DOWNLOAD',
                     'ivalue' => $package['Id'],
                     'tvalue' => \Model\Package\Assignment::PENDING,
-                    'comments' => $this->_serviceLocator->get(ClockInterface::class)->now()->format(
+                    'comments' => $this->container->get(ClockInterface::class)->now()->format(
                         \Model\Package\Assignment::DATEFORMAT
                     ),
                 )
@@ -369,8 +365,8 @@ abstract class ClientOrGroup extends AbstractModel
      */
     public function removePackage($name)
     {
-        $package = $this->_serviceLocator->get('Model\Package\PackageManager')->getPackage($name);
-        $this->_serviceLocator->get('Database\Table\ClientConfig')->delete(
+        $package = $this->container->get(PackageManager::class)->getPackage($name);
+        $this->container->get(ClientConfig::class)->delete(
             array(
                 'hardware_id' => $this['Id'],
                 'ivalue' => $package['Id'],
@@ -432,9 +428,9 @@ abstract class ClientOrGroup extends AbstractModel
                 $name = 'SNMP_SWITCH'; // differs from global database option name
                 break;
             default:
-                $name = $this->_serviceLocator->get('Model\Config')->getDbIdentifier($option);
+                $name = $this->container->get(Config::class)->getDbIdentifier($option);
         }
-        $clientConfig = $this->_serviceLocator->get('Database\Table\ClientConfig');
+        $clientConfig = $this->container->get(ClientConfig::class);
         $select = $clientConfig->getSql()->select();
         $select->columns(array($column))
             ->where(
@@ -473,7 +469,7 @@ abstract class ClientOrGroup extends AbstractModel
         if ($option == 'allowScan' or $option == 'scanThisNetwork') {
             $name = 'IPDISCOVER';
         } else {
-            $name = $this->_serviceLocator->get('Model\Config')->getDbIdentifier($option);
+            $name = $this->container->get(Config::class)->getDbIdentifier($option);
             if ($option == 'packageDeployment' or $option == 'scanSnmp') {
                 $name .= '_SWITCH';
             }
@@ -500,7 +496,7 @@ abstract class ClientOrGroup extends AbstractModel
             'name' => $name,
         );
 
-        $clientConfig = $this->_serviceLocator->get('Database\Table\ClientConfig');
+        $clientConfig = $this->container->get(ClientConfig::class);
         $connection = $clientConfig->getAdapter()->getDriver()->getConnection();
         $connection->beginTransaction();
         try {

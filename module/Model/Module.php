@@ -59,8 +59,6 @@ class Module implements
                     StorageInterface::class => Direct::class, // this is the only implementation so far
                 ),
                 'factories' => array(
-                    'Model\Client\Client' => 'Model\Service\Client\ClientFactory',
-                    'Model\Group\Group' => 'Model\Service\Group\GroupFactory',
                     'Model\Operator\AuthenticationService' => 'Model\Service\Operator\AuthenticationServiceFactory',
                 ),
                 'shared' => array(

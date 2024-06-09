@@ -29,6 +29,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Library\Test\Hydrator\AbstractHydratorTestCase;
 use Model\Client\CustomFieldManager;
 use Model\Client\ItemManager;
+use Nada\Database\AbstractDatabase;
 use PHPUnit\Framework\MockObject\Stub;
 
 class ClientsTest extends AbstractHydratorTestCase
@@ -77,14 +78,12 @@ class ClientsTest extends AbstractHydratorTestCase
 
         /** @var Stub|ServiceLocatorInterface */
         $serviceManager = $this->createStub(ServiceLocatorInterface::class);
-        $serviceManager->method('get')->willReturnMap(
-            array(
-                array('Database\Nada', $nada),
-                array('Database\Table\WindowsInstallations', $windowsInstallations),
-                array('Model\Client\CustomFieldManager', $customFieldManager),
-                array('Model\Client\ItemManager', $itemManager),
-            )
-        );
+        $serviceManager->method('get')->willReturnMap([
+            [AbstractDatabase::class, $nada],
+            [WindowsInstallations::class, $windowsInstallations],
+            [CustomFieldManager::class, $customFieldManager],
+            [ItemManager::class, $itemManager],
+        ]);
 
         return new \Database\Hydrator\Clients($serviceManager);
     }

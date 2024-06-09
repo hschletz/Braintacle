@@ -3,17 +3,24 @@
 namespace Braintacle\Legacy;
 
 use Braintacle\AppConfig;
+use DI\Container;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Http\Header\HeaderInterface;
 use Laminas\Http\Response as MvcResponse;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
+use Model\Client\Client;
+use Model\Group\Group;
 use Nada\Database\AbstractDatabase;
 use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+
+use function DI\get;
 
 /**
  * Invoke the MVC application.
@@ -24,7 +31,7 @@ class ApplicationBridge implements RequestHandlerInterface
 
     public function __construct(
         private ResponseInterface $response,
-        private ContainerInterface $container,
+        private Container $container,
         private Application $application,
     ) {
     }
@@ -37,9 +44,19 @@ class ApplicationBridge implements RequestHandlerInterface
         $serviceManager->setService(AbstractDatabase::class, $this->container->get(AbstractDatabase::class));
         $serviceManager->setService(Adapter::class, $this->container->get(Adapter::class));
         $serviceManager->setService(AppConfig::class, $this->container->get(AppConfig::class));
+        $serviceManager->setService(Client::class, $this->container->get(Client::class));
         $serviceManager->setService(ClockInterface::class, $this->container->get(ClockInterface::class));
+        $serviceManager->setService(ContainerInterface::class, $serviceManager);
+        $serviceManager->setService(Group::class, $this->container->get(Group::class));
         $serviceManager->setAlias('Database\Nada', AbstractDatabase::class);
         $serviceManager->setAlias('Db', Adapter::class);
+
+        // Create legacy service definitions in main container, allowing
+        // autowiring classes that still depend on these services.
+        $this->container->set(ServiceLocatorInterface::class, $serviceManager);
+        $this->container->set(ServiceManager::class, $serviceManager);
+        $this->container->set('Database\Nada', get(AbstractDatabase::class));
+        $this->container->set('Db', get(Adapter::class));
 
         // Prevent the MVC application from generating output. Capture the MVC
         // response instead.

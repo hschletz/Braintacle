@@ -26,6 +26,7 @@ use Database\Table\Clients;
 use Database\Table\GroupInfo;
 use Database\Table\GroupMemberships;
 use DateTimeImmutable;
+use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\Db\Adapter\Driver\DriverInterface;
 use Laminas\Db\Adapter\Platform\AbstractPlatform;
@@ -68,7 +69,7 @@ class GroupTest extends AbstractGroupTestCase
         static::$serviceManager->setService(Config::class, $config);
 
         $model = new Group();
-        $model->setServiceLocator(static::$serviceManager);
+        $model->setContainer(static::$serviceManager);
 
         $this->assertSame($expectedValue, $model->getDefaultConfig($option));
     }
@@ -125,7 +126,7 @@ class GroupTest extends AbstractGroupTestCase
         }
         $model->expects($this->once())->method('unlock');
         $model['Id'] = 10;
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $model->setMembersFromQuery($type, 'filter', 'search', 'operator', true);
         $this->assertTablesEqual(
@@ -177,7 +178,7 @@ class GroupTest extends AbstractGroupTestCase
         $model->expects($this->once())->method('lock')->willReturn(true);
         $model->expects($this->once())->method('unlock');
         $model['Id'] = 10;
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('test');
@@ -233,16 +234,11 @@ class GroupTest extends AbstractGroupTestCase
 
         /** @var Stub|ServiceLocatorInterface */
         $serviceManager = $this->createStub(ServiceLocatorInterface::class);
-        $serviceManager->method('get')
-            ->willReturnMap(
-                array(
-                    array('Db', $adapter),
-                    array('Model\Client\ClientManager', $clientManager),
-                    array(
-                        'Database\Table\GroupInfo', $this->_groupInfo
-                    )
-                )
-            );
+        $serviceManager->method('get')->willReturnMap([
+            [Adapter::class, $adapter],
+            [ClientManager::class, $clientManager],
+            [GroupInfo::class, $this->_groupInfo]
+        ]);
 
         $model = $this->createPartialMock(Group::class, ['update']);
         $model->expects($this->once())
@@ -253,7 +249,7 @@ class GroupTest extends AbstractGroupTestCase
                 $this->assertEquals('query_new', $model['DynamicMembersSql']);
             });
         $model['Id'] = 10;
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $model->setMembersFromQuery(
             \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
@@ -295,7 +291,7 @@ class GroupTest extends AbstractGroupTestCase
         static::$serviceManager->setService(ClientManager::class, $clientManager);
 
         $model = new Group();
-        $model->setServiceLocator(static::$serviceManager);
+        $model->setContainer(static::$serviceManager);
         $model->id = 10;
 
         $this->expectException('LogicException');
@@ -360,7 +356,7 @@ class GroupTest extends AbstractGroupTestCase
         if ($dataSet !== null) {
             $model->expects($this->once())->method('unlock');
         }
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
         $model['Id'] = 10;
         $model['DynamicMembersSql'] = $setSql ? 'SELECT id FROM hardware WHERE id IN(2,3,4,5)' : null;
         $model['CacheCreationDate'] = null;
@@ -388,14 +384,16 @@ class GroupTest extends AbstractGroupTestCase
 
     public function testGetPackagesDefaultOrder()
     {
-        $model = $this->getModel();
+        $model = new Group();
+        $model->setContainer(static::$serviceManager);
         $model->id = 10;
         $this->assertEquals(array('package1', 'package2'), $model->getPackages());
     }
 
     public function testGetPackagesReverseOrder()
     {
-        $model = $this->getModel();
+        $model = new Group();
+        $model->setContainer(static::$serviceManager);
         $model->id = 10;
         $this->assertEquals(array('package2', 'package1'), $model->getPackages('desc'));
     }

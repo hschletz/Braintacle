@@ -23,13 +23,23 @@
 namespace Model\Client;
 
 use Database\Hydrator\NamingStrategy\MapNamingStrategy;
+use Database\Table\AndroidInstallations;
 use Database\Table\ClientConfig;
+use Database\Table\DuplicateAssetTags;
+use Database\Table\DuplicateSerials;
+use Database\Table\GroupMemberships;
+use Database\Table\PackageHistory;
+use Database\Table\WindowsInstallations;
 use DateTimeInterface;
 use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Db\Sql\Select;
 use Laminas\Hydrator\ObjectPropertyHydrator;
 use Laminas\Hydrator\Strategy\DateTimeFormatterStrategy;
+use Model\Config;
+use Model\Group\GroupManager;
 use Model\Package\Assignment;
+use Model\Package\PackageManager;
+use Protocol\Message\InventoryRequest;
 use Psr\Clock\ClockInterface;
 use ReturnTypeWillChange;
 
@@ -274,14 +284,14 @@ class Client extends \Model\ClientOrGroup
             // Virtual properties from database queries
             switch ($key) {
                 case 'Android':
-                    $androidInstallations = $this->_serviceLocator->get('Database\Table\AndroidInstallations');
+                    $androidInstallations = $this->container->get(AndroidInstallations::class);
                     $select = $androidInstallations->getSql()->select();
                     $select->columns(['javacountry', 'javaname', 'javaclasspath', 'javahome']);
                     $select->where(array('hardware_id' => $this['Id']));
                     $value = $androidInstallations->selectWith($select)->current() ?: null;
                     break;
                 case 'Windows':
-                    $windowsInstallations = $this->_serviceLocator->get('Database\Table\WindowsInstallations');
+                    $windowsInstallations = $this->container->get(WindowsInstallations::class);
                     $select = $windowsInstallations->getSql()->select();
                     $select->columns(
                         array(
@@ -299,14 +309,14 @@ class Client extends \Model\ClientOrGroup
                     $value = $windowsInstallations->selectWith($select)->current() ?: null;
                     break;
                 case 'CustomFields':
-                    $value = $this->_serviceLocator->get('Model\Client\CustomFieldManager')->read($this['Id']);
+                    $value = $this->container->get(CustomFieldManager::class)->read($this->id);
                     break;
                 case 'IsSerialBlacklisted':
-                    $duplicateSerials = $this->_serviceLocator->get('Database\Table\DuplicateSerials');
+                    $duplicateSerials = $this->container->get(DuplicateSerials::class);
                     $value = (bool) $duplicateSerials->select(['serial' => $this->serial])->count();
                     break;
                 case 'IsAssetTagBlacklisted':
-                    $duplicateAssetTags = $this->_serviceLocator->get('Database\Table\DuplicateAssetTags');
+                    $duplicateAssetTags = $this->container->get(DuplicateAssetTags::class);
                     $value = (bool) $duplicateAssetTags->select(['assettag' => $this->assetTag])->count();
                     break;
                 default:
@@ -326,7 +336,7 @@ class Client extends \Model\ClientOrGroup
             return $this->_configDefault[$option];
         }
 
-        $config = $this->_serviceLocator->get('Model\Config');
+        $config = $this->container->get(Config::class);
 
         // Get non-NULL values from groups
         $groupValues = array();
@@ -445,7 +455,7 @@ class Client extends \Model\ClientOrGroup
 
         switch ($option) {
             case 'inventoryInterval':
-                $globalValue = $this->_serviceLocator->get('Model\Config')->inventoryInterval;
+                $globalValue = $this->container->get(Config::class)->inventoryInterval;
                 // Special global values 0 and -1 always take precedence.
                 if ($globalValue <= 0) {
                     $value = $globalValue;
@@ -518,7 +528,7 @@ class Client extends \Model\ClientOrGroup
             new DateTimeFormatterStrategy(Assignment::DATEFORMAT)
         );
 
-        $sql = $this->_serviceLocator->get(ClientConfig::class)->getSql();
+        $sql = $this->container->get(ClientConfig::class)->getSql();
         $select = $sql->select();
         $select->columns(['tvalue', 'comments'])
             ->join(
@@ -543,7 +553,7 @@ class Client extends \Model\ClientOrGroup
      */
     public function getDownloadedPackageIds()
     {
-        $packageHistory = $this->_serviceLocator->get('Database\Table\PackageHistory');
+        $packageHistory = $this->container->get(PackageHistory::class);
         $select = $packageHistory->getSql()->select();
         $select->columns(array('pkg_id'))
             ->where(array('hardware_id' => $this['Id']))
@@ -558,8 +568,8 @@ class Client extends \Model\ClientOrGroup
      */
     public function resetPackage($name)
     {
-        $package = $this->_serviceLocator->get('Model\Package\PackageManager')->getPackage($name);
-        $clientConfig = $this->_serviceLocator->get('Database\Table\ClientConfig');
+        $package = $this->container->get(PackageManager::class)->getPackage($name);
+        $clientConfig = $this->container->get(ClientConfig::class);
 
         // Common filter for all operations
         $where = [
@@ -601,7 +611,7 @@ class Client extends \Model\ClientOrGroup
             $clientConfig->update(
                 array(
                     'tvalue' => \Model\Package\Assignment::PENDING,
-                    'comments' => $this->_serviceLocator->get(ClockInterface::class)->now()->format(
+                    'comments' => $this->container->get(ClockInterface::class)->now()->format(
                         \Model\Package\Assignment::DATEFORMAT
                     ),
                 ),
@@ -627,7 +637,7 @@ class Client extends \Model\ClientOrGroup
     public function getItems($type, $order = null, $direction = null, $filters = array())
     {
         $filters['Client'] = $this['Id'];
-        return $this->_serviceLocator->get('Model\Client\ItemManager')->getItems(
+        return $this->container->get(ItemManager::class)->getItems(
             $type,
             $filters,
             $order,
@@ -645,12 +655,12 @@ class Client extends \Model\ClientOrGroup
      */
     public function setGroupMemberships($newMemberships)
     {
-        $groupMemberships = $this->_serviceLocator->get('Database\Table\GroupMemberships');
+        $groupMemberships = $this->container->get(GroupMemberships::class);
 
         // Build lookup tables
         $groupsById = array();
         $groupsByName = array();
-        foreach ($this->_serviceLocator->get('Model\Group\GroupManager')->getGroups() as $group) {
+        foreach ($this->container->get(GroupManager::class)->getGroups() as $group) {
             $groupsById[$group['Id']] = $group;
             $groupsByName[$group['Name']] = $group;
         }
@@ -735,7 +745,7 @@ class Client extends \Model\ClientOrGroup
      */
     public function getGroupMemberships($membershipType)
     {
-        $groupMemberships = $this->_serviceLocator->get('Database\Table\GroupMemberships');
+        $groupMemberships = $this->container->get(GroupMemberships::class);
         $select = $groupMemberships->getSql()->select();
         $select->columns(array('group_id', 'static'));
 
@@ -757,7 +767,7 @@ class Client extends \Model\ClientOrGroup
         }
         $select->where(array('hardware_id' => $this['Id']));
 
-        $this->_serviceLocator->get('Model\Group\GroupManager')->updateCache();
+        $this->container->get(GroupManager::class)->updateCache();
 
         $result = array();
         foreach ($groupMemberships->selectWith($select) as $row) {
@@ -777,7 +787,7 @@ class Client extends \Model\ClientOrGroup
     {
         if ($this->_groups === null) {
             $this->_groups = iterator_to_array(
-                $this->_serviceLocator->get('Model\Group\GroupManager')->getGroups('Member', $this['Id'])
+                $this->container->get(GroupManager::class)->getGroups('Member', $this->id)
             );
         }
         return $this->_groups;
@@ -789,7 +799,7 @@ class Client extends \Model\ClientOrGroup
      */
     public function setCustomFields($values)
     {
-        $this->_serviceLocator->get('Model\Client\CustomFieldManager')->write($this['Id'], $values);
+        $this->container->get(CustomFieldManager::class)->write($this->id, $values);
     }
 
     /**
@@ -799,7 +809,7 @@ class Client extends \Model\ClientOrGroup
      */
     public function toDomDocument()
     {
-        $document = $this->_serviceLocator->get(\Protocol\Message\InventoryRequest::class);
+        $document = $this->container->get(InventoryRequest::class);
         $document->formatOutput = true;
         $document->loadClient($this);
         return $document;

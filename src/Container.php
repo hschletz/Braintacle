@@ -4,6 +4,7 @@ namespace Braintacle;
 
 use Braintacle\Database\AdapterFactory;
 use Braintacle\Database\DatabaseFactory;
+use Braintacle\Legacy\ClientOrGroupFactory;
 use Braintacle\Logger\LoggerFactory;
 use Composer\InstalledVersions;
 use DI\Container as DIContainer;
@@ -11,6 +12,8 @@ use Laminas\Config\Reader\Ini as IniReader;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Mvc\Application as MvcApplication;
 use Library\Application;
+use Model\Client\Client;
+use Model\Group\Group;
 use Nada\Database\AbstractDatabase;
 use Nyholm\Psr7\Response;
 use Psr\Clock\ClockInterface;
@@ -32,7 +35,9 @@ class Container extends DIContainer
                 new IniReader(),
                 getenv('BRAINTACLE_CONFIG') ?: InstalledVersions::getRootPackage()['install_path'] . '/config/braintacle.ini',
             ),
+            Client::class => factory(ClientOrGroupFactory::class),
             ClockInterface::class => get(Clock::class),
+            Group::class => factory(ClientOrGroupFactory::class),
             LoggerInterface::class => factory(LoggerFactory::class),
             MvcApplication::class => factory(Application::init(...))->parameter('module', 'Console'),
             ResponseInterface::class => get(Response::class),

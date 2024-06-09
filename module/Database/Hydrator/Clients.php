@@ -22,6 +22,12 @@
 
 namespace Database\Hydrator;
 
+use Database\Table\WindowsInstallations;
+use Model\Client\CustomFieldManager;
+use Model\Client\ItemManager;
+use Nada\Database\AbstractDatabase;
+use Psr\Container\ContainerInterface;
+
 /**
  * Hydrator for clients
  *
@@ -36,12 +42,6 @@ namespace Database\Hydrator;
  */
 class Clients implements \Laminas\Hydrator\HydratorInterface
 {
-    /**
-     * Service locator
-     * @var \Laminas\ServiceManager\ServiceLocatorInterface
-     */
-    protected $_serviceLocator;
-
     /**
      * Database time zone
      *
@@ -125,14 +125,8 @@ class Clients implements \Laminas\Hydrator\HydratorInterface
         'Uuid' => 'uuid',
     );
 
-    /**
-     * Constructor
-     *
-     * @param \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->_serviceLocator = $serviceLocator;
         $this->_databaseTimeZone = new \DateTimeZone('UTC');
     }
 
@@ -196,18 +190,18 @@ class Clients implements \Laminas\Hydrator\HydratorInterface
         $property = $matches[2];
         switch ($model) {
             case 'customfields':
-                $hydrator = $this->_serviceLocator->get('Model\Client\CustomFieldManager')->getHydrator();
+                $hydrator = $this->container->get(CustomFieldManager::class)->getHydrator();
                 $name = 'CustomFields.' . $hydrator->hydrateName($property);
                 break;
             case 'windows':
-                $hydrator = $this->_serviceLocator->get('Database\Table\WindowsInstallations')->getHydrator();
+                $hydrator = $this->container->get(WindowsInstallations::class)->getHydrator();
                 $name = 'Windows.' . $hydrator->hydrateName($property);
                 break;
             case 'registry':
                 $name = 'Registry.Content';
                 break;
             default:
-                $table = $this->_serviceLocator->get('Model\Client\ItemManager')->getTable($model);
+                $table = $this->container->get(ItemManager::class)->getTable($model);
                 // Get mixed-case model name
                 $model = get_class($table->getResultSetPrototype()->getObjectPrototype());
                 $model = substr($model, strrpos($model, '\\') + 1);
@@ -248,7 +242,7 @@ class Clients implements \Laminas\Hydrator\HydratorInterface
                 case 'InventoryDate':
                 case 'LastContactDate':
                     $value = \DateTime::createFromFormat(
-                        $this->_serviceLocator->get('Database\Nada')->timestampFormatPhp(),
+                        $this->container->get(AbstractDatabase::class)->timestampFormatPhp(),
                         $value,
                         $this->_databaseTimeZone
                     );
@@ -261,17 +255,17 @@ class Clients implements \Laminas\Hydrator\HydratorInterface
             $property = $matches[2];
             switch ($model) {
                 case 'CustomFields':
-                    $hydrator = $this->_serviceLocator->get('Model\Client\CustomFieldManager')->getHydrator();
+                    $hydrator = $this->container->get(CustomFieldManager::class)->getHydrator();
                     $value = $hydrator->hydrateValue($property, $value);
                     break;
                 case 'Windows':
-                    $hydrator = $this->_serviceLocator->get('Database\Table\WindowsInstallations')->getHydrator();
+                    $hydrator = $this->container->get(WindowsInstallations::class)->getHydrator();
                     $value = $hydrator->hydrateValue($property, $value);
                     break;
                 case 'Registry':
                     break;
                 default:
-                    $table = $this->_serviceLocator->get('Model\Client\ItemManager')->getTable($model);
+                    $table = $this->container->get(ItemManager::class)->getTable($model);
                     $hydrator = $table->getHydrator();
                     $value = $hydrator->hydrateValue($property, $value);
             }
@@ -290,7 +284,7 @@ class Clients implements \Laminas\Hydrator\HydratorInterface
     {
         if ($name == 'lastcome' or $name == 'lastdate') {
             $value->setTimezone($this->_databaseTimeZone);
-            $value = $value->format($this->_serviceLocator->get('Database\Nada')->timestampFormatPhp());
+            $value = $value->format($this->container->get(AbstractDatabase::class)->timestampFormatPhp());
         }
         return $value;
     }

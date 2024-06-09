@@ -86,7 +86,7 @@ class ClientTest extends AbstractTestCase
 
         $model = new Client();
         $model->id = 3;
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $android = $model['Android'];
         $this->assertInstanceOf('Model\Client\AndroidInstallation', $android);
@@ -116,7 +116,7 @@ class ClientTest extends AbstractTestCase
 
         $model = new Client();
         $model->id = 2;
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $this->assertNull($model['Android']);
         $this->assertNull($model['Android']); // cached result
@@ -136,7 +136,7 @@ class ClientTest extends AbstractTestCase
 
         $model = new Client();
         $model->id = 2;
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $windows = $model['Windows'];
         $this->assertInstanceOf('Model\Client\WindowsInstallation', $windows);
@@ -170,7 +170,7 @@ class ClientTest extends AbstractTestCase
 
         $model = new Client();
         $model->id = 3;
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $this->assertNull($model['Windows']);
         $this->assertNull($model['Windows']); // cached result
@@ -185,7 +185,7 @@ class ClientTest extends AbstractTestCase
         static::$serviceManager->setService(CustomFieldManager::class, $customFieldManager);
 
         $model = new Client();
-        $model->setServiceLocator(static::$serviceManager);
+        $model->setContainer(static::$serviceManager);
         $model->id = 2;
 
         $this->assertEquals($customFields, $model->customFields);
@@ -224,7 +224,7 @@ class ClientTest extends AbstractTestCase
         );
         $model = new Client();
         $model->$initialIndex = $initialValue;
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
         $this->assertSame($result, $model[$index]);
         $this->assertSame($result, $model[$index]); // cached result
     }
@@ -299,7 +299,7 @@ class ClientTest extends AbstractTestCase
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroups', '__destruct']);
         $model->method('offsetGet')->willReturn(42);
         $model->method('getGroups')->willReturn($groups);
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $this->assertSame($expectedValue, $model->getDefaultConfig($option));
     }
@@ -319,7 +319,7 @@ class ClientTest extends AbstractTestCase
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroups', '__destruct']);
         $model->expects($this->exactly(3))->method('offsetGet')->willReturn(42);
         $model->expects($this->exactly(2))->method('getGroups')->willReturn(array());
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $this->assertEquals('value1', $model->getDefaultConfig('option1'));
         $this->assertEquals('value1', $model->getDefaultConfig('option1')); // from cache
@@ -529,7 +529,7 @@ class ClientTest extends AbstractTestCase
         $serviceManager->method('get')->with('Model\Config')->willReturn($config);
 
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getConfig', 'getGroups']);
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getConfig')->with('inventoryInterval')->willReturn($clientValue);
         $model->method('getGroups')->willReturn($groups);
@@ -576,7 +576,8 @@ class ClientTest extends AbstractTestCase
      */
     public function testGetPackageAssignments($order, $direction, $package0, $package1)
     {
-        $model = $this->getModel();
+        $model = new Client();
+        $model->setContainer(static::$serviceManager);
         $model->id = 1;
 
         $assignments = $model->getPackageAssignments($order, $direction);
@@ -591,7 +592,8 @@ class ClientTest extends AbstractTestCase
 
     public function testGetPackageAssignmentsDefaultOrder()
     {
-        $model = $this->getModel();
+        $model = new Client();
+        $model->setContainer(static::$serviceManager);
         $model->id = 1;
 
         $assignments = $model->getPackageAssignments();
@@ -620,7 +622,8 @@ class ClientTest extends AbstractTestCase
 
     public function testGetDownloadedPackageIds()
     {
-        $model = $this->getModel();
+        $model = new Client();
+        $model->setContainer(static::$serviceManager);
         $model->id = 1;
         $this->assertEquals(array(1, 2), $model->getDownloadedPackageIds());
     }
@@ -650,7 +653,7 @@ class ClientTest extends AbstractTestCase
         static::$serviceManager->setService(PackageManager::class, $packageManager);
 
         $model = new Client();
-        $model->setServiceLocator(static::$serviceManager);
+        $model->setContainer(static::$serviceManager);
         $model->id = 1;
 
         $model->resetPackage('packageName');
@@ -674,7 +677,7 @@ class ClientTest extends AbstractTestCase
         static::$serviceManager->setService(PackageManager::class, $packageManager);
 
         $model = new Client();
-        $model->setServiceLocator(static::$serviceManager);
+        $model->setContainer(static::$serviceManager);
         $model->id = 1;
 
         try {
@@ -731,7 +734,7 @@ class ClientTest extends AbstractTestCase
         static::$serviceManager->setService(PackageManager::class, $packageManager);
 
         $model = new Client();
-        $model->setServiceLocator(static::$serviceManager);
+        $model->setContainer(static::$serviceManager);
         $model->id = 1;
 
         $model->resetPackage('packageName');
@@ -766,7 +769,7 @@ class ClientTest extends AbstractTestCase
         static::$serviceManager->setService(PackageManager::class, $packageManager);
 
         $model = new Client();
-        $model->setServiceLocator(static::$serviceManager);
+        $model->setContainer(static::$serviceManager);
         $model->id = 1;
 
         $model->resetPackage('packageName');
@@ -788,7 +791,7 @@ class ClientTest extends AbstractTestCase
 
         $model = $this->createPartialMock(Client::class, ['offsetGet']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $this->assertSame($result, $model->getItems('type'));
     }
@@ -809,7 +812,7 @@ class ClientTest extends AbstractTestCase
 
         $model = $this->createPartialMock(Client::class, ['offsetGet']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $this->assertSame($result, $model->getItems('type', 'order', 'direction', array('filter' => 'arg')));
     }
@@ -879,7 +882,7 @@ class ClientTest extends AbstractTestCase
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn($oldMemberships);
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $cache = new \ReflectionProperty($model, '_groups');
         $cache->setAccessible(true);
@@ -948,7 +951,7 @@ class ClientTest extends AbstractTestCase
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn($oldMemberships);
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $cache = new \ReflectionProperty($model, '_groups');
         $cache->setAccessible(true);
@@ -1017,7 +1020,7 @@ class ClientTest extends AbstractTestCase
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn(array(1 => $oldMembership));
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $cache = new \ReflectionProperty($model, '_groups');
         $cache->setAccessible(true);
@@ -1078,7 +1081,7 @@ class ClientTest extends AbstractTestCase
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn([1 => $oldMembership]);
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $cache = new \ReflectionProperty($model, '_groups');
         $cache->setAccessible(true);
@@ -1126,7 +1129,7 @@ class ClientTest extends AbstractTestCase
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn(array(2 => \Model\Client\Client::MEMBERSHIP_ALWAYS));
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $model->setGroupMemberships(
             array(
@@ -1154,7 +1157,7 @@ class ClientTest extends AbstractTestCase
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn(array());
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Invalid membership type: 23');
@@ -1206,7 +1209,7 @@ class ClientTest extends AbstractTestCase
 
         $model = new Client();
         $model->id = 1;
-        $model->setServiceLocator(static::$serviceManager);
+        $model->setContainer(static::$serviceManager);
 
         $this->assertSame($expected, $model->getGroupMemberships($type));
     }
@@ -1216,7 +1219,8 @@ class ClientTest extends AbstractTestCase
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Bad value for membership: 42');
 
-        $model = $this->getModel();
+        $model = new Client();
+        $model->setContainer(static::$serviceManager);
         $model->getGroupMemberships(42);
     }
 
@@ -1231,7 +1235,7 @@ class ClientTest extends AbstractTestCase
         static::$serviceManager->setService(GroupManager::class, $groupManager);
 
         $model = new Client();
-        $model->setServiceLocator(static::$serviceManager);
+        $model->setContainer(static::$serviceManager);
         $model->id = 42;
 
         $this->assertEquals($groups, $model->getGroups());
@@ -1247,7 +1251,7 @@ class ClientTest extends AbstractTestCase
         static::$serviceManager->setService(CustomFieldManager::class, $customFieldManager);
 
         $model = new Client();
-        $model->setServiceLocator(static::$serviceManager);
+        $model->setContainer(static::$serviceManager);
         $model->id = 42;
 
         $model->setCustomFields($data);
@@ -1258,7 +1262,7 @@ class ClientTest extends AbstractTestCase
         $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
 
         $model = $this->getModel();
-        $model->setServiceLocator($serviceManager);
+        $model->setContainer($serviceManager);
 
         // DomDocument constructor must be preserved. Otherwise setting the
         // formatOutput property would have no effect for whatever reason.

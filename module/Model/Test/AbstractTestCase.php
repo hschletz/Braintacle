@@ -30,6 +30,7 @@ use Laminas\Log\Writer\Noop as NoopWriter;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Library\Application;
+use Nada\Database\AbstractDatabase;
 use Nada\Factory;
 use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\TestCase;
@@ -76,10 +77,11 @@ abstract class AbstractTestCase extends TestCase
         $config['abstract_factories'][] = AutowireFactory::class;
         $config['aliases'][ServiceLocatorInterface::class] = ContainerInterface::class;
         $config['aliases'][ServiceManager::class] = ContainerInterface::class;
+        $config['aliases']['Database\Nada'] = AbstractDatabase::class;
+        $config['aliases']['Db'] = Adapter::class;
+        $config['services'][AbstractDatabase::class] = (new DatabaseFactory(new Factory(), static::$adapter))();
+        $config['services'][Adapter::class] = static::$adapter;
         $config['services']['Library\Logger'] = new Logger(['writers' => [['name' => NoopWriter::class]]]);
-        $config['services']['Db'] = static::$adapter;
-        $config['services']['Database\Nada'] = (new DatabaseFactory(new Factory(), static::$adapter))();
-
         // Store config for creation of temporary service manager instances.
         static::$serviceManagerConfig = $config;
 
