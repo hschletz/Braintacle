@@ -22,7 +22,7 @@
 
 namespace Protocol\Message\InventoryRequest;
 
-use Laminas\Hydrator\HydratorInterface;
+use Braintacle\Client\Exporter;
 use Model\Client\Client;
 use Model\Client\ItemManager;
 use PhpBench\Dom\Element;
@@ -196,8 +196,9 @@ class Content extends Element
     {
         $items = $this->client->getItems($itemType, 'id', 'asc');
         $table = $this->container->get(ItemManager::class)->getTableName($itemType);
-        /** @var HydratorInterface */
-        $hydrator = $this->container->get("Protocol\\Hydrator\\$table");
+        $exporter = $this->container->get(Exporter::class);
+        assert($exporter instanceof Exporter);
+        $hydrator = $exporter->getHydrator($table);
         /** @var object */
         foreach ($items as $item) {
             $this->appendSection($section, $hydrator->extract($item));

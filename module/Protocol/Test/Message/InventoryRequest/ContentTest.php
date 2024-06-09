@@ -23,6 +23,7 @@
 namespace Protocol\Test\Message\InventoryRequest;
 
 use ArrayObject;
+use Braintacle\Client\Exporter;
 use Laminas\Db\ResultSet\ResultSet;
 use Model\Client\AndroidInstallation;
 use Model\Client\Client;
@@ -251,11 +252,13 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
             [$itemHydrated2, $itemExtracted2],
         ]);
 
-        /** @var MockObject|ContainerInterface */
+        $exporter = $this->createMock(Exporter::class);
+        $exporter->method('getHydrator')->with('Table')->willReturn($hydrator);
+
         $container = $this->createStub(ContainerInterface::class);
         $container->method('get')->willReturnMap([
             [ItemManager::class, $itemManager],
-            ['Protocol\Hydrator\Table', $hydrator],
+            [Exporter::class, $exporter],
         ]);
 
         $items = new ResultSet();
