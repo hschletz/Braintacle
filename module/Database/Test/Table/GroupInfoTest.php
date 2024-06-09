@@ -22,8 +22,9 @@
 
 namespace Database\Test\Table;
 
+use Database\Table\Config as ConfigTable;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use Model\Config;
+use Model\Config as ConfigModel;
 use PHPUnit\Framework\MockObject\Stub;
 
 class GroupInfoTest extends AbstractTestCase
@@ -31,7 +32,7 @@ class GroupInfoTest extends AbstractTestCase
     public static function setUpBeforeClass(): void
     {
         // GroupInfo initialization depends on Config table
-        static::$serviceManager->get('Database\Table\Config')->updateSchema(true);
+        static::createServiceManager()->get(ConfigTable::class)->updateSchema(true);
         parent::setUpBeforeClass();
     }
 
@@ -45,7 +46,7 @@ class GroupInfoTest extends AbstractTestCase
         $nada = $this->createStub(\Nada\Database\AbstractDatabase::class);
         $nada->method('timestampFormatPhp')->willReturn(DATE_ATOM);
 
-        $config = $this->createMock(Config::class);
+        $config = $this->createMock(ConfigModel::class);
         $config->expects($this->once())->method('__get')->with('groupCacheExpirationInterval')->willReturn(42);
 
         /** @var Stub|ServiceLocatorInterface */

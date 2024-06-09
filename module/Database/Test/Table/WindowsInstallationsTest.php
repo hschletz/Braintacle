@@ -22,13 +22,17 @@
 
 namespace Database\Test\Table;
 
+use Database\Table\ClientsAndGroups;
+use Database\Table\WindowsProductKeys;
+
 class WindowsInstallationsTest extends AbstractTestCase
 {
     public static function setUpBeforeClass(): void
     {
         // These tables must exist before the view can be created
-        static::$serviceManager->get('Database\Table\ClientsAndGroups')->updateSchema(true);
-        static::$serviceManager->get('Database\Table\WindowsProductKeys')->updateSchema(true);
+        $serviceManager = static::createServiceManager();
+        $serviceManager->get(ClientsAndGroups::class)->updateSchema(true);
+        $serviceManager->get(WindowsProductKeys::class)->updateSchema(true);
         parent::setUpBeforeClass();
     }
 

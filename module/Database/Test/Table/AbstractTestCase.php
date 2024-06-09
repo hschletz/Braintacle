@@ -22,7 +22,19 @@
 
 namespace Database\Test\Table;
 
+use Braintacle\Database\DatabaseFactory;
+use Laminas\Db\Adapter\Adapter;
+use Laminas\Di\Container\ServiceManager\AutowireFactory;
+use Laminas\Log\Logger;
+use Laminas\Log\Writer\Noop as NoopWriter;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
+use Library\Application;
+use Nada\Database\AbstractDatabase;
+use Nada\Factory;
 use PHPUnit\DbUnit\Database\Connection;
+use PHPUnit\Framework\Attributes\Before;
+use Psr\Container\ContainerInterface;
 
 /**
  * Base class for table interface tests
@@ -32,11 +44,8 @@ use PHPUnit\DbUnit\Database\Connection;
  */
 abstract class AbstractTestCase extends \PHPUnit\DbUnit\TestCase
 {
-    /**
-     * Service manager
-     * @var \Laminas\ServiceManager\ServiceManager
-     */
-    public static $serviceManager;
+    protected static ServiceManager $serviceManager;
+    private static array $serviceManagerConfig;
 
     /**
      * Table class, provided by setUpBeforeClass();
@@ -54,9 +63,55 @@ abstract class AbstractTestCase extends \PHPUnit\DbUnit\TestCase
      */
     public static function setUpBeforeClass(): void
     {
-        static::$_table = static::$serviceManager->get(static::getClass());
+        static::$_table = static::createServiceManager()->get(static::getClass());
         static::$_table->updateSchema(true);
         parent::setUpBeforeClass();
+    }
+
+    #[Before]
+    public function setupServiceManager(): void
+    {
+        // Set up a clean temporary service manager instance to be used by
+        // tests, which can inject their own service mocks without interfering
+        // with other tests.
+        static::$serviceManager = static::createServiceManager();
+    }
+
+    /**
+     * Create new service manager instance.
+     *
+     * The instance is built from the stored config, without any leftover
+     * service instances from other tests.
+     */
+    protected static function createServiceManager(): ServiceManager
+    {
+        if (!isset(static::$serviceManagerConfig)) {
+            $adapter = new Adapter(
+                json_decode(
+                    getenv('BRAINTACLE_TEST_DATABASE'),
+                    true
+                )
+            );
+
+            // Extend module-generated service manager config with required entries.
+            $config = Application::init('Database')->getServiceManager()->get('config')['service_manager'];
+            $config['abstract_factories'][] = AutowireFactory::class;
+            $config['aliases'][ServiceLocatorInterface::class] = ContainerInterface::class;
+            $config['aliases'][ServiceManager::class] = ContainerInterface::class;
+            $config['aliases']['Database\Nada'] = AbstractDatabase::class;
+            $config['aliases']['Db'] = Adapter::class;
+            $config['services'][AbstractDatabase::class] = (new DatabaseFactory(new Factory(), $adapter))();
+            $config['services'][Adapter::class] = $adapter;
+            $config['services']['Library\Logger'] = new Logger(['writers' => [['name' => NoopWriter::class]]]);
+
+            static::$serviceManagerConfig = $config;
+        }
+
+        $serviceManager = new ServiceManager(static::$serviceManagerConfig);
+        $serviceManager->setService('config', static::$serviceManagerConfig);
+        $serviceManager->setService(ContainerInterface::class, $serviceManager);
+
+        return $serviceManager;
     }
 
     /**
