@@ -24,6 +24,7 @@ namespace Database\Table;
 
 use Nada\Column\AbstractColumn as Column;
 use Nada\Database\AbstractDatabase;
+use Psr\Container\ContainerInterface;
 
 /**
  * "accountinfo_config" table
@@ -52,12 +53,12 @@ class CustomFieldConfig extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'accountinfo_config';
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
 
-        $this->database = $serviceLocator->get('Database\Nada');
+        $this->database = $container->get(AbstractDatabase::class);
         $this->useTransaction = $this->database->canUseDdlTransaction();
     }
 
@@ -99,7 +100,7 @@ class CustomFieldConfig extends \Database\AbstractTable
      */
     public function getFields()
     {
-        $columns = $this->container->get('Database\Nada')->getTable('accountinfo')->getColumns();
+        $columns = $this->container->get(AbstractDatabase::class)->getTable('accountinfo')->getColumns();
         $select = $this->getSql()->select();
         $select->columns(array('id', 'type', 'name'))
             ->where(array('account_type' => 'COMPUTERS'))

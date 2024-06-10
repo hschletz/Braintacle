@@ -23,6 +23,7 @@
 namespace Model\Client;
 
 use Laminas\Db\ResultSet\AbstractResultSet;
+use Psr\Container\ContainerInterface;
 
 /**
  * Client item manager
@@ -74,20 +75,8 @@ class ItemManager
         'storagedevice' => 'StorageDevice',
     );
 
-    /**
-     * Service manager
-     * @var \Laminas\ServiceManager\ServiceManager
-     */
-    protected $_serviceManager;
-
-    /**
-     * Constructor
-     *
-     * @param \Laminas\ServiceManager\ServiceManager $serviceManager
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceManager $serviceManager)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->_serviceManager = $serviceManager;
     }
 
     /**
@@ -124,7 +113,7 @@ class ItemManager
      */
     public function getTable($type)
     {
-        return $this->_serviceManager->get('Database\Table\\' . $this->getTableName($type));
+        return $this->container->get('Database\Table\\' . $this->getTableName($type));
     }
 
     /**
@@ -167,7 +156,7 @@ class ItemManager
     {
         $where = array('hardware_id' => $clientId);
         foreach ($this->_tableClasses as $table) {
-            $this->_serviceManager->get("Database\\Table\\$table")->delete($where);
+            $this->container->get("Database\\Table\\$table")->delete($where);
         }
     }
 }

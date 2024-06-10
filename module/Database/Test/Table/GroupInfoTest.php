@@ -23,8 +23,12 @@
 namespace Database\Test\Table;
 
 use Database\Table\Config as ConfigTable;
+use Laminas\Db\Adapter\Adapter;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Model\Config as ConfigModel;
+use Model\Config;
+use Model\Group\Group;
+use Nada\Database\AbstractDatabase;
 use PHPUnit\Framework\MockObject\Stub;
 
 class GroupInfoTest extends AbstractTestCase
@@ -51,14 +55,12 @@ class GroupInfoTest extends AbstractTestCase
 
         /** @var Stub|ServiceLocatorInterface */
         $serviceManager = $this->createStub(ServiceLocatorInterface::class);
-        $serviceManager->method('get')->will(
-            $this->returnValueMap([
-                ['Database\Nada', $nada],
-                ['Db', $this->createMock('Laminas\Db\Adapter\Adapter')],
-                ['Model\Config', $config],
-                ['Model\Group\Group', new \Model\Group\Group()],
-            ])
-        );
+        $serviceManager->method('get')->willReturnMap([
+            [AbstractDatabase::class, $nada],
+            [Adapter::class, $this->createMock(Adapter::class)],
+            [Config::class, $config],
+            [Group::class, new Group()],
+        ]);
 
         $table = new \Database\Table\GroupInfo($serviceManager);
 

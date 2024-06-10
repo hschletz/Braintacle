@@ -61,22 +61,6 @@ class Module implements Feature\ConfigProviderInterface
                     UrlFromRoute::class => UrlFromRouteFactory::class,
                 )
             ),
-            'filters' => array(
-                'aliases' => array(
-                    'Library\LogLevel' => 'Library\Filter\LogLevel',
-                ),
-            ),
-            'log' => array(
-                'Library\Logger' => array(
-                    // Ready-to-use logger instance with a noop writer attached.
-                    // Applications can add their own writer.
-                    'writers' => array(
-                        array(
-                            'name' => 'noop',
-                        ),
-                    ),
-                ),
-            ),
             'service_manager' => array(
                 'delegators' => array(
                     'Laminas\Mvc\I18n\Translator' => array('Library\I18n\Translator\DelegatorFactory'),
@@ -87,16 +71,10 @@ class Module implements Feature\ConfigProviderInterface
                 'factories' => [
                     ConfigInterface::class => ConfigFactory::class,
                     InjectorInterface::class => InjectorFactory::class,
-                    'Library\HttpClient' => function () {
-                        return new \Laminas\Http\Client();
-                    },
                     'Library\Log\Writer\StdErr' => function () {
                         return new \Laminas\Log\Writer\Stream('php://stderr');
                     },
                     'Library\UserConfig' => 'Library\Service\UserConfigFactory',
-                ],
-                'shared' => [
-                    'Library\HttpClient' => false,
                 ],
             ),
             'translator' => array(
@@ -118,7 +96,6 @@ class Module implements Feature\ConfigProviderInterface
                     'Library\DirectoryWritable' => 'Library\Validator\DirectoryWritable',
                     'Library\FileReadable' => 'Library\Validator\FileReadable',
                     'Library\IpNetworkAddress' => Validator\IpNetworkAddress::class,
-                    'Library\LogLevel' => 'Library\Validator\LogLevel',
                     'Library\NotInArray' => 'Library\Validator\NotInArray',
                     'Library\ProductKey' => 'Library\Validator\ProductKey',
                 ),

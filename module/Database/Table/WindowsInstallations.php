@@ -22,6 +22,11 @@
 
 namespace Database\Table;
 
+use Model\Client\WindowsInstallation;
+use Nada\Database\AbstractDatabase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
+
 /**
  * "windows_installations" view
  */
@@ -31,7 +36,7 @@ class WindowsInstallations extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
         $this->_hydrator->setNamingStrategy(
@@ -51,10 +56,10 @@ class WindowsInstallations extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\WindowsInstallation')
+            $container->get(WindowsInstallation::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 
     /**
@@ -64,8 +69,8 @@ class WindowsInstallations extends \Database\AbstractTable
     public function updateSchema($prune = false)
     {
         // Reimplementation to provide a view
-        $logger = $this->container->get('Library\Logger');
-        $database = $this->container->get('Database\Nada');
+        $logger = $this->container->get(LoggerInterface::class);
+        $database = $this->container->get(AbstractDatabase::class);
         if (!in_array('windows_installations', $database->getViewNames())) {
             $logger->info("Creating view 'windows_installations'");
             $sql = $this->container->get(ClientsAndGroups::class)->getSql();

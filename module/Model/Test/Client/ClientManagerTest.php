@@ -38,8 +38,10 @@ use Database\Table\PackageHistory;
 use Database\Table\RegistryData;
 use Database\Table\WindowsInstallations;
 use Database\Table\WindowsProductKeys;
+use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\Db\Adapter\Driver\DriverInterface;
+use Laminas\Http\Client as HttpClient;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Model\Client\Client;
 use Model\Client\ClientManager;
@@ -49,6 +51,7 @@ use Model\Config;
 use Model\Group\Group;
 use Model\Test\AbstractTestCase;
 use Nada\Column\AbstractColumn as Column;
+use Nada\Database\AbstractDatabase;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -774,8 +777,8 @@ class ClientManagerTest extends AbstractTestCase
         /** @var MockObject|ServiceLocatorInterface */
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocator->method('get')->willReturnMap([
-            ['Db', static::$serviceManager->get('Db')],
-            ['Database\Nada', static::$serviceManager->get('Database\Nada')],
+            [Adapter::class, static::$serviceManager->get(Adapter::class)],
+            [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
             [CustomFields::class, static::$serviceManager->get(CustomFields::class)],
             [ItemManager::class, static::$serviceManager->get(ItemManager::class)],
             [RegistryData::class, static::$serviceManager->get(RegistryData::class)],
@@ -868,7 +871,7 @@ class ClientManagerTest extends AbstractTestCase
         /** @var MockObject|ServiceLocatorInterface */
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocator->method('get')->willReturnMap([
-            ['Db', static::$serviceManager->get('Db')],
+            [Adapter::class, static::$serviceManager->get(Adapter::class)],
             [Clients::class, $clients],
         ]);
 
@@ -924,8 +927,8 @@ class ClientManagerTest extends AbstractTestCase
         /** @var MockObject|ServiceLocatorInterface */
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocator->method('get')->willReturnMap([
-            ['Db', static::$serviceManager->get('Db')],
-            ['Database\Nada', static::$serviceManager->get('Database\Nada')],
+            [Adapter::class, static::$serviceManager->get(Adapter::class)],
+            [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
             [ItemManager::class, static::$serviceManager->get(ItemManager::class)],
             [Clients::class, $clients],
         ]);
@@ -1026,8 +1029,8 @@ class ClientManagerTest extends AbstractTestCase
         /** @var MockObject|ServiceLocatorInterface */
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocator->method('get')->willReturnMap([
-            ['Db', static::$serviceManager->get('Db')],
-            ['Database\Nada', static::$serviceManager->get('Database\Nada')],
+            [Adapter::class, static::$serviceManager->get('Db')],
+            [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
             [Clients::class, static::$serviceManager->get(Clients::class)],
             [CustomFieldManager::class, $customFieldManager],
         ]);
@@ -1139,7 +1142,7 @@ class ClientManagerTest extends AbstractTestCase
         /** @var MockObject|ServiceLocatorInterface */
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocator->method('get')->willReturnMap([
-            ['Db', $adapter],
+            [Adapter::class, $adapter],
             [AndroidInstallations::class, $androidInstallations],
             [Attachments::class, $attachments],
             [ClientConfig::class, $clientConfig],
@@ -1203,7 +1206,7 @@ class ClientManagerTest extends AbstractTestCase
         /** @var MockObject|ServiceLocatorInterface */
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocator->method('get')->willReturnMap([
-            ['Db', static::$serviceManager->get('Db')],
+            [Adapter::class, static::$serviceManager->get(Adapter::class)],
             [NetworkDevicesIdentified::class, static::$serviceManager->get(NetworkDevicesIdentified::class)],
             [NetworkDevicesScanned::class, static::$serviceManager->get(NetworkDevicesScanned::class)],
             [NetworkInterfaces::class, static::$serviceManager->get(NetworkInterfaces::class)],
@@ -1296,7 +1299,7 @@ class ClientManagerTest extends AbstractTestCase
         /** @var MockObject|ServiceLocatorInterface */
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocator->method('get')->willReturnMap([
-            ['Db', $adapter],
+            [Adapter::class, $adapter],
             [AndroidInstallations::class, $androidInstallations],
         ]);
 
@@ -1346,7 +1349,7 @@ class ClientManagerTest extends AbstractTestCase
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocator->method('get')->willReturnMap([
             [Config::class, $config],
-            ['Library\HttpClient', $httpClient],
+            [HttpClient::class, $httpClient],
         ]);
 
         $model = new ClientManager($serviceLocator);
@@ -1380,7 +1383,7 @@ class ClientManagerTest extends AbstractTestCase
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocator->method('get')->willReturnMap([
             [Config::class, $config],
-            ['Library\HttpClient', $httpClient]
+            [HttpClient::class, $httpClient]
         ]);
 
         $model = new ClientManager($serviceLocator);

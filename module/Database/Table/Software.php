@@ -22,6 +22,11 @@
 
 namespace Database\Table;
 
+use Model\Client\Item\Software as SoftwareItem;
+use Nada\Database\AbstractDatabase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
+
 /**
  * "software_installations" view.
  *
@@ -34,7 +39,7 @@ class Software extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'software_installations';
 
@@ -42,10 +47,10 @@ class Software extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Client\Item\Software')
+            $container->get(SoftwareItem::class)
         );
 
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 
     /** {@inheritdoc} */
@@ -67,8 +72,8 @@ class Software extends \Database\AbstractTable
         $softwareRaw = $this->container->get(SoftwareRaw::class);
         $softwareRaw->updateSchema($prune);
 
-        $logger = $this->container->get('Library\Logger');
-        $database = $this->container->get('Database\Nada');
+        $logger = $this->container->get(LoggerInterface::class);
+        $database = $this->container->get(AbstractDatabase::class);
         if (!in_array('software_installations', $database->getViewNames())) {
             $logger->info("Creating view 'software_installations'");
             $sql = $softwareRaw->getSql();

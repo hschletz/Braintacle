@@ -22,29 +22,30 @@
 
 namespace Model\Client;
 
+use Database\Table\Attachments;
+use Database\Table\Clients;
+use Database\Table\ClientsAndGroups;
+use Database\Table\NetworkDevicesIdentified;
+use Database\Table\NetworkDevicesScanned;
+use Database\Table\NetworkInterfaces;
+use Database\Table\WindowsInstallations;
+use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Sql\Predicate;
+use Laminas\Db\Sql\Sql;
+use Laminas\Http\Client as HttpClient;
+use Model\Config;
 use Model\Group\Group;
+use Nada\Database\AbstractDatabase;
+use Psr\Container\ContainerInterface;
 
 /**
  * Client manager
  */
 class ClientManager
 {
-    /**
-     * Service Locator
-     * @var \Laminas\ServiceManager\ServiceLocatorInterface
-     */
-    protected $_serviceLocator;
-
-    /**
-     * Constructor
-     *
-     * @param \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->_serviceLocator = $serviceLocator;
     }
 
     /**
@@ -76,7 +77,7 @@ class ClientManager
         $distinct = false,
         $query = true
     ) {
-        $clients = $this->_serviceLocator->get('Database\Table\Clients');
+        $clients = $this->container->get(Clients::class);
         $map = $clients->getHydrator()->getExtractorMap();
 
         $fromClients = array();
@@ -88,7 +89,7 @@ class ClientManager
             if (isset($map[$property])) {
                 $fromClients[] = $map[$property];
             } elseif (preg_match('/^Windows\.(.*)/', $property, $matches)) {
-                $column = $this->_serviceLocator->get('Database\Table\WindowsInstallations')
+                $column = $this->container->get(WindowsInstallations::class)
                     ->getHydrator()
                     ->extractName($matches[1]);
                 $fromWindows["windows_$column"] = $column;
@@ -102,7 +103,7 @@ class ClientManager
 
         // Set up Select object manually instead of pulling it from a table
         // gateway because the base table might be changed later.
-        $sql = new \Laminas\Db\Sql\Sql($this->_serviceLocator->get('Db'));
+        $sql = new Sql($this->container->get(Adapter::class));
         $select = $sql->select();
         $select->from('clients');
         $select->columns($fromClients);
@@ -271,7 +272,7 @@ class ClientManager
                 default:
                     if (preg_match('#^CustomFields\\.(.*)#', $type, $matches)) {
                         $property = $matches[1];
-                        $fieldType = $this->_serviceLocator->get('Model\Client\CustomFieldManager')
+                        $fieldType = $this->container->get(CustomFieldManager::class)
                             ->getFields()[$property];
                         switch ($fieldType) {
                             case 'text':
@@ -347,10 +348,10 @@ class ClientManager
             } elseif ($order == 'Membership') {
                 $order = 'groups_cache.static';
             } elseif (preg_match('/^CustomFields\\.(.+)/', $order, $matches)) {
-                $order = 'customfields_' . $this->_serviceLocator->get('Model\Client\CustomFieldManager')
+                $order = 'customfields_' . $this->container->get(CustomFieldManager::class)
                     ->getColumnMap()[$matches[1]];
             } elseif (preg_match('/^Windows\.(.+)/', $order, $matches)) {
-                $hydrator = $this->_serviceLocator->get('Database\Table\WindowsInstallations')->getHydrator();
+                $hydrator = $this->container->get(WindowsInstallations::class)->getHydrator();
                 $order = 'windows_' . $hydrator->extractName($matches[1]);
             } elseif (preg_match('/^Registry\./', $order)) {
                 $order = 'registry_content';
@@ -358,7 +359,7 @@ class ClientManager
                 $model = $matches[1];
                 $property = $matches[2];
                 // Assume column alias 'model_column'
-                $tableGateway = $this->_serviceLocator->get('Model\Client\ItemManager')->getTable($model);
+                $tableGateway = $this->container->get(ItemManager::class)->getTable($model);
                 $column = $tableGateway->getHydrator()->extractName($property);
                 $order = strtolower("{$model}_$column");
             } else {
@@ -463,12 +464,12 @@ class ClientManager
             // If $arg contains '%' and '_', they are currently not escaped, i.e. they operate as wildcards too.
             // The result is encapsulated within '%' to support searching for arbitrary substrings.
             $arg = '%' . strtr($arg, '*?', '%_') . '%';
-            $operator = $this->_serviceLocator->get('Database\Nada')->iLike();
+            $operator = $this->container->get(AbstractDatabase::class)->iLike();
         }
         $where = "$table.$column $operator ?";
         if ($invertResult) {
             // include NULL values
-            $where = "($where) IS NOT " . $this->_serviceLocator->get('Database\Nada')->booleanLiteral(true);
+            $where = "($where) IS NOT " . $this->container->get(AbstractDatabase::class)->booleanLiteral(true);
         }
         $select->where(array($where => $arg));
 
@@ -519,7 +520,7 @@ class ClientManager
         $where = $tableGateway->getTable() . ".$column $operator ?";
         if ($invertResult) {
             // include NULL values
-            $where = "($where) IS NOT " . $this->_serviceLocator->get('Database\Nada')->booleanLiteral(true);
+            $where = "($where) IS NOT " . $this->container->get(AbstractDatabase::class)->booleanLiteral(true);
         }
         $select->where(array($where => $arg));
 
@@ -570,7 +571,7 @@ class ClientManager
         // < 00:00:00 of the next day.
         // Other operations (<, >) are defined accordingly.
 
-        $nada = $this->_serviceLocator->get('Database\Nada');
+        $nada = $this->container->get(AbstractDatabase::class);
 
         // Get beginning of day
         $dayStart->modify('midnight');
@@ -618,7 +619,7 @@ class ClientManager
             }
             // include NULL values
             $where = array(
-                "($conditions) IS NOT " . $this->_serviceLocator->get('Database\Nada')->booleanLiteral(true) => $operands
+                "($conditions) IS NOT " . $this->container->get(AbstractDatabase::class)->booleanLiteral(true) => $operands
             );
         }
         $select->where($where);
@@ -686,13 +687,13 @@ class ClientManager
         switch ($model) {
             case 'Client':
                 $table = 'Clients';
-                $hydrator = $this->_serviceLocator->get('Database\Table\Clients')->getHydrator();
+                $hydrator = $this->container->get(Clients::class)->getHydrator();
                 $column = $hydrator->extractName($property);
                 $columnAlias = $column;
                 break;
             case 'CustomFields':
                 $table = 'CustomFields';
-                $column = $this->_serviceLocator->get('Model\Client\CustomFieldManager')->getColumnMap()[$property];
+                $column = $this->container->get(CustomFieldManager::class)->getColumnMap()[$property];
                 $columnAlias = 'customfields_' . $column;
                 $fk = 'hardware_id';
                 break;
@@ -705,20 +706,20 @@ class ClientManager
                 break;
             case 'Windows':
                 $table = 'WindowsInstallations';
-                $hydrator = $this->_serviceLocator->get('Database\Table\WindowsInstallations')->getHydrator();
+                $hydrator = $this->container->get(WindowsInstallations::class)->getHydrator();
                 $column = $hydrator->extractName($property);
                 $columnAlias = 'windows_' . $column;
                 $fk = 'client_id';
                 break;
             default:
-                $tableGateway = $this->_serviceLocator->get('Model\Client\ItemManager')->getTable($model);
+                $tableGateway = $this->container->get(ItemManager::class)->getTable($model);
                 $column = $tableGateway->getHydrator()->extractName($property);
                 $columnAlias = strtolower($model) . '_' . $column;
                 $fk = 'hardware_id';
         }
 
         if (!isset($tableGateway)) {
-            $tableGateway = $this->_serviceLocator->get("Database\Table\\$table");
+            $tableGateway = $this->container->get("Database\Table\\$table");
         }
         $table = $tableGateway->getTable();
 
@@ -794,7 +795,7 @@ class ClientManager
             throw new \RuntimeException('Could not lock client for deletion');
         }
 
-        $connection = $this->_serviceLocator->get('Db')->getDriver()->getConnection();
+        $connection = $this->container->get(Adapter::class)->getDriver()->getConnection();
         $id = $client['Id'];
 
         // Start transaction to keep database consistent in case of errors
@@ -812,13 +813,13 @@ class ClientManager
             // If requested, delete client's network interfaces from the list of
             // scanned interfaces. Also delete any manually entered description.
             if ($deleteInterfaces) {
-                $macAddresses = $this->_serviceLocator->get('Database\Table\NetworkInterfaces')->getSql()->select();
+                $macAddresses = $this->container->get(NetworkInterfaces::class)->getSql()->select();
                 $macAddresses->columns(array('macaddr'));
                 $macAddresses->where(array('hardware_id' => $id));
-                $this->_serviceLocator->get('Database\Table\NetworkDevicesIdentified')->delete(
+                $this->container->get(NetworkDevicesIdentified::class)->delete(
                     new \Laminas\Db\Sql\Predicate\In('macaddr', $macAddresses)
                 );
-                $this->_serviceLocator->get('Database\Table\NetworkDevicesScanned')->delete(
+                $this->container->get(NetworkDevicesScanned::class)->delete(
                     new \Laminas\Db\Sql\Predicate\In('mac', $macAddresses)
                 );
             }
@@ -835,18 +836,18 @@ class ClientManager
                 'ClientConfig',
             );
             foreach ($tables as $table) {
-                $this->_serviceLocator->get("Database\\Table\\$table")->delete(array('hardware_id' => $id));
+                $this->container->get("Database\\Table\\$table")->delete(['hardware_id' => $id]);
             }
-            $this->_serviceLocator->get('Database\Table\Attachments')->delete(
+            $this->container->get(Attachments::class)->delete(
                 array(
                     'id_dde' => $id,
                     'table_name' => \Database\Table\Attachments::OBJECT_TYPE_CLIENT
                 )
             );
-            $this->_serviceLocator->get('Model\Client\ItemManager')->deleteItems($id);
+            $this->container->get(ItemManager::class)->deleteItems($id);
 
             // Delete row in clients table
-            $this->_serviceLocator->get('Database\Table\ClientsAndGroups')->delete(array('id' => $id));
+            $this->container->get(ClientsAndGroups::class)->delete(['id' => $id]);
 
             if ($transactionStarted) {
                 $connection->commit();
@@ -881,8 +882,8 @@ class ClientManager
      */
     public function importClient($data)
     {
-        $uri = $this->_serviceLocator->get('Model\Config')->communicationServerUri;
-        $httpClient = $this->_serviceLocator->get('Library\HttpClient');
+        $uri = $this->container->get(Config::class)->communicationServerUri;
+        $httpClient = clone $this->container->get(HttpClient::class);
         $httpClient->setOptions([
             'strictredirects' => true, // required for POST requests
             'useragent' => 'Braintacle_local_upload', // Substring 'local' required for correct server operation

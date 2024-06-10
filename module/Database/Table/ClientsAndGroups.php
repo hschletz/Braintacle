@@ -22,6 +22,8 @@
 
 namespace Database\Table;
 
+use Psr\Container\ContainerInterface;
+
 /**
  * "hardware" table
  *
@@ -34,10 +36,10 @@ class ClientsAndGroups extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'hardware';
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 
     /**
@@ -48,7 +50,7 @@ class ClientsAndGroups extends \Database\AbstractTable
     {
         // obsolete feature which was never supported.
         if ($this->delete(array('deviceid' => '_DOWNLOADGROUP_'))) {
-            $logger->warn('Obsolete download groups found and deleted.');
+            $logger->warning('Obsolete download groups found and deleted.');
         }
     }
 }

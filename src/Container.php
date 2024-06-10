@@ -14,6 +14,8 @@ use Laminas\Mvc\Application as MvcApplication;
 use Library\Application;
 use Model\Client\Client;
 use Model\Group\Group;
+use Model\Package\Storage\Direct as DirectStorage;
+use Model\Package\Storage\StorageInterface;
 use Nada\Database\AbstractDatabase;
 use Nyholm\Psr7\Response;
 use Psr\Clock\ClockInterface;
@@ -41,6 +43,7 @@ class Container extends DIContainer
             LoggerInterface::class => factory(LoggerFactory::class),
             MvcApplication::class => factory(Application::init(...))->parameter('module', 'Console'),
             ResponseInterface::class => get(Response::class),
+            StorageInterface::class => get(DirectStorage::class),
         ]);
     }
 }

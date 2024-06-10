@@ -22,6 +22,10 @@
 
 namespace Database\Table;
 
+use Model\Network\Device;
+use Nada\Database\AbstractDatabase;
+use Psr\Container\ContainerInterface;
+
 /**
  * "netmap" table
  */
@@ -31,7 +35,7 @@ class NetworkDevicesScanned extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'netmap';
 
@@ -50,7 +54,7 @@ class NetworkDevicesScanned extends \Database\AbstractTable
         );
 
         $dateTimeFormatter = new \Laminas\Hydrator\Strategy\DateTimeFormatterStrategy(
-            $serviceLocator->get('Database\Nada')->timestampFormatPhp(),
+            $container->get(AbstractDatabase::class)->timestampFormatPhp(),
             new \DateTimeZone('UTC')
         );
         $this->_hydrator->addStrategy('DiscoveryDate', $dateTimeFormatter);
@@ -62,8 +66,8 @@ class NetworkDevicesScanned extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Network\Device')
+            $container->get(Device::class)
         );
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 }

@@ -30,7 +30,7 @@ use Laminas\ServiceManager\ServiceManager;
 use Model\Package\Package;
 use Model\Package\PackageBuilder;
 use Model\Package\PackageManager;
-use Model\Package\Storage\Direct;
+use Model\Package\Storage\StorageInterface;
 use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
@@ -77,7 +77,7 @@ class PackageManagerTest extends AbstractTestCase
         /** @var MockObject|ServiceManager */
         $serviceManager = $this->createMock(ServiceManager::class);
         $serviceManager->method('get')->willReturnMap([
-            [Direct::class, $storage],
+            [StorageInterface::class, $storage],
             [Packages::class, static::$serviceManager->get(Packages::class)],
         ]);
 
@@ -109,7 +109,7 @@ class PackageManagerTest extends AbstractTestCase
         /** @var MockObject|ServiceManager */
         $serviceManager = $this->createMock(ServiceManager::class);
         $serviceManager->method('get')->willReturnMap([
-            [Direct::class, $storage],
+            [StorageInterface::class, $storage],
             [Packages::class, static::$serviceManager->get(Packages::class)],
         ]);
 
@@ -212,7 +212,7 @@ class PackageManagerTest extends AbstractTestCase
         /** @var MockObject|ServiceManager */
         $serviceManager = $this->createMock(ServiceManager::class);
         $serviceManager->method('get')->willReturnMap([
-            [Direct::class, $storage],
+            [StorageInterface::class, $storage],
             [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
             [Packages::class, static::$serviceManager->get(Packages::class)],
         ]);

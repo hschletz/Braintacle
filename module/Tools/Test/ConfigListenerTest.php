@@ -22,7 +22,7 @@
 
 namespace Tools\Test;
 
-use Laminas\ServiceManager\ServiceManager;
+use Braintacle\AppConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,12 +40,10 @@ class ConfigListenerTest extends \PHPUnit\Framework\TestCase
         $event = $this->createStub(ConsoleCommandEvent::class);
         $event->method('getInput')->willReturn($input);
 
-        /** @var ServiceManager|MockObject */
-        $serviceManager = $this->createMock(ServiceManager::class);
-        $serviceManager->expects($this->never())->method('get');
-        $serviceManager->expects($this->never())->method('setService');
+        $appConfig = $this->createMock(AppConfig::class);
+        $appConfig->expects($this->never())->method('setFile');
 
-        $configListener = new ConfigListener($serviceManager);
+        $configListener = new ConfigListener($appConfig);
         $configListener($event);
     }
 
@@ -61,43 +59,10 @@ class ConfigListenerTest extends \PHPUnit\Framework\TestCase
         $event = $this->createStub(ConsoleCommandEvent::class);
         $event->method('getInput')->willReturn($input);
 
-        $serviceManager = new ServiceManager([
-            'services' => [
-                'ApplicationConfig' => ['key' => 'value'],
-            ],
-        ]);
-        $allowOverride = $serviceManager->getAllowOverride();
+        $appConfig = $this->createMock(AppConfig::class);
+        $appConfig->expects($this->once())->method('setFile')->with($configOption);
 
-        $configListener = new ConfigListener($serviceManager);
-        $configListener($event);
-
-        $this->assertSame($allowOverride, $serviceManager->getAllowOverride());
-        $this->assertEquals([
-            'key' => 'value',
-            'Library\UserConfig' => $configOption,
-        ], $serviceManager->get('ApplicationConfig'));
-    }
-
-    public function testInvokeOverridingExistingConfigThrowsException()
-    {
-        /** @var InputInterface|MockObject */
-        $input = $this->createMock(InputInterface::class);
-        $input->method('getOption')->with('config')->willReturn('configFile');
-
-        /** @var ConsoleCommandEvent|MockObject */
-        $event = $this->createStub(ConsoleCommandEvent::class);
-        $event->method('getInput')->willReturn($input);
-
-        /** @var ServiceManager|MockObject */
-        $serviceManager = $this->createMock(ServiceManager::class);
-        $serviceManager->method('get')->willReturn(['Library\UserConfig' => 'existingConfig']);
-        $serviceManager->expects($this->never())->method('setAllowOverride');
-        $serviceManager->expects($this->never())->method('setService');
-
-        $this->expectException('LogicException');
-        $this->expectExceptionMessage('Library\UserConfig already set');
-
-        $configListener = new ConfigListener($serviceManager);
+        $configListener = new ConfigListener($appConfig);
         $configListener($event);
     }
 }

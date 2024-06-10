@@ -24,6 +24,7 @@ namespace Tools;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Tools\Controller;
 
 /**
  * Listener for injection of the controller service
@@ -45,23 +46,23 @@ use Symfony\Component\Console\Event\ConsoleCommandEvent;
  */
 class ControllerInjectionListener
 {
-    /**
-     * Container
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    public function __construct(ContainerInterface $container)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->container = $container;
     }
 
     public function __invoke(ConsoleCommandEvent $event)
     {
         $command = $event->getCommand();
-        $serviceName = 'Tools\command:' . $command->getName();
-        if ($this->container->has($serviceName)) {
-            $controller = $this->container->get($serviceName);
+        $controllerClass = match ($command->getName()) {
+            'build' => Controller\Build::class,
+            'database' => Controller\Database::class,
+            'decode' => Controller\Decode::class,
+            'export' => Controller\Export::class,
+            'import' => Controller\Import::class,
+            default => null,
+        };
+        if ($controllerClass) {
+            $controller = $this->container->get($controllerClass);
             $command->setCode($controller);
         }
     }

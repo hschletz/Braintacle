@@ -24,6 +24,8 @@ namespace Database\Table;
 
 use Model\Config as ConfigModel;
 use Model\Group\Group;
+use Nada\Database\AbstractDatabase;
+use Psr\Container\ContainerInterface;
 
 /**
  * "groups" table
@@ -34,14 +36,14 @@ class GroupInfo extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'groups';
         // Hydrator and ResultSet initialization is postponed to initialize()
         // because they depend on reading from Model\Config which is
         // inappropriate in a constructor and may not be functional under
         // certain circumstances (database initialization)
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 
     /** {@inheritdoc} */
@@ -63,7 +65,7 @@ class GroupInfo extends \Database\AbstractTable
         );
 
         $dateTimeFormatter = new \Laminas\Hydrator\Strategy\DateTimeFormatterStrategy(
-            $this->container->get('Database\Nada')->timestampFormatPhp()
+            $this->container->get(AbstractDatabase::class)->timestampFormatPhp()
         );
         $this->_hydrator->addStrategy('CreationDate', $dateTimeFormatter);
         $this->_hydrator->addStrategy('lastdate', $dateTimeFormatter);

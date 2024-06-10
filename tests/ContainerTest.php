@@ -16,5 +16,6 @@ class ContainerTest extends TestCase
         $container = new Container();
         $this->assertSame($container, $container->get(ContainerInterface::class));
         $this->assertInstanceOf(ResponseInterface::class, $container->get(ResponseInterface::class));
+        $this->assertInstanceOf(StorageInterface::class, $container->get(StorageInterface::class));
     }
 }

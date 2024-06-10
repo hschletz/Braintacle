@@ -22,9 +22,11 @@
 
 namespace Tools\Test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Tools\Controller;
 use Tools\ControllerInjectionListener;
 
 class ControllerInjectionListenerTest extends \PHPUnit\Framework\TestCase
@@ -32,11 +34,10 @@ class ControllerInjectionListenerTest extends \PHPUnit\Framework\TestCase
     public function testInvokeWithoutService()
     {
         $container = $this->createMock(ContainerInterface::class);
-        $container->method('has')->with('Tools\command:name')->willReturn(false);
         $container->expects($this->never())->method('get');
 
         $command = $this->createMock(Command::class);
-        $command->method('getName')->willReturn('name');
+        $command->method('getName')->willReturn('noController');
         $command->expects($this->never())->method('setCode');
 
         $event = $this->createStub(ConsoleCommandEvent::class);
@@ -46,18 +47,28 @@ class ControllerInjectionListenerTest extends \PHPUnit\Framework\TestCase
         $listener($event);
     }
 
-    public function testInvokeWithService()
+    public static function invokeWithServiceProvider()
     {
-        $controller = function () {
-        };
+        return [
+            ['build', Controller\Build::class],
+            ['database', Controller\Database::class],
+            ['decode', Controller\Decode::class],
+            ['export', Controller\Export::class],
+            ['import', Controller\Import::class],
+        ];
+    }
+
+    #[DataProvider('invokeWithServiceProvider')]
+    public function testInvokeWithService(string $commandName, string $class)
+    {
+        $controller = $this->createStub($class);
 
         $container = $this->createMock(ContainerInterface::class);
-        $container->method('has')->with('Tools\command:name')->willReturn(true);
-        $container->method('get')->willReturn($controller);
+        $container->method('get')->with($class)->willReturn($controller);
 
         $command = $this->createMock(Command::class);
-        $command->method('getName')->willReturn('name');
-        $command->expects($this->once())->method('setCode')->with($controller);
+        $command->method('getName')->willReturn($commandName);
+        $command->expects($this->once())->method('setCode')->with($this->isInstanceOf($class));
 
         $event = $this->createStub(ConsoleCommandEvent::class);
         $event->method('getCommand')->willReturn($command);

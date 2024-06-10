@@ -22,7 +22,6 @@
 
 namespace Tools;
 
-use Laminas\ServiceManager\ServiceManager;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
@@ -35,13 +34,15 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class Application extends \Symfony\Component\Console\Application
 {
-    public function __construct(ServiceManager $serviceManager)
-    {
+    public function __construct(
+        ConfigListener $configListener,
+        ControllerInjectionListener $controllerInjectionListener,
+    ) {
         parent::__construct('Braintacle command line tool');
 
         $dispatcher = new EventDispatcher();
-        $dispatcher->addListener(ConsoleEvents::COMMAND, new ConfigListener($serviceManager), 1);
-        $dispatcher->addListener(ConsoleEvents::COMMAND, new ControllerInjectionListener($serviceManager));
+        $dispatcher->addListener(ConsoleEvents::COMMAND, $configListener, 1);
+        $dispatcher->addListener(ConsoleEvents::COMMAND, $controllerInjectionListener);
         $this->setDispatcher($dispatcher);
 
         $this->add(new Command\Apidoc());

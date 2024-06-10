@@ -26,6 +26,7 @@ use Braintacle\Database\DatabaseFactory;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Di\Container\ServiceManager\AutowireFactory;
 use Laminas\Log\Logger;
+use Laminas\Log\PsrLoggerAdapter;
 use Laminas\Log\Writer\Noop as NoopWriter;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
@@ -36,6 +37,7 @@ use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\TestCase;
 use PHPUnit\Framework\Attributes\Before;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Base class for model tests
@@ -81,7 +83,9 @@ abstract class AbstractTestCase extends TestCase
         $config['aliases']['Db'] = Adapter::class;
         $config['services'][AbstractDatabase::class] = (new DatabaseFactory(new Factory(), static::$adapter))();
         $config['services'][Adapter::class] = static::$adapter;
-        $config['services']['Library\Logger'] = new Logger(['writers' => [['name' => NoopWriter::class]]]);
+        $config['services'][LoggerInterface::class] = new PsrLoggerAdapter(
+            new Logger(['writers' => [['name' => NoopWriter::class]]])
+        );
         // Store config for creation of temporary service manager instances.
         static::$serviceManagerConfig = $config;
 

@@ -31,6 +31,11 @@ namespace Model\Operator;
  */
 class AuthenticationService extends \Laminas\Authentication\AuthenticationService
 {
+    public function __construct(AuthenticationAdapter $adapter)
+    {
+        parent::__construct(null, $adapter);
+    }
+
     /**
      * Attempt login with given credentials
      *

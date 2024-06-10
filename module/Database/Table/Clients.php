@@ -24,6 +24,8 @@ namespace Database\Table;
 
 use Database\Hydrator\Clients as ClientsHydrator;
 use Model\Client\Client;
+use Nada\Database\AbstractDatabase;
+use Psr\Log\LoggerInterface;
 
 /**
  * "clients" view
@@ -56,8 +58,8 @@ class Clients extends \Database\AbstractTable
     public function updateSchema($prune = false)
     {
         // Reimplementation to provide a view
-        $logger = $this->container->get('Library\Logger');
-        $database = $this->container->get('Database\Nada');
+        $logger = $this->container->get(LoggerInterface::class);
+        $database = $this->container->get(AbstractDatabase::class);
         if (!in_array('clients', $database->getViewNames())) {
             $logger->info("Creating view 'clients'");
             $sql = $this->container->get(ClientsAndGroups::class)->getSql();

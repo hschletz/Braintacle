@@ -23,10 +23,14 @@
 namespace Tools\Controller;
 
 use Database\SchemaManager;
+use Laminas\Log\Filter\Priority as PriorityFilter;
+use Laminas\Log\Formatter\Simple as SimpleFormatter;
 use Laminas\Log\Logger;
+use Laminas\Log\PsrLoggerAdapter;
 use Laminas\Log\Writer\WriterInterface;
 use Library\Filter\LogLevel as LogLevelFilter;
 use Library\Validator\LogLevel as LogLevelValidator;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,24 +40,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Database implements ControllerInterface
 {
-    protected $logger;
-    protected $loglevelFilter;
-    protected $loglevelValidator;
-    protected $schemaManager;
-    protected $writer;
-
     public function __construct(
-        SchemaManager $schemaManager,
-        Logger $logger,
-        WriterInterface $writer,
-        LogLevelFilter $loglevelFilter,
-        LogLevelValidator $loglevelValidator
+        private SchemaManager $schemaManager,
+        private LoggerInterface $logger,
+        private LogLevelFilter $loglevelFilter,
+        private LogLevelValidator $loglevelValidator
     ) {
-        $this->schemaManager = $schemaManager;
-        $this->logger = $logger;
-        $this->writer = $writer;
-        $this->loglevelFilter = $loglevelFilter;
-        $this->loglevelValidator = $loglevelValidator;
     }
 
     public function __invoke(InputInterface $input, OutputInterface $output)
@@ -67,10 +59,21 @@ class Database implements ControllerInterface
             return Command::FAILURE;
         }
 
-        $this->writer->addFilter('priority', ['priority' => $this->loglevelFilter->filter($loglevel)]);
-        $this->writer->setFormatter('simple', ['format' => '%priorityName%: %message%']);
+        // Assume logger as set up during container initialization.
+        assert($this->logger instanceof PsrLoggerAdapter);
+        $logger = $this->logger->getLogger();
+        assert($logger instanceof Logger);
+        $loglevel = $this->loglevelFilter->filter($loglevel);
 
-        $this->logger->addWriter($this->writer);
+        // Clone the writers queue because it's an SplPriorityQueue which will
+        // be emptied upon iteration. Cloning is shallow; the writer objects
+        // will be the same instances, and the modifications will apply to the
+        // original queue.
+        /** @var WriterInterface $writer */
+        foreach (clone $logger->getWriters() as $writer) {
+            $writer->addFilter(new PriorityFilter($loglevel));
+            $writer->setFormatter(new SimpleFormatter('%priorityName%: %message%'));
+        }
 
         $this->schemaManager->updateAll($prune);
 

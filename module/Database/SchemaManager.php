@@ -22,8 +22,18 @@
 
 namespace Database;
 
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Database\Table\Clients;
+use Database\Table\CustomFieldConfig;
+use Database\Table\PackageDownloadInfo;
+use Database\Table\Software;
+use Database\Table\WindowsInstallations;
+use Laminas\Db\Adapter\Adapter;
+use Model\Config;
+use Nada\Database\AbstractDatabase;
+use Nada\Table\AbstractTable as NadaTable;
 use Nada\Table\Mysql;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Schema management class
@@ -40,15 +50,8 @@ class SchemaManager
      */
     const SCHEMA_VERSION = 8;
 
-    /**
-     * Service locator
-     * @var \Laminas\ServiceManager\ServiceLocatorInterface
-     */
-    protected $_serviceLocator;
-
-    public function __construct(ServiceLocatorInterface $serviceLocator)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->_serviceLocator = $serviceLocator;
     }
 
     /**
@@ -65,13 +68,13 @@ class SchemaManager
      */
     public function updateAll($prune)
     {
-        $nada = $this->_serviceLocator->get('Database\Nada');
-        $connection = $this->_serviceLocator->get('Db')->getDriver()->getConnection();
+        $nada = $this->container->get(AbstractDatabase::class);
+        $connection = $this->container->get(Adapter::class)->getDriver()->getConnection();
         $connection->beginTransaction();
         try {
             $convertedTimestamps = $nada->convertTimestampColumns();
             if ($convertedTimestamps) {
-                $this->_serviceLocator->get('Library\Logger')->info(
+                $this->container->get(LoggerInterface::class)->info(
                     sprintf(
                         '%d columns converted to %s.',
                         $convertedTimestamps,
@@ -80,7 +83,7 @@ class SchemaManager
                 );
             }
             $this->updateTables($prune);
-            $this->_serviceLocator->get('Model\Config')->schemaVersion = self::SCHEMA_VERSION;
+            $this->container->get(Config::class)->schemaVersion = self::SCHEMA_VERSION;
             $connection->commit();
         } catch (\Exception $e) {
             $connection->rollback();
@@ -99,23 +102,23 @@ class SchemaManager
      */
     public function updateTables($prune)
     {
-        $database = $this->_serviceLocator->get('Database\Nada');
+        $database = $this->container->get(AbstractDatabase::class);
         $handledTables = array();
 
         $glob = new \GlobIterator(Module::getPath('data/Tables') . '/*.json');
         foreach ($glob as $fileinfo) {
             $tableClass = $fileinfo->getBaseName('.json');
-            $table = $this->_serviceLocator->get('Database\Table\\' . $tableClass);
+            $table = $this->container->get('Database\Table\\' . $tableClass);
             $table->updateSchema($prune);
             $handledTables[] = $table->table;
         }
         // Views need manual invocation.
-        $this->_serviceLocator->get('Database\Table\Clients')->updateSchema();
-        $this->_serviceLocator->get('Database\Table\PackageDownloadInfo')->updateSchema();
-        $this->_serviceLocator->get('Database\Table\WindowsInstallations')->updateSchema();
-        $this->_serviceLocator->get('Database\Table\Software')->updateSchema();
+        $this->container->get(Clients::class)->updateSchema();
+        $this->container->get(PackageDownloadInfo::class)->updateSchema();
+        $this->container->get(WindowsInstallations::class)->updateSchema();
+        $this->container->get(Software::class)->updateSchema();
 
-        $logger = $this->_serviceLocator->get('Library\Logger');
+        $logger = $this->container->get(LoggerInterface::class);
 
         // Server tables have no table class
         $glob = new \GlobIterator(Module::getPath('data/Tables/Server') . '/*.json');
@@ -147,7 +150,7 @@ class SchemaManager
                 // accountinfo_config may not exist yet when populating an empty
                 // database. In that case, there are no obsolete columns.
                 if (in_array('accountinfo_config', $database->getTableNames())) {
-                    $customFieldConfig = $this->_serviceLocator->get('Database\Table\CustomFieldConfig');
+                    $customFieldConfig = $this->container->get(CustomFieldConfig::class);
                     $select = $customFieldConfig->getSql()->select();
                     $select->columns(array('id'))
                         ->where(
@@ -189,7 +192,7 @@ class SchemaManager
     /**
      * Create or update table according to schema
      *
-     * @param \Laminas\Log\Logger $logger Logger instance
+     * @param LoggerInterface $logger Logger instance
      * @param array $schema Parsed table schema
      * @param \Nada\Database\AbstractDatabase $database Database object
      * @param string[] $obsoleteColumns List of obsolete columns to prune or warn about
@@ -325,7 +328,7 @@ class SchemaManager
                 $table->dropColumn($column);
                 $logger->notice('done.');
             } else {
-                $logger->warn("Obsolete column $tableName.$column detected.");
+                $logger->warning("Obsolete column $tableName.$column detected.");
             }
         }
     }
@@ -334,8 +337,8 @@ class SchemaManager
      * Drop indexes which are not defined in the schema.
      */
     protected static function dropIndexes(
-        \Laminas\Log\LoggerInterface $logger,
-        \Nada\Table\AbstractTable $table,
+        LoggerInterface $logger,
+        NadaTable $table,
         array $schema
     ) {
         if (!isset($schema['indexes'])) {

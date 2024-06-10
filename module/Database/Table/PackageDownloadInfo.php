@@ -24,6 +24,9 @@ namespace Database\Table;
 
 use Nada\Column\AbstractColumn as Column;
 use Laminas\Db\Sql\Literal;
+use Nada\Database\AbstractDatabase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * "download_enable" view
@@ -35,10 +38,10 @@ class PackageDownloadInfo extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $this->table = 'download_enable';
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 
     /**
@@ -49,8 +52,8 @@ class PackageDownloadInfo extends \Database\AbstractTable
     {
         // Reimplementation to provide a view instead of previous table
 
-        $logger = $this->container->get('Library\Logger');
-        $database = $this->container->get('Database\Nada');
+        $logger = $this->container->get(LoggerInterface::class);
+        $database = $this->container->get(AbstractDatabase::class);
 
         if (in_array('download_enable', $database->getTableNames())) {
             // Use value of "fileid" column instead of obsolete "id" for package assignments

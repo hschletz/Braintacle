@@ -24,7 +24,9 @@ namespace Database\Table;
 
 use Laminas\Db\Sql\Predicate\Operator;
 use Laminas\Db\Sql\Where;
+use Model\Operator\Operator as OperatorModel;
 use Model\Operator\OperatorManager;
+use Psr\Container\ContainerInterface;
 
 /**
  * "operators" table
@@ -45,7 +47,7 @@ class Operators extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function __construct(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $container)
     {
         $map = array(
             'id' => 'Id',
@@ -62,9 +64,9 @@ class Operators extends \Database\AbstractTable
 
         $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
             $this->_hydrator,
-            $serviceLocator->get('Model\Operator\Operator')
+            $container->get(OperatorModel::class)
         );
-        parent::__construct($serviceLocator);
+        parent::__construct($container);
     }
 
     /**
@@ -85,7 +87,7 @@ class Operators extends \Database\AbstractTable
                 $dropped += $this->delete(new Where([new Operator('new_accesslvl', '!=', 'sadmin')]));
             }
             if ($dropped) {
-                $logger->warn("$dropped non-admin accounts dropped.");
+                $logger->warning("$dropped non-admin accounts dropped.");
             }
         }
     }
@@ -138,7 +140,7 @@ class Operators extends \Database\AbstractTable
         $select->columns(array('id', 'passwd', 'password_version'));
         foreach ($sql->prepareStatementForSqlObject($select)->execute() as $operator) {
             if ($operator['password_version'] == self::HASH_LEGACY) {
-                $logger->warn(
+                $logger->warning(
                     sprintf(
                         'Account "%s" has an unsafe hash and should log in to have it automatically updated.',
                         $operator['id']
@@ -149,7 +151,7 @@ class Operators extends \Database\AbstractTable
                 ($operator['password_version'] == self::HASH_LEGACY and $operator['passwd'] == $md5Default) or
                 ($operator['password_version'] == self::HASH_DEFAULT and password_verify('admin', $operator['passwd']))
             ) {
-                $logger->warn(
+                $logger->warning(
                     sprintf(
                         'Account "%s" has default password. It should be changed as soon as possible!',
                         $operator['id']

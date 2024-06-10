@@ -22,9 +22,14 @@
 
 namespace Model\Test\Group;
 
+use Laminas\Db\Adapter\Adapter;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Model\Config;
+use Model\Group\Group;
 use Model\Test\AbstractTestCase;
+use Nada\Database\AbstractDatabase;
 use PHPUnit\Framework\MockObject\Stub;
+use Psr\Log\LoggerInterface;
 
 abstract class AbstractGroupTestCase extends AbstractTestCase
 {
@@ -47,15 +52,13 @@ abstract class AbstractGroupTestCase extends AbstractTestCase
 
             /** @var Stub|ServiceLocatorInterface */
             $serviceManager = $this->createStub(ServiceLocatorInterface::class);
-            $serviceManager->method('get')->willReturnMap(
-                array(
-                    array('Db', static::$serviceManager->get('Db')),
-                    array('Database\Nada', static::$serviceManager->get('Database\Nada')),
-                    array('Library\Logger', static::$serviceManager->get('Library\Logger')),
-                    array('Model\Config', $this->_config),
-                    array('Model\Group\Group', static::$serviceManager->get('Model\Group\Group')),
-                )
-            );
+            $serviceManager->method('get')->willReturnMap([
+                [Adapter::class, static::$serviceManager->get(Adapter::class)],
+                [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
+                [Config::class, $this->_config],
+                [Group::class, static::$serviceManager->get(Group::class)],
+                [LoggerInterface::class, $this->createStub(LoggerInterface::class)],
+            ]);
 
             $this->_groupInfo = new \Database\Table\GroupInfo($serviceManager);
             $this->_groupInfo->updateSchema(true);

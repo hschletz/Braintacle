@@ -24,6 +24,7 @@ namespace Library\Test\Filter;
 
 use DomainException;
 use Laminas\Log\Logger;
+use Library\Filter\LogLevel as LogLevelFilter;
 
 class LogLevelTest extends \PHPUnit\Framework\TestCase
 {
@@ -51,16 +52,15 @@ class LogLevelTest extends \PHPUnit\Framework\TestCase
      */
     public function testFilter($value, $expectedResult)
     {
-        $this->assertSame(
-            $expectedResult,
-            \Laminas\Filter\StaticFilter::execute($value, 'Library\LogLevel')
-        );
+        $filter = new LogLevelFilter();
+        $this->assertSame($expectedResult, $filter->filter($value));
     }
 
     public function testInvalidArgument()
     {
+        $filter = new LogLevelFilter();
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('Invalid log level: error');
-        \Laminas\Filter\StaticFilter::execute('error', 'Library\LogLevel');
+        $filter->filter('error');
     }
 }

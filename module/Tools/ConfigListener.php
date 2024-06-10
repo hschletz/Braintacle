@@ -22,7 +22,7 @@
 
 namespace Tools;
 
-use Laminas\ServiceManager\ServiceManager;
+use Braintacle\AppConfig;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 
 /**
@@ -36,33 +36,16 @@ use Symfony\Component\Console\Event\ConsoleCommandEvent;
  */
 class ConfigListener
 {
-    /**
-     * Service Manager
-     * @var ServiceManager
-     */
-    protected $serviceManager;
-
-    public function __construct(ServiceManager $serviceManager)
+    public function __construct(private AppConfig $appConfig)
     {
-        $this->serviceManager = $serviceManager;
     }
 
     public function __invoke(ConsoleCommandEvent $event)
     {
         $input = $event->getInput();
-        $config = $input->getOption('config');
-        if ($config) {
-            // Set Library\UserConfig to specified config file
-            $applicationConfig = $this->serviceManager->get('ApplicationConfig');
-            if (isset($applicationConfig['Library\UserConfig'])) {
-                throw new \LogicException('Library\UserConfig already set');
-            }
-            $applicationConfig['Library\UserConfig'] = $config;
-
-            $allowOverride = $this->serviceManager->getAllowOverride();
-            $this->serviceManager->setAllowOverride(true);
-            $this->serviceManager->setService('ApplicationConfig', $applicationConfig);
-            $this->serviceManager->setAllowOverride($allowOverride);
+        $configFile = $input->getOption('config');
+        if ($configFile) {
+            $this->appConfig->setFile($configFile);
         }
     }
 }

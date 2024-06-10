@@ -22,8 +22,11 @@
 
 namespace Database;
 
+use Laminas\Db\Adapter\Adapter;
 use Laminas\Hydrator\HydratorInterface;
+use Nada\Database\AbstractDatabase;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Base class for table objects
@@ -49,7 +52,7 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
             // the beginning of the string.
             $this->table = strtolower(preg_replace('/(.)([A-Z])/', '$1_$2', $this->getClassName()));
         }
-        $this->adapter = $container->get('Db');
+        $this->adapter = $container->get(Adapter::class);
         $this->initialize();
     }
 
@@ -104,11 +107,11 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      */
     public function updateSchema($prune = false)
     {
-        $logger = $this->container->get('Library\Logger');
+        $logger = $this->container->get(LoggerInterface::class);
         $schema = \Laminas\Config\Factory::fromFile(
             Module::getPath('data/Tables/' . $this->getClassName() . '.json')
         );
-        $database = $this->container->get('Database\Nada');
+        $database = $this->container->get(AbstractDatabase::class);
 
         $this->preSetSchema($logger, $schema, $database, $prune);
         $this->setSchema($logger, $schema, $database, $prune);
@@ -118,9 +121,9 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
     /**
      * Hook to be called before creating/altering table schema
      *
-     * @param \Laminas\Log\Logger $logger Logger instance
+     * @param LoggerInterface $logger Logger instance
      * @param array $schema Parsed table schema
-     * @param \Nada\Database\AbstractDatabase $database Database object
+     * @param AbstractDatabase $database Database object
      * @param bool $prune Drop obsolete columns
      * @codeCoverageIgnore
      */
@@ -133,9 +136,9 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      *
      * The default implementation calls \Database\SchemaManager::setSchema().
      *
-     * @param \Laminas\Log\Logger $logger Logger instance
+     * @param LoggerInterface $logger Logger instance
      * @param array $schema Parsed table schema
-     * @param \Nada\Database\AbstractDatabase $database Database object
+     * @param AbstractDatabase $database Database object
      * @param bool $prune Drop obsolete columns
      * @codeCoverageIgnore
      */
@@ -153,9 +156,9 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
     /**
      * Hook to be called after creating/altering table schema
      *
-     * @param \Laminas\Log\Logger $logger Logger instance
+     * @param LoggerInterface $logger Logger instance
      * @param array $schema Parsed table schema
-     * @param \Nada\Database\AbstractDatabase $database Database object
+     * @param AbstractDatabase $database Database object
      * @param bool $prune Drop obsolete columns
      * @codeCoverageIgnore
      */
@@ -167,9 +170,9 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      * Get names of columns that are present in the current database but not in
      * the given schema
      *
-     * @param \Laminas\Log\Logger $logger Logger instance
+     * @param LoggerInterface $logger Logger instance
      * @param array $schema Parsed table schema
-     * @param \Nada\Database\AbstractDatabase $database Database object
+     * @param AbstractDatabase $database Database object
      * @return string[]
      * @codeCoverageIgnore
      */
@@ -190,8 +193,8 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      * @codeCoverageIgnore
      */
     protected function rename(
-        \Laminas\Log\LoggerInterface $logger,
-        \Nada\Database\AbstractDatabase $database,
+        LoggerInterface $logger,
+        AbstractDatabase $database,
         string $oldName
     ): void {
         $logger->info("Renaming table $oldName to $this->table...");
@@ -202,8 +205,8 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
     /**
      * Drop a column if it exists
      *
-     * @param \Laminas\Log\Logger $logger Logger instance
-     * @param \Nada\Database\AbstractDatabase $database Database object
+     * @param LoggerInterface $logger Logger instance
+     * @param AbstractDatabase $database Database object
      * @param string $column column name
      * @codeCoverageIgnore
      */

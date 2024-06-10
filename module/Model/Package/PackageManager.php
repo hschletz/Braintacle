@@ -22,28 +22,21 @@
 
 namespace Model\Package;
 
+use Database\Table\ClientConfig;
+use Database\Table\GroupInfo;
+use Database\Table\Packages;
 use Laminas\Db\Sql\Predicate;
+use Model\Package\Storage\StorageInterface;
 use Psr\Clock\ClockInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Package manager
  */
 class PackageManager
 {
-    /**
-     * Service manager
-     * @var \Laminas\ServiceManager\ServiceManager
-     */
-    protected $_serviceManager;
-
-    /**
-     * Constructor
-     *
-     * @param \Laminas\ServiceManager\ServiceManager $serviceManager
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceManager $serviceManager)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->_serviceManager = $serviceManager;
     }
 
     /**
@@ -54,7 +47,7 @@ class PackageManager
      */
     public function packageExists($name)
     {
-        $packages = $this->_serviceManager->get('Database\Table\Packages');
+        $packages = $this->container->get(Packages::class);
         $sql = $packages->getSql()->select()->columns(array('name'))->where(array('name' => $name));
         return (bool) $packages->selectWith($sql)->count();
     }
@@ -68,8 +61,8 @@ class PackageManager
      */
     public function getPackage($name)
     {
-        $packages = $this->_serviceManager->get('Database\Table\Packages');
-        $storage = $this->_serviceManager->get('Model\Package\Storage\Direct');
+        $packages = $this->container->get(Packages::class);
+        $storage = $this->container->get(StorageInterface::class);
 
         $select = $packages->getSql()->select();
         $select->columns(array('fileid', 'name', 'priority', 'fragments', 'size', 'osname', 'comment'))
@@ -98,9 +91,9 @@ class PackageManager
      */
     public function getPackages($order = null, $direction = 'asc')
     {
-        $clientConfig = $this->_serviceManager->get('Database\Table\ClientConfig');
-        $groupInfo = $this->_serviceManager->get('Database\Table\GroupInfo');
-        $packages = $this->_serviceManager->get('Database\Table\Packages');
+        $clientConfig = $this->container->get(ClientConfig::class);
+        $groupInfo = $this->container->get(GroupInfo::class);
+        $packages = $this->container->get(Packages::class);
 
         // Subquery prototype for deployment statistics
         $subquery = $clientConfig->getSql()->select();
@@ -159,7 +152,7 @@ class PackageManager
      */
     public function getAllNames()
     {
-        return $this->_serviceManager->get('Database\Table\Packages')->fetchCol('name');
+        return $this->container->get(Packages::class)->fetchCol('name');
     }
 
     /**
@@ -171,7 +164,7 @@ class PackageManager
      */
     public function buildPackage(array $data, bool $deleteSource): void
     {
-        $this->_serviceManager->get(PackageBuilder::class)->buildPackage($data, $deleteSource);
+        $this->container->get(PackageBuilder::class)->buildPackage($data, $deleteSource);
     }
 
     /**
@@ -182,9 +175,9 @@ class PackageManager
      */
     public function deletePackage($name)
     {
-        $packages = $this->_serviceManager->get('Database\Table\Packages');
-        $clientConfig = $this->_serviceManager->get('Database\Table\ClientConfig');
-        $storage = $this->_serviceManager->get('Model\Package\Storage\Direct');
+        $packages = $this->container->get(Packages::class);
+        $clientConfig = $this->container->get(ClientConfig::class);
+        $storage = $this->container->get(StorageInterface::class);
         try {
             $select = $packages->getSql()->select()->columns(array('fileid'))->where(array('name' => $name));
             $package = $packages->selectWith($select)->current();
@@ -278,8 +271,8 @@ class PackageManager
             return; // nothing to do
         }
 
-        $clientConfig = $this->_serviceManager->get('Database\Table\ClientConfig');
-        $groupInfo = $this->_serviceManager->get('Database\Table\GroupInfo');
+        $clientConfig = $this->container->get(ClientConfig::class);
+        $groupInfo = $this->container->get(GroupInfo::class);
 
         $where = new \Laminas\Db\Sql\Where();
         $where->equalTo('ivalue', $oldPackageId);
@@ -307,7 +300,7 @@ class PackageManager
             $where->addPredicate($filters);
         }
 
-        $now = $this->_serviceManager->get(ClockInterface::class)->now()->format(Assignment::DATEFORMAT);
+        $now = $this->container->get(ClockInterface::class)->now()->format(Assignment::DATEFORMAT);
         try {
             // Remove DOWNLOAD_* options from updated assignments
             $subquery = $clientConfig->getSql()
