@@ -66,11 +66,6 @@ class Module implements
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setLayoutTitle'));
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onError'));
         $eventManager->attach(MvcEvent::EVENT_RENDER_ERROR, array($this, 'onError'));
-
-        // Evaluate locale from HTTP header. Affects translations, date/time rendering etc.
-        if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            \Locale::setDefault(\Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']));
-        }
     }
 
     /**

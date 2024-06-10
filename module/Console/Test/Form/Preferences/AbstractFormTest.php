@@ -22,11 +22,15 @@
 
 namespace Console\Test\Form\Preferences;
 
+use Library\Test\InjectServicesTrait;
+
 /**
  * Tests for AbstractForm
  */
 class AbstractFormTest extends \PHPUnit\Framework\TestCase
 {
+    use InjectServicesTrait;
+
     /**
      * Create a new view renderer
      *
@@ -36,6 +40,8 @@ class AbstractFormTest extends \PHPUnit\Framework\TestCase
     {
         $serviceManager = \Library\Application::init('Console')->getServiceManager();
         $serviceManager->setService('Library\UserConfig', array());
+        static::injectServices($serviceManager);
+
         $view = new \Laminas\View\Renderer\PhpRenderer();
         $view->setHelperPluginManager($serviceManager->get('ViewHelperManager'));
         return $view;

@@ -22,6 +22,7 @@
 
 namespace Console\Test\Navigation;
 
+use Library\Test\InjectServicesTrait;
 use Library\Application;
 
 /**
@@ -29,6 +30,8 @@ use Library\Application;
  */
 class MainMenuTest extends \Laminas\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
 {
+    use InjectServicesTrait;
+
     /**
      * Set up application config
      */
@@ -72,6 +75,7 @@ class MainMenuTest extends \Laminas\Test\PHPUnit\Controller\AbstractHttpControll
         $serviceManager->setService('Model\SoftwareManager', $model);
         $serviceManager->setService('Library\UserConfig', array());
         Application::addAbstractFactories($serviceManager);
+        static::injectServices($serviceManager);
 
         // Dispatch arbitrary action and test corresponding menu entry
         $this->dispatch('/console/licenses/index/');

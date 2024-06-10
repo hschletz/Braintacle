@@ -25,6 +25,7 @@ namespace Console\Test;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 use Library\Application;
+use Library\Test\InjectServicesTrait;
 
 /**
  * Abstract controller test case
@@ -33,6 +34,8 @@ use Library\Application;
  */
 abstract class AbstractControllerTestCase extends AbstractHttpControllerTestCase
 {
+    use InjectServicesTrait;
+
     /**
      * Set up application config
      */
@@ -59,6 +62,7 @@ abstract class AbstractControllerTestCase extends AbstractHttpControllerTestCase
             )
         );
         Application::addAbstractFactories($serviceManager);
+        static::injectServices($serviceManager);
     }
 
     public function testRedirectToLoginPage()

@@ -21,9 +21,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Composer\InstalledVersions;
 use Console\Template\Extensions\AssetLoaderExtension;
 use Console\View\Helper\ConsoleScript;
 use Gettext\Generator\PoGenerator;
+use Gettext\Loader\StrictPoLoader;
 use Gettext\Scanner\PhpScanner;
 use Gettext\Translation;
 use Gettext\Translations;
@@ -46,103 +48,79 @@ error_reporting(-1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// Module configuration
-//
-// The "translationPath" element must be present for each module. If the
-// "subdirs" element is present, message strings are extracted from these
-// subdirectories. The "keywords" element lists function names whose first
-// argument is to be extracted.
-$modules = array(
-    'Console' => array(
-        'subdirs' => array('Controller', 'Form', 'Navigation', 'View/Helper', 'views'),
-        'keywords' => ['_', 'translate', 'setLabel', 'setMessage'],
-        'translationPath' => 'data/i18n',
-    ),
-    'Library' => array(
-        'keywords' => ['_'],
-        'translationPath' => 'data/i18n',
-    ),
+$rootPath = InstalledVersions::getRootPackage()['install_path'];
+$translationPath = $rootPath . '/i18n';
+$potFileName = $translationPath . '/Braintacle.pot';
+
+$translations = Translations::create();
+$translations->setDescription('Braintacle translation file');
+$translations->getHeaders()->set('Content-Type', 'text/plain; charset=UTF-8');
+
+// Add strings from various sources, sorted by source.
+$translations = $translations->mergeWith(parsePhpFiles([
+    'module/Console/Controller',
+    'module/Console/Form',
+    'module/Console/Navigation',
+    'module/Console/View/Helper',
+    'module/Console/views',
+]));
+$translations = $translations->mergeWith(
+    (new StrictPoLoader())->loadFile($rootPath . '/module/Library/data/i18n/Library.pot')
 );
+$translations = $translations->mergeWith(parsePhpFiles(['src']));
+$translations = $translations->mergeWith(parseTemplates());
 
-foreach ($modules as $module => $config) {
-    $modulePath = Application::getPath("module/$module");
-    $translationPath = Application::getPath("module/$module/$config[translationPath]");
-    $potFileName = Application::getPath("module/$module/$config[translationPath]/$module.pot");
+// Create POT file
+$generator = new PoGenerator();
+$newPot = $generator->generateString($translations);
 
-    if (isset($config['subdirs'])) {
-        // STAGE 1: extract all strings from module
-        print "Extracting strings fron $module module...";
+if (in_array('--force', $_SERVER['argv'])) {
+    $update = true;
+} else {
+    $oldPot = FileObject::fileGetContents($potFileName);
+    $update = ($newPot != $oldPot);
+}
+if ($update) {
+    $fileSystem = new Filesystem();
+    $fileSystem->dumpFile($potFileName, $newPot);
+    print "Changes written to $potFileName.\n";
+} else {
+    print "No changes detected for $potFileName.\n";
+}
 
-        $translations = Translations::create();
-        $translations->setDescription("Translation file for $module module");
-        $translations->getHeaders()->set('Content-Type', 'text/plain; charset=UTF-8');
-        $translations = $translations->mergeWith(
-            parsePhpFiles($modulePath, $config['subdirs'], $config['keywords'])
-        );
-        if ($module == 'Console') {
-            $translations = $translations->mergeWith(parseTemplates());
-        }
-
-        $generator = new PoGenerator();
-        $newPot = $generator->generateString($translations);
-
-        print " done.\n";
-
-        if (in_array('--force', $_SERVER['argv'])) {
-            $update = true;
-        } else {
-            $oldPot = FileObject::fileGetContents($potFileName);
-            $update = ($newPot != $oldPot);
-        }
-        if ($update) {
-            $fileSystem = new Filesystem();
-            $fileSystem->dumpFile($potFileName, $newPot);
-            print "Changes written to $potFileName.\n";
-        } else {
-            print "No changes detected for $potFileName.\n";
-        }
+// Update .po files if necessary
+foreach (new GlobIterator("$translationPath/*.po", GlobIterator::CURRENT_AS_PATHNAME) as $poFileName) {
+    $cmd = [
+        'msgmerge',
+        '--quiet',
+        '--update',
+        '--backup=off',
+        '--sort-by-file',
+        $poFileName,
+        $potFileName,
+    ];
+    $process = new \Symfony\Component\Process\Process($cmd);
+    if ($process->run()) {
+        printf("ERROR: msgmerge returned with error code %d.\n", $process->getExitCode());
+        print "Command line was:\n\n";
+        print $process->getCommandLine();
+        print "\n\n";
+        exit(1);
     }
-
-    // STAGE 2: Update .po files if necessary
-    print "Updating .po files for $module module...";
-    foreach (new \GlobIterator("$translationPath/*.po", \GlobIterator::CURRENT_AS_PATHNAME) as $poFileName) {
-        $cmd = [
-            'msgmerge',
-            '--quiet',
-            '--update',
-            '--backup=off',
-            '--sort-by-file',
-            $poFileName,
-            $potFileName,
-        ];
-        $process = new \Symfony\Component\Process\Process($cmd);
-        if ($process->run()) {
-            printf("ERROR: msgmerge returned with error code %d.\n", $process->getExitCode());
-            print "Command line was:\n\n";
-            print $process->getCommandLine();
-            print "\n\n";
-            exit(1);
-        }
-    }
-    print " done.\n";
 }
 
 /**
  * Extract strings from all PHP scripts in given directories.
  */
-function parsePhpFiles(string $baseDir, array $subDirs, array $keywords): Translations
+function parsePhpFiles(array $dirs): Translations
 {
-    $functions = [];
-    foreach ($keywords as $keyword) {
-        $functions[$keyword] = 'gettext';
-    }
-    $translations = Translations::create();
+    global $rootPath;
 
-    chdir($baseDir);
+    chdir($rootPath); // Allows for relative paths in output
     $files = [];
-    foreach ($subDirs as $subDir) {
+    foreach ($dirs as $dir) {
         $directoryIterator = new RecursiveDirectoryIterator(
-            $subDir,
+            $dir,
             RecursiveDirectoryIterator::CURRENT_AS_PATHNAME
         );
         $iterator = new RecursiveIteratorIterator($directoryIterator);
@@ -152,9 +130,11 @@ function parsePhpFiles(string $baseDir, array $subDirs, array $keywords): Transl
             }
         }
     }
-    sort($files);
+    sort($files); // Results in POT output to be sorted by first occurrence
+
+    $translations = Translations::create();
     foreach ($files as $file) {
-        $fileTranslations = parsePhpFile($file, $functions);
+        $fileTranslations = parsePhpFile($file);
         $translations = $translations->mergeWith($fileTranslations);
     }
     return $translations;
@@ -163,8 +143,15 @@ function parsePhpFiles(string $baseDir, array $subDirs, array $keywords): Transl
 /**
  * Extract strings from a PHP script.
  */
-function parsePhpFile(string $file, array $functions): Translations
+function parsePhpFile(string $file): Translations
 {
+    static $functions = [
+        '_'          => 'gettext',
+        'translate'  => 'gettext',
+        'setLabel'   => 'gettext',
+        'setMessage' => 'gettext',
+    ];
+
     $scanner = new PhpScanner(Translations::create());
     $scanner->setFunctions($functions);
     $scanner->ignoreInvalidFunctions(); // Required for function calls with non-literal arguments
@@ -266,7 +253,7 @@ function parseTemplate(string $file, string $relativePath): Translations
         }
 
         $translation = Translation::create(null, $value->value);
-        $translation->getReferences()->add($relativePath);
+        $translation->getReferences()->add('templates/' . $relativePath);
         $translations->add($translation);
     });
 

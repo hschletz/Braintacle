@@ -10,6 +10,19 @@ error_reporting(-1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// Detect and set locale early because it will be evaluated in container setup.
+// Ignore any errors caused by invalid Accept-Language header, independent of
+// intl.use_exceptions setting.
+if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+    try {
+        $locale = Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        if ($locale) {
+            Locale::setDefault($locale);
+        }
+    } catch (IntlException) {
+    }
+}
+
 $container = new Container();
 
 $app = AppFactory::createFromContainer($container);

@@ -9,6 +9,7 @@ use DI\Container;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\EventManager\EventManager;
 use Laminas\Http\Response as MvcResponse;
+use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
 use Laminas\ServiceManager\ServiceLocatorInterface;
@@ -33,6 +34,7 @@ class ApplicationBridgeTest extends TestCase
             Client::class => $this->createStub(Client::class),
             ClockInterface::class => $this->createStub(ClockInterface::class),
             Group::class => $this->createStub(Group::class),
+            TranslatorInterface::class => $this->createStub(TranslatorInterface::class),
         ];
         $container = new Container($services);
 
@@ -78,6 +80,7 @@ class ApplicationBridgeTest extends TestCase
         $this->assertSame($services[Client::class], $serviceManager->get(Client::class));
         $this->assertSame($services[ClockInterface::class], $serviceManager->get(ClockInterface::class));
         $this->assertSame($services[Group::class], $serviceManager->get(Group::class));
+        $this->assertSame($services[TranslatorInterface::class], $serviceManager->get(TranslatorInterface::class));
         $this->assertSame($serviceManager, $serviceManager->get(ContainerInterface::class));
 
         $this->assertSame($serviceManager, $container->get(ServiceLocatorInterface::class));

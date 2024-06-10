@@ -7,6 +7,7 @@ use DI\Container;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Http\Header\HeaderInterface;
 use Laminas\Http\Response as MvcResponse;
+use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
 use Laminas\ServiceManager\ServiceLocatorInterface;
@@ -48,6 +49,7 @@ class ApplicationBridge implements RequestHandlerInterface
         $serviceManager->setService(ClockInterface::class, $this->container->get(ClockInterface::class));
         $serviceManager->setService(ContainerInterface::class, $serviceManager);
         $serviceManager->setService(Group::class, $this->container->get(Group::class));
+        $serviceManager->setService(TranslatorInterface::class, $this->container->get(TranslatorInterface::class));
         $serviceManager->setAlias('Database\Nada', AbstractDatabase::class);
         $serviceManager->setAlias('Db', Adapter::class);
 

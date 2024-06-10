@@ -121,15 +121,6 @@ return array(
             TemplateRenderer::class => TemplateRendererFactory::class,
         ),
     ),
-    'translator' => array(
-        'translation_file_patterns' => array(
-            array(
-                'type' => 'Po',
-                'base_dir' => __DIR__ . '/data/i18n',
-                'pattern' => '%s.po',
-            ),
-        ),
-    ),
     'view_helpers' => array(
         'aliases' => array(
             'clientHeader' => ClientHeader::class,

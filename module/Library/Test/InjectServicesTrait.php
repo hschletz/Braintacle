@@ -1,0 +1,48 @@
+<?php
+
+namespace Library\Test;
+
+use Braintacle\AppConfig;
+use Braintacle\I18n\Translator;
+use Composer\InstalledVersions;
+use Laminas\Config\Reader\ReaderInterface;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\ServiceManager\ServiceManager;
+
+/**
+ * Inject services which are normally injected during MVC bootstrapping.
+ */
+trait InjectServicesTrait
+{
+    /**
+     * Call this on any newly created ServiceManager instance.
+     */
+    private static function injectServices(ServiceManager $serviceManager): void
+    {
+        // Inject empty dummy config. Tests that evaluate config set up their
+        // own.
+        $appConfig = new AppConfig(
+            new class implements ReaderInterface
+            {
+                public function fromFile($filename)
+                {
+                    return [];
+                }
+
+                public function fromString($string)
+                {
+                    return [];
+                }
+            },
+            ''
+        );
+        $serviceManager->setService(AppConfig::class, $appConfig);
+
+        // Create fully functional translator.
+        $serviceManager->setService(TranslatorInterface::class, new Translator(
+            'de',
+            InstalledVersions::getRootPackage()['install_path'] . '/i18n',
+            $appConfig
+        ));
+    }
+}

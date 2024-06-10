@@ -22,6 +22,9 @@
 
 namespace Library\Test\View\Helper;
 
+use Library\Test\InjectServicesTrait;
+use Laminas\ServiceManager\ServiceManager;
+use Library\Application;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -33,11 +36,9 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class AbstractTestCase extends TestCase
 {
-    /**
-     * Service manager
-     * @var \Laminas\ServiceManager\ServiceManager
-     */
-    public static $serviceManager;
+    use InjectServicesTrait;
+
+    protected static ServiceManager $serviceManager;
 
     /**
      * View helper manager
@@ -49,6 +50,8 @@ abstract class AbstractTestCase extends TestCase
     {
         parent::setUpBeforeClass();
 
+        static::$serviceManager = Application::init('Console')->getServiceManager();
+        static::injectServices(static::$serviceManager);
         static::$_helperManager = static::$serviceManager->get('ViewHelperManager');
     }
 

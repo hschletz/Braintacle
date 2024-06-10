@@ -24,12 +24,15 @@ namespace Console\Test;
 
 use Console\View\Helper\ConsoleScript;
 use Laminas\Dom\Document\Query;
+use Library\Test\InjectServicesTrait;
 
 /**
  * Tests for the main layout template
  */
 class LayoutTest extends \PHPUnit\Framework\TestCase
 {
+    use InjectServicesTrait;
+
     protected $_view;
     protected $_authService;
 
@@ -44,6 +47,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
             'Laminas\Authentication\AuthenticationService',
             $this->_authService
         );
+        static::injectServices($serviceManager);
 
         $this->_view = new \Laminas\View\Renderer\PhpRenderer();
         $this->_view->setHelperPluginManager($serviceManager->get('ViewHelperManager'));

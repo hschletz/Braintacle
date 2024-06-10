@@ -23,6 +23,7 @@
 namespace Console\Test;
 
 use Laminas\Validator\Translator\TranslatorInterface;
+use Library\Test\InjectServicesTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -34,6 +35,8 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class AbstractFormTestCase extends TestCase
 {
+    use InjectServicesTrait;
+
     /**
      * HTML header to declare document encoding
      *
@@ -128,6 +131,8 @@ abstract class AbstractFormTestCase extends TestCase
                 ),
             )
         );
+        static::injectServices($serviceManager);
+
         $view = new \Laminas\View\Renderer\PhpRenderer();
         $view->setHelperPluginManager(clone $serviceManager->get('ViewHelperManager'));
         return $view;

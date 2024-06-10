@@ -4,14 +4,17 @@ namespace Braintacle;
 
 use Braintacle\Database\AdapterFactory;
 use Braintacle\Database\DatabaseFactory;
+use Braintacle\I18n\Translator;
 use Braintacle\Legacy\ClientOrGroupFactory;
 use Braintacle\Logger\LoggerFactory;
 use Composer\InstalledVersions;
 use DI\Container as DIContainer;
 use Laminas\Config\Reader\Ini as IniReader;
 use Laminas\Db\Adapter\Adapter;
+use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\Application as MvcApplication;
 use Library\Application;
+use Locale;
 use Model\Client\Client;
 use Model\Group\Group;
 use Model\Package\Storage\Direct as DirectStorage;
@@ -30,6 +33,8 @@ class Container extends DIContainer
 {
     public function __construct()
     {
+        $rootPath = InstalledVersions::getRootPackage()['install_path'];
+
         parent::__construct([
             AbstractDatabase::class => factory(DatabaseFactory::class),
             Adapter::class => factory(AdapterFactory::class),
@@ -44,6 +49,11 @@ class Container extends DIContainer
             MvcApplication::class => factory(Application::init(...))->parameter('module', 'Console'),
             ResponseInterface::class => get(Response::class),
             StorageInterface::class => get(DirectStorage::class),
+            TranslatorInterface::class => create(Translator::class)->constructor(
+                Locale::getDefault(),
+                $rootPath . '/i18n',
+                get(AppConfig::class)
+            ),
         ]);
     }
 }

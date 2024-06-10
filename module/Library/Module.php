@@ -62,9 +62,6 @@ class Module implements Feature\ConfigProviderInterface
                 )
             ),
             'service_manager' => array(
-                'delegators' => array(
-                    'Laminas\Mvc\I18n\Translator' => array('Library\I18n\Translator\DelegatorFactory'),
-                ),
                 'aliases' => [
                     ServiceLocatorInterface::class => ServiceManager::class,
                 ],
@@ -76,20 +73,6 @@ class Module implements Feature\ConfigProviderInterface
                     },
                     'Library\UserConfig' => 'Library\Service\UserConfigFactory',
                 ],
-            ),
-            'translator' => array(
-                'translation_file_patterns' => array(
-                    array(
-                        'type' => 'Po',
-                        'base_dir' => __DIR__ . '/data/i18n',
-                        'pattern' => '%s.po',
-                    ),
-                ),
-            ),
-            'translator_plugins' => array(
-                'aliases' => array(
-                    'Po' => 'Library\I18n\Translator\Loader\Po',
-                ),
             ),
             'validators' => array(
                 'aliases' => array(
