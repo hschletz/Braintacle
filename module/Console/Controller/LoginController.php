@@ -22,6 +22,8 @@
 
 namespace Console\Controller;
 
+use Laminas\Session\Container as Session;
+
 /**
  * Controller for all login-related actions.
  */
@@ -87,15 +89,16 @@ class LoginController extends \Laminas\Mvc\Controller\AbstractActionController
                     )
                 ) {
                     // Authentication successful. Redirect to appropriate page.
-                    $session = new \Laminas\Session\Container('login');
+                    $session = new Session();
                     if (isset($session->originalUri)) {
                         // We got redirected here from another page. Redirect to original page.
                         $response = $this->redirect()->toUrl($session->originalUri);
+                        unset($session->originalUri);
                     } else {
                         // Redirect to default page (client listing)
                         $response = $this->redirectToRoute('client');
                     }
-                    $session->getManager()->getStorage()->clear('login');
+
                     return $response;
                 }
             }

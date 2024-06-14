@@ -24,6 +24,7 @@ namespace Console\Test\Controller;
 
 use Console\Form\Login;
 use Console\Test\AbstractControllerTestCase;
+use Laminas\Session\Container as Session;
 use Model\Operator\AuthenticationService;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -58,11 +59,6 @@ class LoginControllerTest extends AbstractControllerTestCase
         $serviceLocator->setAllowOverride(true);
         $serviceLocator->setService('Model\Operator\AuthenticationService', $this->_authenticationService);
         $serviceLocator->get('FormElementManager')->setService('Console\Form\Login', $this->_form);
-    }
-
-    public function testRedirectToLoginPage()
-    {
-        // Skip Test for Login controller
     }
 
     /**
@@ -168,7 +164,7 @@ class LoginControllerTest extends AbstractControllerTestCase
     {
         $this->mockAuthenticationService(false);
         $postData = array('userid' => 'gooduser', 'password' => 'goodpassword');
-        $session = new \Laminas\Session\Container('login');
+        $session = new Session();
         $session->originalUri = 'redirectTest';
         $this->_form->expects($this->once())
             ->method('isValid')
@@ -178,7 +174,7 @@ class LoginControllerTest extends AbstractControllerTestCase
             ->will($this->returnValue(array('User' => 'gooduser', 'Password' => 'goodpassword')));
         $this->dispatch('/console/login/login', 'POST', $postData);
         $this->assertRedirectTo('redirectTest');
-        $this->assertArrayNotHasKey('login', $_SESSION); // Should be cleared by action
+        $this->assertArrayNotHasKey('originalUri', $_SESSION['Default']); // Should be cleared by action
     }
 
     public function testIndexAction()

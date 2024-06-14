@@ -48,7 +48,7 @@ abstract class AbstractControllerTestCase extends AbstractHttpControllerTestCase
 
         // Put application in authenticated state
         $auth = $this->createMock('Model\Operator\AuthenticationService');
-        $auth->expects($this->atLeastOnce())->method('hasIdentity')->willReturn(true);
+        $auth->method('hasIdentity')->willReturn(true);
 
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setService('Model\Operator\AuthenticationService', $auth);
@@ -63,27 +63,6 @@ abstract class AbstractControllerTestCase extends AbstractHttpControllerTestCase
         );
         Application::addAbstractFactories($serviceManager);
         static::injectServices($serviceManager);
-    }
-
-    public function testRedirectToLoginPage()
-    {
-        $serviceLocator = $this->getApplicationServiceLocator();
-        $serviceLocator->setAllowOverride(true);
-
-        // Call method on overridden service to satisfy atLeastOnce constraint
-        $serviceLocator->get('Model\Operator\AuthenticationService')->hasIdentity();
-
-        // Reset application to unauthenticated state
-        $auth = $this->createMock('Model\Operator\AuthenticationService');
-        $auth->expects($this->atLeastOnce())->method('hasIdentity')->willReturn(false);
-        $serviceLocator->setService('Model\Operator\AuthenticationService', $auth);
-
-        $uri = '/console/' . strtolower(preg_replace('/(.*\\\\|ControllerTest)/', '', get_class($this)));
-        $this->dispatch($uri);
-        $this->assertRedirectTo('/console/login/login/');
-
-        $session = new \Laminas\Session\Container('login');
-        $this->assertEquals($uri, $session->originalUri);
     }
 
     /**

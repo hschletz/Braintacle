@@ -3,6 +3,8 @@
 namespace Braintacle\Test;
 
 use Braintacle\Container;
+use Laminas\Authentication\AuthenticationServiceInterface;
+use Model\Operator\AuthenticationService;
 use Model\Package\Storage\StorageInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -15,6 +17,7 @@ class ContainerTest extends TestCase
     {
         $container = new Container();
         $this->assertSame($container, $container->get(ContainerInterface::class));
+        $this->assertInstanceOf(AuthenticationService::class, $container->get(AuthenticationServiceInterface::class));
         $this->assertInstanceOf(ResponseInterface::class, $container->get(ResponseInterface::class));
         $this->assertInstanceOf(StorageInterface::class, $container->get(StorageInterface::class));
     }

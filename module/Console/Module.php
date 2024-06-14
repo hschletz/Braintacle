@@ -60,7 +60,6 @@ class Module implements
         $eventManager = $e->getParam('application')->getEventManager();
         $eventManager->attach(MvcEvent::EVENT_RENDER, [$this, 'registerTemplateStrategy']);
         $eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'setTranslators'));
-        $eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'forceLogin'));
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'forceStrictVars'));
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setMenu'));
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setLayoutTitle'));
@@ -109,37 +108,6 @@ class Module implements
         // already translated in controllers to enable string formatting with
         // placeholders.
         $helperPluginManager->get(FlashMessenger::class)->setTranslatorEnabled(false);
-    }
-
-    /**
-     * Hook to redirect unauthenticated requests to the login page
-     *
-     * @param \Laminas\Mvc\MvcEvent $e MVC event
-     * @return mixed Redirect response (\Laminas\Stdlib\ResponseInterface) or NULL to continue
-     */
-    public function forceLogin(\Laminas\Mvc\MvcEvent $e)
-    {
-        // If user is not yet authenticated, redirect to the login page except
-        // for the login controller, in which case redirection would result in
-        // an infinite loop.
-        $serviceManager = $e->getApplication()->getServiceManager();
-        if (
-            !$serviceManager->get('Laminas\Authentication\AuthenticationService')->hasIdentity() and
-            $e->getRouteMatch()->getParam('controller') != 'login'
-        ) {
-            // Preserve URI of current request for redirect after successful login
-            $session = new \Laminas\Session\Container('login');
-            $session->originalUri = $e->getRequest()->getUriString();
-
-            $location = $e->getRouter()->assemble(
-                array('controller' => 'login', 'action' => 'login'),
-                array('name' => 'console')
-            );
-            $response = $e->getResponse();
-            $response->setStatusCode(302);
-            $response->getHeaders()->addHeaderLine('Location', $location);
-            return $response;
-        }
     }
 
     /**

@@ -9,6 +9,7 @@ use Braintacle\Legacy\ClientOrGroupFactory;
 use Braintacle\Logger\LoggerFactory;
 use Composer\InstalledVersions;
 use DI\Container as DIContainer;
+use Laminas\Authentication\AuthenticationServiceInterface;
 use Laminas\Config\Reader\Ini as IniReader;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\I18n\Translator\TranslatorInterface;
@@ -17,6 +18,7 @@ use Library\Application;
 use Locale;
 use Model\Client\Client;
 use Model\Group\Group;
+use Model\Operator\AuthenticationService;
 use Model\Package\Storage\Direct as DirectStorage;
 use Model\Package\Storage\StorageInterface;
 use Nada\Database\AbstractDatabase;
@@ -42,6 +44,7 @@ class Container extends DIContainer
                 new IniReader(),
                 getenv('BRAINTACLE_CONFIG') ?: InstalledVersions::getRootPackage()['install_path'] . '/config/braintacle.ini',
             ),
+            AuthenticationServiceInterface::class => get(AuthenticationService::class),
             Client::class => factory(ClientOrGroupFactory::class),
             ClockInterface::class => get(Clock::class),
             Group::class => factory(ClientOrGroupFactory::class),
