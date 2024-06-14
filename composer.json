@@ -86,10 +86,7 @@
         "braintacle-tool.php"
     ],
     "config": {
-        "sort-packages": true,
-        "platform": {
-            "php": "8.1.27"
-        }
+        "sort-packages": true
     },
     "scripts": {
         "psalm": "psalm"
