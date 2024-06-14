@@ -13,7 +13,7 @@ class LoggerFactory
 {
     public function __invoke(): LoggerInterface
     {
-        $writer = new StreamWriter(STDERR);
+        $writer = new StreamWriter('php://stderr');
         $writer->setFormatter(new SimpleFormatter('%timestamp% Braintacle %priorityName%: %message% %extra%'));
 
         $logger = new Logger();
