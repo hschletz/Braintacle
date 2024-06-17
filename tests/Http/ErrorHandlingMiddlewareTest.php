@@ -26,12 +26,11 @@ class ErrorHandlingMiddlewareTest extends TestCase
 
         $middleware = new ErrorHandlingMiddleware($this->response, $appConfig, $logger);
 
-        $expectedResponse = $this->createStub(ResponseInterface::class);
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->method('handle')->with($this->request)->willReturn($expectedResponse);
+        $handler->method('handle')->with($this->request)->willReturn($this->response);
 
-        $returnedResponse = $middleware->process($this->request, $handler);
-        $this->assertSame($expectedResponse, $returnedResponse);
+        $response = $middleware->process($this->request, $handler);
+        $this->assertSame($this->response, $response);
     }
 
     public static function noBacktraceProvider()
