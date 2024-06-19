@@ -1,64 +1,61 @@
 {* Software page *}
-
+{import ../SortableHeader.latte}
 {addScript form_software.js}
 
-{layout ../Layout.latte}
-{block mainContent}
-    <form method="get">
-        <input type="hidden" name="csrf" value="{$csrfToken}">
-        <div class="table">
-            <label>
-                <span>{translate('Filter')}</span>
-                <select name="filter" onchange="this.form.submit()">
-                    <option value="accepted" n:attr="selected => $filter == 'accepted'">{translate('selected for display')}</option>
-                    <option value="ignored" n:attr="selected => $filter == 'ignored'">{translate('ignored for display')}</option>
-                    <option value="new" n:attr="selected => $filter == 'new'">{translate('new or not categorized')}</option>
-                    <option value="all" n:attr="selected => $filter == 'all'">{translate('all')}</option>
-                </select>
-            </label>
-        </div>
-    </form>
+<form method="get">
+    <input type="hidden" name="csrf" value="{$csrfToken}">
+    <div class="table">
+        <label>
+            <span>{translate('Filter')}</span>
+            <select name="filter" onchange="this.form.submit()">
+                <option value="accepted" n:attr="selected => $filter == 'accepted'">{translate('selected for display')}</option>
+                <option value="ignored" n:attr="selected => $filter == 'ignored'">{translate('ignored for display')}</option>
+                <option value="new" n:attr="selected => $filter == 'new'">{translate('new or not categorized')}</option>
+                <option value="all" n:attr="selected => $filter == 'all'">{translate('all')}</option>
+            </select>
+        </label>
+    </div>
+</form>
 
-    <form method="post" class="form form_software" action="{consoleUrl('software', 'confirm')}">
-        <input type="hidden" name="csrf" value="{$csrfToken}">
-        <div class="textcenter">
-            <button n:if="$filter != 'accepted'" type="submit" name="accept">{translate('Accept selected')}</button>
-            <button n:if="$filter != 'ignored'" type="submit" name="ignore">{translate('Ignore selected')}</button>
-        </div>
+<form method="post" class="form form_software" action="{consoleUrl('software', 'confirm')}">
+    <input type="hidden" name="csrf" value="{$csrfToken}">
+    <div class="textcenter">
+        <button n:if="$filter != 'accepted'" type="submit" name="accept">{translate('Accept selected')}</button>
+        <button n:if="$filter != 'ignored'" type="submit" name="ignore">{translate('Ignore selected')}</button>
+    </div>
 
-        <table class="alternating">
-            <tr>
-                <th>
-                    <input type="checkbox" class="checkAll">
-                </th>
-                <th>
-                    {include sortableHeader, 'name', translate('Name')}
-                </th>
-                <th class="textright">
-                    {include sortableHeader, 'num_clients', translate('Count')}
-                </th>
-            </tr>
+    <table class="alternating">
+        <tr>
+            <th>
+                <input type="checkbox" class="checkAll">
+            </th>
+            <th>
+                {include sortableHeader, 'name', translate('Name')}
+            </th>
+            <th class="textright">
+                {include sortableHeader, 'num_clients', translate('Count')}
+            </th>
+        </tr>
 
-            <tr n:foreach="$software as $row">
-                <td>
-                    <input type="checkbox" name="software[]" value="{$row['name']}">
-                </td>
-                <td>{$row['name']}</td>
-                <td class="textright">
-                    <a href="{consoleUrl(
-                        'client',
-                        'index',
-                        [
-                            'columns' => 'name,userName,lastContactDate,inventoryDate,software.version',
-                            'jumpto' => 'software',
-                            'filter' => Software,
-                            'search' => $row['name'],
-                        ]
-                    )}">
-                        {$row['num_clients']}
-                    </a>
-                </td>
-            </tr>
-        </table>
-    </form>
-{/block}
+        <tr n:foreach="$software as $row">
+            <td>
+                <input type="checkbox" name="software[]" value="{$row['name']}">
+            </td>
+            <td>{$row['name']}</td>
+            <td class="textright">
+                <a href="{consoleUrl(
+                    'client',
+                    'index',
+                    [
+                        'columns' => 'name,userName,lastContactDate,inventoryDate,software.version',
+                        'jumpto' => 'software',
+                        'filter' => Software,
+                        'search' => $row['name'],
+                    ]
+                )}">
+                    {$row['num_clients']}
+                </a>
+            </td>
+        </tr>
+    </table>
+</form>

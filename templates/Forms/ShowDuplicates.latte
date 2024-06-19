@@ -1,8 +1,7 @@
 {* Show duplicates and provide merge options. *}
 
+{import ../SortableHeader.latte}
 {addScript form_showduplicates.js}
-
-{layout '../Layout.latte'}
 
 {* Generate link to allow duplicate criteria value *}
 {define allowLink, string $criteria, ?string $value}
@@ -13,54 +12,52 @@
     <label><input type="checkbox" name="mergeOptions[]" value="{$name}" n:attr="checked => $checked">{$label}</label>
 {/define}
 
-{block mainContent}
-    <ul n:ifcontent class="error">
-        <li n:foreach="$messages as $message">{$message}</li>
-    </ul>
+<ul n:ifcontent class="error">
+    <li n:foreach="$messages as $message">{$message}</li>
+</ul>
 
-    <form method="post" class="form form_showduplicates">
-        <input type="hidden" name="_csrf" value="{$csrfToken}">
-        <table class="alternating">
-            <tr>
-                <th>
-                    <input type="checkbox" class="checkAll">
-                    {include sortableHeader, 'Id', translate('ID')}
-                </th>
-                <th>{include sortableHeader, 'Name', translate('Name')}</th>
-                <th>{include sortableHeader, 'NetworkInterface.MacAddress', translate('MAC Address')}</th>
-                <th>{include sortableHeader, 'Serial', translate('Serial number')}</th>
-                <th>{include sortableHeader, 'AssetTag', translate('Asset tag')}</th>
-                <th>{include sortableHeader, 'LastContactDate', translate('Last contact')}</th>
-            </tr>
-            <tr n:foreach="$clients as $client">
-                <td>
-                    <input type="checkbox" name="clients[]" value="{$client->id}">
-                    {$client->id}
-                </td>
-                <td>
-                    <a href="{consoleUrl('client', 'customfields', ['id' => $client->id])}">{$client->name}</a>
-                </td>
-                <td>
-                    {include allowLink, 'MacAddress', $client['NetworkInterface.MacAddress']}
-                </td>
-                <td>
-                    {include allowLink, 'Serial', $client->serial}
-                </td>
-                <td>
-                    {include allowLink, 'AssetTag', $client->assetTag}
-                </td>
-                <td>
-                    {$client->lastContactDate|dateFormat: IntlDateFormatter::SHORT, IntlDateFormatter::SHORT}
-                <td>
-            </tr>
-        </table>
+<form method="post" class="form form_showduplicates">
+    <input type="hidden" name="_csrf" value="{$csrfToken}">
+    <table class="alternating">
+        <tr>
+            <th>
+                <input type="checkbox" class="checkAll">
+                {include sortableHeader, 'Id', translate('ID')}
+            </th>
+            <th>{include sortableHeader, 'Name', translate('Name')}</th>
+            <th>{include sortableHeader, 'NetworkInterface.MacAddress', translate('MAC Address')}</th>
+            <th>{include sortableHeader, 'Serial', translate('Serial number')}</th>
+            <th>{include sortableHeader, 'AssetTag', translate('Asset tag')}</th>
+            <th>{include sortableHeader, 'LastContactDate', translate('Last contact')}</th>
+        </tr>
+        <tr n:foreach="$clients as $client">
+            <td>
+                <input type="checkbox" name="clients[]" value="{$client->id}">
+                {$client->id}
+            </td>
+            <td>
+                <a href="{consoleUrl('client', 'customfields', ['id' => $client->id])}">{$client->name}</a>
+            </td>
+            <td>
+                {include allowLink, 'MacAddress', $client['NetworkInterface.MacAddress']}
+            </td>
+            <td>
+                {include allowLink, 'Serial', $client->serial}
+            </td>
+            <td>
+                {include allowLink, 'AssetTag', $client->assetTag}
+            </td>
+            <td>
+                {$client->lastContactDate|dateFormat: IntlDateFormatter::SHORT, IntlDateFormatter::SHORT}
+            <td>
+        </tr>
+    </table>
 
-        {include mergeOption, 'mergeCustomFields', $config->defaultMergeCustomFields, translate('Merge user supplied information')}
-        {include mergeOption, 'mergeConfig', $config->defaultMergeConfig, translate('Merge configuration')}
-        {include mergeOption, 'mergeGroups', $config->defaultMergeGroups, translate('Merge manual group assignments')}
-        {include mergeOption, 'mergePackages', $config->defaultMergePackages, translate('Merge missing package assignments')}
-        {include mergeOption, 'mergeProductKey', $config->defaultMergeProductKey, translate('Keep manually entered Windows product key')}
+    {include mergeOption, 'mergeCustomFields', $config->defaultMergeCustomFields, translate('Merge user supplied information')}
+    {include mergeOption, 'mergeConfig', $config->defaultMergeConfig, translate('Merge configuration')}
+    {include mergeOption, 'mergeGroups', $config->defaultMergeGroups, translate('Merge manual group assignments')}
+    {include mergeOption, 'mergePackages', $config->defaultMergePackages, translate('Merge missing package assignments')}
+    {include mergeOption, 'mergeProductKey', $config->defaultMergeProductKey, translate('Keep manually entered Windows product key')}
 
-        <button type="submit">{translate('Merge selected clients')}</button>
-    </form>
-{/block}
+    <button type="submit">{translate('Merge selected clients')}</button>
+</form>
