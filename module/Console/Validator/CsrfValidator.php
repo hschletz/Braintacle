@@ -13,6 +13,8 @@ class CsrfValidator extends Csrf
 
     /**
      * Get current token.
+     *
+     * @deprecated Call getHash() on injected instance.
      */
     public static function getToken(): string
     {

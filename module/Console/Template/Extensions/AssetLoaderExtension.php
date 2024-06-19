@@ -19,6 +19,8 @@ use Latte\Extension;
  * The tag may be used anywhere within a template. It does not generate output
  * by itself, but adds a sctipt to the ConsoleScript helper where it will be
  * evaluated by the page layout.
+ *
+ * @deprecated Add assets via AssetUrlFunction.
  */
 class AssetLoaderExtension extends Extension
 {

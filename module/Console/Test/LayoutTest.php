@@ -181,7 +181,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(
             1,
             Query::execute(
-                "/html/body/div[@id='menu']/div[@id='logout']/a[@href='/console/login/logout/'][text()='\nAbmelden\n']",
+                "/html/body/div[@id='menu']/div[@id='logout']/a[@href='/logout'][text()='\nAbmelden\n']",
                 $document
             )
         );

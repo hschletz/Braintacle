@@ -8,6 +8,7 @@ use Braintacle\I18n\Translator;
 use Braintacle\Legacy\ClientOrGroupFactory;
 use Braintacle\Logger\LoggerFactory;
 use Composer\InstalledVersions;
+use Console\Template\TemplateLoader;
 use DI\Container as DIContainer;
 use Laminas\Authentication\AuthenticationServiceInterface;
 use Laminas\Config\Reader\Ini as IniReader;
@@ -52,6 +53,7 @@ class Container extends DIContainer
             MvcApplication::class => factory(Application::init(...))->parameter('module', 'Console'),
             ResponseInterface::class => get(Response::class),
             StorageInterface::class => get(DirectStorage::class),
+            TemplateLoader::class => create(TemplateLoader::class)->constructor($rootPath . 'templates'),
             TranslatorInterface::class => create(Translator::class)->constructor(
                 Locale::getDefault(),
                 $rootPath . '/i18n',

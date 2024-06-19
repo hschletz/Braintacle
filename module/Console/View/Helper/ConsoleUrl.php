@@ -24,6 +24,8 @@ namespace Console\View\Helper;
 
 /**
  * Generate URL to given controller and action
+ *
+ * @deprecated Define named route and use RouteHelper::getPathForRoute().
  */
 class ConsoleUrl extends \Laminas\View\Helper\AbstractHelper
 {

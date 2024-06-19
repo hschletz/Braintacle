@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Braintacle</title>
+        <link rel="stylesheet" href="{assetUrl('style.css')}">
+    </head>
+    <body>
+    <div id="content">
+        <h1>{translate('Login to Braintacle')}</h1>
+        {if $invalidCredentials}
+            <p class="error">{translate('Invalid username or password')}</p>
+        {/if}
+        <form method="post" action="{pathForRoute('loginHandler')}" class="form form_login">
+            <input type="hidden" name="_csrf" value="{csrfToken()}">
+            <div class="table">
+                <label>
+                    <span>{translate('Username')}</span>
+                    <input type="text" name="user" autofocus>
+                </label>
+                <label>
+                    <span>{translate('Password')}</span>
+                    <input type="password" name="password">
+                </label>
+                <span class="cell"></span>
+                <button type="submit">{translate('Login')}</button>
+            </div>
+        </form>
+    </body>
+</html>

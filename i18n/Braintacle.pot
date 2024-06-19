@@ -71,7 +71,7 @@ msgid "Login name"
 msgstr ""
 
 #: module/Console/Form/Account/AbstractForm.php
-#: module/Console/Form/Login.php
+#: templates/Pages/Login.latte
 msgid "Password"
 msgstr ""
 
@@ -355,14 +355,6 @@ msgstr ""
 #: module/Console/Form/Import.php
 #: module/Console/Navigation/MainMenuFactory.php
 msgid "Import"
-msgstr ""
-
-#: module/Console/Form/Login.php
-msgid "Username"
-msgstr ""
-
-#: module/Console/Form/Login.php
-msgid "Login"
 msgstr ""
 
 #: module/Console/Form/ManageRegistryValues.php
@@ -1613,14 +1605,6 @@ msgstr ""
 msgid "Manually entered Windows product keys"
 msgstr ""
 
-#: module/Console/views/console/login/login.php
-msgid "Login to Braintacle"
-msgstr ""
-
-#: module/Console/views/console/login/login.php
-msgid "Invalid username or password"
-msgstr ""
-
 #: module/Console/views/console/network/delete.php
 #, php-format
 msgid "The network device '%1s' with the MAC address %2s will be permanently deleted. Continue?"
@@ -1901,6 +1885,22 @@ msgstr ""
 
 #: templates/Group/Header.latte
 msgid "Excluded"
+msgstr ""
+
+#: templates/Pages/Login.latte
+msgid "Login to Braintacle"
+msgstr ""
+
+#: templates/Pages/Login.latte
+msgid "Invalid username or password"
+msgstr ""
+
+#: templates/Pages/Login.latte
+msgid "Username"
+msgstr ""
+
+#: templates/Pages/Login.latte
+msgid "Login"
 msgstr ""
 
 #: templates/Software/Confirm.latte

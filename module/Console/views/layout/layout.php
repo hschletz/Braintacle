@@ -75,7 +75,7 @@ if ($this->identity() and !isset($this->noRoute)) {
     print $this->htmlElement(
         'a',
         $this->translate('Logout'),
-        array('href' => $this->consoleUrl('login', 'logout'))
+        ['href' => $this->basePath() . '/logout']
     );
 
     print "</div> <!-- #logout -->\n";

@@ -6,6 +6,8 @@ use Console\View\Helper\ConsoleUrl;
 
 /**
  * Generate URL to given controller and action
+ *
+ * @deprecated Define named route and and use PathForRouteFunction.
  */
 class ConsoleUrlFunction
 {

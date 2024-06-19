@@ -45,12 +45,6 @@ if (isset($this->exception)) {
         print "<h3>Exception Message trace:</h3>\n";
         dump($this->exception);
 
-        // The additional debug information below might contain sensitive data.
-        if ($this->controller == 'login') {
-            print 'Details hidden for security reasons.';
-            return;
-        }
-
         $request = $this->request;
         print "<h3>Request Parameters:</h3>\n";
 

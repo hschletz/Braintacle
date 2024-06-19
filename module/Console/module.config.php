@@ -63,7 +63,6 @@ return array(
             'duplicates' => 'Console\Service\DuplicatesControllerFactory',
             'group' => 'Console\Service\GroupControllerFactory',
             'licenses' => 'Console\Service\LicensesControllerFactory',
-            'login' => 'Console\Service\LoginControllerFactory',
             'network' => 'Console\Service\NetworkControllerFactory',
             'package' => 'Console\Service\PackageControllerFactory',
             'preferences' => 'Console\Service\PreferencesControllerFactory',
