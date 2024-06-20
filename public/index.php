@@ -4,15 +4,13 @@ namespace Braintacle;
 
 use Braintacle\Container;
 use Braintacle\Http\ErrorHandlingMiddleware;
-use Braintacle\Http\LoginMiddleware;
 use Braintacle\Http\RouteHelperMiddleware;
 use Braintacle\Http\RouteHelper;
-use Braintacle\Legacy\ApplicationBridge;
+use Braintacle\Http\Router;
 use IntlException;
 use Locale;
 use Slim\Factory\AppFactory;
 use Slim\Handlers\Strategies\RequestHandler;
-use Slim\Interfaces\RouteCollectorProxyInterface;
 
 error_reporting(-1);
 
@@ -41,19 +39,6 @@ $app->add(RouteHelperMiddleware::class);
 $app->addRoutingMiddleware();
 $app->add(ErrorHandlingMiddleware::class);
 
-// Login routes must not have LoginMiddleware attached.
-$app->get('/login', Authentication\ShowLoginFormHandler::class)->setName('loginPage');
-$app->post('/login', Authentication\ProcessLoginFormHandler::class)->setName('loginHandler');
-$app->get('/logout', Authentication\LogoutHandler::class)->setName(Authentication\LogoutHandler::class);
-
-// All other routes get LoginMiddleware.
-$app->group('', function (RouteCollectorProxyInterface $group) {
-    // Legacy routes handled by MVC application, which are listed here to
-    // provide a route name.
-    $group->get('/console/client/index', ApplicationBridge::class)->setName('clientList');
-
-    // Catch-all route: forward to MVC application
-    $group->any('{path:.*}', ApplicationBridge::class);
-})->add(LoginMiddleware::class);
+Router::setup($app);
 
 $app->run();
