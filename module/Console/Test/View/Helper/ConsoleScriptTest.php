@@ -22,90 +22,31 @@
 
 namespace Console\Test\View\Helper;
 
-use ArrayIterator;
+use Braintacle\Template\Function\AssetUrlFunction;
 use Console\View\Helper\ConsoleScript;
-use Laminas\Uri\UriInterface;
-use Laminas\View\Helper\Placeholder\Container\AbstractContainer;
-use Laminas\View\Renderer\PhpRenderer;
+use Laminas\Escaper\Escaper;
 use Library\Test\View\Helper\AbstractTestCase;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\Mock;
-use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class ConsoleScriptTest extends AbstractTestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testInvokeNoArgs()
+    public function testHelperService()
     {
-        /** @var MockObject|ConsoleScript|callable */
-        $consoleScript = $this->createPartialMock(ConsoleScript::class, ['getContainer']);
-        $consoleScript->expects($this->never())->method('getContainer');
-
-        $this->assertSame($consoleScript, $consoleScript());
-    }
-
-    public function testInvokeWithScript()
-    {
-        $container = $this->createMock(AbstractContainer::class);
-        $container->expects($this->once())->method('append')->with('script');
-
-        /** @var MockObject|ConsoleScript|callable */
-        $consoleScript = $this->createPartialMock(ConsoleScript::class, ['getContainer']);
-        $consoleScript->expects($this->once())->method('getContainer')->willReturn($container);
-
-        $this->assertSame($consoleScript, $consoleScript('script'));
-    }
-
-    public function testToString()
-    {
-        /** @var Mock|ConsoleScript */
-        $consoleScript = Mockery::mock(ConsoleScript::class)->makePartial();
-        $consoleScript->shouldReceive('getIterator')->andReturn(new ArrayIterator(['script1', 'script2']));
-        $consoleScript->shouldReceive('getSeparator')->andReturn('_');
-        $consoleScript->shouldReceive('getHtml')->with('script1')->andReturn('html1');
-        $consoleScript->shouldReceive('getHtml')->with('script2')->andReturn('html2');
-
-        $this->assertEquals('html1_html2', $consoleScript->toString());
+        $this->assertInstanceOf(ConsoleScript::class, $this->getHelper(ConsoleScript::class));
     }
 
     public function testGetHtml()
     {
-        $uri = $this->createStub(UriInterface::class);
+        $assetUrl = $this->createMock(AssetUrlFunction::class);
+        $assetUrl->method('__invoke')->with('script_path')->willReturn('asset_url');
 
-        $view = $this->createMock(PhpRenderer::class);
-        $view->method('__call')->with('escapeHtmlAttr', [$uri])->willReturn('script_uri');
+        $escaper = $this->createMock(Escaper::class);
+        $escaper->method('escapeHtmlAttr')->with('asset_url')->willReturn('escaped');
 
-        $consoleScript = $this->createPartialMock(ConsoleScript::class, ['getUri', 'getView']);
-        $consoleScript->method('getUri')->with('script_name')->willReturn($uri);
-        $consoleScript->method('getView')->willReturn($view);
+        $consoleScript = new ConsoleScript($assetUrl, $escaper);
 
         $this->assertEquals(
-            '<script src="script_uri" type="module"></script>',
-            $consoleScript->getHtml('script_name')
+            '<script src="escaped" type="module"></script>',
+            $consoleScript('script_path')
         );
-    }
-
-    public function testGetUri()
-    {
-        $filename = vfsStream::newFile('test.js')->at(vfsStream::setup('root'))->url();
-
-        $view = $this->createMock(PhpRenderer::class);
-        $view->method('__call')->with('basePath', ['/js/script.js'])->willReturn('script_path');
-
-        $consoleScript = $this->createPartialMock(ConsoleScript::class, ['getFile', 'getView']);
-        $consoleScript->method('getFile')->with('script.js')->willReturn($filename);
-        $consoleScript->method('getView')->willReturn($view);
-
-        $uri = 'script_path?' . filemtime($filename);
-        $this->assertEquals($uri, $consoleScript->getUri('script.js'));
-    }
-
-    public function testGetFile()
-    {
-        $consoleScript = new ConsoleScript();
-        $this->assertStringEndsWith('/public/js/form_search.js', $consoleScript->getFile('form_search.js'));
     }
 }

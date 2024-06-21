@@ -22,6 +22,7 @@
 
 namespace Console\View\Helper\Form;
 
+use Console\View\Helper\ConsoleScript;
 use Laminas\Form\FormInterface;
 use Laminas\View\Helper\AbstractHelper;
 
@@ -30,11 +31,14 @@ use Laminas\View\Helper\AbstractHelper;
  */
 class Search extends AbstractHelper implements FormHelperInterface
 {
+    public function __construct(private ConsoleScript $consoleScript)
+    {
+    }
+
     public function __invoke(FormInterface $form = null)
     {
         $view = $this->getView();
-        $view->consoleScript('form_search.js');
 
-        return $view->consoleForm($form);
+        return $view->consoleForm($form) . ($this->consoleScript)('js/form_search.js');
     }
 }

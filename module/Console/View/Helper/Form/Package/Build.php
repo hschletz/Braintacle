@@ -23,6 +23,7 @@
 namespace Console\View\Helper\Form\Package;
 
 use Console\Form\Package\Build as FormBuild;
+use Console\View\Helper\ConsoleScript;
 use Console\View\Helper\Form\FormHelperInterface;
 use Laminas\Form\FormInterface;
 use Laminas\View\Helper\AbstractHelper;
@@ -32,14 +33,17 @@ use Laminas\View\Helper\AbstractHelper;
  */
 class Build extends AbstractHelper implements FormHelperInterface
 {
+    public function __construct(private ConsoleScript $consoleScript)
+    {
+    }
+
     public function __invoke(FormInterface $form = null)
     {
         $view = $this->getView();
-        $view->consoleScript('form_package.js');
 
         $this->initLabels($form);
 
-        return $view->consoleForm($form);
+        return $view->consoleForm($form) . ($this->consoleScript)('js/form_package.js');
     }
 
     /**

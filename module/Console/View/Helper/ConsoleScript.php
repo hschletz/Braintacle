@@ -22,75 +22,27 @@
 
 namespace Console\View\Helper;
 
-use Laminas\Uri\Uri;
-use Laminas\Uri\UriInterface;
-use Laminas\View\Helper\Placeholder\Container\AbstractStandalone;
-use Library\Application;
-use LogicException;
+use Braintacle\Template\Function\AssetUrlFunction;
+use Laminas\Escaper\Escaper;
 
 /**
- * Helper for setting and retrieving script elements for HTML head section
- *
- * This is similar to the HeadScript helper. If invoked with a script name, the
- * given script from /public/js will be appended to the head section. Scripts
- * are loaded as modules.
- *
- * @extends AbstractStandalone<array-key, string>
+ * Load script as module.
  */
-class ConsoleScript extends AbstractStandalone
+class ConsoleScript
 {
-    public function __invoke(string $script = null): self
-    {
-        if ($script) {
-            $this->getContainer()->append($script);
-        }
-
-        return $this;
-    }
-
-    public function toString()
-    {
-        $scripts = [];
-        foreach ($this as $script) {
-            $scripts[] = $this->getHtml($script);
-        }
-
-        return implode($this->getSeparator(), $scripts);
+    public function __construct(
+        private AssetUrlFunction $assetUrl,
+        private Escaper $escaper,
+    ) {
     }
 
     /**
      * Generate HTML to load given script.
      */
-    public function getHtml(string $script): string
+    public function __invoke(string $script): string
     {
-        $uri = $this->getUri($script);
-        $src = $this->getView()->escapeHtmlAttr($uri);
+        $uri = ($this->assetUrl)($script);
 
-        return sprintf('<script src="%s" type="module"></script>', $src);
-    }
-
-    /**
-     * Get Uri for given script.
-     *
-     * URI will contain the script file's mtime as query parameter (cachebuster).
-     */
-    public function getUri(string $script): UriInterface
-    {
-        $filename = $this->getFile($script);
-        $path = '/js/' . $script;
-        $uri = new Uri($this->getView()->basePath($path));
-        $uri->setQuery((string) filemtime($filename));
-
-        return $uri;
-    }
-
-    /**
-     * Get absolute file path for given script.
-     *
-     * @throws LogicException if file does not exist below public/js/
-     */
-    public function getFile(string $script): string
-    {
-        return Application::getPath('public/js/' . $script);
+        return sprintf('<script src="%s" type="module"></script>', $this->escaper->escapeHtmlAttr($uri));
     }
 }

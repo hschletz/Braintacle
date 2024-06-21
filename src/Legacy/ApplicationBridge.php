@@ -3,6 +3,7 @@
 namespace Braintacle\Legacy;
 
 use Braintacle\AppConfig;
+use Braintacle\Template\Function\AssetUrlFunction;
 use DI\Container;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Http\Header\HeaderInterface;
@@ -45,6 +46,7 @@ class ApplicationBridge implements RequestHandlerInterface
         $serviceManager->setService(AbstractDatabase::class, $this->container->get(AbstractDatabase::class));
         $serviceManager->setService(Adapter::class, $this->container->get(Adapter::class));
         $serviceManager->setService(AppConfig::class, $this->container->get(AppConfig::class));
+        $serviceManager->setService(AssetUrlFunction::class, $this->container->get(AssetUrlFunction::class));
         $serviceManager->setService(Client::class, $this->container->get(Client::class));
         $serviceManager->setService(ClockInterface::class, $this->container->get(ClockInterface::class));
         $serviceManager->setService(ContainerInterface::class, $serviceManager);

@@ -23,6 +23,7 @@
 namespace Console\View\Helper\Form;
 
 use Console\Form\AddToGroup as FormAddToGroup;
+use Console\View\Helper\ConsoleScript;
 use Laminas\View\Helper\AbstractHelper;
 
 /**
@@ -30,11 +31,14 @@ use Laminas\View\Helper\AbstractHelper;
  */
 class AddToGroup extends AbstractHelper
 {
+    public function __construct(private ConsoleScript $consoleScript)
+    {
+    }
+
     public function __invoke(FormAddToGroup $form): string
     {
         $view = $this->getView();
-        $view->consoleScript('form_addtogroup.js');
 
-        return $view->consoleForm($form);
+        return $view->consoleForm($form) . ($this->consoleScript)('js/form_addtogroup.js');
     }
 }

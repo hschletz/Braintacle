@@ -23,6 +23,7 @@
 namespace Console\Test\View\Helper\Form\Package;
 
 use Console\Form\Package\Build as BuildForm;
+use Console\View\Helper\ConsoleScript;
 use Console\View\Helper\Form\Package\Build as BuildHelper;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
@@ -30,31 +31,33 @@ use Laminas\View\Renderer\PhpRenderer;
 use Library\Test\View\Helper\AbstractTestCase;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\MockObject\MockObject;
+use Mockery\Mock;
 
 class BuildTest extends AbstractTestCase
 {
     use MockeryPHPUnitIntegration;
 
-    protected function getHelperName()
+    public function testHelperService()
     {
-        return 'consoleFormPackageBuild';
+        $this->assertInstanceOf(BuildHelper::class, $this->getHelper(BuildHelper::class));
     }
 
     public function testInvoke()
     {
         $form = $this->createStub(BuildForm::class);
 
+        $consoleScript = $this->createMock(ConsoleScript::class);
+        $consoleScript->method('__invoke')->with('js/form_package.js')->willReturn('<scriptPackage>');
+
         $view = Mockery::mock(PhpRenderer::class);
-        $view->shouldReceive('consoleScript')->once()->with('form_package.js');
         $view->shouldReceive('consoleForm')->once()->with($form)->andReturn('rendered form');
 
-        /** @var MockObject|BuildHelper|callable */
-        $helper = $this->createPartialMock(BuildHelper::class, ['getView', 'initLabels']);
-        $helper->method('getView')->willReturn($view);
-        $helper->expects($this->once())->method('initLabels')->with($form);
+        /** @var Mock|BuildHelper|callable */
+        $helper = Mockery::mock(BuildHelper::class, [$consoleScript])->makePartial();
+        $helper->shouldReceive('getView')->andReturn($view);
+        $helper->shouldReceive('initLabels')->once()->with($form);
 
-        $this->assertEquals('rendered form', $helper($form));
+        $this->assertEquals('rendered form<scriptPackage>', $helper($form));
     }
 
     public static function initLabelsProvider()

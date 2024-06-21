@@ -1,6 +1,7 @@
 {* Software page *}
 {import ../SortableHeader.latte}
-{addScript form_software.js}
+
+<script type="module" src="{assetUrl('js/form_software.js')}"></script>
 
 <form method="get">
     <input type="hidden" name="csrf" value="{$csrfToken}">

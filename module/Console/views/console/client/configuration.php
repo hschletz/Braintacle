@@ -20,5 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Console\View\Helper\Form\ClientConfig;
+
 print $this->clientHeader($this->client);
-print $this->consoleFormClientConfig($this->form);
+print $this->plugin(ClientConfig::class)($this->form);

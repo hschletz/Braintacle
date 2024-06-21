@@ -23,6 +23,7 @@
 namespace Console\Test\View\Helper\Form;
 
 use Console\Form\ClientConfig as ClientConfigForm;
+use Console\View\Helper\ConsoleScript;
 use Console\View\Helper\Form\ClientConfig as ClientConfigHelper;
 use Console\View\Helper\Form\Fieldset as FormFieldset;
 use Laminas\Form\Element;
@@ -30,6 +31,8 @@ use Laminas\Form\Fieldset;
 use Laminas\Stdlib\PriorityList;
 use Laminas\View\Renderer\PhpRenderer;
 use Library\Test\View\Helper\AbstractTestCase;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\Client\Client;
 use Model\ClientOrGroup;
 use Model\Group\Group;
@@ -38,24 +41,24 @@ use PHPUnit\Framework\MockObject\Stub;
 
 class ClientConfigTest extends AbstractTestCase
 {
-    /** {@inheritdoc} */
-    protected function getHelperName()
+    use MockeryPHPUnitIntegration;
+
+    public function testHelperService()
     {
-        return 'consoleFormClientConfig';
+        $this->assertInstanceOf(ClientConfigHelper::class, $this->getHelper(ClientConfigHelper::class));
     }
 
     public function testRender()
     {
-        $view = $this->createMock(PhpRenderer::class);
-        $view->expects($this->once())->method('__call')->with('consoleScript', ['form_clientconfig.js']);
+        $consoleScript = $this->createMock(ConsoleScript::class);
+        $consoleScript->method('__invoke')->with('js/form_clientconfig.js')->willReturn('<scriptClientConfig>');
 
         $form = $this->createStub(ClientConfigForm::class);
 
-        $helper = $this->createPartialMock(ClientConfigHelper::class, ['getView', 'renderForm']);
-        $helper->method('getView')->willReturn($view);
-        $helper->method('renderForm')->with($form)->willReturn('rendered form');
+        $helper = Mockery::mock(ClientConfigHelper::class, [$consoleScript])->makePartial();
+        $helper->shouldReceive('renderForm')->with($form)->andReturn('rendered form');
 
-        $this->assertEquals('rendered form', $helper->render($form));
+        $this->assertEquals('rendered form<scriptClientConfig>', $helper->render($form));
     }
 
     public function testRenderContent()

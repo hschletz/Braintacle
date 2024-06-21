@@ -4,6 +4,7 @@ namespace Braintacle\Test\Legacy;
 
 use Braintacle\AppConfig;
 use Braintacle\Legacy\ApplicationBridge;
+use Braintacle\Template\Function\AssetUrlFunction;
 use Braintacle\Test\HttpHandlerTestTrait;
 use DI\Container;
 use Laminas\Db\Adapter\Adapter;
@@ -31,6 +32,7 @@ class ApplicationBridgeTest extends TestCase
             AbstractDatabase::class => $this->createStub(AbstractDatabase::class),
             Adapter::class => $this->createStub(Adapter::class),
             AppConfig::class => $this->createStub(AppConfig::class),
+            AssetUrlFunction::class => $this->createStub(AssetUrlFunction::class),
             Client::class => $this->createStub(Client::class),
             ClockInterface::class => $this->createStub(ClockInterface::class),
             Group::class => $this->createStub(Group::class),
@@ -77,6 +79,7 @@ class ApplicationBridgeTest extends TestCase
         $this->assertSame($services[Adapter::class], $serviceManager->get(Adapter::class));
         $this->assertSame($services[Adapter::class], $serviceManager->get('Db'));
         $this->assertSame($services[AppConfig::class], $serviceManager->get(AppConfig::class));
+        $this->assertSame($services[AssetUrlFunction::class], $serviceManager->get(AssetUrlFunction::class));
         $this->assertSame($services[Client::class], $serviceManager->get(Client::class));
         $this->assertSame($services[ClockInterface::class], $serviceManager->get(ClockInterface::class));
         $this->assertSame($services[Group::class], $serviceManager->get(Group::class));

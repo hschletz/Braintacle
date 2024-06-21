@@ -22,6 +22,7 @@
 
 namespace Console\View\Helper\Form;
 
+use Console\View\Helper\ConsoleScript;
 use Laminas\Form\Element\Checkbox;
 use Laminas\Form\Fieldset;
 use Laminas\Form\FormInterface;
@@ -33,11 +34,13 @@ use Model\ClientOrGroup;
  */
 class ClientConfig extends Form
 {
+    public function __construct(private ConsoleScript $consoleScript)
+    {
+    }
+
     public function render(\Laminas\Form\FormInterface $form): string
     {
-        $this->getView()->consoleScript('form_clientconfig.js');
-
-        return $this->renderForm($form);
+        return $this->renderForm($form) . ($this->consoleScript)('js/form_clientconfig.js');
     }
 
     public function renderContent(FormInterface $form): string

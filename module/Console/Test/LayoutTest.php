@@ -22,7 +22,6 @@
 
 namespace Console\Test;
 
-use Console\View\Helper\ConsoleScript;
 use Laminas\Dom\Document\Query;
 use Library\Test\InjectServicesTrait;
 
@@ -95,18 +94,6 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         $html = $this->_view->render('layout');
         $document = new \Laminas\Dom\Document($html);
         $this->assertCount(1, Query::execute('/html/head/title[text()="title"]', $document));
-    }
-
-    public function testConsoleScript()
-    {
-        $helper = $this->createMock(ConsoleScript::class);
-        $helper->method('__invoke')->with(null)->willReturnSelf();
-        $helper->method('__toString')->willReturn('<consolescript/>');
-        $this->_view->getHelperPluginManager()->setService('consoleScript', $helper);
-
-        $html = $this->_view->render('layout');
-        $document = new \Laminas\Dom\Document($html);
-        $this->assertCount(1, Query::execute('/html/head/consolescript', $document));
     }
 
     public function testContent()

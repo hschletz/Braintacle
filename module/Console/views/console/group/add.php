@@ -20,8 +20,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Console\View\Helper\Form\AddToGroup;
+
 print $this->htmlElement(
     'h1',
     $this->translate('Save to group')
 );
-print $this->consoleFormAddToGroup($this->form);
+print $this->plugin(AddToGroup::class)($this->form);

@@ -34,9 +34,6 @@ print $this->HeadLink()->appendStylesheet(
 );
 print "\n";
 
-print $this->consoleScript();
-print "\n";
-
 print "</head>\n";
 print "<body>\n";
 print "<div id='content'>\n";

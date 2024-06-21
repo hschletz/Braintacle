@@ -25,15 +25,9 @@ use Console\Mvc\Controller\Plugin\Translate;
 use Console\Template\TemplateRenderer;
 use Console\Template\TemplateRendererFactory;
 use Console\View\Helper\ClientHeader;
-use Console\View\Helper\ConsoleScript;
-use Console\View\Helper\Form\AddToGroup;
-use Console\View\Helper\Form\Package\Build;
-use Console\View\Helper\Form\Package\Update;
-use Console\View\Helper\Form\Search;
 use Console\View\Helper\GroupHeader;
 use Console\View\Helper\Service\ClientHeaderFactory;
 use Console\View\Helper\Service\GroupHeaderFactory;
-use Laminas\ServiceManager\Factory\InvokableFactory;
 
 return array(
     'controller_plugins' => array(
@@ -123,36 +117,24 @@ return array(
     'view_helpers' => array(
         'aliases' => array(
             'clientHeader' => ClientHeader::class,
-            'consoleScript' => ConsoleScript::class,
             'consoleUrl' => 'Console\View\Helper\ConsoleUrl',
             'filterDescription' => 'Console\View\Helper\FilterDescription',
             'groupHeader' => GroupHeader::class,
             'table' => 'Console\View\Helper\Table',
             'consoleForm' => 'Console\View\Helper\Form\Form',
-            'consoleFormAddToGroup' => AddToGroup::class,
             'consoleFormFieldset' => 'Console\View\Helper\Form\Fieldset',
-            'consoleFormClientConfig' => 'Console\View\Helper\Form\ClientConfig',
             'consoleFormManageRegistryValues' => 'Console\View\Helper\Form\ManageRegistryValues',
-            'consoleFormPackageBuild' => Build::class,
-            'consoleFormPackageUpdate' => Update::class,
-            'consoleFormSearch' => Search::class,
             'consoleFormSoftware' => 'Console\View\Helper\Form\Software',
         ),
         'factories' => array(
             ClientHeader::class => ClientHeaderFactory::class,
-            ConsoleScript::class => InvokableFactory::class,
             'Console\View\Helper\ConsoleUrl' => 'Console\View\Helper\Service\ConsoleUrlFactory',
             'Console\View\Helper\FilterDescription' => 'Console\View\Helper\Service\FilterDescriptionFactory',
             GroupHeader::class => GroupHeaderFactory::class,
             'Console\View\Helper\Table' => 'Console\View\Helper\Service\TableFactory',
-            AddToGroup::class => InvokableFactory::class,
             'Console\View\Helper\Form\Form' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\Fieldset' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-            'Console\View\Helper\Form\ClientConfig' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\ManageRegistryValues' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-            Build::class => InvokableFactory::class,
-            Update::class => InvokableFactory::class,
-            Search::class => InvokableFactory::class,
             'Console\View\Helper\Form\ShowDuplicates' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\Software' => 'Laminas\ServiceManager\Factory\InvokableFactory',
         ),

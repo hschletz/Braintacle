@@ -64,6 +64,7 @@ class Application
         $serviceManager->get(FilterPluginManager::class)->addAbstractFactory(AutowireFactory::class);
         $serviceManager->get(LoaderPluginManager::class)->addAbstractFactory(AutowireFactory::class);
         $serviceManager->get(ValidatorPluginManager::class)->addAbstractFactory(AutowireFactory::class);
+        $serviceManager->get('ViewHelperManager')->addAbstractFactory(AutowireFactory::class);
     }
 
     /**

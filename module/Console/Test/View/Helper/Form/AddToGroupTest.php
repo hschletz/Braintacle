@@ -23,34 +23,35 @@
 namespace Console\Test\View\Helper\Form;
 
 use Console\Form\AddToGroup as AddToGroupForm;
+use Console\View\Helper\ConsoleScript;
 use Console\View\Helper\Form\AddToGroup as AddToGroupHelper;
 use Laminas\View\Renderer\PhpRenderer;
 use Library\Test\View\Helper\AbstractTestCase;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class AddToGroupTest extends AbstractTestCase
 {
     use MockeryPHPUnitIntegration;
 
-    protected function getHelperName()
+    public function testHelperService()
     {
-        return 'consoleFormAddToGroup';
+        $this->assertInstanceOf(AddToGroupHelper::class, $this->getHelper(AddToGroupHelper::class));
     }
 
     public function testRender()
     {
         $form = $this->createStub(AddToGroupForm::class);
 
+        $consoleScript = $this->createMock(ConsoleScript::class);
+        $consoleScript->method('__invoke')->with('js/form_addtogroup.js')->willReturn('<scriptAddToGroup>');
+
         $view = Mockery::mock(PhpRenderer::class);
-        $view->shouldReceive('consoleScript')->once()->with('form_addtogroup.js');
         $view->shouldReceive('consoleForm')->once()->with($form)->andReturn('rendered form');
 
-        /** @var MockObject|AddToGroupHelper|callable */
-        $helper = $this->createPartialMock(AddToGroupHelper::class, ['getView']);
-        $helper->method('getView')->willReturn($view);
+        $helper = new AddToGroupHelper($consoleScript);
+        $helper->setView($view);
 
-        $this->assertEquals('rendered form', $helper($form));
+        $this->assertEquals('rendered form<scriptAddToGroup>', $helper($form));
     }
 }

@@ -34,12 +34,17 @@ use Laminas\Form\View\Helper\FormElementErrors;
 use Laminas\Form\View\Helper\FormRow;
 use Laminas\View\Renderer\PhpRenderer;
 use Library\Test\View\Helper\AbstractTestCase;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery\Mock;
 
 class UpdateTest extends AbstractTestCase
 {
-    protected function getHelperName()
+    use MockeryPHPUnitIntegration;
+
+    public function testHelperService()
     {
-        return 'consoleFormPackageUpdate';
+        $this->assertInstanceOf(Update::class, $this->getHelper(Update::class));
     }
 
     public function testRender()
@@ -47,22 +52,20 @@ class UpdateTest extends AbstractTestCase
         $form = $this->createStub(BuildForm::class);
 
         $consoleScript = $this->createMock(ConsoleScript::class);
-        $consoleScript->expects($this->once())->method('__invoke')->with('form_package.js');
+        $consoleScript->method('__invoke')->with('js/form_package.js')->willReturn('<scriptPackage>');
 
         $build = $this->createMock(BuildHelper::class);
         $build->expects($this->once())->method('initLabels')->with($form);
 
-        $view = $this->createStub(PhpRenderer::class);
-        $view->method('plugin')->willReturnMap([
-            [ConsoleScript::class, null, $consoleScript],
-            [BuildHelper::class, null, $build],
-        ]);
+        $view = $this->createMock(PhpRenderer::class);
+        $view->method('plugin')->with(BuildHelper::class)->willReturn($build);
 
-        $helper = $this->createPartialMock(Update::class, ['getView', 'renderForm']);
-        $helper->method('getView')->willReturn($view);
-        $helper->method('renderForm')->with($form)->willReturn('rendered form');
+        /** @var Mock|Update */
+        $helper = Mockery::mock(Update::class, [$consoleScript])->makePartial();
+        $helper->shouldReceive('getView')->andReturn($view);
+        $helper->shouldReceive('renderForm')->with($form)->andReturn('rendered form');
 
-        $this->assertEquals('rendered form', $helper->render($form));
+        $this->assertEquals('rendered form<scriptPackage>', $helper->render($form));
     }
 
     public function testRenderContent()

@@ -2,12 +2,11 @@
 
 namespace Console\Template;
 
-use Console\Template\Extensions\AssetLoaderExtension;
+use Braintacle\Template\Function\AssetUrlFunction;
 use Console\Template\Filters\DateFormatFilter;
 use Console\Template\Filters\NumberFormatFilter;
 use Console\Template\Functions\ConsoleUrlFunction;
 use Console\Template\Functions\TranslateFunction;
-use Console\View\Helper\ConsoleScript;
 use Console\View\Helper\ConsoleUrl;
 use Laminas\Mvc\I18n\Translator;
 use Laminas\ServiceManager\Factory\FactoryInterface;
@@ -23,7 +22,6 @@ class TemplateRendererFactory implements FactoryInterface
 
         /** @var HelperPluginManager */
         $viewHelperManager = $container->get('ViewHelperManager');
-        $consoleScript = $viewHelperManager->get(ConsoleScript::class);
         $consoleUrl = $viewHelperManager->get(ConsoleUrl::class);
 
         $consoleUrlFunction = new ConsoleUrlFunction($consoleUrl);
@@ -35,16 +33,13 @@ class TemplateRendererFactory implements FactoryInterface
         $dateFormatFilter = $container->get(DateFormatFilter::class);
         $numberFormatFilter = new NumberFormatFilter();
 
-        $assetLoaderExtension = new AssetLoaderExtension($consoleScript);
-
         $engine = new Engine();
+        $engine->addFunction('assetUrl', $container->get(AssetUrlFunction::class));
         $engine->addFunction('consoleUrl', $consoleUrlFunction);
         $engine->addFunction('translate', $translateFunction);
 
         $engine->addFilter('dateFormat', $dateFormatFilter);
         $engine->addFilter('numberFormat', $numberFormatFilter);
-
-        $engine->addExtension($assetLoaderExtension);
 
         return new TemplateRenderer($engine);
     }

@@ -34,13 +34,16 @@ use Laminas\Form\View\Helper\FormRow;
  */
 class Update extends Form implements FormHelperInterface
 {
+    public function __construct(private ConsoleScript $consoleScript)
+    {
+    }
+
     public function render(FormInterface $form): string
     {
         $view = $this->getView();
-        $view->plugin(ConsoleScript::class)('form_package.js');
         $view->plugin(Build::class)->initLabels($form);
 
-        return $this->renderForm($form);
+        return $this->renderForm($form) . ($this->consoleScript)('js/form_package.js');
     }
 
     public function renderContent(FormInterface $form): string

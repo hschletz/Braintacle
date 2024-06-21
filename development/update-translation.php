@@ -22,8 +22,6 @@
  */
 
 use Composer\InstalledVersions;
-use Console\Template\Extensions\AssetLoaderExtension;
-use Console\View\Helper\ConsoleScript;
 use Gettext\Generator\PoGenerator;
 use Gettext\Loader\StrictPoLoader;
 use Gettext\Scanner\PhpScanner;
@@ -233,7 +231,6 @@ function parseTemplate(string $file, string $relativePath): Translations
 
     // Invoke Latte parser, assuming HTML content.
     $engine = new Engine();
-    $engine->addExtension(new AssetLoaderExtension(new ConsoleScript()));
     $nodes = $engine->parse($template);
     $traverser = new NodeTraverser();
     $traverser->traverse($nodes, function (Node $node) use ($translations, $relativePath) {
