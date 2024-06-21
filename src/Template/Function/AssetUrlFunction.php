@@ -2,6 +2,7 @@
 
 namespace Braintacle\Template\Function;
 
+use Braintacle\Http\RouteHelper;
 use Composer\InstalledVersions;
 
 /**
@@ -9,11 +10,15 @@ use Composer\InstalledVersions;
  */
 class AssetUrlFunction
 {
+    public function __construct(private RouteHelper $routeHelper)
+    {
+    }
+
     public function __invoke(string $path): string
     {
         $fileName = InstalledVersions::getRootPackage()['install_path'] . 'public/' . $path;
         $timestamp = filemtime($fileName);
 
-        return $path . '?' . $timestamp;
+        return $this->routeHelper->getBasePath() . '/' . $path . '?' . $timestamp;
     }
 }

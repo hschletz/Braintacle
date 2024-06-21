@@ -24,8 +24,11 @@ class RouteHelperMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        // The route context will not contain the base path because Slim will
+        // inject it only after the middleware stack has been processed.
         $routeContext = RouteContext::fromRequest($request);
-        $this->routeHelper->setRouteContext($routeContext);
+        $this->routeHelper->setRouteParser($routeContext->getRouteParser());
+        $this->routeHelper->setBasePath(RouteHelper::detectBasePath($request->getServerParams()));
 
         return $handler->handle($request);
     }

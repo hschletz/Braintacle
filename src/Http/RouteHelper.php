@@ -2,11 +2,12 @@
 
 namespace Braintacle\Http;
 
-use Slim\Routing\RouteContext;
+use Slim\Interfaces\RouteParserInterface;
 
 class RouteHelper
 {
-    private RouteContext $routeContext;
+    private string $basePath;
+    private RouteParserInterface $routeParser;
 
     /**
      * Detect application's base URI path.
@@ -16,7 +17,7 @@ class RouteHelper
      *
      * @param array<string,mixed> $serverParams Content of $_SERVER
      */
-    public static function getBasePath(array $serverParams): string
+    public static function detectBasePath(array $serverParams): string
     {
         $scriptName = $serverParams['SCRIPT_NAME'] ?? '';
         $basePath = dirname($scriptName);
@@ -27,9 +28,19 @@ class RouteHelper
         return $basePath;
     }
 
-    public function setRouteContext(RouteContext $routeContext): void
+    public function setBasePath(string $basePath): void
     {
-        $this->routeContext = $routeContext;
+        $this->basePath = $basePath;
+    }
+
+    public function getBasePath(): string
+    {
+        return $this->basePath;
+    }
+
+    public function setRouteParser(RouteParserInterface $routeParser): void
+    {
+        $this->routeParser = $routeParser;
     }
 
     /**
@@ -37,6 +48,6 @@ class RouteHelper
      */
     public function getPathForRoute(string $name): string
     {
-        return $this->routeContext->getRouteParser()->urlFor($name);
+        return $this->routeParser->urlFor($name);
     }
 }

@@ -33,7 +33,7 @@ $container = new Container();
 
 $app = AppFactory::createFromContainer($container);
 $app->getRouteCollector()->setDefaultInvocationStrategy(new RequestHandler());
-$app->setBasePath(RouteHelper::getBasePath($_SERVER));
+$app->setBasePath(RouteHelper::detectBasePath($_SERVER));
 
 $app->add(RouteHelperMiddleware::class);
 $app->addRoutingMiddleware();

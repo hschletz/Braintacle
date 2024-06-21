@@ -6,11 +6,10 @@ use Braintacle\Http\RouteHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Slim\Interfaces\RouteParserInterface;
-use Slim\Routing\RouteContext;
 
 class RouteHelperTest extends TestCase
 {
-    public static function getBasePathProvider()
+    public static function detectBasePathProvider()
     {
         return [
             [null, ''],
@@ -20,13 +19,20 @@ class RouteHelperTest extends TestCase
         ];
     }
 
-    #[DataProvider('getBasePathProvider')]
-    public function testGetBasePath(?string $scriptName, string $basePath)
+    #[DataProvider('detectBasePathProvider')]
+    public function testDetectBasePath(?string $scriptName, string $basePath)
     {
         $serverEnvironment = ['SCRIPT_NAME' => $scriptName];
 
         /** @psalm-suppress InvalidArgument $scriptName may be NULL for this test only */
-        $this->assertEquals($basePath, RouteHelper::getBasePath($serverEnvironment));
+        $this->assertEquals($basePath, RouteHelper::detectBasePath($serverEnvironment));
+    }
+
+    public function testGetBasePath()
+    {
+        $routeHelper = new RouteHelper();
+        $routeHelper->setBasePath('/base');
+        $this->assertEquals('/base', $routeHelper->getBasePath());
     }
 
     public function testGetPathForRoute()
@@ -34,11 +40,8 @@ class RouteHelperTest extends TestCase
         $routeParser = $this->createMock(RouteParserInterface::class);
         $routeParser->method('urlFor')->with('routeName')->willReturn('/path');
 
-        $routeContext = $this->createStub(RouteContext::class);
-        $routeContext->method('getRouteParser')->willReturn($routeParser);
-
         $routeHelper = new RouteHelper();
-        $routeHelper->setRouteContext($routeContext);
+        $routeHelper->setRouteParser($routeParser);
         $this->assertEquals('/path', $routeHelper->getPathForRoute('routeName'));
     }
 }
