@@ -210,8 +210,7 @@ msgstr "Die Eingabe ist länger als 255 Zeichen"
 msgid "The name already exists"
 msgstr "Der Name existiert bereits"
 
-#: module/Console/Form/ClientConfig.php
-#: module/Console/Navigation/MainMenuFactory.php
+#: module/Console/Form/ClientConfig.php templates/PreferencesMenuLayout.latte
 msgid "Agent"
 msgstr "Agent"
 
@@ -243,8 +242,7 @@ msgstr "Pause (in Sekunden) zwischen Fragmenten"
 msgid "Delay (in seconds) between periods"
 msgstr "Pause (in Sekunden) zwischen Perioden"
 
-#: module/Console/Form/ClientConfig.php
-#: module/Console/Navigation/MainMenuFactory.php
+#: module/Console/Form/ClientConfig.php templates/PreferencesMenuLayout.latte
 msgid "Download"
 msgstr "Download"
 
@@ -262,8 +260,7 @@ msgstr "Inventar-Intervall (in Tagen, 0 = immer, -1 = nie)"
 msgid "Maximum package priority"
 msgstr "Maximale Paket-Priorität"
 
-#: module/Console/Form/ClientConfig.php
-#: module/Console/Navigation/MainMenuFactory.php
+#: module/Console/Form/ClientConfig.php templates/PreferencesMenuLayout.latte
 msgid "Network scanning"
 msgstr "Netzwerk-Scans"
 
@@ -350,7 +347,7 @@ msgstr "nie"
 msgid "File (*.ocs, *.xml)"
 msgstr "Datei (*.ocs, *.xml)"
 
-#: module/Console/Form/Import.php module/Console/Navigation/MainMenuFactory.php
+#: module/Console/Form/Import.php templates/InventoryMenuLayout.latte
 msgid "Import"
 msgstr "Import"
 
@@ -396,8 +393,7 @@ msgstr "Erlaube Abbruch durch Benutzer"
 msgid "Allow delay by user"
 msgstr "Erlaube Aufschub durch Benutzer"
 
-#: module/Console/Form/Package/Build.php
-#: module/Console/Navigation/MainMenuFactory.php
+#: module/Console/Form/Package/Build.php templates/PackagesMenuLayout.latte
 msgid "Build"
 msgstr "Erstellen"
 
@@ -464,8 +460,8 @@ msgid "Error"
 msgstr "Fehler"
 
 #: module/Console/Form/Package/Update.php
-#: module/Console/Form/Preferences/Packages.php
-#: module/Console/Navigation/MainMenuFactory.php templates/Client/Header.latte
+#: module/Console/Form/Preferences/Packages.php templates/Client/Header.latte
+#: templates/Layout.latte templates/PreferencesMenuLayout.latte
 msgid "Groups"
 msgstr "Gruppen"
 
@@ -887,7 +883,7 @@ msgstr "Druckername"
 msgid "Printer port"
 msgstr "Druckeranschluss"
 
-#: module/Console/Form/Search.php module/Console/Navigation/MainMenuFactory.php
+#: module/Console/Form/Search.php templates/Layout.latte
 msgid "Search"
 msgstr "Suchen"
 
@@ -971,63 +967,6 @@ msgstr "Arbeitsgruppe"
 #: module/Console/Form/ShowDuplicates.php
 msgid "At least 2 different clients have to be selected"
 msgstr "Es müssen mindestens 2 verschiedene Clients ausgewählt werden"
-
-#: module/Console/Navigation/MainMenuFactory.php
-msgid "Clients"
-msgstr "Clients"
-
-#: module/Console/Navigation/MainMenuFactory.php templates/Client/Header.latte
-msgid "Display"
-msgstr "Anzeige"
-
-#: module/Console/Navigation/MainMenuFactory.php
-msgid "Duplicates"
-msgstr "Duplikate"
-
-#: module/Console/Navigation/MainMenuFactory.php
-msgid "Filters"
-msgstr "Filter"
-
-#: module/Console/Navigation/MainMenuFactory.php
-msgid "Inventory"
-msgstr "Inventar"
-
-#: module/Console/Navigation/MainMenuFactory.php
-msgid "Licenses"
-msgstr "Lizenzen"
-
-#: module/Console/Navigation/MainMenuFactory.php templates/Client/Header.latte
-msgid "Network"
-msgstr "Netzwerk"
-
-#: module/Console/Navigation/MainMenuFactory.php
-msgid "Overview"
-msgstr "Übersicht"
-
-#: module/Console/Navigation/MainMenuFactory.php templates/Client/Header.latte
-#: templates/Group/Header.latte
-msgid "Packages"
-msgstr "Pakete"
-
-#: module/Console/Navigation/MainMenuFactory.php
-msgid "Preferences"
-msgstr "Einstellungen"
-
-#: module/Console/Navigation/MainMenuFactory.php
-msgid "Raw data"
-msgstr "Rohdaten"
-
-#: module/Console/Navigation/MainMenuFactory.php templates/Client/Header.latte
-msgid "Software"
-msgstr "Software"
-
-#: module/Console/Navigation/MainMenuFactory.php templates/Client/Header.latte
-msgid "System"
-msgstr "System"
-
-#: module/Console/Navigation/MainMenuFactory.php
-msgid "Users"
-msgstr "Benutzer"
 
 #: module/Console/View/Helper/FilterDescription.php
 #, php-format
@@ -1641,10 +1580,6 @@ msgstr "Der Registry-Wert '%s' wird aus dem Inventar gelöscht. Fortfahren?"
 msgid "Manage registry values"
 msgstr "Registry-Werte verwalten"
 
-#: module/Console/views/layout/layout.php
-msgid "Logout"
-msgstr "Abmelden"
-
 #: module/Library/Validator/DirectoryWritable.php
 msgid "'%value%' is not a directory or inaccessible"
 msgstr "'%value%' ist kein Verzeichnis oder nicht zugänglich"
@@ -1725,6 +1660,10 @@ msgstr "Konfiguration"
 msgid "Details for client '%s'"
 msgstr "Einzelheiten für Client '%s'"
 
+#: templates/Client/Header.latte templates/PreferencesMenuLayout.latte
+msgid "Display"
+msgstr "Anzeige"
+
 #: templates/Client/Header.latte
 msgid "Export"
 msgstr "Exportieren"
@@ -1741,6 +1680,15 @@ msgstr "MS Office"
 msgid "Misc"
 msgstr "Verschiedenes"
 
+#: templates/Client/Header.latte templates/InventoryMenuLayout.latte
+msgid "Network"
+msgstr "Netzwerk"
+
+#: templates/Client/Header.latte templates/Group/Header.latte
+#: templates/Layout.latte templates/PreferencesMenuLayout.latte
+msgid "Packages"
+msgstr "Pakete"
+
 #: templates/Client/Header.latte
 msgid "Printers"
 msgstr "Drucker"
@@ -1749,9 +1697,17 @@ msgstr "Drucker"
 msgid "Registry"
 msgstr "Registry"
 
+#: templates/Client/Header.latte templates/InventoryMenuLayout.latte
+msgid "Software"
+msgstr "Software"
+
 #: templates/Client/Header.latte
 msgid "Storage"
 msgstr "Massenspeicher"
+
+#: templates/Client/Header.latte templates/PreferencesMenuLayout.latte
+msgid "System"
+msgstr "System"
 
 #: templates/Client/Header.latte
 msgid "User defined"
@@ -1833,6 +1789,34 @@ msgstr "Ausgeschlossen"
 msgid "Members"
 msgstr "Mitglieder"
 
+#: templates/InventoryMenuLayout.latte
+msgid "Clients"
+msgstr "Clients"
+
+#: templates/InventoryMenuLayout.latte
+msgid "Duplicates"
+msgstr "Duplikate"
+
+#: templates/Layout.latte templates/PreferencesMenuLayout.latte
+msgid "Inventory"
+msgstr "Inventar"
+
+#: templates/Layout.latte
+msgid "Licenses"
+msgstr "Lizenzen"
+
+#: templates/Layout.latte
+msgid "Logout"
+msgstr "Abmelden"
+
+#: templates/Layout.latte
+msgid "Preferences"
+msgstr "Einstellungen"
+
+#: templates/PackagesMenuLayout.latte
+msgid "Overview"
+msgstr "Übersicht"
+
 #: templates/Pages/Login.latte
 msgid "Invalid username or password"
 msgstr "Benutzername und/oder Passwort ungültig."
@@ -1848,6 +1832,18 @@ msgstr "Bei Braintacle anmelden"
 #: templates/Pages/Login.latte
 msgid "Username"
 msgstr "Benutzername"
+
+#: templates/PreferencesMenuLayout.latte
+msgid "Filters"
+msgstr "Filter"
+
+#: templates/PreferencesMenuLayout.latte
+msgid "Raw data"
+msgstr "Rohdaten"
+
+#: templates/PreferencesMenuLayout.latte
+msgid "Users"
+msgstr "Benutzer"
 
 #: templates/Software/Confirm.latte
 msgid "The following software will be marked as known and accepted. Continue?"

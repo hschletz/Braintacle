@@ -24,6 +24,7 @@ namespace Console\Test;
 
 use Laminas\Mvc\MvcEvent;
 use Laminas\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
+use Laminas\View\Model\ViewModel;
 use Library\Application;
 use Library\Test\InjectServicesTrait;
 
@@ -63,6 +64,19 @@ abstract class AbstractControllerTestCase extends AbstractHttpControllerTestCase
         );
         Application::addAbstractFactories($serviceManager);
         static::injectServices($serviceManager);
+
+        // Prevent the MVC application from applying a layout. Unlike in the
+        // real application, the listener must not be attached to the
+        // MvcEvent::EVENT_RENDER_ERROR. That would break
+        // AbstractHttpControllerTestCase's error handling.
+        $eventManager = $this->getApplication()->getEventManager();
+        $eventManager->attach(MvcEvent::EVENT_RENDER, function (MvcEvent $event) {
+            $result = $event->getResult();
+            if ($result instanceof ViewModel) {
+                $result->setTerminal(true);
+                $event->setViewModel($result);
+            }
+        }, -95);
     }
 
     /**

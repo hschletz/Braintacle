@@ -22,6 +22,9 @@
 
 namespace Console\Controller;
 
+use Laminas\Stdlib\RequestInterface;
+use Laminas\Stdlib\ResponseInterface;
+
 /**
  * Controller for managing preferences
  */
@@ -80,6 +83,13 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
         $this->_config = $config;
     }
 
+    public function dispatch(RequestInterface $request, ?ResponseInterface $response = null)
+    {
+        $this->getEvent()->setParam('template', 'PreferencesMenuLayout.latte');
+
+        return parent::dispatch($request, $response);
+    }
+
     /**
      * Redirect to first page
      *
@@ -97,6 +107,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function displayAction()
     {
+        $this->getEvent()->setParam('subMenuRoute', 'preferencesDisplayPage');
         return $this->useForm('Console\Form\Preferences\Display');
     }
 
@@ -107,6 +118,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function inventoryAction()
     {
+        $this->getEvent()->setParam('subMenuRoute', 'preferencesInventoryPage');
         return $this->useForm('Console\Form\Preferences\Inventory');
     }
 
@@ -117,6 +129,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function agentAction()
     {
+        $this->getEvent()->setParam('subMenuRoute', 'preferencesAgentPage');
         return $this->useForm('Console\Form\Preferences\Agent');
     }
 
@@ -127,6 +140,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function packagesAction()
     {
+        $this->getEvent()->setParam('subMenuRoute', 'preferencesPackagesPage');
         return $this->useForm('Console\Form\Preferences\Packages');
     }
 
@@ -137,6 +151,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function downloadAction()
     {
+        $this->getEvent()->setParam('subMenuRoute', 'preferencesDownloadPage');
         return $this->useForm('Console\Form\Preferences\Download');
     }
 
@@ -147,6 +162,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function networkscanningAction()
     {
+        $this->getEvent()->setParam('subMenuRoute', 'preferencesNetworkScanningPage');
         return $this->useForm('Console\Form\Preferences\NetworkScanning');
     }
 
@@ -157,6 +173,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function groupsAction()
     {
+        $this->getEvent()->setParam('subMenuRoute', 'preferencesGroupsPage');
         return $this->useForm('Console\Form\Preferences\Groups');
     }
 
@@ -167,6 +184,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function rawdataAction()
     {
+        $this->getEvent()->setParam('subMenuRoute', 'preferencesRawDataPage');
         return $this->useForm('Console\Form\Preferences\RawData');
     }
 
@@ -177,6 +195,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function filtersAction()
     {
+        $this->getEvent()->setParam('subMenuRoute', 'preferencesFiltersPage');
         return $this->useForm('Console\Form\Preferences\Filters');
     }
 
@@ -187,6 +206,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function systemAction()
     {
+        $this->getEvent()->setParam('subMenuRoute', 'preferencesSystemPage');
         return $this->useForm('Console\Form\Preferences\System');
     }
 
@@ -197,6 +217,10 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function customfieldsAction()
     {
+        $event = $this->getEvent();
+        $event->setParam('template', 'InventoryMenuLayout.latte');
+        $event->setParam('subMenuRoute', 'clientList');
+
         $form = $this->_formManager->get('Console\Form\DefineFields');
         if ($this->getRequest()->isPost()) {
             $form->setData($this->params()->fromPost());
@@ -216,6 +240,10 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function deletefieldAction()
     {
+        $event = $this->getEvent();
+        $event->setParam('template', 'InventoryMenuLayout.latte');
+        $event->setParam('subMenuRoute', 'clientList');
+
         $field = $this->params()->fromQuery('name');
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
@@ -234,6 +262,10 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function networkdevicesAction()
     {
+        $event = $this->getEvent();
+        $event->setParam('template', 'InventoryMenuLayout.latte');
+        $event->setParam('subMenuRoute', 'networkPage');
+
         $form = $this->_formManager->get('Console\Form\NetworkDeviceTypes');
         if ($this->getRequest()->isPost()) {
             $form->setData($this->params()->fromPost());
@@ -253,6 +285,10 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function deletedevicetypeAction()
     {
+        $event = $this->getEvent();
+        $event->setParam('template', 'InventoryMenuLayout.latte');
+        $event->setParam('subMenuRoute', 'networkPage');
+
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
                 $this->_deviceManager->deleteType($this->params()->fromQuery('name'));
@@ -270,6 +306,8 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function registryvaluesAction()
     {
+        $this->getEvent()->setParam('subMenuRoute', 'preferencesInventoryPage');
+
         $form = $this->_formManager->get('Console\Form\ManageRegistryValues');
         if ($this->getRequest()->isPost()) {
             $form->setData($this->params()->fromPost());
@@ -290,6 +328,8 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      */
     public function deleteregistryvalueAction()
     {
+        $this->getEvent()->setParam('subMenuRoute', 'preferencesInventoryPage');
+
         if ($this->getRequest()->isPost()) {
             if ($this->params()->fromPost('yes')) {
                 $this->_registryManager->deleteValueDefinition($this->params()->fromQuery('name'));

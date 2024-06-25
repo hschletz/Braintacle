@@ -29,6 +29,8 @@
     {include navigationItem, 'packages', translate('Packages')}
     {include navigationItem, 'groups', translate('Groups')}
     {include navigationItem, 'configuration', translate('Configuration')}
-    {include navigationItem, 'export', translate('Export')}
+    <li>
+        <a download href="{pathForRoute('export', ['id' => $client->id])}">{translate('Export')}</a>
+    </li>
     {include navigationItem, 'delete', translate('Delete')}
 </ul>

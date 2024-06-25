@@ -24,6 +24,7 @@ namespace Console\Controller;
 
 use Console\View\Helper\Form\Package\Build;
 use Console\View\Helper\Form\Package\Update;
+use Laminas\Mvc\MvcEvent;
 
 /**
  * Controller for all package related actions
@@ -74,6 +75,13 @@ class PackageController extends \Laminas\Mvc\Controller\AbstractActionController
         $this->_updateForm = $updateForm;
     }
 
+    public function onDispatch(MvcEvent $e)
+    {
+        $this->getEvent()->setParam('template', 'PackagesMenuLayout.latte');
+
+        return parent::onDispatch($e);
+    }
+
     /**
      * Show package overview
      *
@@ -81,6 +89,7 @@ class PackageController extends \Laminas\Mvc\Controller\AbstractActionController
      */
     public function indexAction()
     {
+        $this->getEvent()->setParam('subMenuRoute', 'packagesList');
         $sorting = $this->getOrder('Name');
         return array(
             'packages' => $this->_packageManager->getPackages(
@@ -98,6 +107,7 @@ class PackageController extends \Laminas\Mvc\Controller\AbstractActionController
      */
     public function buildAction()
     {
+        $this->getEvent()->setParam('subMenuRoute', 'packageBuildPage');
         if ($this->getRequest()->isPost()) {
             $this->_buildForm->setData($this->params()->fromPost() + $this->params()->fromFiles());
             if ($this->_buildForm->isValid()) {
@@ -222,7 +232,6 @@ class PackageController extends \Laminas\Mvc\Controller\AbstractActionController
                 return $this->redirectToRoute('package', 'index');
             }
         } else {
-            $this->setActiveMenu('Packages');
             $form->setData(
                 array(
                     'Deploy' => array(

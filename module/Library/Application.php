@@ -83,7 +83,6 @@ class Application
                 'Laminas\Log',
                 'Laminas\Mvc\I18n',
                 'Laminas\Mvc\Plugin\FlashMessenger',
-                'Laminas\Navigation',
                 'Laminas\Router',
                 'Laminas\Validator',
                 $module,

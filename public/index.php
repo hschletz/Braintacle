@@ -32,7 +32,7 @@ if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 $container = new Container();
 
 $app = AppFactory::createFromContainer($container);
-$app->getRouteCollector()->setDefaultInvocationStrategy(new RequestHandler());
+$app->getRouteCollector()->setDefaultInvocationStrategy(new RequestHandler(true));
 $app->setBasePath(RouteHelper::detectBasePath($_SERVER));
 
 $app->add(RouteHelperMiddleware::class);

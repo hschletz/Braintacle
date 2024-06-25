@@ -17,10 +17,14 @@ class HeaderTest extends TestCase
     {
         $engine = new Engine();
         $engine->setLoader(TemplateRenderer::createLoader());
-        $engine->addFunction('translate', fn($message) => $message);
+        $engine->addFunction('translate', fn ($message) => $message);
         $engine->addFunction(
             'consoleUrl',
             fn ($controller, $action, $queryParams) => "/$controller/$action/?" . http_build_query($queryParams)
+        );
+        $engine->addFunction(
+            'pathForRoute',
+            fn ($routeName, $routeArguments) => "/client/$routeArguments[id]/export"
         );
 
         return $engine;
@@ -41,6 +45,7 @@ class HeaderTest extends TestCase
         $this->assertXpathMatches($document, $query . '/a[@href="/client/windows/?id=1"]');
         $this->assertXpathMatches($document, $query . '/a[@href="/client/msoffice/?id=1"]');
         $this->assertXpathMatches($document, $query . '/a[@href="/client/registry/?id=1"]');
+        $this->assertXpathMatches($document, $query . '/a[@href="/client/1/export"]');
     }
 
     public function testMenuForNonWindowsClients()
@@ -55,7 +60,7 @@ class HeaderTest extends TestCase
         $document = $this->createDocument($content);
 
         $query = '//ul[contains(concat(" ", normalize-space(@class), " "), " navigation_details ")]/li';
-        $this->assertXpathMatches($document, $query); // Avoid false positives when rendering fails
+        $this->assertXpathMatches($document, $query . '/a[@href="/client/1/export"]');
         $this->assertNotXpathMatches($document, $query . '/a[@href="/client/windows/?id=1"]');
         $this->assertNotXpathMatches($document, $query . '/a[@href="/client/msoffice/?id=1"]');
         $this->assertNotXpathMatches($document, $query . '/a[@href="/client/registry/?id=1"]');

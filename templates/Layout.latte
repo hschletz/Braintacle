@@ -1,0 +1,33 @@
+{* Main layout. *}
+{import MenuItem.latte}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Braintacle</title>
+        <link rel="stylesheet" href="{assetUrl('style.css')}">
+    </head>
+    <body>
+        <div id='content'>
+            {block content}{/block}
+        </div>
+        <div id='menu'>
+            <ul class="navigation">
+                {include menuItem, $mainMenuRoute, 'clientList', translate('Inventory')}
+                {include menuItem, $mainMenuRoute, 'groupList', translate('Groups')}
+                {include menuItem, $mainMenuRoute, 'packagesList', translate('Packages')}
+                {include menuItem, $mainMenuRoute, 'licensesPage', translate('Licenses')}
+                {include menuItem, $mainMenuRoute, 'searchPage', translate('Search')}
+                {include menuItem, $mainMenuRoute, 'preferencesPage', translate('Preferences')}
+            </ul>
+            <ul class="navigation navigation_sub">
+                {block subMenu}{/block}
+            </ul>
+            <div id='logout'>
+                <a href="{pathForRoute('logout')}">
+                    {translate('Logout')}
+                </a>
+            </div>
+        </div>
+    </body>
+</html>

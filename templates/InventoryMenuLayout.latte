@@ -1,0 +1,11 @@
+{* Layout for a subpage from the "Inventory" menu *}
+{layout MvcLayout.latte}
+{import MenuItem.latte}
+{var $mainMenuRoute = 'clientList'}
+{block subMenu}
+    {include menuItem, $subMenuRoute, 'clientList', translate('Clients')}
+    {include menuItem, $subMenuRoute, 'softwarePage', translate('Software')}
+    {include menuItem, $subMenuRoute, 'networkPage', translate('Network')}
+    {include menuItem, $subMenuRoute, 'duplicatesList', translate('Duplicates')}
+    {include menuItem, $subMenuRoute, 'importPage', translate('Import')}
+{/block}

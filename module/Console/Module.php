@@ -61,8 +61,6 @@ class Module implements
         $eventManager->attach(MvcEvent::EVENT_RENDER, [$this, 'registerTemplateStrategy']);
         $eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'setTranslators'));
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'forceStrictVars'));
-        $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setMenu'));
-        $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setLayoutTitle'));
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onError'));
         $eventManager->attach(MvcEvent::EVENT_RENDER_ERROR, array($this, 'onError'));
     }
@@ -139,32 +137,6 @@ class Module implements
         foreach ($model->getChildren() as $child) {
             $this->setStrictVars($child);
         }
-    }
-
-    /**
-     * Hook to inject the main menu
-     *
-     * This is invoked by the "render" event.
-     *
-     * @param \Laminas\Mvc\MvcEvent $e MVC event
-     */
-    public function setMenu(\Laminas\EventManager\EventInterface $e)
-    {
-        $e->getViewModel()->menu = 'Console\Navigation\MainMenu';
-    }
-
-    /**
-     * Hook to set the page title
-     *
-     * This is invoked by the "render" event.
-     *
-     * @param \Laminas\Mvc\MvcEvent $e MVC event
-     */
-    public function setLayoutTitle(\Laminas\Mvc\MvcEvent $e)
-    {
-        $headTitleHelper = $e->getApplication()->getServiceManager()->get('ViewHelperManager')->get('headTitle');
-        $headTitleHelper->setTranslatorEnabled(false);
-        $headTitleHelper->append('Braintacle'); // TODO: append page-specific information
     }
 
     /**

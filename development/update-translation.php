@@ -58,7 +58,6 @@ $translations->getHeaders()->set('Content-Type', 'text/plain; charset=UTF-8');
 $translations = $translations->mergeWith(parsePhpFiles([
     'module/Console/Controller',
     'module/Console/Form',
-    'module/Console/Navigation',
     'module/Console/View/Helper',
     'module/Console/views',
 ]));

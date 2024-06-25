@@ -3,6 +3,7 @@
 namespace Console\Test\Template;
 
 use Braintacle\Template\Function\AssetUrlFunction;
+use Braintacle\Template\Function\PathForRouteFunction;
 use Console\Template\Filters\DateFormatFilter;
 use Console\Template\TemplateRenderer;
 use Console\Template\TemplateRendererFactory;
@@ -31,6 +32,9 @@ class TemplateRendererTest extends TestCase
         $assetUrl = $this->createMock(AssetUrlFunction::class);
         $assetUrl->method('__invoke')->with('path')->willReturn('url');
 
+        $pathForRoute = $this->createMock(PathForRouteFunction::class);
+        $pathForRoute->method('__invoke')->with('route')->willReturn('path');
+
         /** @var MockObject|TranslatorInterface */
         $translator = $this->createStub(Translator::class);
         $translator->method('translate')->willReturn('translated');
@@ -54,6 +58,7 @@ class TemplateRendererTest extends TestCase
         $container->method('get')->willReturnMap([
             [AssetUrlFunction::class, $assetUrl],
             [DateFormatFilter::class, new DateFormatFilter()],
+            [PathForRouteFunction::class, $pathForRoute],
             [Translator::class, $translator],
             ['ViewHelperManager', $viewHelperManager],
         ]);
@@ -67,6 +72,7 @@ class TemplateRendererTest extends TestCase
         $this->assertEquals('translated', $engine->invokeFunction('translate', ['message']));
         $this->assertEquals('url', $engine->invokeFunction('consoleUrl', []));
         $this->assertEquals('url', $engine->invokeFunction('assetUrl', ['path']));
+        $this->assertEquals('path', $engine->invokeFunction('pathForRoute', ['route']));
     }
 
     public function testService()

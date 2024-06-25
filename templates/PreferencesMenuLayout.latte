@@ -1,0 +1,17 @@
+{* Layout for a subpage from the "Preferences" menu *}
+{layout MvcLayout.latte}
+{import MenuItem.latte}
+{var $mainMenuRoute = 'preferencesPage'}
+{block subMenu}
+    {include menuItem, $subMenuRoute, 'preferencesDisplayPage', translate('Display')}
+    {include menuItem, $subMenuRoute, 'preferencesInventoryPage', translate('Inventory')}
+    {include menuItem, $subMenuRoute, 'preferencesAgentPage', translate('Agent')}
+    {include menuItem, $subMenuRoute, 'preferencesPackagesPage', translate('Packages')}
+    {include menuItem, $subMenuRoute, 'preferencesDownloadPage', translate('Download')}
+    {include menuItem, $subMenuRoute, 'preferencesGroupsPage', translate('Groups')}
+    {include menuItem, $subMenuRoute, 'preferencesNetworkScanningPage', translate('Network scanning')}
+    {include menuItem, $subMenuRoute, 'preferencesRawDataPage', translate('Raw data')}
+    {include menuItem, $subMenuRoute, 'preferencesFiltersPage', translate('Filters')}
+    {include menuItem, $subMenuRoute, 'preferencesSystemPage', translate('System')}
+    {include menuItem, $subMenuRoute, 'preferencesUsersList', translate('Users')}
+{/block}

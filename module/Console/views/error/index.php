@@ -24,7 +24,6 @@
 // Absence of the controller variable hints an invalid route which requires
 // special treatment.
 if (!isset($this->controller)) {
-    $this->layout()->noRoute = true;
     print "<p class='textcenter'><strong>Error:</strong> No route matched.</p>\n";
     return;
 }

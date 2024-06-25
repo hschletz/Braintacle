@@ -25,6 +25,7 @@ namespace Console\Controller;
 use Console\Form\SoftwareManagementForm;
 use Console\Template\TemplateViewModel;
 use Console\Validator\CsrfValidator;
+use Laminas\Mvc\MvcEvent;
 use Laminas\Session\Container;
 
 /**
@@ -46,6 +47,15 @@ class SoftwareController extends \Laminas\Mvc\Controller\AbstractActionControlle
     ) {
         $this->_softwareManager = $softwareManager;
         $this->softwareManagementForm = $softwareManagementForm;
+    }
+
+    public function onDispatch(MvcEvent $e)
+    {
+        $event = $this->getEvent();
+        $event->setParam('template', 'InventoryMenuLayout.latte');
+        $event->setParam('subMenuRoute', 'softwarePage');
+
+        return parent::onDispatch($e);
     }
 
     /**

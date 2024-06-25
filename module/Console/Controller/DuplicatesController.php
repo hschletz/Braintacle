@@ -23,6 +23,7 @@
 namespace Console\Controller;
 
 use Console\Template\TemplateViewModel;
+use Laminas\Mvc\MvcEvent;
 use Model\Config;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
@@ -62,6 +63,15 @@ class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionControl
         $this->_showDuplicates = $showDuplicates;
     }
 
+    public function onDispatch(MvcEvent $e)
+    {
+        $event = $this->getEvent();
+        $event->setParam('template', 'InventoryMenuLayout.latte');
+        $event->setParam('subMenuRoute', 'duplicatesList');
+
+        return parent::onDispatch($e);
+    }
+
     /**
      * Display overview of duplicates
      *
@@ -95,7 +105,6 @@ class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionControl
             }
         }
 
-        $this->setActiveMenu('Inventory', 'Duplicates');
         $ordering = $this->getOrder('Id', 'asc');
         $clients = $this->_duplicates->find(
             $this->params()->fromQuery('criteria'),

@@ -13,8 +13,8 @@ class PathForRouteFunction
     {
     }
 
-    public function __invoke(string $name): string
+    public function __invoke(string $name, array $routeArguments = []): string
     {
-        return $this->routeHelper->getPathForRoute($name);
+        return $this->routeHelper->getPathForRoute($name, $routeArguments);
     }
 }

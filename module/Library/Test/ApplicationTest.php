@@ -44,7 +44,6 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
                     'Laminas\Log',
                     'Laminas\Mvc\I18n',
                     'Laminas\Mvc\Plugin\FlashMessenger',
-                    'Laminas\Navigation',
                     'Laminas\Router',
                     'Laminas\Validator',
                     'moduleName',

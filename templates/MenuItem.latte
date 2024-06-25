@@ -1,0 +1,5 @@
+{define menuItem, string $activeRoute, string $routeName, string $label}
+    <li n:class="$routeName == $activeRoute ? active">
+        <a href="{pathForRoute($routeName)}">{$label}</a>
+    </li>
+{/define}

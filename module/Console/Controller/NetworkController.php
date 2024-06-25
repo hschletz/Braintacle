@@ -22,6 +22,8 @@
 
 namespace Console\Controller;
 
+use Laminas\Mvc\MvcEvent;
+
 /**
  * Controller for subnets and IP discovery
  */
@@ -71,13 +73,13 @@ class NetworkController extends \Laminas\Mvc\Controller\AbstractActionController
         $this->_deviceForm = $deviceForm;
     }
 
-    /** {@inheritdoc} */
-    public function dispatch(
-        \Laminas\Stdlib\RequestInterface $request,
-        \Laminas\Stdlib\ResponseInterface $response = null
-    ) {
-        $this->setActiveMenu('Inventory', 'Network');
-        return parent::dispatch($request, $response);
+    public function onDispatch(MvcEvent $e)
+    {
+        $event = $this->getEvent();
+        $event->setParam('template', 'InventoryMenuLayout.latte');
+        $event->setParam('subMenuRoute', 'networkPage');
+
+        return parent::onDispatch($e);
     }
 
     /**

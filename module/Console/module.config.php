@@ -37,15 +37,11 @@ return array(
             'getOrder' => 'Console\Mvc\Controller\Plugin\GetOrder',
             'PrintForm' => 'Console\Mvc\Controller\Plugin\PrintForm',
             'printForm' => 'Console\Mvc\Controller\Plugin\PrintForm',
-            'SetActiveMenu' => 'Console\Mvc\Controller\Plugin\SetActiveMenu',
-            'setActiveMenu' => 'Console\Mvc\Controller\Plugin\SetActiveMenu',
             'Translate' => Translate::class,
             'translate' => Translate::class,
         ),
         'factories' => array(
             'Console\Mvc\Controller\Plugin\GetOrder' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-            'Console\Mvc\Controller\Plugin\SetActiveMenu' =>
-            'Console\Mvc\Controller\Plugin\Service\SetActiveMenuFactory',
             'Console\Mvc\Controller\Plugin\PrintForm' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             Translate::class => TranslateFactory::class,
         ),
@@ -110,7 +106,6 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-            'Console\Navigation\MainMenu' => 'Console\Navigation\MainMenuFactory',
             TemplateRenderer::class => TemplateRendererFactory::class,
         ),
     ),
@@ -147,6 +142,7 @@ return array(
         'default_template_suffix' => 'php',
         'display_exceptions' => true,
         'display_not_found_reason' => true,
+        'layout'                   => false,
         'not_found_template'       => 'error/index',
         'exception_template'       => 'error/index',
     ),

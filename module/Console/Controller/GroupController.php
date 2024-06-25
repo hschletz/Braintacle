@@ -82,8 +82,10 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
         \Laminas\Stdlib\RequestInterface $request,
         \Laminas\Stdlib\ResponseInterface $response = null
     ) {
+        $event = $this->getEvent();
+
         // Fetch group with given name for actions referring to a particular group
-        $action = $this->getEvent()->getRouteMatch()->getParam('action');
+        $action = $event->getRouteMatch()->getParam('action');
         if ($action != 'index' and $action != 'add') {
             try {
                 $this->_currentGroup = $this->_groupManager->getGroup(
@@ -95,6 +97,9 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
                 return $this->redirectToRoute('group', 'index');
             }
         }
+
+        $event->setParam('template', 'GroupMenuLayout.latte');
+
         return parent::dispatch($request, $response);
     }
 
@@ -124,7 +129,6 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
      */
     public function generalAction()
     {
-        $this->setActiveMenu('Groups');
         return array('group' => $this->_currentGroup);
     }
 
@@ -135,8 +139,6 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
      */
     public function membersAction()
     {
-        $this->setActiveMenu('Groups');
-
         $vars['sorting'] = $this->getOrder('InventoryDate', 'desc');
         $vars['group'] = $this->_currentGroup;
         $vars['clients'] = $this->_clientManager->getClients(
@@ -156,8 +158,6 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
      */
     public function excludedAction()
     {
-        $this->setActiveMenu('Groups');
-
         $vars['sorting'] = $this->getOrder('InventoryDate', 'desc');
         $vars['group'] = $this->_currentGroup;
         $vars['clients'] = $this->_clientManager->getClients(
@@ -175,8 +175,6 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
      */
     public function packagesAction(): TemplateViewModel
     {
-        $this->setActiveMenu('Groups');
-
         $vars = $this->getOrder('Name');
         $vars['group'] = $this->_currentGroup;
         $vars['assignedPackages'] = $this->_currentGroup->getPackages($vars['direction']);
@@ -260,7 +258,6 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
      */
     public function configurationAction()
     {
-        $this->setActiveMenu('Groups');
         $this->_clientConfigForm->setClientObject($this->_currentGroup);
         if ($this->getRequest()->isPost()) {
             $this->_clientConfigForm->setData($this->params()->fromPost());

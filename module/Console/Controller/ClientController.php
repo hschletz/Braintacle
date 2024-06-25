@@ -100,8 +100,10 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
         \Laminas\Stdlib\RequestInterface $request,
         \Laminas\Stdlib\ResponseInterface $response = null
     ) {
+        $event = $this->getEvent();
+
         // Fetch client with given ID for actions referring to a particular client
-        $action = $this->getEvent()->getRouteMatch()->getParam('action');
+        $action = $event->getRouteMatch()->getParam('action');
         if ($action != 'index' and $action != 'search' and $action != 'import') {
             try {
                 $this->_currentClient = $this->_clientManager->getClient($request->getQuery('id'));
@@ -111,6 +113,10 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
                 return $this->redirectToRoute('client', 'index');
             }
         }
+
+        $event->setParam('template', 'InventoryMenuLayout.latte');
+        $event->setParam('subMenuRoute', 'clientList');
+
         return parent::dispatch($request, $response);
     }
 
@@ -651,6 +657,8 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
      */
     public function searchAction()
     {
+        $this->getEvent()->setParam('template', 'SearchMenuLayout.latte');
+
         $form = $this->_formManager->get('Console\Form\Search');
         $form->remove('_csrf');
         $data = $this->params()->fromQuery();
@@ -671,6 +679,7 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
      */
     public function importAction()
     {
+        $this->getEvent()->setParam('subMenuRoute', 'importPage');
         $form = $this->_formManager->get('Console\Form\Import');
         $vars = array('form' => $form);
         if ($this->getRequest()->isPost()) {
@@ -686,30 +695,5 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
             }
         }
         return $vars;
-    }
-
-    /**
-     * Download client as XML file
-     *
-     * @return \Laminas\Http\Response Response with downloadable XML content
-     */
-    public function exportAction()
-    {
-        $document = $this->_currentClient->toDomDocument();
-        if ($this->_config->validateXml) {
-            $document->forceValid();
-        }
-        $filename = $document->getFilename();
-        $xml = $document->saveXml();
-        $response = $this->getResponse();
-        $response->getHeaders()->addHeaders(
-            array(
-                'Content-Type' => 'text/xml; charset="utf-8"',
-                'Content-Disposition' => "attachment; filename=\"$filename\"",
-                'Content-Length' => strlen($xml),
-            )
-        );
-        $response->setContent($xml);
-        return $response;
     }
 }

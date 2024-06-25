@@ -22,6 +22,8 @@
 
 namespace Console\Controller;
 
+use Laminas\Mvc\MvcEvent;
+
 /**
  * Controller for managing Braintacle user accounts
  */
@@ -62,6 +64,14 @@ class AccountsController extends \Laminas\Mvc\Controller\AbstractActionControlle
         $this->_formAccountEdit = $formAccountEdit;
     }
 
+    public function onDispatch(MvcEvent $e)
+    {
+        $e->setParam('template', 'PreferencesMenuLayout.latte');
+        $e->setParam('subMenuRoute', 'preferencesUsersList');
+
+        return parent::onDispatch($e);
+    }
+
     /**
      * Display overview of operators
      *
@@ -95,7 +105,6 @@ class AccountsController extends \Laminas\Mvc\Controller\AbstractActionControlle
             }
         }
 
-        $this->setActiveMenu('Preferences', 'Users');
         return array('form' => $form);
     }
 
@@ -122,7 +131,6 @@ class AccountsController extends \Laminas\Mvc\Controller\AbstractActionControlle
             $form->setData($data);
         }
 
-        $this->setActiveMenu('Preferences', 'Users');
         return array('form' => $form);
     }
 
@@ -141,7 +149,6 @@ class AccountsController extends \Laminas\Mvc\Controller\AbstractActionControlle
             }
             return $this->redirectToRoute('accounts', 'index');
         } else {
-            $this->setActiveMenu('Preferences', 'Users');
             return array('id' => $id);
         }
     }

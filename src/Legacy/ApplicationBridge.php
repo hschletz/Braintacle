@@ -4,6 +4,8 @@ namespace Braintacle\Legacy;
 
 use Braintacle\AppConfig;
 use Braintacle\Template\Function\AssetUrlFunction;
+use Braintacle\Template\Function\PathForRouteFunction;
+use Braintacle\Template\TemplateEngine;
 use DI\Container;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Http\Header\HeaderInterface;
@@ -13,6 +15,7 @@ use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\Model\ViewModel;
 use Model\Client\Client;
 use Model\Group\Group;
 use Nada\Database\AbstractDatabase;
@@ -30,11 +33,14 @@ use function DI\get;
 class ApplicationBridge implements RequestHandlerInterface
 {
     private MvcResponse $mvcResponse;
+    private string $template;
+    private ?string $subMenuRoute;
 
     public function __construct(
         private ResponseInterface $response,
         private Container $container,
         private Application $application,
+        private TemplateEngine $templateEngine,
     ) {
     }
 
@@ -51,6 +57,7 @@ class ApplicationBridge implements RequestHandlerInterface
         $serviceManager->setService(ClockInterface::class, $this->container->get(ClockInterface::class));
         $serviceManager->setService(ContainerInterface::class, $serviceManager);
         $serviceManager->setService(Group::class, $this->container->get(Group::class));
+        $serviceManager->setService(PathForRouteFunction::class, $this->container->get(PathForRouteFunction::class));
         $serviceManager->setService(TranslatorInterface::class, $this->container->get(TranslatorInterface::class));
         $serviceManager->setAlias('Database\Nada', AbstractDatabase::class);
         $serviceManager->setAlias('Db', Adapter::class);
@@ -62,11 +69,18 @@ class ApplicationBridge implements RequestHandlerInterface
         $this->container->set('Database\Nada', get(AbstractDatabase::class));
         $this->container->set('Db', get(Adapter::class));
 
+        // Prevent the MVC application from applying a layout.
+        $eventManager = $this->application->getEventManager();
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH, $this->preventMvcLayout(...), -95);
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, $this->preventMvcLayout(...), -95);
+
         // Prevent the MVC application from generating output. Capture the MVC
-        // response instead.
-        $this->application->getEventManager()->attach(MvcEvent::EVENT_FINISH, function (MvcEvent $event) {
+        // response and template parameters instead.
+        $eventManager->attach(MvcEvent::EVENT_FINISH, function (MvcEvent $event) {
             $event->stopPropagation();
             $this->mvcResponse = $event->getResponse();
+            $this->template = $event->getParam('template');
+            $this->subMenuRoute = $event->getParam('subMenuRoute');
         });
 
         // run() triggers a warning. This seems to be caused by inconsistent
@@ -92,8 +106,28 @@ class ApplicationBridge implements RequestHandlerInterface
         foreach ($this->mvcResponse->getHeaders() as $header) {
             $response = $response->withAddedHeader($header->getFieldName(), $header->getFieldValue());
         }
-        $response->getBody()->write($this->mvcResponse->getContent());
+        $response->getBody()->write($this->applyLayout());
 
         return $response;
+    }
+
+    public function preventMvcLayout(MvcEvent $event): void
+    {
+        $result = $event->getResult();
+        if ($result instanceof ViewModel) {
+            $result->setTerminal(true);
+            $event->setViewModel($result);
+        }
+    }
+
+    private function applyLayout(): string
+    {
+        return $this->templateEngine->render(
+            $this->template,
+            [
+                'content' => $this->mvcResponse->getContent(),
+                'subMenuRoute' => $this->subMenuRoute,
+            ]
+        );
     }
 }

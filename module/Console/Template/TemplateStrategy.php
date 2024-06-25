@@ -29,7 +29,8 @@ class TemplateStrategy extends AbstractListenerAggregate
 
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $this->listeners[] = $events->attach(ViewEvent::EVENT_RENDERER, [$this, 'selectRenderer'], $priority);
+        $this->listeners[] = $events->attach(ViewEvent::EVENT_RENDERER, $this->selectRenderer(...), $priority);
+        $this->listeners[] = $events->attach(ViewEvent::EVENT_RESPONSE, $this->injectResponse(...), $priority);
     }
 
     public function selectRenderer(ViewEvent $e): ?TemplateRenderer
@@ -40,6 +41,13 @@ class TemplateStrategy extends AbstractListenerAggregate
             return $this->templateRenderer;
         } else {
             return null;
+        }
+    }
+
+    public function injectResponse(ViewEvent $event)
+    {
+        if ($event->getModel() instanceof TemplateViewModel) {
+            $event->getResponse()->setContent($event->getResult());
         }
     }
 }

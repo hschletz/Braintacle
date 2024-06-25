@@ -3,16 +3,26 @@
 namespace Library\Test;
 
 use Braintacle\AppConfig;
-use Braintacle\Http\RouteHelper;
 use Braintacle\I18n\Translator;
 use Braintacle\Template\Function\AssetUrlFunction;
+use Braintacle\Template\Function\PathForRouteFunction;
 use Composer\InstalledVersions;
 use Laminas\Config\Reader\ReaderInterface;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\ServiceManager\ServiceManager;
+use Mockery;
 
 /**
  * Inject services which are normally injected during MVC bootstrapping.
+ *
+ * Some services are stubs created using Mockery, because PHPUnit's mocks/stubs
+ * cannot be created from a static method. Unlike regular test classes using
+ * Mockery, the MockeryPHPUnitIntegration trait MUST NOT be used in this trait!
+ * This would lead to infinite recursion when used with classes that use
+ * MockeryPHPUnitIntegration too. That's OK because the created objects are
+ * simple stubs, and no assertions are needed.
+ *
+ * @psalm-require-extends \PHPUnit\Framework\TestCase
  */
 trait InjectServicesTrait
 {
@@ -40,9 +50,17 @@ trait InjectServicesTrait
         );
         $serviceManager->setService(AppConfig::class, $appConfig);
 
-        $routeHelper = new RouteHelper();
-        $routeHelper->setBasePath('/assets');
-        $serviceManager->setService(AssetUrlFunction::class, new AssetUrlFunction($routeHelper));
+        $assetUrlFunction = Mockery::mock(AssetUrlFunction::class);
+        $assetUrlFunction->shouldReceive('__invoke')->andReturnUsing(
+            fn (string $path) => "/assets/$path"
+        );
+        $serviceManager->setService(AssetUrlFunction::class, $assetUrlFunction);
+
+        $pathForRouteFunction = Mockery::mock(PathForRouteFunction::class);
+        $pathForRouteFunction->shouldReceive('__invoke')->andReturnUsing(
+            fn (string $name, array $routeArguments = []) => "/route/$name"
+        );
+        $serviceManager->setService(PathForRouteFunction::class, $pathForRouteFunction);
 
         // Create fully functional translator.
         $serviceManager->setService(TranslatorInterface::class, new Translator(
