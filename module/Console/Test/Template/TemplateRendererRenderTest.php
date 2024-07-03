@@ -2,14 +2,12 @@
 
 namespace Console\Test\Template;
 
+use Braintacle\Test\ErrorHandlerTestTrait;
 use Console\Template\TemplateRenderer;
 use ErrorException;
 use Exception;
 use Laminas\View\Model\ViewModel;
 use Latte\Engine;
-use PHPUnit\Framework\Attributes\After;
-use PHPUnit\Framework\Attributes\Before;
-use PHPUnit\Framework\Attributes\PostCondition;
 use PHPUnit\Framework\Attributes\WithoutErrorHandler;
 use PHPUnit\Framework\TestCase;
 use Throwable;
@@ -23,47 +21,7 @@ use Throwable;
  */
 class TemplateRendererRenderTest extends TestCase
 {
-    private const MessagePrefix = 'TEMPLATE RENDERER TEST MESSAGE: ';
-
-    #[Before]
-    public function setErrorHandler()
-    {
-        // Set up a handler that throws a distinct exception which will be
-        // caught and tested in assertErrorHandlerRestored().
-        set_error_handler(
-            function (int $errno, string $errstr) {
-                throw new ErrorException(static::MessagePrefix . $errstr, $errno);
-            },
-            E_USER_WARNING
-        );
-    }
-
-    #[After]
-    public function restoreErrorHandler()
-    {
-        restore_error_handler();
-    }
-
-    #[PostCondition]
-    protected function assertErrorHandlerRestored(): void
-    {
-        // Trigger a warning. The handler that gets installed before each test
-        // should throw a distinct exception which will be caught and tested. If
-        // render() does not restore the handler, this will not happen, a
-        // situtation which will be detected here.
-        $message = null;
-        try {
-            trigger_error('handler restored', E_USER_WARNING);
-        } catch (ErrorException $warning) {
-            $message = $warning->getMessage();
-            if ($message != static::MessagePrefix . 'handler restored') {
-                $this->fail('TemplateRenderer::render() did not restore error handler.');
-            }
-        }
-        if (!$message) {
-            $this->fail(__CLASS__ . ' set up an error handler, but it did not get invoked.');
-        }
-    }
+    use ErrorHandlerTestTrait;
 
     public function testRenderWithName()
     {
