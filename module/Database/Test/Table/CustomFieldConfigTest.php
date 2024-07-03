@@ -25,6 +25,7 @@ namespace Database\Test\Table;
 use Database\Table\CustomFieldConfig;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Nada\Column\AbstractColumn as Column;
+use Nada\Database\AbstractDatabase;
 
 /**
  * Tests for the CustomFieldConfig class
@@ -36,7 +37,7 @@ class CustomFieldConfigTest extends AbstractTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        static::$_nada = static::$serviceManager->get('Database\Nada');
+        static::$_nada = static::$serviceManager->get(AbstractDatabase::class);
     }
 
     public function setUp(): void

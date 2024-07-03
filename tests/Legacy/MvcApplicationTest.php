@@ -65,9 +65,7 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
         $mvcApplication->configureServices();
 
         $this->assertSame($services[AbstractDatabase::class], $serviceManager->get(AbstractDatabase::class));
-        $this->assertSame($services[AbstractDatabase::class], $serviceManager->get('Database\Nada'));
         $this->assertSame($services[Adapter::class], $serviceManager->get(Adapter::class));
-        $this->assertSame($services[Adapter::class], $serviceManager->get('Db'));
         $this->assertSame($services[AppConfig::class], $serviceManager->get(AppConfig::class));
         $this->assertSame($services[AssetUrlFunction::class], $serviceManager->get(AssetUrlFunction::class));
         $this->assertSame($services[Client::class], $serviceManager->get(Client::class));
@@ -79,8 +77,6 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
 
         $this->assertSame($serviceManager, $container->get(ServiceLocatorInterface::class));
         $this->assertSame($serviceManager, $container->get(ServiceManager::class));
-        $this->assertSame($services[AbstractDatabase::class], $container->get('Database\Nada'));
-        $this->assertSame($services[Adapter::class], $container->get('Db'));
     }
 
     public function testRunConfiguresApplication()

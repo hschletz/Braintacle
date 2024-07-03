@@ -118,7 +118,7 @@ class ClientManagerTest extends AbstractTestCase
         parent::setUpBeforeClass();
 
         // Add columns to CustomFields table
-        static::$_customFields = static::createServiceManager()->get('Database\Nada')->getTable('accountinfo');
+        static::$_customFields = static::createServiceManager()->get(AbstractDatabase::class)->getTable('accountinfo');
         static::$_customFields->addColumn('col_text', Column::TYPE_VARCHAR, 255);
         static::$_customFields->addColumn('col_clob', Column::TYPE_CLOB);
         static::$_customFields->addColumn('col_integer', Column::TYPE_INTEGER, 32);
@@ -1029,7 +1029,7 @@ class ClientManagerTest extends AbstractTestCase
         /** @var MockObject|ServiceLocatorInterface */
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocator->method('get')->willReturnMap([
-            [Adapter::class, static::$serviceManager->get('Db')],
+            [Adapter::class, static::$serviceManager->get(Adapter::class)],
             [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
             [Clients::class, static::$serviceManager->get(Clients::class)],
             [CustomFieldManager::class, $customFieldManager],

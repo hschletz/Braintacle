@@ -24,6 +24,8 @@ namespace Model\Group;
 
 use Countable;
 use Database\Table\GroupInfo;
+use Laminas\Db\Adapter\Adapter;
+use Nada\Database\AbstractDatabase;
 use Psr\Clock\ClockInterface;
 
 /**
@@ -156,7 +158,7 @@ class GroupManager
         }
         $now = $this->_serviceManager->get(ClockInterface::class)->now();
 
-        $connection = $this->_serviceManager->get('Db')->getDriver()->getConnection();
+        $connection = $this->_serviceManager->get(Adapter::class)->getDriver()->getConnection();
         $connection->beginTransaction();
         try {
             $clientsAndGroups->insert(
@@ -164,7 +166,7 @@ class GroupManager
                     'name' => $name,
                     'description' => $description,
                     'deviceid' => '_SYSTEMGROUP_',
-                    'lastdate' => $now->format($this->_serviceManager->get('Database\Nada')->timestampFormatPhp()),
+                    'lastdate' => $now->format($this->_serviceManager->get(AbstractDatabase::class)->timestampFormatPhp()),
                 )
             );
             $id = $clientsAndGroups->select(array('name' => $name, 'deviceid' => '_SYSTEMGROUP_'))->current()['id'];
@@ -194,7 +196,7 @@ class GroupManager
         }
 
         $id = $group['Id'];
-        $connection = $this->_serviceManager->get('Db')->getDriver()->getConnection();
+        $connection = $this->_serviceManager->get(Adapter::class)->getDriver()->getConnection();
         $connection->beginTransaction();
         try {
             $this->_serviceManager->get('Database\Table\GroupMemberships')->delete(array('group_id' => $id));

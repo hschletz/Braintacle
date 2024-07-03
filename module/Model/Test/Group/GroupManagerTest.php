@@ -27,12 +27,14 @@ use Database\Table\ClientsAndGroups;
 use Database\Table\GroupInfo;
 use Database\Table\GroupMemberships;
 use DateTimeImmutable;
+use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery;
 use Model\Config;
 use Model\Group\Group;
 use Model\Group\GroupManager;
+use Nada\Database\AbstractDatabase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Clock\ClockInterface;
 
@@ -167,8 +169,8 @@ class GroupManagerTest extends AbstractGroupTestCase
         $serviceManager = $this->createMock(ServiceManager::class);
         $serviceManager->method('get')->willReturnMap([
             [ClockInterface::class, $clock],
-            ['Database\Nada', static::$serviceManager->get('Database\Nada')],
-            ['Db', static::$serviceManager->get('Db')],
+            [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
+            [Adapter::class, static::$serviceManager->get(Adapter::class)],
             [ClientsAndGroups::class, static::$serviceManager->get(ClientsAndGroups::class)],
             [GroupInfo::class, $this->_groupInfo],
         ]);
@@ -280,8 +282,8 @@ class GroupManagerTest extends AbstractGroupTestCase
 
         $serviceManager = $this->createMock(ServiceManager::class);
         $serviceManager->method('get')->willReturnMap([
-            ['Db', $adapter],
-            ['Database\Nada', static::$serviceManager->get('Database\Nada')],
+            [Adapter::class, $adapter],
+            [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
             [ClockInterface::class, $clock],
             [ClientsAndGroups::class, $clientsAndGroups],
         ]);
@@ -301,7 +303,7 @@ class GroupManagerTest extends AbstractGroupTestCase
         /** @var MockObject|ServiceManager */
         $serviceManager = $this->createMock(ServiceManager::class);
         $serviceManager->method('get')->willReturnMap([
-            ['Db', static::$serviceManager->get('Db')],
+            [Adapter::class, static::$serviceManager->get(Adapter::class)],
             [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
             [ClientsAndGroups::class, static::$serviceManager->get(ClientsAndGroups::class)],
             [GroupMemberships::class, static::$serviceManager->get(GroupMemberships::class)],
@@ -399,7 +401,7 @@ class GroupManagerTest extends AbstractGroupTestCase
         /** @var MockObject|ServiceManager */
         $serviceManager = $this->createMock(ServiceManager::class);
         $serviceManager->method('get')->willReturnMap([
-            ['Db', static::$serviceManager->get('Db')],
+            [Adapter::class, static::$serviceManager->get(Adapter::class)],
             [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
             [GroupMemberships::class, static::$serviceManager->get(GroupMemberships::class)],
             [ClientsAndGroups::class, $clientsAndGroups],

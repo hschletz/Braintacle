@@ -30,6 +30,7 @@ use Database\Table\DuplicateMacAddresses;
 use Database\Table\DuplicateSerials;
 use Database\Table\NetworkInterfaces;
 use DateTime;
+use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Mockery;
 use Model\Client\Client;
@@ -159,7 +160,7 @@ class DuplicatesManagerTest extends AbstractTestCase
             'NetworkInterface.MacAddress' => 'networkinterface_macaddr',
         );
 
-        $sql = new \Laminas\Db\Sql\Sql(static::$serviceManager->get('Db'), 'clients');
+        $sql = new \Laminas\Db\Sql\Sql(static::$serviceManager->get(Adapter::class), 'clients');
 
         $select = $sql->select()
             ->columns(array('id', 'name', 'lastcome', 'ssn', 'assettag'))

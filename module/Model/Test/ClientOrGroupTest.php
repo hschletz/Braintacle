@@ -525,7 +525,7 @@ class ClientOrGroupTest extends AbstractTestCase
         $config->method('getDbIdentifier')->with('inventoryInterval')->willReturn('FREQUENCY');
 
         $clientConfig = $this->createMock('Database\Table\ClientConfig');
-        $clientConfig->method('getAdapter')->willReturn(static::$serviceManager->get('Db'));
+        $clientConfig->method('getAdapter')->willReturn(static::$serviceManager->get(Adapter::class));
         $clientConfig->expects($this->never())->method('insert');
         $clientConfig->expects($this->never())->method('update');
         $clientConfig->expects($this->never())->method('delete');

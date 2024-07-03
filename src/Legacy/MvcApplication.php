@@ -20,8 +20,6 @@ use Nada\Database\AbstractDatabase;
 use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
 
-use function DI\get;
-
 class MvcApplication
 {
     private ?Closure $previousErrorHandler;
@@ -48,15 +46,11 @@ class MvcApplication
         $serviceManager->setService(Group::class, $this->container->get(Group::class));
         $serviceManager->setService(PathForRouteFunction::class, $this->container->get(PathForRouteFunction::class));
         $serviceManager->setService(TranslatorInterface::class, $this->container->get(TranslatorInterface::class));
-        $serviceManager->setAlias('Database\Nada', AbstractDatabase::class);
-        $serviceManager->setAlias('Db', Adapter::class);
 
         // Create legacy service definitions in main container, allowing
         // autowiring classes that still depend on these services.
         $this->container->set(ServiceLocatorInterface::class, $serviceManager);
         $this->container->set(ServiceManager::class, $serviceManager);
-        $this->container->set('Database\Nada', get(AbstractDatabase::class));
-        $this->container->set('Db', get(Adapter::class));
     }
 
     public function configureEvents(): void

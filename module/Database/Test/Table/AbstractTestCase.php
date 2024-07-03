@@ -100,8 +100,6 @@ abstract class AbstractTestCase extends \PHPUnit\DbUnit\TestCase
             $config['abstract_factories'][] = AutowireFactory::class;
             $config['aliases'][ServiceLocatorInterface::class] = ContainerInterface::class;
             $config['aliases'][ServiceManager::class] = ContainerInterface::class;
-            $config['aliases']['Database\Nada'] = AbstractDatabase::class;
-            $config['aliases']['Db'] = Adapter::class;
             $config['services'][AbstractDatabase::class] = (new DatabaseFactory(new Factory(), $adapter))();
             $config['services'][Adapter::class] = $adapter;
             $config['services'][LoggerInterface::class] = new PsrLoggerAdapter(
