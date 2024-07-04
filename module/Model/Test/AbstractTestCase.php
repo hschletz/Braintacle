@@ -28,7 +28,6 @@ use Laminas\Di\Container\ServiceManager\AutowireFactory;
 use Laminas\Log\Logger;
 use Laminas\Log\PsrLoggerAdapter;
 use Laminas\Log\Writer\Noop as NoopWriter;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Library\Application;
 use Nada\Database\AbstractDatabase;
@@ -77,8 +76,6 @@ abstract class AbstractTestCase extends TestCase
         // Extend module-generated service manager config with required entries.
         $config = Application::init('Model')->getServiceManager()->get('config')['service_manager'];
         $config['abstract_factories'][] = AutowireFactory::class;
-        $config['aliases'][ServiceLocatorInterface::class] = ContainerInterface::class;
-        $config['aliases'][ServiceManager::class] = ContainerInterface::class;
         $config['services'][AbstractDatabase::class] = (new DatabaseFactory(new Factory(), static::$adapter))();
         $config['services'][Adapter::class] = static::$adapter;
         $config['services'][LoggerInterface::class] = new PsrLoggerAdapter(

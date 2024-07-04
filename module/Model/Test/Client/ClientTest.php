@@ -28,7 +28,6 @@ use DateTime;
 use DateTimeImmutable;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\Db\ResultSet\AbstractResultSet;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\Client\Client;
@@ -39,8 +38,8 @@ use Model\Package\Assignment;
 use Model\Package\PackageManager;
 use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\Stub;
 use Psr\Clock\ClockInterface;
+use Psr\Container\ContainerInterface;
 
 class ClientTest extends AbstractTestCase
 {
@@ -74,8 +73,7 @@ class ClientTest extends AbstractTestCase
 
     public function testOffsetGetAndroidNotNull()
     {
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -104,8 +102,7 @@ class ClientTest extends AbstractTestCase
 
     public function testOffsetGetAndroidNull()
     {
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -124,8 +121,7 @@ class ClientTest extends AbstractTestCase
 
     public function testOffsetGetWindowsNotNull()
     {
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -158,8 +154,7 @@ class ClientTest extends AbstractTestCase
 
     public function testOffsetGetWindowsNull()
     {
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -213,8 +208,7 @@ class ClientTest extends AbstractTestCase
      */
     public function testOffsetGetBlacklisted($index, $initialIndex, $initialValue, $result)
     {
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->expects($this->once())->method('get')->willReturnCallback(
             function ($name) {
                 // Proxy to real service manager. Mock only exists to assert
@@ -292,8 +286,7 @@ class ClientTest extends AbstractTestCase
             $groups[] = $group;
         }
 
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->with('Model\Config')->willReturn($config);
 
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroups', '__destruct']);
@@ -312,8 +305,7 @@ class ClientTest extends AbstractTestCase
             ['option2', 'value2'],
         ]);
 
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->expects($this->exactly(2))->method('get')->with('Model\Config')->willReturn($config);
 
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroups', '__destruct']);
@@ -524,8 +516,7 @@ class ClientTest extends AbstractTestCase
             $groups[] = $group;
         }
 
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->with('Model\Config')->willReturn($config);
 
         $model = $this->createPartialMock(Client::class, ['offsetGet', 'getConfig', 'getGroups']);
@@ -785,8 +776,7 @@ class ClientTest extends AbstractTestCase
             ->with('type', array('Client' => 42), null, null)
             ->willReturn($result);
 
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->with('Model\Client\ItemManager')->willReturn($itemManager);
 
         $model = $this->createPartialMock(Client::class, ['offsetGet']);
@@ -806,8 +796,7 @@ class ClientTest extends AbstractTestCase
             ->with('type', array('filter' => 'arg', 'Client' => 42), 'order', 'direction')
             ->willReturn($result);
 
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceManager = $this->createMock(ServiceLocatorInterface::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->with('Model\Client\ItemManager')->willReturn($itemManager);
 
         $model = $this->createPartialMock(Client::class, ['offsetGet']);
@@ -869,8 +858,7 @@ class ClientTest extends AbstractTestCase
             )
         );
 
-        /** @var Stub|ServiceLocatorInterface */
-        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
+        $serviceManager = $this->createStub(ContainerInterface::class);
         $serviceManager->method('get')
             ->willReturnMap(
                 array(
@@ -938,8 +926,7 @@ class ClientTest extends AbstractTestCase
             )
         );
 
-        /** @var Stub|ServiceLocatorInterface */
-        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
+        $serviceManager = $this->createStub(ContainerInterface::class);
         $serviceManager->method('get')
             ->willReturnMap(
                 array(
@@ -1007,8 +994,7 @@ class ClientTest extends AbstractTestCase
             )
         );
 
-        /** @var Stub|ServiceLocatorInterface */
-        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
+        $serviceManager = $this->createStub(ContainerInterface::class);
         $serviceManager->method('get')
             ->willReturnMap(
                 array(
@@ -1068,8 +1054,7 @@ class ClientTest extends AbstractTestCase
         $groupManager = $this->createMock('Model\Group\GroupManager');
         $groupManager->method('getGroups')->with()->willReturn(array($group1, $group2));
 
-        /** @var Stub|ServiceLocatorInterface */
-        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
+        $serviceManager = $this->createStub(ContainerInterface::class);
         $serviceManager->method('get')
             ->willReturnMap(
                 array(
@@ -1116,8 +1101,7 @@ class ClientTest extends AbstractTestCase
             )
         );
 
-        /** @var Stub|ServiceLocatorInterface */
-        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
+        $serviceManager = $this->createStub(ContainerInterface::class);
         $serviceManager->method('get')
             ->willReturnMap(
                 array(
@@ -1147,8 +1131,7 @@ class ClientTest extends AbstractTestCase
             array(array('Id' => 1, 'Name' => 'group1'))
         );
 
-        /** @var Stub|ServiceLocatorInterface */
-        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
+        $serviceManager = $this->createStub(ContainerInterface::class);
         $serviceManager->method('get')
             ->willReturnMap(
                 array(array('Model\Group\GroupManager', $groupManager))
@@ -1259,7 +1242,7 @@ class ClientTest extends AbstractTestCase
 
     public function testToDomDocument()
     {
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock(ContainerInterface::class);
 
         $model = $this->getModel();
         $model->setContainer($serviceManager);

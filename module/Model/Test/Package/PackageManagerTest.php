@@ -26,15 +26,14 @@ use Database\Table\ClientConfig;
 use Database\Table\GroupInfo;
 use Database\Table\Packages;
 use DateTimeImmutable;
-use Laminas\ServiceManager\ServiceManager;
 use Model\Package\Package;
 use Model\Package\PackageBuilder;
 use Model\Package\PackageManager;
 use Model\Package\Storage\StorageInterface;
 use Model\Test\AbstractTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Psr\Clock\ClockInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Tests for Model\Package\PackageManager
@@ -74,8 +73,7 @@ class PackageManagerTest extends AbstractTestCase
         $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->expects($this->once())->method('readMetadata')->with('1415958320')->willReturn($metadata);
 
-        /** @var MockObject|ServiceManager */
-        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [StorageInterface::class, $storage],
             [Packages::class, static::$serviceManager->get(Packages::class)],
@@ -106,8 +104,7 @@ class PackageManagerTest extends AbstractTestCase
         $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->method('readMetadata')->will($this->throwException(new \RuntimeException('metadata error')));
 
-        /** @var MockObject|ServiceManager */
-        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [StorageInterface::class, $storage],
             [Packages::class, static::$serviceManager->get(Packages::class)],
@@ -197,7 +194,7 @@ class PackageManagerTest extends AbstractTestCase
         $packageBuilder = $this->createMock(PackageBuilder::class);
         $packageBuilder->expects($this->once())->method('buildPackage')->with($data, true);
 
-        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->with(PackageBuilder::class)->willReturn($packageBuilder);
 
         $model = new PackageManager($serviceManager);
@@ -209,8 +206,7 @@ class PackageManagerTest extends AbstractTestCase
         $storage = $this->createMock('Model\Package\Storage\Direct');
         $storage->expects($this->once())->method('cleanup')->with('1415958319');
 
-        /** @var MockObject|ServiceManager */
-        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [StorageInterface::class, $storage],
             [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
@@ -333,8 +329,7 @@ class PackageManagerTest extends AbstractTestCase
         $clock = $this->createStub(ClockInterface::class);
         $clock->method('now')->willReturn(new DateTimeImmutable('2015-02-08 14:17:29'));
 
-        /** @var MockObject|ServiceManager */
-        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [ClockInterface::class, $clock],
             [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
@@ -373,7 +368,7 @@ class PackageManagerTest extends AbstractTestCase
         $clock = $this->createStub(ClockInterface::class);
         $clock->method('now')->willReturn(new DateTimeImmutable());
 
-        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [ClientConfig::class, $clientConfig],
             [GroupInfo::class, static::$serviceManager->get(GroupInfo::class)],

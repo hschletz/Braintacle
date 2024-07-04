@@ -23,12 +23,11 @@
 namespace Model\Test\Group;
 
 use Laminas\Db\Adapter\Adapter;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Model\Config;
 use Model\Group\Group;
 use Model\Test\AbstractTestCase;
 use Nada\Database\AbstractDatabase;
-use PHPUnit\Framework\MockObject\Stub;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 abstract class AbstractGroupTestCase extends AbstractTestCase
@@ -50,8 +49,7 @@ abstract class AbstractGroupTestCase extends AbstractTestCase
             $this->_config = $this->createMock('Model\Config');
             $this->_config->method('__get')->willReturnMap(array(array('groupCacheExpirationInterval', 30)));
 
-            /** @var Stub|ServiceLocatorInterface */
-            $serviceManager = $this->createStub(ServiceLocatorInterface::class);
+            $serviceManager = $this->createStub(ContainerInterface::class);
             $serviceManager->method('get')->willReturnMap([
                 [Adapter::class, static::$serviceManager->get(Adapter::class)],
                 [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],

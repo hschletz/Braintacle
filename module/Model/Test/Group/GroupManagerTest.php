@@ -29,7 +29,6 @@ use Database\Table\GroupMemberships;
 use DateTimeImmutable;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
-use Laminas\ServiceManager\ServiceManager;
 use Mockery;
 use Model\Config;
 use Model\Group\Group;
@@ -37,6 +36,7 @@ use Model\Group\GroupManager;
 use Nada\Database\AbstractDatabase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Clock\ClockInterface;
+use Psr\Container\ContainerInterface;
 
 class GroupManagerTest extends AbstractGroupTestCase
 {
@@ -83,7 +83,7 @@ class GroupManagerTest extends AbstractGroupTestCase
         $clock = $this->createStub(ClockInterface::class);
         $clock->method('now')->willReturn(new DateTimeImmutable('2015-02-08 19:36:29'));
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [GroupInfo::class, $this->_groupInfo],
             [ClockInterface::class, $clock],
@@ -108,8 +108,7 @@ class GroupManagerTest extends AbstractGroupTestCase
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Invalid group filter: invalid');
 
-        /** @var MockObject|ServiceManager */
-        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->with(GroupInfo::class)->willReturn($this->_groupInfo);
 
         $model = new GroupManager($serviceManager);
@@ -118,8 +117,7 @@ class GroupManagerTest extends AbstractGroupTestCase
 
     public function testGetGroup()
     {
-        /** @var MockObject|ServiceManager */
-        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->with(GroupInfo::class)->willReturn($this->_groupInfo);
 
         $model = new GroupManager($serviceManager);
@@ -133,8 +131,7 @@ class GroupManagerTest extends AbstractGroupTestCase
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Unknown group name: invalid');
 
-        /** @var MockObject|ServiceManager */
-        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->with(GroupInfo::class)->willReturn($this->_groupInfo);
 
         $model = new GroupManager($serviceManager);
@@ -165,8 +162,7 @@ class GroupManagerTest extends AbstractGroupTestCase
         $clock = $this->createStub(ClockInterface::class);
         $clock->method('now')->willReturn(new DateTimeImmutable('2015-02-12 22:07:00'));
 
-        /** @var MockObject|ServiceManager */
-        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [ClockInterface::class, $clock],
             [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
@@ -280,7 +276,7 @@ class GroupManagerTest extends AbstractGroupTestCase
         $clock = $this->createStub(ClockInterface::class);
         $clock->method('now')->willReturn(new DateTimeImmutable());
 
-        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [Adapter::class, $adapter],
             [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
@@ -300,8 +296,7 @@ class GroupManagerTest extends AbstractGroupTestCase
         $group->method('offsetGet')->with('Id')->willReturn(1);
         $group->expects($this->once())->method('unlock');
 
-        /** @var MockObject|ServiceManager */
-        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [Adapter::class, static::$serviceManager->get(Adapter::class)],
             [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
@@ -398,8 +393,7 @@ class GroupManagerTest extends AbstractGroupTestCase
         $clientsAndGroups = $this->createMock(ClientsAndGroups::class);
         $clientsAndGroups->method('delete')->will($this->throwException(new \RuntimeException('database error')));
 
-        /** @var MockObject|ServiceManager */
-        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [Adapter::class, static::$serviceManager->get(Adapter::class)],
             [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],

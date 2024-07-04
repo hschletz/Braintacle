@@ -23,30 +23,23 @@
 namespace Model\Group;
 
 use Countable;
+use Database\Table\ClientConfig;
+use Database\Table\ClientsAndGroups;
 use Database\Table\GroupInfo;
+use Database\Table\GroupMemberships;
 use Laminas\Db\Adapter\Adapter;
+use Model\Config;
 use Nada\Database\AbstractDatabase;
 use Psr\Clock\ClockInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Group manager
  */
 class GroupManager
 {
-    /**
-     * Service manager
-     * @var \Laminas\ServiceManager\ServiceManager
-     */
-    protected $_serviceManager;
-
-    /**
-     * Constructor
-     *
-     * @param \Laminas\ServiceManager\ServiceManager $serviceManager
-     */
-    public function __construct(\Laminas\ServiceManager\ServiceManager $serviceManager)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->_serviceManager = $serviceManager;
     }
 
     /**
@@ -61,7 +54,7 @@ class GroupManager
     public function getGroups($filter = null, $filterArg = null, $order = null, $direction = 'asc'): iterable
     {
         /** @var GroupInfo */
-        $groupInfo = $this->_serviceManager->get('Database\Table\GroupInfo');
+        $groupInfo = $this->container->get('Database\Table\GroupInfo');
         $select = $groupInfo->getSql()->select();
         $select->columns(array('request', 'create_time', 'revalidate_from'))
             ->join(
@@ -81,12 +74,12 @@ class GroupManager
                 $select->where(array('name' => $filterArg));
                 break;
             case 'Expired':
-                $now = $this->_serviceManager->get(ClockInterface::class)->now()->getTimestamp();
+                $now = $this->container->get(ClockInterface::class)->now()->getTimestamp();
                 $select->where(
                     new \Laminas\Db\Sql\Predicate\Operator(
                         'revalidate_from',
                         '<=',
-                        $now - $this->_serviceManager->get('Model\Config')->groupCacheExpirationInterval
+                        $now - $this->container->get(Config::class)->groupCacheExpirationInterval
                     )
                 );
                 break;
@@ -148,7 +141,7 @@ class GroupManager
             throw new \InvalidArgumentException('Group name is empty');
         }
 
-        $clientsAndGroups = $this->_serviceManager->get('Database\Table\ClientsAndGroups');
+        $clientsAndGroups = $this->container->get(ClientsAndGroups::class);
         if ($clientsAndGroups->select(array('name' => $name, 'deviceid' => '_SYSTEMGROUP_'))->count()) {
             throw new \RuntimeException('Group already exists: ' . $name);
         }
@@ -156,9 +149,9 @@ class GroupManager
         if ($description == '') {
             $description = null;
         }
-        $now = $this->_serviceManager->get(ClockInterface::class)->now();
+        $now = $this->container->get(ClockInterface::class)->now();
 
-        $connection = $this->_serviceManager->get(Adapter::class)->getDriver()->getConnection();
+        $connection = $this->container->get(Adapter::class)->getDriver()->getConnection();
         $connection->beginTransaction();
         try {
             $clientsAndGroups->insert(
@@ -166,11 +159,11 @@ class GroupManager
                     'name' => $name,
                     'description' => $description,
                     'deviceid' => '_SYSTEMGROUP_',
-                    'lastdate' => $now->format($this->_serviceManager->get(AbstractDatabase::class)->timestampFormatPhp()),
+                    'lastdate' => $now->format($this->container->get(AbstractDatabase::class)->timestampFormatPhp()),
                 )
             );
             $id = $clientsAndGroups->select(array('name' => $name, 'deviceid' => '_SYSTEMGROUP_'))->current()['id'];
-            $this->_serviceManager->get('Database\Table\GroupInfo')->insert(
+            $this->container->get(GroupInfo::class)->insert(
                 array(
                     'hardware_id' => $id,
                     'create_time' => $now->getTimestamp(),
@@ -196,13 +189,13 @@ class GroupManager
         }
 
         $id = $group['Id'];
-        $connection = $this->_serviceManager->get(Adapter::class)->getDriver()->getConnection();
+        $connection = $this->container->get(Adapter::class)->getDriver()->getConnection();
         $connection->beginTransaction();
         try {
-            $this->_serviceManager->get('Database\Table\GroupMemberships')->delete(array('group_id' => $id));
-            $this->_serviceManager->get('Database\Table\ClientConfig')->delete(array('hardware_id' => $id));
-            $this->_serviceManager->get('Database\Table\GroupInfo')->delete(array('hardware_id' => $id));
-            $this->_serviceManager->get('Database\Table\ClientsAndGroups')->delete(array('id' => $id));
+            $this->container->get(GroupMemberships::class)->delete(array('group_id' => $id));
+            $this->container->get(ClientConfig::class)->delete(array('hardware_id' => $id));
+            $this->container->get(GroupInfo::class)->delete(array('hardware_id' => $id));
+            $this->container->get(ClientsAndGroups::class)->delete(array('id' => $id));
             $connection->commit();
         } catch (\Exception $e) {
             $connection->rollBack();

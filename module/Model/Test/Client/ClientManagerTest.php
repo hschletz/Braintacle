@@ -42,7 +42,6 @@ use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\Db\Adapter\Driver\DriverInterface;
 use Laminas\Http\Client as HttpClient;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Model\Client\Client;
 use Model\Client\ClientManager;
 use Model\Client\CustomFieldManager;
@@ -55,6 +54,7 @@ use Nada\Database\AbstractDatabase;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Container\ContainerInterface;
 use RuntimeException;
 
 class ClientManagerTest extends AbstractTestCase
@@ -774,8 +774,7 @@ class ClientManagerTest extends AbstractTestCase
         $clients->method('getHydrator')->willReturn($hydrator);
 
 
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator = $this->createMock(ContainerInterface::class);
         $serviceLocator->method('get')->willReturnMap([
             [Adapter::class, static::$serviceManager->get(Adapter::class)],
             [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
@@ -868,8 +867,7 @@ class ClientManagerTest extends AbstractTestCase
         $clients->method('getResultSetPrototype')->willReturn($resultSetPrototype);
         $clients->method('getHydrator')->willReturn($hydrator);
 
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator = $this->createMock(ContainerInterface::class);
         $serviceLocator->method('get')->willReturnMap([
             [Adapter::class, static::$serviceManager->get(Adapter::class)],
             [Clients::class, $clients],
@@ -924,8 +922,7 @@ class ClientManagerTest extends AbstractTestCase
         $clients->method('getResultSetPrototype')->willReturn($resultSetPrototype);
         $clients->method('getHydrator')->willReturn($hydrator);
 
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator = $this->createMock(ContainerInterface::class);
         $serviceLocator->method('get')->willReturnMap([
             [Adapter::class, static::$serviceManager->get(Adapter::class)],
             [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
@@ -1026,8 +1023,7 @@ class ClientManagerTest extends AbstractTestCase
             )
         );
 
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator = $this->createMock(ContainerInterface::class);
         $serviceLocator->method('get')->willReturnMap([
             [Adapter::class, static::$serviceManager->get(Adapter::class)],
             [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
@@ -1139,8 +1135,7 @@ class ClientManagerTest extends AbstractTestCase
         $clientsAndGroups = $this->createMock('Database\Table\ClientsAndGroups');
         $clientsAndGroups->expects($this->once())->method('delete')->with(array('id' => 42));
 
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator = $this->createMock(ContainerInterface::class);
         $serviceLocator->method('get')->willReturnMap([
             [Adapter::class, $adapter],
             [AndroidInstallations::class, $androidInstallations],
@@ -1203,8 +1198,7 @@ class ClientManagerTest extends AbstractTestCase
         $clientsAndGroups = $this->createMock(ClientsAndGroups::class);
         $clientsAndGroups->expects($this->once())->method('delete')->with(array('id' => 4));
 
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator = $this->createMock(ContainerInterface::class);
         $serviceLocator->method('get')->willReturnMap([
             [Adapter::class, static::$serviceManager->get(Adapter::class)],
             [NetworkDevicesIdentified::class, static::$serviceManager->get(NetworkDevicesIdentified::class)],
@@ -1248,8 +1242,7 @@ class ClientManagerTest extends AbstractTestCase
         $client->expects($this->once())->method('lock')->willReturn(false);
         $client->expects($this->never())->method('unlock');
 
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator = $this->createMock(ContainerInterface::class);
         $serviceLocator->expects($this->never())->method('get');
 
         $clientManager = new ClientManager($serviceLocator);
@@ -1296,8 +1289,7 @@ class ClientManagerTest extends AbstractTestCase
         $androidInstallations = $this->createMock(AndroidInstallations::class);
         $androidInstallations->method('delete')->willThrowException(new \RuntimeException('message'));
 
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator = $this->createMock(ContainerInterface::class);
         $serviceLocator->method('get')->willReturnMap([
             [Adapter::class, $adapter],
             [AndroidInstallations::class, $androidInstallations],
@@ -1345,8 +1337,7 @@ class ClientManagerTest extends AbstractTestCase
         $config = $this->createMock('Model\Config');
         $config->method('__get')->with('communicationServerUri')->willReturn($uri);
 
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator = $this->createMock(ContainerInterface::class);
         $serviceLocator->method('get')->willReturnMap([
             [Config::class, $config],
             [HttpClient::class, $httpClient],
@@ -1379,8 +1370,7 @@ class ClientManagerTest extends AbstractTestCase
         $config = $this->createMock('Model\Config');
         $config->method('__get')->with('communicationServerUri')->willReturn('http://example.net/server');
 
-        /** @var MockObject|ServiceLocatorInterface */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator = $this->createMock(ContainerInterface::class);
         $serviceLocator->method('get')->willReturnMap([
             [Config::class, $config],
             [HttpClient::class, $httpClient]

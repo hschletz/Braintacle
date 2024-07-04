@@ -20,7 +20,6 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Controller\ControllerManager;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Mvc\View\Http\InjectTemplateListener;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 use Laminas\View\Resolver\TemplateMapResolver;
@@ -74,9 +73,6 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
         $this->assertSame($services[PathForRouteFunction::class], $serviceManager->get(PathForRouteFunction::class));
         $this->assertSame($services[TranslatorInterface::class], $serviceManager->get(TranslatorInterface::class));
         $this->assertSame($serviceManager, $serviceManager->get(ContainerInterface::class));
-
-        $this->assertSame($serviceManager, $container->get(ServiceLocatorInterface::class));
-        $this->assertSame($serviceManager, $container->get(ServiceManager::class));
     }
 
     public function testRunConfiguresApplication()

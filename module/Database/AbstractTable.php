@@ -39,9 +39,6 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
     protected HydratorInterface $_hydrator;
 
     /**
-     * Constructor
-     *
-     * @param \Laminas\ServiceManager\ServiceLocatorInterface $container Service manager instance
      * @codeCoverageIgnore
      */
     public function __construct(protected ContainerInterface $container)

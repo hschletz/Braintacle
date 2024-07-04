@@ -27,8 +27,6 @@ use Laminas\Di\Container\ConfigFactory;
 use Laminas\Di\Container\InjectorFactory;
 use Laminas\Di\InjectorInterface;
 use Laminas\ModuleManager\Feature;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Laminas\ServiceManager\ServiceManager;
 use Library\Mvc\Controller\Plugin\RedirectToRoute;
 use Library\Mvc\Controller\Plugin\UrlFromRoute;
 use Library\Mvc\Service\RedirectToRouteFactory;
@@ -62,9 +60,6 @@ class Module implements Feature\ConfigProviderInterface
                 )
             ),
             'service_manager' => array(
-                'aliases' => [
-                    ServiceLocatorInterface::class => ServiceManager::class,
-                ],
                 'factories' => [
                     ConfigInterface::class => ConfigFactory::class,
                     InjectorInterface::class => InjectorFactory::class,

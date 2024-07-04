@@ -26,6 +26,7 @@ use Database\Table\CustomFieldConfig;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Nada\Column\AbstractColumn as Column;
 use Nada\Database\AbstractDatabase;
+use Psr\Container\ContainerInterface;
 
 /**
  * Tests for the CustomFieldConfig class
@@ -169,7 +170,7 @@ class CustomFieldConfigTest extends AbstractTestCase
         $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
         $adapter->method('getDriver')->willReturn($driver);
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock(ContainerInterface::class);
 
         $table = $this->createPartialMock(CustomFieldConfig::class, ['getSql']);
         $table->method('getSql')->willThrowException(new \RuntimeException('test message'));

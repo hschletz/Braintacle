@@ -23,6 +23,7 @@
 namespace Database\Test\Table;
 
 use Database\Table\Software;
+use Psr\Container\ContainerInterface;
 
 class SoftwareTest extends AbstractTestCase
 {
@@ -46,7 +47,7 @@ class SoftwareTest extends AbstractTestCase
         $softwareRaw = $this->createMock(\Database\Table\SoftwareRaw::class);
         $softwareRaw->method('delete')->with('_where')->willReturn(42);
 
-        $serviceLocator = $this->createMock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
+        $serviceLocator = $this->createMock(ContainerInterface::class);
         $serviceLocator->method('get')->with('Database\Table\SoftwareRaw')->willReturn($softwareRaw);
 
         $table = $this->createPartialMock(Software::class, ['getContainer']);

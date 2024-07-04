@@ -35,6 +35,7 @@ use Model\Package\PackageManager;
 use Nada\Database\AbstractDatabase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Clock\ClockInterface;
+use Psr\Container\ContainerInterface;
 
 class ClientOrGroupTest extends AbstractTestCase
 {
@@ -126,7 +127,7 @@ class ClientOrGroupTest extends AbstractTestCase
         $config = $this->createMock('Model\Config');
         $config->method('__get')->with('lockValidity')->willReturn(42);
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
             [Locks::class, static::$serviceManager->get(Locks::class)],
@@ -161,7 +162,7 @@ class ClientOrGroupTest extends AbstractTestCase
         $config = $this->createMock('Model\Config');
         $config->expects($this->once())->method('__get')->with('lockValidity')->willreturn($timeout);
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
             [Locks::class, static::$serviceManager->get(Locks::class)],
@@ -190,7 +191,7 @@ class ClientOrGroupTest extends AbstractTestCase
 
         $config = $this->createMock('Model\Config');
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
             [Locks::class, $locks],
@@ -214,7 +215,7 @@ class ClientOrGroupTest extends AbstractTestCase
 
     public function testUnlockWithReleasedLock()
     {
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
             [Locks::class, static::$serviceManager->get(Locks::class)],
@@ -240,7 +241,7 @@ class ClientOrGroupTest extends AbstractTestCase
 
     public function testUnlockWithExpiredLock()
     {
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
             [Adapter::class, static::$serviceManager->get(Adapter::class)],
@@ -299,7 +300,7 @@ class ClientOrGroupTest extends AbstractTestCase
         $config = $this->createMock('Model\Config');
         $config->method('__get')->with('lockValidity')->willReturn(42);
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
             [Locks::class, static::$serviceManager->get(Locks::class)],
@@ -348,7 +349,7 @@ class ClientOrGroupTest extends AbstractTestCase
         $clock = $this->createStub(ClockInterface::class);
         $clock->method('now')->willReturn(new DateTimeImmutable('2024-06-05T19:58:21'));
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
             [ClockInterface::class, $clock],
@@ -383,7 +384,7 @@ class ClientOrGroupTest extends AbstractTestCase
             ->with('package5')
             ->willReturn(array('Id' => 5));
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap(
             array(
                 array(
@@ -433,7 +434,7 @@ class ClientOrGroupTest extends AbstractTestCase
         $config = $this->createMock('Model\Config');
         $config->method('getDbIdentifier')->with('inventoryInterval')->willReturn('FREQUENCY');
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap(
             array(
                 array(
@@ -488,7 +489,7 @@ class ClientOrGroupTest extends AbstractTestCase
         $config = $this->createMock('Model\Config');
         $config->method('getDbIdentifier')->with($option)->willReturn($identifier);
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap(
             array(
                 array(
@@ -530,7 +531,7 @@ class ClientOrGroupTest extends AbstractTestCase
         $clientConfig->expects($this->never())->method('update');
         $clientConfig->expects($this->never())->method('delete');
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap(
             array(
                 array('Database\Table\ClientConfig', $clientConfig),
@@ -563,7 +564,7 @@ class ClientOrGroupTest extends AbstractTestCase
         $clientConfig->method('getAdapter')->willReturn($adapter);
         $clientConfig->method('delete')->willThrowException(new \RuntimeException('test message'));
 
-        $serviceManager = $this->createMock('Laminas\ServiceManager\ServiceManager');
+        $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->with('Database\Table\ClientConfig')->willReturn($clientConfig);
 
         $this->expectException('RuntimeException');

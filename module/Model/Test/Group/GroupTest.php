@@ -30,14 +30,13 @@ use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\Db\Adapter\Driver\DriverInterface;
 use Laminas\Db\Adapter\Platform\AbstractPlatform;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Library\Random;
 use Model\Client\ClientManager;
 use Model\Config;
 use Model\Group\Group;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\Stub;
 use Psr\Clock\ClockInterface;
+use Psr\Container\ContainerInterface;
 
 class GroupTest extends AbstractGroupTestCase
 {
@@ -103,8 +102,7 @@ class GroupTest extends AbstractGroupTestCase
                 true
             )->willReturn(array(array('Id' => 1), array('Id' => 2), array('Id' => 3), array('Id' => 5)));
 
-        /** @var Stub|ServiceLocatorInterface */
-        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
+        $serviceManager = $this->createStub(ContainerInterface::class);
         $serviceManager->method('get')
             ->willReturnMap(
                 array(
@@ -164,8 +162,7 @@ class GroupTest extends AbstractGroupTestCase
         $groupMemberships->method('selectWith')->willReturn(array());
         $groupMemberships->method('insert')->will($this->throwException(new \RuntimeException('test')));
 
-        /** @var Stub|ServiceLocatorInterface */
-        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
+        $serviceManager = $this->createStub(ContainerInterface::class);
         $serviceManager->method('get')
             ->willReturnMap(
                 array(
@@ -232,8 +229,7 @@ class GroupTest extends AbstractGroupTestCase
                 false
             )->willReturn($select);
 
-        /** @var Stub|ServiceLocatorInterface */
-        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
+        $serviceManager = $this->createStub(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
             [Adapter::class, $adapter],
             [ClientManager::class, $clientManager],
@@ -339,8 +335,7 @@ class GroupTest extends AbstractGroupTestCase
             )
         );
 
-        /** @var Stub|ServiceLocatorInterface */
-        $serviceManager = $this->createStub(ServiceLocatorInterface::class);
+        $serviceManager = $this->createStub(ContainerInterface::class);
         $serviceManager->method('get')
             ->willReturnMap([
                 [Clients::class, static::$serviceManager->get(Clients::class)],

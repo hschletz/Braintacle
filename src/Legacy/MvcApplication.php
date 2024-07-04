@@ -11,8 +11,6 @@ use Laminas\Db\Adapter\Adapter;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Model\ViewModel;
 use Model\Client\Client;
 use Model\Group\Group;
@@ -46,11 +44,6 @@ class MvcApplication
         $serviceManager->setService(Group::class, $this->container->get(Group::class));
         $serviceManager->setService(PathForRouteFunction::class, $this->container->get(PathForRouteFunction::class));
         $serviceManager->setService(TranslatorInterface::class, $this->container->get(TranslatorInterface::class));
-
-        // Create legacy service definitions in main container, allowing
-        // autowiring classes that still depend on these services.
-        $this->container->set(ServiceLocatorInterface::class, $serviceManager);
-        $this->container->set(ServiceManager::class, $serviceManager);
     }
 
     public function configureEvents(): void
