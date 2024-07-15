@@ -8,6 +8,7 @@ use Braintacle\Template\Function\PathForRouteFunction;
 use Closure;
 use DI\Container;
 use Laminas\Db\Adapter\Adapter;
+use Laminas\Http\Response;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
@@ -17,10 +18,14 @@ use Model\Group\Group;
 use Nada\Database\AbstractDatabase;
 use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use RuntimeException;
+use Slim\Exception\HttpNotFoundException;
 
 class MvcApplication
 {
     private ?Closure $previousErrorHandler;
+    private ServerRequestInterface $request;
 
     public function __construct(
         private Application $application,
@@ -50,9 +55,25 @@ class MvcApplication
     {
         // Prevent the MVC application from applying a layout.
         $eventManager = $this->application->getEventManager();
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH, $this->preventMvcLayout(...), -95);
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, $this->preventMvcLayout(...), -95);
-        $eventManager->attach(MvcEvent::EVENT_RENDER_ERROR, $this->preventMvcLayout(...), -95);
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $event) {
+            $result = $event->getResult();
+            if ($result instanceof ViewModel) {
+                $result->setTerminal(true);
+                $event->setViewModel($result);
+            }
+        }, -95);
+
+        // Prevent the MVC application from applying an error template.
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $event) {
+            /** @var Response */
+            $response = $event->getResponse();
+            if ($response->getStatusCode() == 404) {
+                // The controller did not provide the requested action.
+                throw new HttpNotFoundException($this->request, 'Invalid action');
+            }
+        }, -85);
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, $this->preventErrorPage(...), -10);
+        $eventManager->attach(MvcEvent::EVENT_RENDER_ERROR, $this->preventErrorPage(...), -10);
 
         // Prevent the MVC application from generating output.
         $eventManager->attach(MvcEvent::EVENT_FINISH, function (MvcEvent $event) {
@@ -60,8 +81,9 @@ class MvcApplication
         });
     }
 
-    public function run(): MvcEvent
+    public function run(ServerRequestInterface $request): MvcEvent
     {
+        $this->request = $request;
         $this->configureServices();
         $this->configureEvents();
 
@@ -81,15 +103,18 @@ class MvcApplication
     }
 
     /**
-     * Event handler to prevent Laminas framework from applying a layout.
+     * Event handler to prevent Laminas framework from setting an error template.
      */
-    public function preventMvcLayout(MvcEvent $event): void
+    public function preventErrorPage(MvcEvent $event)
     {
-        $result = $event->getResult();
-        if ($result instanceof ViewModel) {
-            $result->setTerminal(true);
-            $event->setViewModel($result);
+        $exception = $event->getParam('exception');
+        if ($exception) {
+            throw $exception;
         }
+        if ($event->getError() == Application::ERROR_CONTROLLER_NOT_FOUND) {
+            throw new HttpNotFoundException($this->request, 'Invalid controller name: ' . $event->getController());
+        }
+        throw new RuntimeException('Unknown error in MVC application.');
     }
 
     public function errorHandler(int $errno, string $errstr, string $errfile, int $errline): bool

@@ -27,16 +27,30 @@ use Library\Application as LegacyApplication;
 use Model\Client\Client;
 use Model\Group\Group;
 use Nada\Database\AbstractDatabase;
+use Nyholm\Psr7\ServerRequest;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use ReflectionProperty;
+use RuntimeException;
+use Slim\Exception\HttpNotFoundException;
 
 class MvcApplicationTest extends AbstractHttpControllerTestCase
 {
     use ErrorHandlerTestTrait;
+
+    private ServerRequestInterface $request;
+
+    #[Before]
+    public function createRequest()
+    {
+        $this->request = new ServerRequest('GET', '');
+    }
 
     public function testServices()
     {
@@ -103,7 +117,7 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
             $eventsConfigured = true;
         });
 
-        $mvcApplication->run();
+        $mvcApplication->run($this->request);
     }
 
     public function testRunReturnsMvcEvent()
@@ -128,7 +142,7 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
             ->onlyMethods(['configureServices', 'configureEvents'])
             ->getMock();
 
-        $result = $mvcApplication->run();
+        $result = $mvcApplication->run($this->request);
         $this->assertSame($mvcEvent, $result);
     }
 
@@ -159,7 +173,7 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
             $this->fail('Warning should have been suppressed');
         });
         try {
-            $mvcApplication->run();
+            $mvcApplication->run($this->request);
         } finally {
             restore_error_handler();
         }
@@ -193,7 +207,7 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
             return true;
         });
         try {
-            $mvcApplication->run();
+            $mvcApplication->run($this->request);
         } finally {
             restore_error_handler();
         }
@@ -218,7 +232,7 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
             ->getMock();
 
         $this->expectExceptionMessage('Error thrown by run()');
-        $mvcApplication->run();
+        $mvcApplication->run($this->request);
         // Error handler is verified by trait
     }
 
@@ -244,6 +258,9 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
         $mvcApplication = new MvcApplication($this->application, $container);
         $mvcApplication->configureServices();
         $mvcApplication->configureEvents();
+
+        // The request would normally be passed to run(), which is bypassed in this test.
+        (new ReflectionProperty($mvcApplication, 'request'))->setValue($mvcApplication, $this->request);
 
         // Set up a stub controller which will be mapped to the route.
         $controller = new class ($serviceManager->get(InjectTemplateListener::class), $action) extends AbstractActionController
@@ -325,10 +342,8 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
             ['error/index' => 'error: <?= $this->exception->getMessage() ?>'], // overrides default template with the same name
         );
 
-        $this->setTraceError(true);
+        $this->expectExceptionMessage('Exception thrown by test action');
         $this->dispatch('/console/test/test');
-        $this->assertResponseStatusCode(500);
-        $this->assertEquals('error: Exception thrown by test action', $this->getResponse()->getContent());
     }
 
     public function testFrameworkIntegrationRenderError()
@@ -342,31 +357,43 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
             ],
         );
 
-        $this->setTraceError(true);
+        $this->expectExceptionMessage('Exception thrown by template');
         $this->dispatch('/console/test/test');
-        $this->assertResponseStatusCode(500);
-        $this->assertEquals('error: Exception thrown by template', $this->getResponse()->getContent());
     }
 
     public static function frameworkIntegrationInvalidRouteProvider()
     {
         return [
-            ['/console/test/invalid'],
-            ['/console/invalid/invalid'],
+            ['/console/test/invalid', 'Invalid action'],
+            ['/console/invalid/invalid', 'Invalid controller name: invalid'],
         ];
     }
 
     #[DataProvider('frameworkIntegrationInvalidRouteProvider')]
-    public function testFrameworkIntegrationInvalidRoute(string $route)
+    public function testFrameworkIntegrationInvalidRoute(string $route, string $message)
     {
         $this->createApplication(
             fn () => null,
             ['error/index' => 'error: not found'],
         );
 
-        $this->setTraceError(true);
+        $this->expectException(HttpNotFoundException::class);
+        $this->expectExceptionMessage($message);
         $this->dispatch($route);
-        $this->assertResponseStatusCode(404);
-        $this->assertEquals('error: not found', $this->getResponse()->getContent());
+    }
+
+    public function testUnknownError()
+    {
+        // It's unclear if and how this condition could be triggered within the
+        // framework. Test the listener directly.
+
+        $mvcApplication = new MvcApplication(
+            $this->createStub(LaminasApplication::class),
+            $this->createStub(Container::class),
+        );
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unknown error in MVC application.');
+        $mvcApplication->preventErrorPage(new MvcEvent());
     }
 }

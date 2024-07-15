@@ -25,6 +25,7 @@ namespace Console\Test\Controller;
 use Console\Form\ShowDuplicates;
 use Console\Test\AbstractControllerTestCase;
 use DateTime;
+use Exception;
 use Laminas\Form\Element\Csrf;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Model\Client\Client;
@@ -139,11 +140,11 @@ class DuplicatesControllerTest extends AbstractControllerTestCase
         $this->_duplicates->expects($this->once())
             ->method('find')
             ->with(null)
-            ->will($this->throwException(new \InvalidArgumentException('Invalid criteria')));
+            ->willThrowException(new Exception('Invalid criteria'));
         $this->_duplicates->expects($this->never())->method('merge');
 
+        $this->expectExceptionMessage('Invalid criteria');
         $this->dispatch('/console/duplicates/manage/');
-        $this->assertApplicationException('InvalidArgumentException');
     }
 
     public function testManageActionInvalidCriteria()
@@ -155,11 +156,11 @@ class DuplicatesControllerTest extends AbstractControllerTestCase
         $this->_duplicates->expects($this->once())
             ->method('find')
             ->with('invalid')
-            ->will($this->throwException(new \InvalidArgumentException('Invalid criteria')));
+            ->willThrowException(new Exception('Invalid criteria'));
         $this->_duplicates->expects($this->never())->method('merge');
 
+        $this->expectExceptionMessage('Invalid criteria');
         $this->dispatch('/console/duplicates/manage/?criteria=invalid');
-        $this->assertApplicationException('InvalidArgumentException');
     }
 
     public function testManageActionGet()

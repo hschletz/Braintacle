@@ -1,0 +1,7 @@
+    .errorPage {
+        margin: 1em;
+    }
+
+    .errorPage * {
+        text-align: left;
+    }

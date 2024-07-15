@@ -2,8 +2,12 @@
 
 namespace Braintacle\Test;
 
+use Braintacle\Template\Function\AssetUrlFunction;
+use Braintacle\Template\Function\CsrfTokenFunction;
+use Braintacle\Template\Function\PathForRouteFunction;
 use Braintacle\Template\TemplateEngine;
 use Composer\InstalledVersions;
+use Console\Template\Functions\TranslateFunction;
 use Console\Template\TemplateLoader;
 use DOMXPath;
 use Latte\Engine;
@@ -30,24 +34,16 @@ trait HttpHandlerTestTrait
         $this->response = new Response();
     }
 
-    private function createTemplateEngine(): TemplateEngine
+    private function createTemplateEngine(array $templateFunctions = []): TemplateEngine
     {
-        $templateEngine = $this->createStub(TemplateEngine::class);
-        $templateEngine->method('render')->willReturnCallback(
-            function (string $templatePath, array $params = []): string {
-                $engine = new Engine();
-                $engine->setLoader(new TemplateLoader(InstalledVersions::getRootPackage()['install_path'] . 'templates'));
-
-                $engine->addFunction('assetUrl', fn (string $path) => '__assetUrl_' . $path);
-                $engine->addFunction('csrfToken', fn () => '__csrfToken');
-                $engine->addFunction('pathForRoute', fn (string $name) => '__pathForRoute_' . $name);
-                $engine->addFunction('translate', fn (string $message) => "__translate($message)");
-
-                return $engine->renderToString($templatePath, $params);
-            }
+        return new TemplateEngine(
+            new Engine(),
+            new TemplateLoader(InstalledVersions::getRootPackage()['install_path'] . 'templates'),
+            $templateFunctions[AssetUrlFunction::class] ?? $this->createStub(AssetUrlFunction::class),
+            $templateFunctions[CsrfTokenFunction::class] ?? $this->createStub(CsrfTokenFunction::class),
+            $templateFunctions[PathForRouteFunction::class] ?? $this->createStub(PathForRouteFunction::class),
+            $templateFunctions[TranslateFunction::class] ?? $this->createStub(TranslateFunction::class),
         );
-
-        return $templateEngine;
     }
 
     private function getMessageContent(MessageInterface $message): string

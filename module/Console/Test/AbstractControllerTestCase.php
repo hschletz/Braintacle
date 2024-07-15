@@ -77,6 +77,12 @@ abstract class AbstractControllerTestCase extends AbstractHttpControllerTestCase
                 $event->setViewModel($result);
             }
         }, -95);
+
+        // Prevent the MVC application from applying an error template. Unlike
+        // in the real application, assume an exception and throw it.
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function (MvcEvent $event) {
+            throw $event->getParam('exception');
+        }, -10);
     }
 
     /**

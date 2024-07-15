@@ -25,6 +25,7 @@ namespace Console\Test\Controller;
 use Console\Form\NetworkDevice;
 use Console\Form\Subnet;
 use Console\Test\AbstractControllerTestCase;
+use Exception;
 use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Text;
 use Laminas\I18n\View\Helper\DateFormat;
@@ -391,10 +392,10 @@ class NetworkControllerTest extends AbstractControllerTestCase
         $this->_subnetManager->expects($this->once())
             ->method('getSubnet')
             ->with(null, null)
-            ->will($this->throwException(new \InvalidArgumentException()));
+            ->willThrowException(new Exception('missing params'));
 
+        $this->expectExceptionMessage('missing params');
         $this->dispatch('/console/network/properties');
-        $this->assertApplicationException('InvalidArgumentException');
     }
 
     public function testEditActionGet()

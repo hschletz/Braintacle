@@ -4,11 +4,18 @@ namespace Braintacle\Test\Authentication;
 
 use Braintacle\Authentication\ShowLoginFormHandler;
 use Braintacle\Http\RouteHelper;
+use Braintacle\Template\Function\CsrfTokenFunction;
+use Braintacle\Template\Function\PathForRouteFunction;
+use Braintacle\Template\TemplateEngine;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Laminas\Authentication\AuthenticationServiceInterface;
 use Laminas\Session\Container as Session;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(ShowLoginFormHandler::class)]
+#[UsesClass(TemplateEngine::class)]
 class ShowLoginFormHandlerTest extends TestCase
 {
     use HttpHandlerTestTrait;
@@ -44,7 +51,16 @@ class ShowLoginFormHandlerTest extends TestCase
         $session->expects($this->once())->method('offsetExists')->with('invalidCredentials')->willReturn(false);
         $session->expects($this->never())->method('offsetUnset');
 
-        $templateEngine = $this->createTemplateEngine();
+        $csrfTokenFunction = $this->createStub(CsrfTokenFunction::class);
+        $csrfTokenFunction->method('__invoke')->willReturn('csrf_token');
+
+        $pathForRouteFunction = $this->createMock(PathForRouteFunction::class);
+        $pathForRouteFunction->method('__invoke')->with('loginHandler')->willReturn('/login_handler');
+
+        $templateEngine = $this->createTemplateEngine([
+            CsrfTokenFunction::class => $csrfTokenFunction,
+            PathForRouteFunction::class => $pathForRouteFunction,
+        ]);
 
         $handler = new ShowLoginFormHandler($this->response, $routeHelper, $authenticationService, $session, $templateEngine);
         $response = $handler->handle($this->request);
@@ -52,8 +68,8 @@ class ShowLoginFormHandlerTest extends TestCase
 
         $xPath = $this->getXPathFromMessage($response);
         $this->assertCount(0, $xPath->query('//p[@class="error"]'));
-        $this->assertCount(1, $xPath->query('//form[@method="post"][@action="__pathForRoute_loginHandler"]'));
-        $this->assertCount(1, $xPath->query('//form//input[@type="hidden"][@name="_csrf"][@value="__csrfToken"]'));
+        $this->assertCount(1, $xPath->query('//form[@method="post"][@action="/login_handler"]'));
+        $this->assertCount(1, $xPath->query('//form//input[@type="hidden"][@name="_csrf"][@value="csrf_token"]'));
         $this->assertCount(1, $xPath->query('//form//input[@type="text"][@name="user"]'));
         $this->assertCount(1, $xPath->query('//form//input[@type="password"][@name="password"]'));
     }
@@ -69,7 +85,16 @@ class ShowLoginFormHandlerTest extends TestCase
         $session->method('offsetExists')->with('invalidCredentials')->willReturn(true);
         $session->expects($this->once())->method('offsetUnset')->with('invalidCredentials');
 
-        $templateEngine = $this->createTemplateEngine();
+        $csrfTokenFunction = $this->createStub(CsrfTokenFunction::class);
+        $csrfTokenFunction->method('__invoke')->willReturn('csrf_token');
+
+        $pathForRouteFunction = $this->createMock(PathForRouteFunction::class);
+        $pathForRouteFunction->method('__invoke')->with('loginHandler')->willReturn('/login_handler');
+
+        $templateEngine = $this->createTemplateEngine([
+            CsrfTokenFunction::class => $csrfTokenFunction,
+            PathForRouteFunction::class => $pathForRouteFunction,
+        ]);
 
         $handler = new ShowLoginFormHandler($this->response, $routeHelper, $authenticationService, $session, $templateEngine);
         $response = $handler->handle($this->request);
@@ -77,8 +102,8 @@ class ShowLoginFormHandlerTest extends TestCase
 
         $xPath = $this->getXPathFromMessage($response);
         $this->assertCount(1, $xPath->query('//p[@class="error"]'));
-        $this->assertCount(1, $xPath->query('//form[@method="post"][@action="__pathForRoute_loginHandler"]'));
-        $this->assertCount(1, $xPath->query('//form//input[@type="hidden"][@name="_csrf"][@value="__csrfToken"]'));
+        $this->assertCount(1, $xPath->query('//form[@method="post"][@action="/login_handler"]'));
+        $this->assertCount(1, $xPath->query('//form//input[@type="hidden"][@name="_csrf"][@value="csrf_token"]'));
         $this->assertCount(1, $xPath->query('//form//input[@type="text"][@name="user"]'));
         $this->assertCount(1, $xPath->query('//form//input[@type="password"][@name="password"]'));
     }

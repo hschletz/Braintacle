@@ -140,10 +140,5 @@ return array(
             'console' => __DIR__ . '/views',
         ),
         'default_template_suffix' => 'php',
-        'display_exceptions' => true,
-        'display_not_found_reason' => true,
-        'layout'                   => false,
-        'not_found_template'       => 'error/index',
-        'exception_template'       => 'error/index',
     ),
 );

@@ -23,7 +23,7 @@ class ApplicationBridge implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $mvcEvent = $this->mvcApplication->run();
+        $mvcEvent = $this->mvcApplication->run($request);
         /** @var Response */
         $mvcResponse = $mvcEvent->getResponse();
 

@@ -61,8 +61,6 @@ class Module implements
         $eventManager->attach(MvcEvent::EVENT_RENDER, [$this, 'registerTemplateStrategy']);
         $eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'setTranslators'));
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'forceStrictVars'));
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onError'));
-        $eventManager->attach(MvcEvent::EVENT_RENDER_ERROR, array($this, 'onError'));
     }
 
     /**
@@ -136,24 +134,6 @@ class Module implements
         $model->setVariables($vars, true);
         foreach ($model->getChildren() as $child) {
             $this->setStrictVars($child);
-        }
-    }
-
-    /**
-     * Hook to inject the controller name and request object into the error template
-     *
-     * This is triggered by EVENT_DISPATCH_ERROR and EVENT_RENDER_ERROR.
-     *
-     * @param \Laminas\Mvc\MvcEvent $e MVC event
-     */
-    public function onError(\Laminas\Mvc\MvcEvent $e)
-    {
-        $result = $e->getResult();
-        $result->serviceManager = $e->getApplication()->getServiceManager();
-        $result->request = $e->getRequest();
-        $routeMatch = $e->getRouteMatch();
-        if ($routeMatch) {
-            $result->controller = $routeMatch->getParam('controller');
         }
     }
 

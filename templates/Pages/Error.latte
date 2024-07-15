@@ -1,0 +1,33 @@
+{layout ../Layout.latte}
+{var $mainMenuRoute = null}
+{block content}
+    <link rel="stylesheet" href="{assetUrl('css/error_page.css')}">
+    <div class="errorPage">
+        <h1>An error occurred</h1>
+
+        <h2>{$message}</h2>
+
+        {if $debug}
+            <pre>{$throwable}</pre>
+
+            <h3>Request Parameters:</h3>
+
+            <h4>Method</h4>
+            <p>{$method}</p>
+
+            <h4>URL parameters</h4>
+            <pre>{$query}</pre>
+
+            <h4>POST parameters</h4>
+            <pre>{$post}</pre>
+
+            <h4>Files</h4>
+            <pre>{$files}</pre>
+
+            <h4>Server variables</h4>
+            <pre>{$env}</pre>
+        {else}
+            <p class='textcenter'>See web server error log for details.</p>
+        {/if}
+    </div>
+{/block}
