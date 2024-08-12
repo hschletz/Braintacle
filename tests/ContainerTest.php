@@ -4,6 +4,7 @@ namespace Braintacle\Test;
 
 use Braintacle\Container;
 use Laminas\Authentication\AuthenticationServiceInterface;
+use Laminas\Validator\Csrf;
 use Model\Operator\AuthenticationService;
 use Model\Package\Storage\StorageInterface;
 use PHPUnit\Framework\TestCase;
@@ -20,5 +21,13 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf(AuthenticationService::class, $container->get(AuthenticationServiceInterface::class));
         $this->assertInstanceOf(ResponseInterface::class, $container->get(ResponseInterface::class));
         $this->assertInstanceOf(StorageInterface::class, $container->get(StorageInterface::class));
+    }
+
+    public function testCsrfValidator()
+    {
+        $container = new Container();
+        $csrfValidator = $container->get(Csrf::class);
+        $this->assertInstanceOf(Csrf::class, $csrfValidator);
+        $this->assertNull($csrfValidator->getTimeout());
     }
 }

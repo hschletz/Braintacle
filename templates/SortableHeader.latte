@@ -14,7 +14,7 @@
         {* use ascending ordering for every other hyperlink. *}
         {var $linkDirection = 'asc'}
     {/if}
-    <a href="{consoleUrl(null, null, ['order' => $key, 'direction' => $linkDirection], true)}">
+    <a href="?order={$key}&amp;direction={$linkDirection}">
         {$label}{$arrow|noescape}
     </a>
 {/define}

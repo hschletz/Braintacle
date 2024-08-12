@@ -25,6 +25,7 @@
         "ext-intl": "*",
         "ext-zip": "*",
         "gettext/gettext": "^5.7",
+        "hschletz/formotron": "dev-main",
         "hschletz/nada": "^1.2.4",
         "laminas/laminas-authentication": "^2.5",
         "laminas/laminas-config": "^3.0",

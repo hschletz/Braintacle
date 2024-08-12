@@ -56,7 +56,6 @@ return array(
             'network' => 'Console\Service\NetworkControllerFactory',
             'package' => 'Console\Service\PackageControllerFactory',
             'preferences' => 'Console\Service\PreferencesControllerFactory',
-            'software' => 'Console\Service\SoftwareControllerFactory',
         ),
     ),
     'form_elements' => array(

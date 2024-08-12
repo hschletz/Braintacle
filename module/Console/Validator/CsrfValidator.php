@@ -6,6 +6,8 @@ use Laminas\Validator\Csrf;
 
 /**
  * Validate CSRF token.
+ *
+ * @deprecated The main container provides a configured Laminas\Validator\Csrf instance.
  */
 class CsrfValidator extends Csrf
 {
@@ -13,8 +15,6 @@ class CsrfValidator extends Csrf
 
     /**
      * Get current token.
-     *
-     * @deprecated Call getHash() on injected instance.
      */
     public static function getToken(): string
     {

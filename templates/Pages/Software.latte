@@ -1,0 +1,77 @@
+{layout ../InventoryMenuLayout.latte}
+{import ../SortableHeader.latte}
+{var $subMenuRoute = 'softwarePage'}
+
+{{block content}
+    <link rel="stylesheet" href="{assetUrl('css/software_page.css')}">
+    <script type="module" src="{assetUrl('js/form_software.js')}"></script>
+
+    <form method="get" class="form_software_filter">
+        <div class="table">
+            <label>
+                <span>{translate('Filter')}</span>
+                <select name="filter">
+                    <option value="accepted" n:attr="selected => $filter == 'accepted'">{translate('selected for display')}</option>
+                    <option value="ignored" n:attr="selected => $filter == 'ignored'">{translate('ignored for display')}</option>
+                    <option value="new" n:attr="selected => $filter == 'new'">{translate('new or not categorized')}</option>
+                    <option value="all" n:attr="selected => $filter == 'all'">{translate('all')}</option>
+                </select>
+            </label>
+        </div>
+    </form>
+
+    <form method="post" class="form form_software">
+        <input type="hidden" name="csrfToken" value="{csrfToken()}">
+        <div class="textcenter">
+            <button n:if="$filter != 'accepted'" type="submit" name="action" value="accept">{translate('Accept selected')}</button>
+            <button n:if="$filter != 'ignored'" type="submit" name="action" value="ignore">{translate('Ignore selected')}</button>
+        </div>
+
+        <table class="alternating">
+            <tr>
+                <th>
+                    <input type="checkbox" class="checkAll">
+                </th>
+                <th>
+                    {include sortableHeader, 'name', translate('Name')}
+                </th>
+                <th class="textright">
+                    {include sortableHeader, 'num_clients', translate('Count')}
+                </th>
+            </tr>
+
+            <tr n:foreach="$software as $row">
+                <td>
+                    <input type="checkbox" name="software[]" value="{$row['name']}">
+                </td>
+                <td>{$row['name']}</td>
+                <td class="textright">
+                    <a href="{pathForRoute('clientList')}?{[
+                        columns: 'name,userName,lastContactDate,inventoryDate,software.version',
+                        jumpto: 'software',
+                        filter: 'Software',
+                        search: $row['name'],
+                    ]|query}">
+                        {$row['num_clients']}
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <dialog class="dialog_software">
+        <p class="message accept">
+            {translate('The following software will be marked as known and accepted. Continue?')}
+        </p>
+        <p class="message ignore">
+            {translate('The following software will be marked as known but ignored. Continue?')}
+        </p>
+
+        <ul>{* will be filled by JS *}</ul>
+
+        <form method="dialog">
+            <button value='yes'>{translate('Yes')}</button>
+            <button value='no'>{translate('No')}</button>
+        </form>
+    </dialog>
+{/block}}

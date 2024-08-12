@@ -15,6 +15,7 @@ use Laminas\Config\Reader\Ini as IniReader;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\Application as MvcApplication;
+use Laminas\Validator\Csrf;
 use Library\Application;
 use Locale;
 use Model\Client\Client;
@@ -48,6 +49,7 @@ class Container extends DIContainer
             AuthenticationServiceInterface::class => get(AuthenticationService::class),
             Client::class => factory(ClientOrGroupFactory::class),
             ClockInterface::class => get(Clock::class),
+            Csrf::class => create(Csrf::class)->constructor(['timeout' => null]),
             Group::class => factory(ClientOrGroupFactory::class),
             LoggerInterface::class => factory(LoggerFactory::class),
             MvcApplication::class => factory(Application::init(...))->parameter('module', 'Console'),

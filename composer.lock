@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f11c9aff4151b37abceea867819bd7c7",
+    "content-hash": "2d987d68d9fd2258b18a517e585491e5",
     "packages": [
         {
             "name": "brick/varexporter",
@@ -202,6 +202,53 @@
                 }
             ],
             "time": "2022-10-18T15:00:10+00:00"
+        },
+        {
+            "name": "hschletz/formotron",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hschletz/formotron.git",
+                "reference": "4f5c24d27d2b485942fa7be748eaa7e4cc6461d5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hschletz/formotron/zipball/4f5c24d27d2b485942fa7be748eaa7e4cc6461d5",
+                "reference": "4f5c24d27d2b485942fa7be748eaa7e4cc6461d5",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1 || ^8.2 || ^8.3",
+                "psr/container": "^1.0 || ^2.0"
+            },
+            "require-dev": {
+                "bamarni/composer-bin-plugin": "^1.8",
+                "phpunit/phpunit": "^10"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Formotron\\": "src/",
+                    "Formotron\\Test\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Holger Schletz",
+                    "email": "holger.schletz@web.de"
+                }
+            ],
+            "description": "Form processing and validation",
+            "support": {
+                "issues": "https://github.com/hschletz/formotron/issues",
+                "source": "https://github.com/hschletz/formotron/tree/main"
+            },
+            "time": "2024-08-12T16:16:31+00:00"
         },
         {
             "name": "hschletz/nada",
@@ -7103,7 +7150,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "hschletz/formotron": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

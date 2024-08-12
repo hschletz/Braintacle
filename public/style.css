@@ -51,6 +51,16 @@ a {
     text-decoration: none;
 }
 
+dialog {
+    text-align: center;
+    border: none;
+}
+
+::backdrop {
+    background-color: black;
+    opacity: 50%;
+}
+
 /* Main page content */
 #content {
     position: absolute;
@@ -552,10 +562,6 @@ form.form_addtogroup > * {
     display: block;
     text-align: center;
     margin: 2ex auto 0 auto;
-}
-
-.form_software button {
-    margin-bottom: 2ex;
 }
 
 /* The following rules are for forms still using the deprecated render() method. */

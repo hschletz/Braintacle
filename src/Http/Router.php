@@ -5,6 +5,7 @@ namespace Braintacle\Http;
 use Braintacle\Authentication;
 use Braintacle\Client;
 use Braintacle\Legacy\ApplicationBridge;
+use Braintacle\Software;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface;
 
@@ -28,6 +29,8 @@ class Router
         // All other routes get LoginMiddleware.
         $app->group('', function (RouteCollectorProxyInterface $group) {
             $group->get('/client/{id}/export', Client\ExportHandler::class)->setName('export');
+            $group->get('/software', Software\SoftwarePageHandler::class)->setName('softwarePage');
+            $group->post('/software', Software\SoftwareManagementHandler::class)->setName('softwareHandler');
 
             // Legacy routes handled by MVC application, which are listed here
             // to provide a route name.
@@ -52,7 +55,6 @@ class Router
             $group->get('/console/preferences/packages', ApplicationBridge::class)->setName('preferencesPackagesPage');
             $group->get('/console/preferences/rawdata', ApplicationBridge::class)->setName('preferencesRawDataPage');
             $group->get('/console/preferences/system', ApplicationBridge::class)->setName('preferencesSystemPage');
-            $group->get('/console/software/index', ApplicationBridge::class)->setName('softwarePage');
 
             // Catch-all route: forward to MVC application
             $group->any('{path:.*}', ApplicationBridge::class);
