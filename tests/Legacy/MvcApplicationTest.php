@@ -365,6 +365,7 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
     {
         return [
             ['/console/test/invalid', 'Invalid action'],
+            ['/console/test/invalid/extra', 'No route matched.'],
             ['/console/invalid/invalid', 'Invalid controller name: invalid'],
         ];
     }

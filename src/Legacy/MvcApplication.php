@@ -111,10 +111,14 @@ class MvcApplication
         if ($exception) {
             throw $exception;
         }
-        if ($event->getError() == Application::ERROR_CONTROLLER_NOT_FOUND) {
-            throw new HttpNotFoundException($this->request, 'Invalid controller name: ' . $event->getController());
+        switch ($event->getError()) {
+            case Application::ERROR_CONTROLLER_NOT_FOUND:
+                throw new HttpNotFoundException($this->request, 'Invalid controller name: ' . $event->getController());
+            case Application::ERROR_ROUTER_NO_MATCH:
+                throw new HttpNotFoundException($this->request, 'No route matched.');
+            default:
+                throw new RuntimeException('Unknown error in MVC application.');
         }
-        throw new RuntimeException('Unknown error in MVC application.');
     }
 
     public function errorHandler(int $errno, string $errstr, string $errfile, int $errline): bool
