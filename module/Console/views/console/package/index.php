@@ -33,7 +33,7 @@ if ($successMessages) {
         $successMessages,
         false,
         array('class' => 'success'),
-        false
+        true
     );
 }
 
