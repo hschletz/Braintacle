@@ -4,18 +4,17 @@ namespace Braintacle\Test\Software;
 
 use Braintacle\Software\Action;
 use Braintacle\Software\SoftwareFormData;
-use Braintacle\Test\FormProcessorTestTrait;
-use Formotron\AssertionFailedException;
+use Braintacle\Test\CsrfFormProcessorTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class SoftwareFormDataTest extends TestCase
 {
-    use FormProcessorTestTrait;
+    use CsrfFormProcessorTestTrait;
 
     public function testDefaultSoftware()
     {
-        $formData = $this->createFormProcessor()->process(
+        $formData = $this->processFormData(
             ['action' => 'accept'],
             SoftwareFormData::class
         );
@@ -24,7 +23,7 @@ class SoftwareFormDataTest extends TestCase
 
     public function testExplicitSoftware()
     {
-        $formData = $this->createFormProcessor()->process(
+        $formData = $this->processFormData(
             [
                 'action' => 'accept',
                 'software' => ['software1', 'software2'],
@@ -46,8 +45,7 @@ class SoftwareFormDataTest extends TestCase
     #[DataProvider('invalidSoftwareProvider')]
     public function testInvalidSoftware($software)
     {
-        $this->expectException(AssertionFailedException::class);
-        $this->createFormProcessor()->process(
+        $this->assertInvalidFormData(
             [
                 'action' => 'accept',
                 'software' => $software,
@@ -58,7 +56,7 @@ class SoftwareFormDataTest extends TestCase
 
     public function testAcceptAction()
     {
-        $formData = $this->createFormProcessor()->process(
+        $formData = $this->processFormData(
             ['action' => 'accept'],
             SoftwareFormData::class
         );
@@ -67,7 +65,7 @@ class SoftwareFormDataTest extends TestCase
 
     public function testIgnoreAction()
     {
-        $formData = $this->createFormProcessor()->process(
+        $formData = $this->processFormData(
             ['action' => 'ignore'],
             SoftwareFormData::class
         );
@@ -76,8 +74,7 @@ class SoftwareFormDataTest extends TestCase
 
     public function testInvalidAction()
     {
-        $this->expectException(AssertionFailedException::class);
-        $this->createFormProcessor()->process(
+        $this->assertInvalidFormData(
             ['action' => 'invalid'],
             SoftwareFormData::class
         );
@@ -85,8 +82,7 @@ class SoftwareFormDataTest extends TestCase
 
     public function testMissingAction()
     {
-        $this->expectException(AssertionFailedException::class);
-        $this->createFormProcessor()->process(
+        $this->assertInvalidFormData(
             [],
             SoftwareFormData::class
         );

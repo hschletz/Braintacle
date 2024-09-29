@@ -2,8 +2,8 @@
 
 namespace Braintacle\Test;
 
-use Braintacle\CsrfProcessor;
 use DI\Container;
+use Formotron\AssertionFailedException;
 use Formotron\FormProcessor;
 
 /**
@@ -11,16 +11,27 @@ use Formotron\FormProcessor;
  */
 trait FormProcessorTestTrait
 {
-    /**
-     * Create form processor, ensure CSRF token validation.
-     */
-    protected function createFormProcessor(): FormProcessor
+    protected function createFormProcessor(array $services = []): FormProcessor
     {
-        $csrfProcessor = $this->createMock(CsrfProcessor::class);
-        $csrfProcessor->expects($this->once())->method('process')->willReturnArgument(0);
-        $container = new Container([CsrfProcessor::class => $csrfProcessor]);
+        $container = new Container($services);
         $formProcessor = $container->get(FormProcessor::class);
 
         return $formProcessor;
+    }
+
+    /**
+     * @template T of object
+     * @param class-string<T> $className
+     * @return T
+     */
+    protected function processFormData(array $input, string $className, array $services = []): object
+    {
+        return $this->createFormProcessor($services)->process($input, $className);
+    }
+
+    protected function assertInvalidFormData(array $input, string $className, array $services = []): void
+    {
+        $this->expectException(AssertionFailedException::class);
+        $this->processFormData($input, $className, $services);
     }
 }
