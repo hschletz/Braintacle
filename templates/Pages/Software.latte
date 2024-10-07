@@ -1,6 +1,7 @@
 {layout ../InventoryMenuLayout.latte}
 {import ../SortableHeader.latte}
 {var $subMenuRoute = 'softwarePage'}
+{var $extraParams = [filter: $filter]}
 
 {block content}
     <link rel="stylesheet" href="{assetUrl('css/software_page.css')}">
@@ -33,10 +34,10 @@
                     <input type="checkbox" class="checkAll">
                 </th>
                 <th>
-                    {include sortableHeader, 'name', translate('Name')}
+                    {include sortableHeader, 'name', translate('Name'), $extraParams}
                 </th>
                 <th class="textright">
-                    {include sortableHeader, 'num_clients', translate('Count')}
+                    {include sortableHeader, 'num_clients', translate('Count'), $extraParams}
                 </th>
             </tr>
 

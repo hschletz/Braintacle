@@ -2,18 +2,19 @@
 {import ../SortableHeader.latte}
 {block clientContent}
 
+{var $extraParams = [id: $client->id]}
 <table class="alternating">
     <tr>
-        <th>{include sortableHeader, 'name', translate('Name')}</th>
-        <th>{include sortableHeader, 'version', translate('Version')}</th>
+        <th>{include sortableHeader, 'name', translate('Name'), $extraParams}</th>
+        <th>{include sortableHeader, 'version', translate('Version'), $extraParams}</th>
         {if $client->windows || $client->android}
-            <th>{include sortableHeader, 'publisher', translate('Publisher')}</th>
-            <th>{include sortableHeader, 'installLocation', translate('Location')}</th>
+            <th>{include sortableHeader, 'publisher', translate('Publisher'), $extraParams}</th>
+            <th>{include sortableHeader, 'installLocation', translate('Location'), $extraParams}</th>
         {else}
-            <th class="textright">{include sortableHeader, 'size', translate('Size')}</th>
+            <th class="textright">{include sortableHeader, 'size', translate('Size'), $extraParams}</th>
         {/if}
         {if $client->windows}
-            <th>{include sortableHeader, 'architecture', translate('Architecture')}</th>
+            <th>{include sortableHeader, 'architecture', translate('Architecture'), $extraParams}</th>
         {/if}
     </tr>
 

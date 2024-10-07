@@ -18,9 +18,11 @@ Fixed bugs:
 - Console: Fixed display of software for UNIX clients that don't
   report package size.
 
+- Console: Some tables had broken links for sortable column headers.
+
 Misc:
 
-- Console: Date fields are now entered wia a date input.
+- Console: Date fields are now entered via a date input.
 
 
 CHANGES IN VERSION 1.10

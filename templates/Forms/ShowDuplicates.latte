@@ -13,6 +13,8 @@
     <label><input type="checkbox" name="mergeOptions[]" value="{$name}" n:attr="checked => $checked">{$label}</label>
 {/define}
 
+{var $extraParams = [criteria: $criteria]}
+
 <ul n:ifcontent class="error">
     <li n:foreach="$messages as $message">{$message}</li>
 </ul>
@@ -23,13 +25,13 @@
         <tr>
             <th>
                 <input type="checkbox" class="checkAll">
-                {include sortableHeader, 'Id', translate('ID')}
+                {include sortableHeader, 'Id', translate('ID'), $extraParams}
             </th>
-            <th>{include sortableHeader, 'Name', translate('Name')}</th>
-            <th>{include sortableHeader, 'NetworkInterface.MacAddress', translate('MAC Address')}</th>
-            <th>{include sortableHeader, 'Serial', translate('Serial number')}</th>
-            <th>{include sortableHeader, 'AssetTag', translate('Asset tag')}</th>
-            <th>{include sortableHeader, 'LastContactDate', translate('Last contact')}</th>
+            <th>{include sortableHeader, 'Name', translate('Name'), $extraParams}</th>
+            <th>{include sortableHeader, 'NetworkInterface.MacAddress', translate('MAC Address'), $extraParams}</th>
+            <th>{include sortableHeader, 'Serial', translate('Serial number'), $extraParams}</th>
+            <th>{include sortableHeader, 'AssetTag', translate('Asset tag'), $extraParams}</th>
+            <th>{include sortableHeader, 'LastContactDate', translate('Last contact'), $extraParams}</th>
         </tr>
         <tr n:foreach="$clients as $client">
             <td>

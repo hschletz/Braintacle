@@ -6,7 +6,7 @@
     <h2>{translate('Assigned packages')}</h2>
     <table class="alternating">
         <tr>
-            <th>{include sortableHeader, 'Name', translate('Name')}
+            <th>{include sortableHeader, 'Name', translate('Name'), [name: $group->name]}
             <th></th>
         </tr>
         <tr n:foreach="$assignedPackages as $package">

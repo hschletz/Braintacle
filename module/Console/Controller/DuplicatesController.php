@@ -105,9 +105,10 @@ class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionControl
             }
         }
 
+        $criteria = $this->params()->fromQuery('criteria');
         $ordering = $this->getOrder('Id', 'asc');
         $clients = $this->_duplicates->find(
-            $this->params()->fromQuery('criteria'),
+            $criteria,
             $ordering['order'],
             $ordering['direction']
         );
@@ -117,6 +118,7 @@ class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionControl
             // Flatten $messages to a single-level list
             'messages' => new RecursiveIteratorIterator(new RecursiveArrayIterator($messages)),
             'clients' => $clients,
+            'criteria' => $criteria,
             'csrfToken' => $this->_showDuplicates->get('_csrf')->getValue(),
             'config' => $this->config,
             'order' => $ordering['order'],
