@@ -22,6 +22,7 @@
 
 namespace Console\Controller;
 
+use Braintacle\Direction;
 use Console\Form\Package\AssignPackagesForm;
 use Console\Template\TemplateViewModel;
 use Console\Validator\CsrfValidator;
@@ -359,6 +360,7 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
             }
         }
         $vars['list'] = $list;
+        $vars['direction'] = Direction::from($vars['direction']);
 
         return new TemplateViewModel('Client/Software.latte', $vars);
     }

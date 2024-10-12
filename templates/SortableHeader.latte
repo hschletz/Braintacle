@@ -3,7 +3,7 @@
     {var $arrow = ''}
     {if $key == $order}
         {* add arrow indicator to currently sorted column and invert direction for the hyperlink. *}
-        {if $direction == 'asc'}
+        {if $direction->value == 'asc'}
             {var $linkDirection = 'desc'}
             {var $arrow = '&uarr;'}
         {else}

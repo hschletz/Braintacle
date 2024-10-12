@@ -24,6 +24,8 @@ Misc:
 
 - Console: Date fields are now entered via a date input.
 
+- Console: Software page now lists software for all client OS.
+
 
 CHANGES IN VERSION 1.10
 =======================

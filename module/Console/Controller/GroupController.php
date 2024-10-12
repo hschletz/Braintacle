@@ -22,6 +22,7 @@
 
 namespace Console\Controller;
 
+use Braintacle\Direction;
 use Console\Form\Package\AssignPackagesForm;
 use Console\Template\TemplateViewModel;
 use Console\Validator\CsrfValidator;
@@ -178,6 +179,7 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
         $vars = $this->getOrder('Name');
         $vars['group'] = $this->_currentGroup;
         $vars['assignedPackages'] = $this->_currentGroup->getPackages($vars['direction']);
+        $vars['direction'] = Direction::from($vars['direction']);
         $vars['assignablePackages'] = $this->_currentGroup->getAssignablePackages();
         $vars['csrfToken'] = CsrfValidator::getToken();
 

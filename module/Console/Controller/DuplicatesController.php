@@ -22,6 +22,7 @@
 
 namespace Console\Controller;
 
+use Braintacle\Direction;
 use Console\Template\TemplateViewModel;
 use Laminas\Mvc\MvcEvent;
 use Model\Config;
@@ -122,7 +123,7 @@ class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionControl
             'csrfToken' => $this->_showDuplicates->get('_csrf')->getValue(),
             'config' => $this->config,
             'order' => $ordering['order'],
-            'direction' => $ordering['direction'],
+            'direction' => Direction::from($ordering['direction']),
         ];
 
         return new TemplateViewModel('Forms/ShowDuplicates.latte', $context);

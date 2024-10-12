@@ -2,13 +2,16 @@
 
 namespace Braintacle\Test\Software;
 
-use Braintacle\Http\OrderHelper;
+use Braintacle\Direction;
+use Braintacle\Software\SoftwareFilter;
+use Braintacle\Software\SoftwarePageColumn;
 use Braintacle\Software\SoftwarePageHandler;
-use Braintacle\Template\TemplateEngine;
 use Braintacle\Test\HttpHandlerTestTrait;
+use Formotron\FormProcessor;
 use Model\SoftwareManager;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class SoftwarePageHandlerTest extends TestCase
@@ -17,50 +20,16 @@ class SoftwarePageHandlerTest extends TestCase
 
     private function getResponseForFilter(string $filter): ResponseInterface
     {
-        $orderHelper = $this->createStub(OrderHelper::class);
-        $orderHelper->method('__invoke')->willReturn(['name', 'asc']);
+        $formProcessor = new FormProcessor($this->createStub(ContainerInterface::class));
+
         $handler = new SoftwarePageHandler(
             $this->response,
-            $orderHelper,
+            $formProcessor,
             $this->createTemplateEngine(),
             $this->createStub(SoftwareManager::class),
         );
 
         return $handler->handle($this->request->withQueryParams(['filter' => $filter]));
-    }
-
-    public static function parameterProvider()
-    {
-        return [
-            [['filter' => 'filterName'], 'filterName'],
-            [[], 'accepted'],
-        ];
-    }
-
-    #[DataProvider('parameterProvider')]
-    public function testParameterEvaluation($queryParams, $expectedFilter)
-    {
-        $orderHelper = $this->createMock(OrderHelper::class);
-        $orderHelper->method('__invoke')->with($queryParams, 'name')->willReturn(['_order', '_direction']);
-
-        $filters = [
-            'Os' => 'windows',
-            'Status' => $expectedFilter,
-        ];
-        $softwareManager = $this->createMock(SoftwareManager::class);
-        $softwareManager
-            ->expects($this->once())
-            ->method('getSoftware')
-            ->with($filters, '_order', '_direction')
-            ->willReturn([]);
-
-        $handler = new SoftwarePageHandler(
-            $this->response,
-            $orderHelper,
-            $this->createStub(TemplateEngine::class),
-            $softwareManager,
-        );
-        $handler->handle($this->request->withQueryParams($queryParams));
     }
 
     public static function filterProvider()
@@ -80,13 +49,6 @@ class SoftwarePageHandlerTest extends TestCase
         $xPath = $this->getXPathFromMessage($response);
         $this->assertCount(1, $xPath->query("//option[@value='$filter'][@selected]"));
         $this->assertCount(1, $xPath->query("//option[@selected]"));
-    }
-
-    public function testInvalidFilter()
-    {
-        $response = $this->getResponseForFilter('invalid');
-        $xPath = $this->getXPathFromMessage($response);
-        $this->assertEmpty($xPath->query('//option[@selected]'));
     }
 
     public function testFilterButtonsAccepted()
@@ -123,17 +85,19 @@ class SoftwarePageHandlerTest extends TestCase
 
     public function testSoftwareList()
     {
-        $orderHelper = $this->createStub(OrderHelper::class);
-        $orderHelper->method('__invoke')->willReturn(['name', 'asc']);
+        $formProcessor = new FormProcessor($this->createStub(ContainerInterface::class));
 
-        $softwareManager = $this->createStub(SoftwareManager::class);
-        $softwareManager->method('getSoftware')->willReturn([
-            ['name' => 'name', 'num_clients' => 1],
-            ['name' => "<name>", 'num_clients' => 2],
-        ]);
+        $softwareManager = $this->createMock(SoftwareManager::class);
+        $softwareManager
+            ->method('getSoftware')
+            ->with(SoftwareFilter::Accepted, SoftwarePageColumn::Name, Direction::Ascending)
+            ->willReturn([
+                ['name' => 'name', 'num_clients' => 1],
+                ['name' => "<name>", 'num_clients' => 2],
+            ]);
         $handler = new SoftwarePageHandler(
             $this->response,
-            $orderHelper,
+            $formProcessor,
             $this->createTemplateEngine(),
             $softwareManager,
         );

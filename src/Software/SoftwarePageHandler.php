@@ -2,8 +2,8 @@
 
 namespace Braintacle\Software;
 
-use Braintacle\Http\OrderHelper;
 use Braintacle\Template\TemplateEngine;
+use Formotron\FormProcessor;
 use Model\SoftwareManager;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -17,7 +17,7 @@ class SoftwarePageHandler implements RequestHandlerInterface
 {
     public function __construct(
         private ResponseInterface $response,
-        private OrderHelper $orderHelper,
+        private FormProcessor $formProcessor,
         private TemplateEngine $templateEngine,
         private SoftwareManager $softwareManager,
     ) {
@@ -25,17 +25,12 @@ class SoftwarePageHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $query = $request->getQueryParams();
-        $filter = $query['filter'] ?? 'accepted';
-        [$order, $direction] = ($this->orderHelper)($query, 'name');
+        $queryParams = $this->formProcessor->process($request->getQueryParams(), SoftwarePageFormData::class);
 
         $software = $this->softwareManager->getSoftware(
-            [
-                'Os' => 'windows',
-                'Status' => $filter,
-            ],
-            $order,
-            $direction,
+            $queryParams->filter,
+            $queryParams->order,
+            $queryParams->direction,
         );
 
         $this->response->getBody()->write(
@@ -43,9 +38,9 @@ class SoftwarePageHandler implements RequestHandlerInterface
                 'Pages/Software.latte',
                 [
                     'software' => $software,
-                    'order' => $order,
-                    'direction' => $direction,
-                    'filter' => $filter,
+                    'order' => $queryParams->order->value,
+                    'direction' => $queryParams->direction,
+                    'filter' => $queryParams->filter->value,
                 ]
             )
         );

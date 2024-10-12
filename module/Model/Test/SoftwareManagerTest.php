@@ -22,6 +22,10 @@
 
 namespace Model\Test;
 
+use Braintacle\Direction;
+use Braintacle\Software\SoftwareFilter;
+use Braintacle\Software\SoftwarePageColumn;
+
 class SoftwareManagerTest extends AbstractTestCase
 {
     /** {@inheritdoc} */
@@ -37,54 +41,27 @@ class SoftwareManagerTest extends AbstractTestCase
     public static function getSoftwareProvider()
     {
         $accepted = array('name' => 'accepted', 'num_clients' => '2');
-        $acceptedOs = array('name' => 'accepted', 'num_clients' => '1');
         $ignored = array('name' => 'ignored', 'num_clients' => '2');
-        $ignoredOs = array('name' => 'ignored', 'num_clients' => '1');
         $new1 = array('name' => 'new1', 'num_clients' => '1');
         $new2 = array('name' => 'new2', 'num_clients' => '2');
-        $new2Os = array('name' => 'new2', 'num_clients' => '1');
-        return array(
-            array(null, 'name', 'asc', array($accepted, $ignored, $new1, $new2)),
-            array(array(), 'num_clients', 'desc', array($accepted, $ignored, $new2, $new1)),
-            array(array('Os' => 'windows'), 'name', 'asc', array($acceptedOs, $ignoredOs, $new1, $new2Os)),
-            array(array('Os' => 'other'), 'name', 'asc', array($acceptedOs, $ignoredOs, $new2Os)),
-            array(array('Status' => 'all'), 'name', 'asc', array($accepted, $ignored, $new1, $new2)),
-            array(array('Status' => 'accepted'), 'name', 'asc', array($accepted)),
-            array(array('Status' => 'ignored'), 'name', 'asc', array($ignored)),
-            array(array('Status' => 'new'), 'name', 'asc', array($new1, $new2)),
-        );
+        return [
+            [SoftwareFilter::All, SoftwarePageColumn::NumClients, Direction::Descending, [$accepted, $ignored, $new2, $new1]],
+            [SoftwareFilter::All, SoftwarePageColumn::Name, Direction::Ascending, [$accepted, $ignored, $new1, $new2]],
+            [SoftwareFilter::Accepted, SoftwarePageColumn::Name, Direction::Ascending, [$accepted]],
+            [SoftwareFilter::Ignored, SoftwarePageColumn::Name, Direction::Ascending, [$ignored]],
+            [SoftwareFilter::New, SoftwarePageColumn::Name, Direction::Ascending, [$new1, $new2]],
+        ];
     }
 
     /**
      * @dataProvider getSoftwareProvider
      */
-    public function testGetSoftware($filters, $order, $direction, $expected)
+    public function testGetSoftware($filter, $order, $direction, $expected)
     {
         $model = $this->getModel();
-        $software = $model->getSoftware($filters, $order, $direction);
+        $software = $model->getSoftware($filter, $order, $direction);
         $this->assertInstanceOf('Laminas\Db\ResultSet\ResultSet', $software);
         $this->assertEquals($expected, iterator_to_array($software));
-    }
-
-    public static function getSoftwareInvalidArgumentsProvider()
-    {
-        return array(
-            array(array('Os' => 'invalid'), 'name', 'Invalid OS filter: invalid'),
-            array(array('Status' => 'invalid'), 'name', 'Invalid status filter: invalid'),
-            array(array('invalid' => ''), 'name', 'Invalid filter: invalid'),
-            array(null, 'invalid', 'Invalid order column: invalid'),
-        );
-    }
-
-    /**
-     * @dataProvider getSoftwareInvalidArgumentsProvider
-     */
-    public function testGetSoftwareInvalidArgument($filters, $order, $message)
-    {
-        $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage($message);
-        $model = $this->getModel();
-        $software = $model->getSoftware($filters, $order);
     }
 
     public function testSetDisplay()

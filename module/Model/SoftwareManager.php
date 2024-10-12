@@ -22,6 +22,9 @@
 
 namespace Model;
 
+use Braintacle\Direction;
+use Braintacle\Software\SoftwareFilter;
+use Braintacle\Software\SoftwarePageColumn;
 use Laminas\Db\ResultSet\ResultSet;
 
 /**
@@ -76,23 +79,9 @@ class SoftwareManager
     /**
      * Get list of all installed software
      *
-     * The optional "Os" filter must have the argument "windows" or "other",
-     * limiting results to software installed on the given OS type.
-     *
-     * The optional "Status" filter knows the following arguments:
-     * - "accepted" lists only software explicitly marked for being displayed.
-     * - "ignored" lists only software explicitly marked for not being displayed.
-     * - "new" lists only software not yet classified.
-     * - "all" lists all software (same result as ommitting the filter entirely).
-     *
-     * Both filters can be combined.
-     *
-     * @param array $filters Associative array of filters. Default: none.
-     * @param string $order One of "name" or "num_clients", default: "name"
-     * @param string $direction Onde of "asc" or "desc", default: "asc"
      * @return iterable<array{name: string, num_clients: int}>
      */
-    public function getSoftware(array $filters = null, string $order = 'name', string $direction = 'asc'): iterable
+    public function getSoftware(SoftwareFilter $filter, SoftwarePageColumn $orderBy, Direction $direction): iterable
     {
         $sql = $this->_software->getSql();
         $select = $sql->select();
@@ -103,66 +92,23 @@ class SoftwareManager
             )
         );
 
-        if (is_array($filters)) {
-            foreach ($filters as $filter => $search) {
-                switch ($filter) {
-                    case 'Os':
-                        $select->join(
-                            'hardware',
-                            'hardware.id = hardware_id',
-                            array(),
-                            \Laminas\Db\Sql\Select::JOIN_INNER
-                        );
-                        switch ($search) {
-                            case 'windows':
-                                $select->where(new \Laminas\Db\Sql\Predicate\IsNotNull('winprodid'));
-                                break;
-                            case 'other':
-                                $select->where(array('winprodid' => null));
-                                break;
-                            default:
-                                throw new \InvalidArgumentException('Invalid OS filter: ' . $search);
-                        }
-                        break;
-                    case 'Status':
-                        if ($search != 'all') {
-                            switch ($search) {
-                                case 'accepted':
-                                    $select->where(array('display' => 1));
-                                    break;
-                                case 'ignored':
-                                    $select->where(array('display' => 0));
-                                    break;
-                                case 'new':
-                                    $select->where(array('display' => null));
-                                    break;
-                                default:
-                                    throw new \InvalidArgumentException('Invalid status filter: ' . $search);
-                            }
-                        }
-                        break;
-                    default:
-                        throw new \InvalidArgumentException('Invalid filter: ' . $filter);
-                }
-            }
+        if ($filter != SoftwareFilter::All) {
+            $select->where(['display' => match ($filter) {
+                SoftwareFilter::Accepted => 1,
+                SoftwareFilter::Ignored => 0,
+                SoftwareFilter::New => null,
+            }]);
         }
 
         $select->group('software_installations.name');
 
-        switch ($order) {
-            case 'name':
-                $select->order(['software_installations.name' => $direction]);
-                break;
-            case 'num_clients':
-                $select->order(['num_clients' => $direction, 'software_installations.name' => 'asc']);
-                break;
-            default:
-                throw new \InvalidArgumentException('Invalid order column: ' . $order);
-                break;
-        }
+        $select->order(match ($orderBy) {
+            SoftwarePageColumn::Name => ['software_installations.name' => $direction->value],
+            SoftwarePageColumn::NumClients => ['num_clients' => $direction->value, 'software_installations.name' => 'asc']
+        });
 
         // Wrap into a ResultSet to support buffering
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet(\Laminas\Db\ResultSet\ResultSet::TYPE_ARRAY);
+        $resultSet = new ResultSet(ResultSet::TYPE_ARRAY);
         $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());
         return $resultSet;
     }
