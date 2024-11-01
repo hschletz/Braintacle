@@ -3,6 +3,7 @@
 namespace Console\Template;
 
 use Braintacle\Template\Function\AssetUrlFunction;
+use Braintacle\Template\Function\CsrfTokenFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
 use Console\Template\Filters\DateFormatFilter;
 use Console\Template\Filters\NumberFormatFilter;
@@ -36,6 +37,7 @@ class TemplateRendererFactory implements FactoryInterface
 
         $engine = new Engine();
         $engine->addFunction('assetUrl', $container->get(AssetUrlFunction::class));
+        $engine->addFunction('csrfToken', $container->get(CsrfTokenFunction::class));
         $engine->addFunction('pathForRoute', $container->get(PathForRouteFunction::class));
         $engine->addFunction('consoleUrl', $consoleUrlFunction);
         $engine->addFunction('translate', $translateFunction);

@@ -166,7 +166,6 @@ msgstr ""
 #: templates/Client/Packages.latte
 #: templates/Client/Software.latte
 #: templates/Forms/ShowDuplicates.latte
-#: templates/Group/Packages.latte
 #: templates/Pages/Software.latte
 msgid "Name"
 msgstr ""
@@ -323,6 +322,7 @@ msgstr ""
 #: module/Console/Form/DeleteClient.php
 #: module/Console/View/Helper/Form/ClientConfig.php
 #: module/Library/View/Helper/FormYesNo.php
+#: templates/Pages/Group/Packages.latte
 #: templates/Pages/Software.latte
 msgid "Yes"
 msgstr ""
@@ -330,6 +330,7 @@ msgstr ""
 #: module/Console/Form/DeleteClient.php
 #: module/Console/View/Helper/Form/ClientConfig.php
 #: module/Library/View/Helper/FormYesNo.php
+#: templates/Pages/Group/Packages.latte
 #: templates/Pages/Software.latte
 msgid "No"
 msgstr ""
@@ -1535,11 +1536,6 @@ msgstr ""
 msgid "Next update:"
 msgstr ""
 
-#: module/Console/views/console/group/removepackage.php
-#, php-format
-msgid "Package '%s' will no longer be assigned to this group. Continue?"
-msgstr ""
-
 #: module/Console/views/console/licenses/index.php
 msgid "Manually entered Windows product keys"
 msgstr ""
@@ -1780,7 +1776,7 @@ msgid "Export"
 msgstr ""
 
 #: templates/Client/Packages.latte
-#: templates/Group/Packages.latte
+#: templates/Pages/Group/Packages.latte
 msgid "Assigned packages"
 msgstr ""
 
@@ -1793,7 +1789,7 @@ msgid "reset"
 msgstr ""
 
 #: templates/Client/Packages.latte
-#: templates/Group/Packages.latte
+#: templates/Pages/Group/Packages.latte
 msgid "remove"
 msgstr ""
 
@@ -1876,6 +1872,10 @@ msgstr ""
 
 #: templates/PackagesMenuLayout.latte
 msgid "Overview"
+msgstr ""
+
+#: templates/Pages/Group/Packages.latte
+msgid "Package '{}' will no longer be assigned to this group. Continue?"
 msgstr ""
 
 #: templates/Pages/Login.latte

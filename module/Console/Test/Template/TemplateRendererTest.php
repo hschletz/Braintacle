@@ -3,6 +3,7 @@
 namespace Console\Test\Template;
 
 use Braintacle\Template\Function\AssetUrlFunction;
+use Braintacle\Template\Function\CsrfTokenFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
 use Console\Template\Filters\DateFormatFilter;
 use Console\Template\TemplateRenderer;
@@ -32,6 +33,9 @@ class TemplateRendererTest extends TestCase
         $assetUrl = $this->createMock(AssetUrlFunction::class);
         $assetUrl->method('__invoke')->with('path')->willReturn('url');
 
+        $csrfToken = $this->createStub(CsrfTokenFunction::class);
+        $csrfToken->method('__invoke')->willReturn('token');
+
         $pathForRoute = $this->createMock(PathForRouteFunction::class);
         $pathForRoute->method('__invoke')->with('route')->willReturn('path');
 
@@ -57,6 +61,7 @@ class TemplateRendererTest extends TestCase
         $container = $this->createMock(ContainerInterface::class);
         $container->method('get')->willReturnMap([
             [AssetUrlFunction::class, $assetUrl],
+            [CsrfTokenFunction::class, $csrfToken],
             [DateFormatFilter::class, new DateFormatFilter()],
             [PathForRouteFunction::class, $pathForRoute],
             [Translator::class, $translator],
@@ -72,6 +77,7 @@ class TemplateRendererTest extends TestCase
         $this->assertEquals('translated', $engine->invokeFunction('translate', ['message']));
         $this->assertEquals('url', $engine->invokeFunction('consoleUrl', []));
         $this->assertEquals('url', $engine->invokeFunction('assetUrl', ['path']));
+        $this->assertEquals('token', $engine->invokeFunction('csrfToken', []));
         $this->assertEquals('path', $engine->invokeFunction('pathForRoute', ['route']));
     }
 

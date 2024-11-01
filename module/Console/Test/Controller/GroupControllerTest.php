@@ -207,7 +207,7 @@ class GroupControllerTest extends AbstractControllerTestCase
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
-            "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='$url']",
+            "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='/route/showGroupGeneral?name=test']",
             'Allgemein'
         );
         $this->assertXpathQuery('//td[text()="Name"]/following::td[text()="groupName"]');
@@ -271,7 +271,7 @@ class GroupControllerTest extends AbstractControllerTestCase
 
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
-            "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='$url']",
+            "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='/route/showGroupMembers?name=test']",
             'Mitglieder'
         );
         $this->assertXpathQuery(
@@ -315,140 +315,11 @@ class GroupControllerTest extends AbstractControllerTestCase
         $this->dispatch($url);
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
-            "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='$url']",
+            "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='/route/showGroupExcluded?name=test']",
             'Ausgeschlossen'
         );
         $this->assertXpathQuery("//p[@class='textcenter'][text()='\nAnzahl Clients: 1\n']");
         $this->assertXpathQuery("//td/a[@href='/console/client/groups/?id=1'][text()='clientName']");
-    }
-
-    public function testPackagesActionOnlyAssigned()
-    {
-        $url = '/console/group/packages/?name=test';
-        $packages = ['package1', 'package2'];
-
-        /** @var MockObject|Group */
-        $group = $this->createMock(Group::class);
-        $group->expects($this->once())->method('getPackages')->with('asc')->willReturn($packages);
-        $group->expects($this->once())->method('getAssignablePackages')->willReturn([]);
-        $group->method('__get')->with('name')->willReturn('test');
-
-        $this->_groupManager->expects($this->once())
-            ->method('getGroup')
-            ->with('test')
-            ->willReturn($group);
-
-        $this->dispatch($url);
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains(
-            "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='$url']",
-            'Pakete'
-        );
-        $this->assertXpathQuery('//td[text()="package1"]');
-        $this->assertXpathQuery('//td[text()="package2"]');
-        $this->assertXpathQuery(
-            '//td/a[@href="/console/group/removepackage/?name=test&package=package2"][normalize-space(text())="entfernen"]'
-        );
-    }
-
-    public function testPackagesActionOnlyAvailable()
-    {
-        $url = '/console/group/packages/?name=test';
-        $assignablePackages = ['package'];
-
-        /** @var MockObject|Group */
-        $group = $this->createMock(Group::class);
-        $group->expects($this->once())->method('getPackages')->with('asc')->willReturn([]);
-        $group->expects($this->once())->method('getAssignablePackages')->willReturn($assignablePackages);
-
-        $this->_groupManager->expects($this->once())
-            ->method('getGroup')
-            ->with('test')
-            ->willReturn($group);
-
-        $this->dispatch($url);
-        $this->assertResponseStatusCode(200);
-        $this->assertNotXpathQuery('//table');
-        $this->assertXpathQuery('//form');
-    }
-
-    public function testRemovepackageActionGet()
-    {
-        $group = $this->createMock('Model\Group\Group');
-        $group->expects($this->never())->method('removePackage');
-        $this->_groupManager->expects($this->once())
-            ->method('getGroup')
-            ->with('test')
-            ->willReturn($group);
-        $this->dispatch('/console/group/removepackage/?package=package&name=test');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery(
-            '//p[text()="Paket \'package\' wird nicht mehr dieser Gruppe zugewiesen sein. Fortfahren?"]'
-        );
-    }
-
-    public function testRemovepackageActionPostNo()
-    {
-        $group = $this->createMock('Model\Group\Group');
-        $group->expects($this->never())->method('removePackage');
-        $this->_groupManager->expects($this->once())
-            ->method('getGroup')
-            ->with('test')
-            ->willReturn($group);
-        $this->dispatch(
-            '/console/group/removepackage/?package=package&name=test',
-            'POST',
-            array('no' => 'No')
-        );
-        $this->assertRedirectTo('/console/group/packages/?name=test');
-    }
-
-    public function testRemovepackageActionPostYes()
-    {
-        $group = $this->createMock('Model\Group\Group');
-        $group->expects($this->once())->method('removePackage')->with('package');
-        $this->_groupManager->expects($this->once())
-            ->method('getGroup')
-            ->with('test')
-            ->willReturn($group);
-        $this->dispatch(
-            '/console/group/removepackage/?package=package&name=test',
-            'POST',
-            array('yes' => 'Yes')
-        );
-        $this->assertRedirectTo('/console/group/packages/?name=test');
-    }
-
-    public function testassignpackageActionGet()
-    {
-        /** @var MockObject|AssignPackagesForm */
-        $form = $this->createMock(AssignPackagesForm::class);
-        $form->expects($this->never())->method('process');
-
-        $this->getApplicationServiceLocator()->setService(AssignPackagesForm::class, $form);
-
-        $this->dispatch('/console/group/assignpackage/?name=test', 'GET');
-        $this->assertRedirectTo('/console/group/packages/?name=test');
-    }
-
-    public function testAssignpackageActionPost()
-    {
-        $postData = ['packages' => ['package1', 'package2']];
-
-        $group = new Group();
-        $this->_groupManager->expects($this->once())
-            ->method('getGroup')
-            ->with('test')
-            ->willReturn($group);
-
-        /** @var MockObject|AssignPackagesForm */
-        $form = $this->createMock(AssignPackagesForm::class);
-        $form->expects($this->once())->method('process')->with($postData, $group);
-
-        $this->getApplicationServiceLocator()->setService(AssignPackagesForm::class, $form);
-
-        $this->dispatch('/console/group/assignpackage/?name=test', 'POST', $postData);
-        $this->assertRedirectTo('/console/group/packages/?name=test');
     }
 
     public function testAddActionGet()

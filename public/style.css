@@ -18,6 +18,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+:root {
+    --link-color: #000055;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -47,7 +51,7 @@ h3 {
 }
 
 a {
-    color: #000055;
+    color: var(--link-color);
     text-decoration: none;
 }
 
@@ -118,7 +122,7 @@ ul.navigation a {
     border-right-color: black;
     border-bottom-color: black;
     border-left-color: white;
-    color: #000055;
+    color: var(--link-color);
     text-decoration: none;
 }
 
@@ -127,7 +131,7 @@ ul.navigation li.active a{
     border-right-color: white;
     border-bottom-color: white;
     border-left-color: black;
-    background-color: #000055;
+    background-color: var(--link-color);
     color: white;
 }
 
@@ -140,7 +144,7 @@ ul.navigation a:hover {
     border-right-color: white;
     border-bottom-color: white;
     border-left-color: black;
-    background-color: #000055;
+    background-color: var(--link-color);
     color: white;
 }
 
@@ -174,7 +178,7 @@ ul.navigation_details a {
     border-left-color: white;
     border-width: 1px;
     border-style: solid;
-    color: #000055;
+    color: var(--link-color);
     text-decoration: none;
 }
 
@@ -183,7 +187,7 @@ ul.navigation_details a {
     border-right-color: white;
     border-bottom-color: white;
     border-left-color: black;
-    background-color: #000055;
+    background-color: var(--link-color);
     color: white;
 }
 
@@ -220,7 +224,7 @@ th {
 }
 
 th a {
-    color: #000055;
+    color: var(--link-color);
     text-decoration: none;
 }
 

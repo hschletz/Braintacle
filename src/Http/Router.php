@@ -4,6 +4,7 @@ namespace Braintacle\Http;
 
 use Braintacle\Authentication;
 use Braintacle\Client;
+use Braintacle\Group;
 use Braintacle\Legacy\ApplicationBridge;
 use Braintacle\Software;
 use Slim\App;
@@ -29,6 +30,9 @@ class Router
         // All other routes get LoginMiddleware.
         $app->group('', function (RouteCollectorProxyInterface $group) {
             $group->get('/client/{id}/export', Client\ExportHandler::class)->setName('export');
+            $group->get('/group/packages', Group\Packages\ShowPackagesHandler::class)->setName('showGroupPackages');
+            $group->post('/group/packages', Group\Packages\AssignPackagesHandler::class)->setName('assignPackageToGroup');
+            $group->delete('/group/packages', Group\Packages\RemovePackagesHandler::class)->setName('removePackageFromGroup');
             $group->get('/software', Software\SoftwarePageHandler::class)->setName('softwarePage');
             $group->post('/software', Software\SoftwareManagementHandler::class)->setName('softwareHandler');
 
@@ -40,6 +44,11 @@ class Router
             $group->get('/console/client/search', ApplicationBridge::class)->setName('searchPage');
             $group->get('/console/duplicates/index', ApplicationBridge::class)->setName('duplicatesList');
             $group->get('/console/group/index', ApplicationBridge::class)->setName('groupList');
+            $group->get('/console/group/general', ApplicationBridge::class)->setName('showGroupGeneral');
+            $group->get('/console/group/members', ApplicationBridge::class)->setName('showGroupMembers');
+            $group->get('/console/group/excluded', ApplicationBridge::class)->setName('showGroupExcluded');
+            $group->get('/console/group/configuration', ApplicationBridge::class)->setName('showGroupConfiguration');
+            $group->get('/console/group/delete', ApplicationBridge::class)->setName('showGroupDelete');
             $group->get('/console/licenses/index', ApplicationBridge::class)->setName('licensesPage');
             $group->get('/console/network/index', ApplicationBridge::class)->setName('networkPage');
             $group->get('/console/package/build', ApplicationBridge::class)->setName('packageBuildPage');

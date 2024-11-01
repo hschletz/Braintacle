@@ -38,7 +38,17 @@ class RouteHelperTest extends TestCase
     public function testGetPathForRoute()
     {
         $routeParser = $this->createMock(RouteParserInterface::class);
-        $routeParser->method('urlFor')->with('routeName')->willReturn('/path');
+        $routeParser->method('urlFor')->with('routeName', ['arg' => 'foo'], ['key' => 'value'])->willReturn('/path');
+
+        $routeHelper = new RouteHelper();
+        $routeHelper->setRouteParser($routeParser);
+        $this->assertEquals('/path', $routeHelper->getPathForRoute('routeName', ['arg' => 'foo'], ['key' => 'value']));
+    }
+
+    public function testGetPathForRouteDefaultArguments()
+    {
+        $routeParser = $this->createMock(RouteParserInterface::class);
+        $routeParser->method('urlFor')->with('routeName', [], [])->willReturn('/path');
 
         $routeHelper = new RouteHelper();
         $routeHelper->setRouteParser($routeParser);

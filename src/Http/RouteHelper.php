@@ -46,8 +46,8 @@ class RouteHelper
     /**
      * Get full url path of named route.
      */
-    public function getPathForRoute(string $name, array $routeArguments = []): string
+    public function getPathForRoute(string $name, array $routeArguments = [], array $queryParams = []): string
     {
-        return $this->routeParser->urlFor($name, $routeArguments);
+        return $this->routeParser->urlFor($name, $routeArguments, $queryParams);
     }
 }

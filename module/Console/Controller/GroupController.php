@@ -172,62 +172,6 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Show assigned and installable packages
-     */
-    public function packagesAction(): TemplateViewModel
-    {
-        $vars = $this->getOrder('Name');
-        $vars['group'] = $this->_currentGroup;
-        $vars['assignedPackages'] = $this->_currentGroup->getPackages($vars['direction']);
-        $vars['direction'] = Direction::from($vars['direction']);
-        $vars['assignablePackages'] = $this->_currentGroup->getAssignablePackages();
-        $vars['csrfToken'] = CsrfValidator::getToken();
-
-        return new TemplateViewModel('Group/Packages.latte', $vars);
-    }
-
-    /**
-     * Remove a package
-     *
-     * @return array|\Laminas\Http\Response array(package, name) or redirect response
-     */
-    public function removepackageAction()
-    {
-        if ($this->getRequest()->isPost()) {
-            if ($this->params()->fromPost('yes')) {
-                $this->_currentGroup->removePackage($this->params()->fromQuery('package'));
-            }
-            return $this->redirectToRoute(
-                'group',
-                'packages',
-                array('name' => $this->params()->fromQuery('name'))
-            );
-        } else {
-            return array('package' => $this->params()->fromQuery('package'));
-        }
-    }
-
-    /**
-     * Assign a package
-     *
-     * POST only
-     *
-     * @return \Laminas\Http\Response redirect response
-     */
-    public function assignpackageAction()
-    {
-        if ($this->getRequest()->isPost()) {
-            $formData = $this->params()->fromPost();
-            $this->assignPackagesForm->process($formData, $this->_currentGroup);
-        }
-        return $this->redirectToRoute(
-            'group',
-            'packages',
-            array('name' => $this->params()->fromQuery('name'))
-        );
-    }
-
-    /**
      * Use Form to set query or include/exclude clients
      *
      * @return array|\Laminas\Http\Response array(form) or redirect response

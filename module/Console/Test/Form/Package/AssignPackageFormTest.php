@@ -36,6 +36,7 @@ class AssignPackageFormTest extends TestCase
     private function renderToString(array $values): string
     {
         $engine = new Engine();
+        $engine->addFunction('csrfToken', fn () => 'token');
         $engine->addFunction('translate', fn ($message) => '_' . $message . '_');
         $renderer = new TemplateRenderer($engine);
         $content = $renderer->render('Forms/AssignPackage.latte', $values);

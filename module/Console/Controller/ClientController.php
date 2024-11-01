@@ -446,7 +446,6 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
     {
         $vars = $this->getOrder('packageName');
         $vars['client'] = $this->_currentClient;
-        $vars['csrfToken'] = CsrfValidator::getToken();
         $vars['assignments'] = $this->_currentClient->getPackageAssignments($vars['order'], $vars['direction']);
         $vars['assignablePackages'] = $this->_currentClient->getAssignablePackages();
 

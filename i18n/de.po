@@ -174,8 +174,7 @@ msgstr "Gruppe"
 #: module/Console/views/console/network/index.php
 #: module/Console/views/console/package/index.php
 #: templates/Client/Packages.latte templates/Client/Software.latte
-#: templates/Forms/ShowDuplicates.latte templates/Group/Packages.latte
-#: templates/Pages/Software.latte
+#: templates/Forms/ShowDuplicates.latte templates/Pages/Software.latte
 msgid "Name"
 msgstr "Name"
 
@@ -319,13 +318,15 @@ msgstr "Interfaces aus Netzwerkliste löschen"
 
 #: module/Console/Form/DeleteClient.php
 #: module/Console/View/Helper/Form/ClientConfig.php
-#: module/Library/View/Helper/FormYesNo.php templates/Pages/Software.latte
+#: module/Library/View/Helper/FormYesNo.php
+#: templates/Pages/Group/Packages.latte templates/Pages/Software.latte
 msgid "No"
 msgstr "Nein"
 
 #: module/Console/Form/DeleteClient.php
 #: module/Console/View/Helper/Form/ClientConfig.php
-#: module/Library/View/Helper/FormYesNo.php templates/Pages/Software.latte
+#: module/Library/View/Helper/FormYesNo.php
+#: templates/Pages/Group/Packages.latte templates/Pages/Software.latte
 msgid "Yes"
 msgstr "Ja"
 
@@ -1479,11 +1480,6 @@ msgstr "Letztes Update:"
 msgid "Next update:"
 msgstr "Nächstes Update:"
 
-#: module/Console/views/console/group/removepackage.php
-#, php-format
-msgid "Package '%s' will no longer be assigned to this group. Continue?"
-msgstr "Paket '%s' wird nicht mehr dieser Gruppe zugewiesen sein. Fortfahren?"
-
 #: module/Console/views/console/licenses/index.php
 msgid "Manually entered Windows product keys"
 msgstr "Manuell eingegebene Windows-Lizenzschlüssel"
@@ -1721,7 +1717,7 @@ msgstr "Virtuelle Maschinen"
 msgid "Windows"
 msgstr "Windows"
 
-#: templates/Client/Packages.latte templates/Group/Packages.latte
+#: templates/Client/Packages.latte templates/Pages/Group/Packages.latte
 msgid "Assigned packages"
 msgstr "Zugewiesene Pakete"
 
@@ -1729,7 +1725,7 @@ msgstr "Zugewiesene Pakete"
 msgid "Timestamp"
 msgstr "Zeitpunkt"
 
-#: templates/Client/Packages.latte templates/Group/Packages.latte
+#: templates/Client/Packages.latte templates/Pages/Group/Packages.latte
 msgid "remove"
 msgstr "entfernen"
 
@@ -1816,6 +1812,10 @@ msgstr "Einstellungen"
 #: templates/PackagesMenuLayout.latte
 msgid "Overview"
 msgstr "Übersicht"
+
+#: templates/Pages/Group/Packages.latte
+msgid "Package '{}' will no longer be assigned to this group. Continue?"
+msgstr "Paket '{}' wird nicht mehr dieser Gruppe zugewiesen sein. Fortfahren?"
 
 #: templates/Pages/Login.latte
 msgid "Invalid username or password"

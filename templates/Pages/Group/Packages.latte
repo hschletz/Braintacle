@@ -1,0 +1,35 @@
+{layout ../../GroupMenuLayout.latte}
+{import ../../SortableHeader.latte}
+
+{block content}
+    {include ../../Group/Header.latte}
+    {if count($assignedPackages)}
+        <link rel="stylesheet" href="{assetUrl('css/assigned_packages.css')}">
+        <script type="module" src="{assetUrl('js/assigned_packages.js')}"></script>
+
+        <h2>{translate('Assigned packages')}</h2>
+        <table class="alternating assignedPackages">
+            <tr n:foreach="$assignedPackages as $package">
+                <td>{$package}</td>
+                <td>
+                    <button type="button" data-package="{$package}">
+                        {translate('remove')}
+                    </button>
+                </td>
+            </tr>
+        </table>
+    {/if}
+
+    {include ../../Forms/AssignPackage.latte,
+        action: pathForRoute('assignPackageToGroup', [], [name: $group->name]),
+        packages: $assignablePackages
+    }
+
+    <dialog class="confirmRemovePackage">
+        <p data-template="{translate('Package \'{}\' will no longer be assigned to this group. Continue?')}"></p>
+        <form method="dialog">
+            <button value='yes'>{translate('Yes')}</button>
+            <button value='no'>{translate('No')}</button>
+        </form>
+    </dialog>
+{/block}
