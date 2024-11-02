@@ -22,10 +22,7 @@
 
 namespace Console\Controller;
 
-use Braintacle\Direction;
 use Console\Form\Package\AssignPackagesForm;
-use Console\Template\TemplateViewModel;
-use Console\Validator\CsrfValidator;
 
 /**
  * Controller for managing groups

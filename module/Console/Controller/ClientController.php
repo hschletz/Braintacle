@@ -25,7 +25,6 @@ namespace Console\Controller;
 use Braintacle\Direction;
 use Console\Form\Package\AssignPackagesForm;
 use Console\Template\TemplateViewModel;
-use Console\Validator\CsrfValidator;
 use Console\View\Helper\Form\Search;
 use Model\Client\Item\Software;
 
