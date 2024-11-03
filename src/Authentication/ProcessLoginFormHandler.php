@@ -3,8 +3,8 @@
 namespace Braintacle\Authentication;
 
 use Braintacle\Http\RouteHelper;
-use Console\Validator\CsrfValidator;
 use Laminas\Session\Container as Session;
+use Laminas\Session\Validator\Csrf;
 use Model\Operator\AuthenticationService;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -17,7 +17,7 @@ class ProcessLoginFormHandler implements RequestHandlerInterface
         private ResponseInterface $response,
         private RouteHelper $routeHelper,
         private Session $session,
-        private CsrfValidator $csrfValidator,
+        private Csrf $csrfValidator,
         private AuthenticationService $authenticationService,
     ) {
     }

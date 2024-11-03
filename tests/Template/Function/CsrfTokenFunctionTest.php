@@ -3,7 +3,7 @@
 namespace Braintacle\Test\Template\Function;
 
 use Braintacle\Template\Function\CsrfTokenFunction;
-use Laminas\Validator\Csrf;
+use Laminas\Session\Validator\Csrf;
 use PHPUnit\Framework\TestCase;
 
 class CsrfTokenFunctionTest extends TestCase

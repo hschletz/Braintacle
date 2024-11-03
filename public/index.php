@@ -9,6 +9,8 @@ use Braintacle\Http\RouteHelper;
 use Braintacle\Http\Router;
 use IntlException;
 use Locale;
+use Psr\Container\ContainerInterface;
+use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Handlers\Strategies\RequestHandler;
 
@@ -31,6 +33,7 @@ if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 
 $container = new Container();
 
+/** @var App<ContainerInterface> */
 $app = AppFactory::createFromContainer($container);
 $app->getRouteCollector()->setDefaultInvocationStrategy(new RequestHandler(true));
 $app->setBasePath(RouteHelper::detectBasePath($_SERVER));

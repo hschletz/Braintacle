@@ -4,6 +4,7 @@ namespace Library\Test;
 
 use Braintacle\AppConfig;
 use Braintacle\I18n\Translator;
+use Braintacle\Legacy\I18nTranslator;
 use Braintacle\Template\Function\AssetUrlFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
 use Composer\InstalledVersions;
@@ -63,10 +64,13 @@ trait InjectServicesTrait
         $serviceManager->setService(PathForRouteFunction::class, $pathForRouteFunction);
 
         // Create fully functional translator.
-        $serviceManager->setService(TranslatorInterface::class, new Translator(
-            'de',
-            InstalledVersions::getRootPackage()['install_path'] . '/i18n',
-            $appConfig
-        ));
+        $translator = new I18nTranslator(
+            new Translator(
+                'de',
+                InstalledVersions::getRootPackage()['install_path'] . '/i18n',
+                $appConfig,
+            )
+        );
+        $serviceManager->setService(TranslatorInterface::class, $translator);
     }
 }

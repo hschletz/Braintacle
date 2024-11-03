@@ -4,7 +4,7 @@ namespace Braintacle;
 
 use Formotron\AssertionFailedException;
 use Formotron\PreProcessor;
-use Laminas\Validator\Csrf;
+use Laminas\Session\Validator\Csrf;
 
 /**
  * Validate and remove csrfToken element from form data.

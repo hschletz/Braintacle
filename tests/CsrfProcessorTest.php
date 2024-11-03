@@ -4,7 +4,7 @@ namespace Braintacle\Test;
 
 use Braintacle\CsrfProcessor;
 use Formotron\AssertionFailedException;
-use Laminas\Validator\Csrf;
+use Laminas\Session\Validator\Csrf;
 use PHPUnit\Framework\TestCase;
 
 class CsrfProcessorTest extends TestCase

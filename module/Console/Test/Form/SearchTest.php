@@ -25,7 +25,7 @@ namespace Console\Test\Form;
 use Console\Form\Search;
 use Console\Test\AbstractFormTestCase;
 use DateTime;
-use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Translator\TranslatorInterface;
 use Model\Client\CustomFieldManager;
 use Model\Registry\RegistryManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -72,7 +72,7 @@ class SearchTest extends AbstractFormTestCase
         $resultSet = new \Laminas\Db\ResultSet\ResultSet();
         $resultSet->initialize(array(array('Name' => 'RegValue')));
 
-        $this->_translator = $this->createMock('\Laminas\I18n\Translator\TranslatorInterface');
+        $this->_translator = $this->createMock(TranslatorInterface::class);
         $this->_translator->method('translate')->willReturnCallback([$this, 'translatorMock']);
 
         $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');

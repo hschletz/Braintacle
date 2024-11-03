@@ -2,7 +2,7 @@
 
 namespace Console\Template\Functions;
 
-use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Translator\TranslatorInterface;
 
 /**
  * Translate message, optionally replace sprintf() placeholders with extra arguments.

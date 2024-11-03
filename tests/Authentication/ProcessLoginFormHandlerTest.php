@@ -5,8 +5,8 @@ namespace Braintacle\Test\Authentication;
 use Braintacle\Authentication\ProcessLoginFormHandler;
 use Braintacle\Http\RouteHelper;
 use Braintacle\Test\HttpHandlerTestTrait;
-use Console\Validator\CsrfValidator;
 use Laminas\Session\Container as Session;
+use Laminas\Session\Validator\Csrf;
 use Model\Operator\AuthenticationService;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +25,7 @@ class ProcessLoginFormHandlerTest extends TestCase
         $session->expects($this->never())->method('offsetSet');
         $session->expects($this->never())->method('offsetUnset');
 
-        $csrfValidator = $this->createStub(CsrfValidator::class);
+        $csrfValidator = $this->createStub(Csrf::class);
 
         $authenticationService = $this->createMock(AuthenticationService::class);
         $authenticationService->method('hasIdentity')->willReturn(true);
@@ -50,7 +50,7 @@ class ProcessLoginFormHandlerTest extends TestCase
         $session->expects($this->once())->method('offsetSet')->with('invalidCredentials', true);
         $session->expects($this->never())->method('offsetUnset');
 
-        $csrfValidator = $this->createMock(CsrfValidator::class);
+        $csrfValidator = $this->createMock(Csrf::class);
         $csrfValidator->method('isValid')->with('token')->willReturn(false);
 
         $authenticationService = $this->createMock(AuthenticationService::class);
@@ -79,7 +79,7 @@ class ProcessLoginFormHandlerTest extends TestCase
         $session->expects($this->once())->method('offsetSet')->with('invalidCredentials', true);
         $session->expects($this->never())->method('offsetUnset');
 
-        $csrfValidator = $this->createMock(CsrfValidator::class);
+        $csrfValidator = $this->createMock(Csrf::class);
         $csrfValidator->method('isValid')->with('token')->willReturn(true);
 
         $authenticationService = $this->createMock(AuthenticationService::class);
@@ -110,7 +110,7 @@ class ProcessLoginFormHandlerTest extends TestCase
         $session->expects($this->never())->method('offsetUnset');
         $session->expects($this->once())->method('offsetExists')->with('originalUri')->willReturn(false);
 
-        $csrfValidator = $this->createMock(CsrfValidator::class);
+        $csrfValidator = $this->createMock(Csrf::class);
         $csrfValidator->method('isValid')->with('token')->willReturn(true);
 
         $authenticationService = $this->createMock(AuthenticationService::class);
@@ -141,7 +141,7 @@ class ProcessLoginFormHandlerTest extends TestCase
         $session->method('offsetExists')->with('originalUri')->willReturn(true);
         $session->method('offsetGet')->with('originalUri')->willReturn(new Uri('/original'));
 
-        $csrfValidator = $this->createMock(CsrfValidator::class);
+        $csrfValidator = $this->createMock(Csrf::class);
         $csrfValidator->method('isValid')->with('token')->willReturn(true);
 
         $authenticationService = $this->createMock(AuthenticationService::class);

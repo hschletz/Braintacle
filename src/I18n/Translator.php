@@ -6,7 +6,7 @@ use Braintacle\AppConfig;
 use Gettext\Loader\StrictPoLoader;
 use Gettext\Translation;
 use Laminas\I18n\Translator\Resources;
-use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Translator\TranslatorInterface;
 use Locale;
 use LogicException;
 use RuntimeException;

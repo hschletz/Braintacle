@@ -4,7 +4,7 @@ namespace Braintacle\Test;
 
 use Braintacle\Container;
 use Laminas\Authentication\AuthenticationServiceInterface;
-use Laminas\Validator\Csrf;
+use Laminas\Session\Validator\Csrf;
 use Model\Operator\AuthenticationService;
 use Model\Package\Storage\StorageInterface;
 use PHPUnit\Framework\TestCase;

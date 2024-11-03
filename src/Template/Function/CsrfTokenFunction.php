@@ -2,7 +2,7 @@
 
 namespace Braintacle\Template\Function;
 
-use Laminas\Validator\Csrf;
+use Laminas\Session\Validator\Csrf;
 
 /**
  * Retrieve CSRF protection token.

@@ -9,9 +9,10 @@ use Closure;
 use DI\Container;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Http\Response;
-use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\I18n\Translator\TranslatorInterface as I18nTranslatorInterface;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
+use Laminas\Translator\TranslatorInterface;
 use Laminas\View\Model\ViewModel;
 use Model\Client\Client;
 use Model\Group\Group;
@@ -47,6 +48,7 @@ class MvcApplication
         $serviceManager->setService(ClockInterface::class, $this->container->get(ClockInterface::class));
         $serviceManager->setService(ContainerInterface::class, $serviceManager);
         $serviceManager->setService(Group::class, $this->container->get(Group::class));
+        $serviceManager->setService(I18nTranslatorInterface::class, $this->container->get(I18nTranslator::class));
         $serviceManager->setService(PathForRouteFunction::class, $this->container->get(PathForRouteFunction::class));
         $serviceManager->setService(TranslatorInterface::class, $this->container->get(TranslatorInterface::class));
     }

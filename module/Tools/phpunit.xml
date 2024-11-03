@@ -23,6 +23,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
     xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
     bootstrap="Test/bootstrap.php"
     cacheDirectory=".phpunit.cache"
+    failOnPhpunitDeprecation="true"
+    displayDetailsOnPhpunitDeprecations="true"
 >
   <coverage>
     <report>

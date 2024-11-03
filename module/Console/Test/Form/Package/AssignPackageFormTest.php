@@ -4,8 +4,8 @@ namespace Console\Test\Inputfilter;
 
 use Console\Form\Package\AssignPackagesForm;
 use Console\Template\TemplateRenderer;
-use Console\Validator\CsrfValidator;
 use Laminas\Dom\Document;
+use Laminas\Session\Validator\Csrf;
 use Laminas\Validator\InArray;
 use Laminas\Validator\NotEmpty;
 use Latte\Engine;
@@ -55,7 +55,7 @@ class AssignPackageFormTest extends TestCase
     public function testProcessValid()
     {
         $formData = [
-            'csrf' => CsrfValidator::getToken(),
+            'csrf' => (new Csrf())->getHash(),
             'packages' => ['package1', 'package2'],
         ];
 
@@ -82,13 +82,13 @@ class AssignPackageFormTest extends TestCase
         $messages = $form->process($formData, $target);
 
         $this->assertCount(1, $messages);
-        $this->assertTrue(isset($messages['csrf'][CsrfValidator::NOT_SAME]));
+        $this->assertTrue(isset($messages['csrf'][Csrf::NOT_SAME]));
     }
 
     public function testProcessInvalidNoPackages()
     {
         $formData = [
-            'csrf' => CsrfValidator::getToken(),
+            'csrf' => (new Csrf())->getHash(),
         ];
 
         $target = $this->createTarget(['package']);
@@ -104,7 +104,7 @@ class AssignPackageFormTest extends TestCase
     public function testProcessInvalidEmptyPackages()
     {
         $formData = [
-            'csrf' => CsrfValidator::getToken(),
+            'csrf' => (new Csrf())->getHash(),
             'packages' => [],
         ];
 
@@ -121,7 +121,7 @@ class AssignPackageFormTest extends TestCase
     public function testProcessInvalidIncorrectPackage()
     {
         $formData = [
-            'csrf' => CsrfValidator::getToken(),
+            'csrf' => (new Csrf())->getHash(),
             'packages' => ['package'],
         ];
 

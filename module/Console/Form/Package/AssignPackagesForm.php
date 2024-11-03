@@ -2,10 +2,10 @@
 
 namespace Console\Form\Package;
 
-use Console\Validator\CsrfValidator;
 use Laminas\InputFilter\ArrayInput;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
+use Laminas\Session\Validator\Csrf;
 use Laminas\Validator\InArray;
 use Model\ClientOrGroup;
 
@@ -22,9 +22,10 @@ class AssignPackagesForm
         $this->inputFilter = new InputFilter();
 
         $csrf = new Input('csrf');
+        /** @psalm-suppress InvalidArgument https://github.com/laminas/laminas-session/pull/94 */
         $csrf->setRequired(true)
-             ->getValidatorChain()
-             ->attach(new CsrfValidator(), true);
+            ->getValidatorChain()
+            ->attach(new Csrf(['timeout' => null]), true);
         $this->inputFilter->add($csrf);
 
         $this->packagesInArray = new InArray();

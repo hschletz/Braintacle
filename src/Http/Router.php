@@ -7,6 +7,7 @@ use Braintacle\Client;
 use Braintacle\Group;
 use Braintacle\Legacy\ApplicationBridge;
 use Braintacle\Software;
+use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface;
 
@@ -19,6 +20,8 @@ class Router
 {
     /**
      * Set up routes.
+     *
+     * @param App<ContainerInterface> $app
      */
     public static function setup(App $app): void
     {
