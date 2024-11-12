@@ -6,6 +6,20 @@ without any warranty.
 ====================================================================
 
 
+CHANGES IN VERSION 1.12
+=======================
+
+Upgrading from previous versions:
+
+- Required: Run "composer install" from the Braintacle root directory to
+  update dependencies.
+
+Fixed bugs:
+
+- This release depends on the latest version of symphony/console which fixes
+  several security vulnerabilities.
+
+
 CHANGES IN VERSION 1.11
 =======================
 
