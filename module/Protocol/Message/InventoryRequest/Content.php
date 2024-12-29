@@ -23,6 +23,7 @@
 namespace Protocol\Message\InventoryRequest;
 
 use Braintacle\Client\Exporter;
+use Laminas\Hydrator\HydratorInterface;
 use Model\Client\Client;
 use Model\Client\ItemManager;
 use PhpBench\Dom\Element;
@@ -88,6 +89,15 @@ class Content extends Element
         $this->container = $container;
     }
 
+    private function getHydrator(string $name): HydratorInterface
+    {
+        $exporter = $this->container->get(Exporter::class);
+        assert($exporter instanceof Exporter);
+        $hydrator = $exporter->getHydrator($name);
+
+        return $hydrator;
+    }
+
     public function setClient(Client $client): void
     {
         $this->client = $client;
@@ -136,7 +146,7 @@ class Content extends Element
     {
         $android = $this->client['Android'];
         if ($android) {
-            $data = $this->container->get('Protocol\Hydrator\AndroidInstallations')->extract($android);
+            $data = $this->getHydrator('AndroidInstallations')->extract($android);
             $this->appendSection('JAVAINFOS', $data);
         }
     }
@@ -196,9 +206,7 @@ class Content extends Element
     {
         $items = $this->client->getItems($itemType, 'id', 'asc');
         $table = $this->container->get(ItemManager::class)->getTableName($itemType);
-        $exporter = $this->container->get(Exporter::class);
-        assert($exporter instanceof Exporter);
-        $hydrator = $exporter->getHydrator($table);
+        $hydrator = $this->getHydrator($table);
         /** @var object */
         foreach ($items as $item) {
             $this->appendSection($section, $hydrator->extract($item));

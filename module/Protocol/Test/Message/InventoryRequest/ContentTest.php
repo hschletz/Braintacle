@@ -115,8 +115,11 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $hydrator = $this->createMock(HydratorInterface::class);
         $hydrator->method('extract')->with($android)->willReturn($data);
 
+        $exporter = $this->createMock(Exporter::class);
+        $exporter->method('getHydrator')->willReturn($hydrator);
+
         $container = $this->createMock(ContainerInterface::class);
-        $container->method('get')->with('Protocol\Hydrator\AndroidInstallations')->willReturn($hydrator);
+        $container->method('get')->with(Exporter::class)->willReturn($exporter);
 
         $content = Mockery::mock(Content::class, [$container])->makePartial();
         $content->shouldReceive('appendSection')->once()->with('JAVAINFOS', $data);

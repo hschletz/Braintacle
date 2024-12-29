@@ -9,6 +9,10 @@ without any warranty.
 CHANGES IN VERSION 1.13
 =======================
 
+Fixed bugs:
+
+- Fixed exception with Android client export.
+
 Misc:
 
 - Server: Experimental SQLite support.
