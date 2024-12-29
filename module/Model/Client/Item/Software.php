@@ -60,7 +60,7 @@ class Software
     public ?bool $isHotfix;
 
     /**
-     * GUID - may contain the MSI GIUD or arbitrary string (Windows only)
+     * GUID - may contain the MSI GUID or arbitrary string (Windows only)
      */
     public ?string $guid;
 
