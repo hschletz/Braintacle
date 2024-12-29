@@ -6,6 +6,14 @@ without any warranty.
 ====================================================================
 
 
+CHANGES IN VERSION 1.13
+=======================
+
+Misc:
+
+- Server: Experimental SQLite support.
+
+
 CHANGES IN VERSION 1.12
 =======================
 

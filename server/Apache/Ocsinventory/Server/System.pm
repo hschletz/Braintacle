@@ -275,18 +275,11 @@ sub _lock{
    }
    my $dbh = $Apache::Ocsinventory::CURRENT_CONTEXT{'DBI_HANDLE'} || shift;
 
-  if($dbh->do("SELECT HARDWARE_ID FROM locks WHERE HARDWARE_ID=$device") eq '0E0') { #does lock not exist yet?
-    if($dbh->do('INSERT INTO locks(HARDWARE_ID, ID, SINCE) VALUES(?,?,CURRENT_TIMESTAMP)', {} , $device, $$ )){
-      $Apache::Ocsinventory::CURRENT_CONTEXT{'LOCK_FL'} = 1;
-      return(0);
-    } else {
-      die ("Error creating a lock for hardware_id $device");
-    }
-  }else{
+  if ($dbh->selectrow_array("SELECT COUNT(*) FROM locks WHERE HARDWARE_ID=$device")) {
     if( $ENV{'OCS_OPT_LOCK_REUSE_TIME'} ){
       my $query;
       $query = 'SELECT * FROM locks WHERE HARDWARE_ID=? AND (' . compose_unix_timestamp('CURRENT_TIMESTAMP') . '-' . compose_unix_timestamp('SINCE') . ')>?';
-      if( $dbh->do($query, {}, $device, $ENV{'OCS_OPT_LOCK_REUSE_TIME'} ) != '0E0' ) {
+      if( $dbh->do($query, {}, $device, $ENV{'OCS_OPT_LOCK_REUSE_TIME'} ) != '0E0' ) { # FIXME: This probably won't work with SQLite - do() always returns 1
         &_log(516,'lock', 'reuse lock') if $ENV{'OCS_OPT_LOGLEVEL'};
         if( $dbh->do('UPDATE locks SET ID=?, SINCE=CURRENT_TIMESTAMP WHERE HARDWARE_ID=?', {}, $$, $device) ){
           $Apache::Ocsinventory::CURRENT_CONTEXT{'LOCK_FL'} = 1;
@@ -295,6 +288,13 @@ sub _lock{
       }
     }
     return 1;
+  } else {
+    if($dbh->do('INSERT INTO locks(HARDWARE_ID, ID, SINCE) VALUES(?,?,CURRENT_TIMESTAMP)', {} , $device, $$ )){
+      $Apache::Ocsinventory::CURRENT_CONTEXT{'LOCK_FL'} = 1;
+      return(0);
+    } else {
+      die ("Error creating a lock for hardware_id $device");
+    }
   }
 }
 
@@ -563,6 +563,8 @@ sub compose_unix_timestamp {
     return "EXTRACT (EPOCH FROM DATE_TRUNC ('seconds', CAST (($expression) AS TIMESTAMP)))";
   } elsif( $ENV{'OCS_DB_TYPE'} eq 'mysql' ){
     return "UNIX_TIMESTAMP($expression)";
+  } elsif( $ENV{'OCS_DB_TYPE'} eq 'SQLite' ){
+    return "UNIXEPOCH($expression)";
   } elsif( $ENV{'OCS_DB_TYPE'} eq 'Oracle' ){
     return "((CAST(($expression) AS DATE) - to_date(\'19700101\', \'YYYYMMDD\') + CAST(SYS_EXTRACT_UTC(SYSTIMESTAMP) AS DATE) - CAST(SYSTIMESTAMP AS DATE)) * 86400 seconds)";
   } else {
