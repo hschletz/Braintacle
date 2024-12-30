@@ -56,15 +56,6 @@ abstract class AbstractTestCase extends \PHPUnit\Framework\TestCase
         $module = strtok(get_called_class(), '\\');
         $application = \Library\Application::init($module);
         static::$_serviceManager = $application->getServiceManager();
-        static::$_serviceManager->setService(
-            'Library\UserConfig',
-            array(
-                'debug' => array(
-                    'display backtrace' => true,
-                    'report missing translations' => true,
-                ),
-            )
-        );
     }
 
     /**

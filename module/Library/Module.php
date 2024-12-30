@@ -66,7 +66,6 @@ class Module implements Feature\ConfigProviderInterface
                     'Library\Log\Writer\StdErr' => function () {
                         return new \Laminas\Log\Writer\Stream('php://stderr');
                     },
-                    'Library\UserConfig' => 'Library\Service\UserConfigFactory',
                 ],
             ),
             'validators' => array(

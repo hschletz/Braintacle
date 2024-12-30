@@ -37,7 +37,6 @@ class FormRendererTest extends \PHPUnit\Framework\TestCase
     protected function createView()
     {
         $serviceManager = \Library\Application::init('Console')->getServiceManager();
-        $serviceManager->setService('Library\UserConfig', array());
         $view = new \Laminas\View\Renderer\PhpRenderer();
         $view->setHelperPluginManager($serviceManager->get('ViewHelperManager'));
         return $view;

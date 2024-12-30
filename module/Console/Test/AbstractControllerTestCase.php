@@ -53,15 +53,6 @@ abstract class AbstractControllerTestCase extends AbstractHttpControllerTestCase
 
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setService('Model\Operator\AuthenticationService', $auth);
-        $serviceManager->setService(
-            'Library\UserConfig',
-            array(
-                'debug' => array(
-                    'display backtrace' => true,
-                    'report missing translations' => true,
-                ),
-            )
-        );
         Application::addAbstractFactories($serviceManager);
         static::injectServices($serviceManager);
 

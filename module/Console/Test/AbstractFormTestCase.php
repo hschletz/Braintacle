@@ -123,14 +123,6 @@ abstract class AbstractFormTestCase extends TestCase
     protected function createView()
     {
         $serviceManager = \Library\Application::init('Console')->getServiceManager();
-        $serviceManager->setService(
-            'Library\UserConfig',
-            array(
-                'debug' => array(
-                    'report missing translations' => true,
-                ),
-            )
-        );
         static::injectServices($serviceManager);
 
         $view = new \Laminas\View\Renderer\PhpRenderer();

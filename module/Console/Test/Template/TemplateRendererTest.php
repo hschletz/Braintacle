@@ -85,7 +85,6 @@ class TemplateRendererTest extends TestCase
     {
         $application = Application::init('Console');
         $serviceManager = $application->getServiceManager();
-        $serviceManager->setService('Library\UserConfig', []); // Dummy to make TemplateRenderer creation work
         $templateRenderer = $serviceManager->get(TemplateRenderer::class);
         $this->assertInstanceOf(TemplateRenderer::class, $templateRenderer);
     }

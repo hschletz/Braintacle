@@ -39,7 +39,6 @@ class AbstractFormTest extends \PHPUnit\Framework\TestCase
     protected function createView()
     {
         $serviceManager = \Library\Application::init('Console')->getServiceManager();
-        $serviceManager->setService('Library\UserConfig', array());
         static::injectServices($serviceManager);
 
         $view = new \Laminas\View\Renderer\PhpRenderer();
