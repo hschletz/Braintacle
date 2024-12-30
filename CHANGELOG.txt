@@ -16,6 +16,8 @@ Fixed bugs:
 - Fixed exception with UNIX client export where the agent does not detect
   certain software properties.
 
+- Fixed broken bulk export via CLI.
+
 Misc:
 
 - Server: Experimental SQLite support.

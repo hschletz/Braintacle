@@ -38,6 +38,8 @@ use Model\Package\Assignment;
 use Model\Package\PackageManager;
 use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Protocol\Message\InventoryRequest;
+use Protocol\Message\InventoryRequest\Content;
 use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
 
@@ -1244,21 +1246,28 @@ class ClientTest extends AbstractTestCase
     {
         $serviceManager = $this->createMock(ContainerInterface::class);
 
-        $model = $this->getModel();
-        $model->setContainer($serviceManager);
+        $client = new Client();
+        $client->setContainer($serviceManager);
 
         // DomDocument constructor must be preserved. Otherwise setting the
         // formatOutput property would have no effect for whatever reason.
-        $inventoryRequest = $this->getMockBuilder(\Protocol\Message\InventoryRequest::class)
-            ->setConstructorArgs(
-                [$this->createStub(\Protocol\Message\InventoryRequest\Content::class)]
-            )->getMock();
-        $inventoryRequest->expects($this->once())->method('loadClient')->with($model);
+        $inventoryRequest = $this->getMockBuilder(InventoryRequest::class)
+            ->setConstructorArgs([$this->createStub(Content::class)])
+            ->getMock();
+        // loadClient() is invoked once per instance, but the invocation counter
+        // is not affected by cloning. This test invokes toDomDocument() twice.
+        $inventoryRequest->expects($this->exactly(2))->method('loadClient')->with($client);
 
-        $serviceManager->method('get')->with('Protocol\Message\InventoryRequest')->willReturn($inventoryRequest);
+        $serviceManager->method('get')->with(InventoryRequest::class)->willReturn($inventoryRequest);
 
-        $document = $model->toDomDocument();
-        $this->assertInstanceOf('Protocol\Message\InventoryRequest', $document);
-        $this->assertTrue($document->formatOutput);
+        $document1 = $client->toDomDocument();
+        $this->assertInstanceOf(InventoryRequest::class, $document1);
+        $this->assertTrue($document1->formatOutput);
+
+        $document2 = $client->toDomDocument();
+        $this->assertInstanceOf(InventoryRequest::class, $document2);
+        $this->assertTrue($document2->formatOutput);
+
+        $this->assertNotSame($document1, $document2);
     }
 }

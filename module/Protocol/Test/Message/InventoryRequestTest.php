@@ -55,16 +55,16 @@ class InventoryRequestTest extends \PHPUnit\Framework\TestCase
         $request = Mockery::mock(Element::class);
         $request->shouldReceive('appendElement')->once()->with('DEVICEID', 'id_string', true);
         $request->shouldReceive('appendElement')->once()->with('QUERY', 'INVENTORY');
-        $request->shouldReceive('appendChild')->once()->with($content);
+        // prototype should have been cloned
+        $request->shouldReceive('appendChild')->once()->withArgs(fn ($arg) => $arg instanceof Content && $arg !== $content);
 
         $document = $this->createPartialMock(InventoryRequest::class, ['createRoot']);
         $document->method('createRoot')->with('REQUEST')->willReturn($request);
 
         // Neither PHPUnit's nor Mockery's mock object implementations can
-        // handle Document's constructor. Fall back to Reflection API to inject
-        // dependency.
-        $property = new ReflectionProperty($document, 'content');
-        $property->setAccessible(true);
+        // handle DOMDocument's constructor. Fall back to Reflection API to
+        // inject dependency.
+        $property = new ReflectionProperty($document, 'contentPrototype');
         $property->setValue($document, $content);
 
         $document->loadClient($client);

@@ -30,12 +30,9 @@ use Protocol\Message\InventoryRequest\Content;
  */
 class InventoryRequest extends \Library\DomDocument
 {
-    protected Content $content;
-
-    public function __construct(Content $content)
+    public function __construct(protected Content $contentPrototype)
     {
         parent::__construct();
-        $this->content = $content;
     }
 
     /** {@inheritdoc} */
@@ -57,9 +54,10 @@ class InventoryRequest extends \Library\DomDocument
         $request->appendElement('DEVICEID', $client['IdString'], true);
         $request->appendElement('QUERY', 'INVENTORY');
         // Main inventory section
-        $request->appendChild($this->content);
-        $this->content->setClient($client);
-        $this->content->appendSections();
+        $content = clone $this->contentPrototype;
+        $request->appendChild($content);
+        $content->setClient($client);
+        $content->appendSections();
     }
 
     /**

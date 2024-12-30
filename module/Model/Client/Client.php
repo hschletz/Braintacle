@@ -809,7 +809,7 @@ class Client extends \Model\ClientOrGroup
      */
     public function toDomDocument()
     {
-        $document = $this->container->get(InventoryRequest::class);
+        $document = clone $this->container->get(InventoryRequest::class);
         $document->formatOutput = true;
         $document->loadClient($this);
         return $document;
