@@ -24,6 +24,8 @@ namespace Protocol\Test\Message\InventoryRequest;
 
 use ArrayObject;
 use Braintacle\Client\Exporter;
+use Braintacle\Dom\Element;
+use DOMDocument;
 use Laminas\Db\ResultSet\ResultSet;
 use Model\Client\AndroidInstallation;
 use Model\Client\Client;
@@ -33,8 +35,6 @@ use Protocol\Message\InventoryRequest\Content;
 use Laminas\Hydrator\HydratorInterface;
 use Mockery;
 use Mockery\Mock;
-use PhpBench\Dom\Document;
-use PhpBench\Dom\Element;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 
@@ -290,15 +290,14 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         ];
 
         $content = new Content($this->createStub(ContainerInterface::class));
-        $document = new Document();
-        $document->createRoot('root');
+        $document = new DOMDocument();
         $document->appendChild($content);
 
         $content->appendSection('section', $items);
 
         $this->assertXmlStringEqualsXmlString(
             '<CONTENT><section><key>value</key><entity>&amp;</entity></section></CONTENT>',
-            $content->dump()
+            $document->saveXML()
         );
     }
 }

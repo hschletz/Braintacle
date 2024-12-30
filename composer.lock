@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2d987d68d9fd2258b18a517e585491e5",
+    "content-hash": "9c2c9f721e4438368a52bf03c4b019f9",
     "packages": [
         {
             "name": "brick/varexporter",
@@ -2942,58 +2942,6 @@
                 }
             ],
             "time": "2024-07-21T15:55:45+00:00"
-        },
-        {
-            "name": "phpbench/dom",
-            "version": "0.3.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpbench/dom.git",
-                "reference": "786a96db538d0def931f5b19225233ec42ec7a72"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpbench/dom/zipball/786a96db538d0def931f5b19225233ec42ec7a72",
-                "reference": "786a96db538d0def931f5b19225233ec42ec7a72",
-                "shasum": ""
-            },
-            "require": {
-                "ext-dom": "*",
-                "php": "^7.3||^8.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.14",
-                "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^8.0||^9.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "PhpBench\\Dom\\": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Daniel Leech",
-                    "email": "daniel@dantleech.com"
-                }
-            ],
-            "description": "DOM wrapper to simplify working with the PHP DOM implementation",
-            "support": {
-                "issues": "https://github.com/phpbench/dom/issues",
-                "source": "https://github.com/phpbench/dom/tree/0.3.3"
-            },
-            "abandoned": true,
-            "time": "2023-03-06T23:46:57+00:00"
         },
         {
             "name": "psr/clock",

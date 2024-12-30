@@ -22,6 +22,7 @@
 
 namespace Library\Test;
 
+use DOMElement;
 use Library\DomDocument;
 use org\bovigo\vfs\vfsStream;
 
@@ -30,6 +31,15 @@ use org\bovigo\vfs\vfsStream;
  */
 class DomDocumentTest extends \PHPUnit\Framework\TestCase
 {
+    public function testCreateRoot()
+    {
+        $document = new DomDocument();
+        $root = $document->createRoot('root');
+        $root->appendChild(new DOMElement('leaf'));
+        $this->assertEquals('root', $root->tagName);
+        $this->assertXmlStringEqualsXmlString('<root><leaf /></root>', $document->saveXML());
+    }
+
     public function testGetSchemaFilenameThrowsException()
     {
         $this->expectException('LogicException');

@@ -23,10 +23,10 @@
 namespace Protocol\Message\InventoryRequest;
 
 use Braintacle\Client\Exporter;
+use Braintacle\Dom\Element;
 use Laminas\Hydrator\HydratorInterface;
 use Model\Client\Client;
 use Model\Client\ItemManager;
-use PhpBench\Dom\Element;
 use Protocol\Hydrator;
 use Psr\Container\ContainerInterface;
 

@@ -22,17 +22,27 @@
 
 namespace Library;
 
-use PhpBench\Dom\Document;
-use ReturnTypeWillChange;
+use Braintacle\Dom\Element;
 
 /**
  * DOM document
  */
-class DomDocument extends Document
+class DomDocument extends \DOMDocument
 {
     public function __construct(string $version = '1.0', string $encoding = 'utf-8')
     {
         parent::__construct($version, $encoding);
+    }
+
+    /**
+     * Create, append and return root node.
+     */
+    public function createRoot(string $name): Element
+    {
+        $element = $this->appendChild(new Element($name));
+        assert($element instanceof Element);
+
+        return $element;
     }
 
     /**

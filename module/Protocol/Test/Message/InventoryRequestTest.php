@@ -22,10 +22,10 @@
 
 namespace Protocol\Test\Message;
 
+use Braintacle\Dom\Element;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\Client\Client;
-use PhpBench\Dom\Element;
 use Protocol\Message\InventoryRequest;
 use Protocol\Message\InventoryRequest\Content;
 use ReflectionProperty;
@@ -53,8 +53,8 @@ class InventoryRequestTest extends \PHPUnit\Framework\TestCase
         $content->expects($this->once())->method('appendSections');
 
         $request = Mockery::mock(Element::class);
-        $request->shouldReceive('appendElement')->once()->with('DEVICEID', 'id_string', true);
-        $request->shouldReceive('appendElement')->once()->with('QUERY', 'INVENTORY');
+        $request->shouldReceive('appendTextNode')->once()->with('DEVICEID', 'id_string', true);
+        $request->shouldReceive('appendTextNode')->once()->with('QUERY', 'INVENTORY');
         // prototype should have been cloned
         $request->shouldReceive('appendChild')->once()->withArgs(fn ($arg) => $arg instanceof Content && $arg !== $content);
 
