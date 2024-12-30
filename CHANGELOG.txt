@@ -13,6 +13,9 @@ Fixed bugs:
 
 - Fixed exception with Android client export.
 
+- Fixed exception with UNIX client export where the agent does not detect
+  certain software properties.
+
 Misc:
 
 - Server: Experimental SQLite support.

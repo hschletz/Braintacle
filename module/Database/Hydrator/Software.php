@@ -101,53 +101,21 @@ class Software implements \Laminas\Hydrator\HydratorInterface
     /** {@inheritdoc} */
     public function extract(object $object): array
     {
-        if (isset($object->isHotfix)) {
-            // Windows
-            $data = [
-                'name' => $object->name,
-                'version' => $object->version,
-                'comment' => $object->comment,
-                'publisher' => $object->publisher,
-                'install_location' => $object->installLocation,
-                'is_hotfix' => $this->extractValue('is_hotfix', $object->isHotfix),
-                'guid' => $object->guid,
-                'language' => $object->language,
-                'installation_date' => $this->extractValue('installation_date', $object->installationDate),
-                'architecture' => $object->architecture,
-                'size' => null,
-            ];
-        } elseif (isset($object->size)) {
-            // UNIX
-            $data = [
-                'name' => $object->name,
-                'version' => $object->version,
-                'comment' => $object->comment,
-                'publisher' => null,
-                'install_location' => null,
-                'is_hotfix' => null,
-                'guid' => null,
-                'language' => null,
-                'installation_date' => null,
-                'architecture' => null,
-                'size' => $object->size,
-            ];
-        } else {
-            //Android
-            $data = [
-                'name' => $object->name,
-                'version' => $object->version,
-                'comment' => null,
-                'publisher' => $object->publisher,
-                'install_location' => $object->installLocation,
-                'is_hotfix' => null,
-                'guid' => null,
-                'language' => null,
-                'installation_date' => null,
-                'architecture' => null,
-                'size' => null,
-            ];
-        }
-        return $data;
+        // Some properties may be uninitialized depending on client OS. These
+        // properties are coalesced to NULL to avoid errors.
+        return [
+            'name' => $object->name,
+            'version' => $object->version,
+            'comment' => $object->comment ?? null,
+            'publisher' => $object->publisher ?? null,
+            'install_location' => $object->installLocation ?? null,
+            'is_hotfix' => $this->extractValue('is_hotfix', $object->isHotfix ?? null),
+            'guid' => $object->guid ?? null,
+            'language' => $object->language ?? null,
+            'installation_date' => $this->extractValue('installation_date', $object->installationDate ?? null),
+            'architecture' => $object->architecture ?? null,
+            'size' => $object->size ?? null,
+        ];
     }
 
     /**
@@ -228,14 +196,12 @@ class Software implements \Laminas\Hydrator\HydratorInterface
      */
     public function extractValue($name, $value)
     {
-        switch ($name) {
-            case 'is_hotfix':
-                $value = (int) !$value;
-                break;
-            case 'installation_date':
-                $value = ($value ? $value->format('Y-m-d') : null);
-                break;
-        }
+        $value = match ($name) {
+            'is_hotfix' => $value === null ? null : (int) !$value,
+            'installation_date' => $value ? $value->format('Y-m-d') : null,
+            default => $value,
+        };
+
         return $value;
     }
 }

@@ -27,7 +27,6 @@ use DateTime;
 use Laminas\Hydrator\ObjectPropertyHydrator;
 use Model\Client\Item\Software as ItemSoftware;
 use PHPUnit\Framework\MockObject\MockObject;
-use stdClass;
 
 class SoftwareTest extends \PHPUnit\Framework\TestCase
 {
@@ -177,6 +176,27 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
             'size' => 42,
         ];
 
+        // Agent does not detect comment and size with some package managers.
+        $hydratedUnixWithNullFields = [
+            'name' => 'Name',
+            'version' => 'Version',
+            'comment' => null,
+            'size' => null,
+        ];
+        $extractedUnixWithNullFields = [
+            'name' => 'Name',
+            'version' => 'Version',
+            'comment' => null,
+            'publisher' => null,
+            'install_location' => null,
+            'is_hotfix' => null,
+            'guid' => null,
+            'language' => null,
+            'installation_date' => null,
+            'architecture' => null,
+            'size' => null,
+        ];
+
         $hydratedAndroid = [
             'name' => 'Name',
             'version' => 'Version',
@@ -200,6 +220,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         return [
             [$hydratedWindows, $extractedWindows],
             [$hydratedUnix, $extractedUnix],
+            [$hydratedUnixWithNullFields, $extractedUnixWithNullFields],
             [$hydratedAndroid, $extractedAndroid],
         ];
     }
