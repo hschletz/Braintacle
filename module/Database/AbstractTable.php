@@ -27,6 +27,7 @@ use Laminas\Hydrator\HydratorInterface;
 use Nada\Database\AbstractDatabase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Base class for table objects
@@ -51,6 +52,17 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
         }
         $this->adapter = $container->get(Adapter::class);
         $this->initialize();
+    }
+
+    /**
+     * Parse table definition from given file.
+     *
+     * @codeCoverageIgnore
+     */
+    public static function loadTableDefinition(string $file): array
+    {
+        $filesystem = new Filesystem();
+        return json_decode($filesystem->readFile($file), true, 5, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -105,9 +117,7 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
     public function updateSchema($prune = false)
     {
         $logger = $this->container->get(LoggerInterface::class);
-        $schema = \Laminas\Config\Factory::fromFile(
-            Module::getPath('data/Tables/' . $this->getClassName() . '.json')
-        );
+        $schema = static::loadTableDefinition(Module::getPath('data/Tables/' . $this->getClassName() . '.json'));
         $database = $this->container->get(AbstractDatabase::class);
 
         $this->preSetSchema($logger, $schema, $database, $prune);

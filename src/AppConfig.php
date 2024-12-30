@@ -2,8 +2,9 @@
 
 namespace Braintacle;
 
-use Laminas\Config\Reader\ReaderInterface;
 use LogicException;
+use RuntimeException;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Application config file content.
@@ -27,7 +28,7 @@ class AppConfig
 {
     private array $config;
 
-    public function __construct(private ReaderInterface $reader, private string $fileName)
+    public function __construct(private Filesystem $filesystem, private string $fileName)
     {
     }
 
@@ -50,7 +51,15 @@ class AppConfig
     public function getAll(): array
     {
         if (!isset($this->config)) {
-            $this->config = $this->reader->fromFile($this->fileName);
+            $config = parse_ini_string(
+                $this->filesystem->readFile($this->fileName),
+                true,
+                INI_SCANNER_TYPED,
+            );
+            if ($config === false) {
+                throw new RuntimeException('Error parsing config file ' . $this->fileName);
+            }
+            $this->config = $config;
         }
 
         return $this->config;

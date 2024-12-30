@@ -13,6 +13,9 @@ Upgrading from previous versions:
 
 - Required: Braintacle 1.13 requires PHP 8.2 or later.
 
+- Required: Run "composer install" from the Braintacle root directory to
+  update dependencies.
+
 Fixed bugs:
 
 - Fixed exception with Android client export.

@@ -28,7 +28,6 @@
         "hschletz/formotron": "dev-main",
         "hschletz/nada": "^1.2.4",
         "laminas/laminas-authentication": "^2.5",
-        "laminas/laminas-config": "^3.0",
         "laminas/laminas-db": "^2.15",
         "laminas/laminas-di": "^3.9",
         "laminas/laminas-escaper": "^2.13",
@@ -61,7 +60,7 @@
         "slim/slim": "^4.13",
         "symfony/console": "^6.4",
         "symfony/event-dispatcher": "^6.4",
-        "symfony/filesystem": "^6.4",
+        "symfony/filesystem": "^7.2",
         "symfony/var-dumper": "^6.4"
     },
     "require-dev": {

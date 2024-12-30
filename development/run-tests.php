@@ -23,10 +23,12 @@
 
 namespace TestRunner;
 
+use Braintacle\AppConfig;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\SingleCommandApplication;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
 error_reporting(-1);
@@ -132,8 +134,8 @@ class Run
             $databases[] = null;
         } else {
             // Get available sections
-            $reader = new \Laminas\Config\Reader\Ini();
-            $config = $reader->fromFile(__DIR__ . '/../config/braintacle.ini');
+            $appConfig = new AppConfig(new Filesystem(), __DIR__ . '/../config/braintacle.ini');
+            $config = $appConfig->getAll();
 
             // Remove reserved sections
             unset($config['database']); // Production database cannot be used

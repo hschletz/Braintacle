@@ -123,7 +123,7 @@ class SchemaManager
         // Server tables have no table class
         $glob = new \GlobIterator(Module::getPath('data/Tables/Server') . '/*.json');
         foreach ($glob as $fileinfo) {
-            $schema = \Laminas\Config\Factory::fromFile($fileinfo->getPathname());
+            $schema = AbstractTable::loadTableDefinition($fileinfo->getPathname());
             self::setSchema(
                 $logger,
                 $schema,
@@ -137,7 +137,7 @@ class SchemaManager
         // SNMP tables have no table class
         $glob = new \GlobIterator(Module::getPath('data/Tables/Snmp') . '/*.json');
         foreach ($glob as $fileinfo) {
-            $schema = \Laminas\Config\Factory::fromFile($fileinfo->getPathname());
+            $schema = AbstractTable::loadTableDefinition($fileinfo->getPathname());
             $obsoleteColumns = \Database\AbstractTable::getObsoleteColumns(
                 $logger,
                 $schema,

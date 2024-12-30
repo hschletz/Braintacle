@@ -3,39 +3,40 @@
 namespace Braintacle\Test;
 
 use Braintacle\AppConfig;
-use Laminas\Config\Reader\ReaderInterface;
 use LogicException;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
+use Symfony\Component\Filesystem\Filesystem;
 use UnhandledMatchError;
 
 class AppConfigTest extends TestCase
 {
     public function testGetAllWithConstructorFile()
     {
-        $reader = $this->createMock(ReaderInterface::class);
-        $reader->method('fromFile')->with('file')->willReturn(['config']);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->method('readFile')->with('file')->willReturn("[section]\nkey=true");
 
-        $appConfig = new AppConfig($reader, 'file');
-        $this->assertEquals(['config'], $appConfig->getAll());
+        $appConfig = new AppConfig($filesystem, 'file');
+        $this->assertEquals(['section' => ['key' => true]], $appConfig->getAll());
     }
 
     public function testGetAllWithOverriddenFile()
     {
-        $reader = $this->createMock(ReaderInterface::class);
-        $reader->method('fromFile')->with('file')->willReturn(['config']);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->method('readFile')->with('file')->willReturn("[section]\nkey=true");
 
-        $appConfig = new AppConfig($reader, '');
+        $appConfig = new AppConfig($filesystem, '');
         $appConfig->setFile('file');
 
-        $this->assertEquals(['config'], $appConfig->getAll());
+        $this->assertEquals(['section' => ['key' => true]], $appConfig->getAll());
     }
 
     public function testSetFileWillThrowWithLoadedConfig()
     {
-        $reader = $this->createMock(ReaderInterface::class);
-        $reader->method('fromFile')->with('file')->willReturn(['config']);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->method('readFile')->with('file')->willReturn("[section]\nkey=true");
 
-        $appConfig = new AppConfig($reader, 'file');
+        $appConfig = new AppConfig($filesystem, 'file');
         $appConfig->getAll();
 
         $this->expectException(LogicException::class);
@@ -45,41 +46,46 @@ class AppConfigTest extends TestCase
 
     public function testEmptyConfig()
     {
-        $reader = $this->createStub(ReaderInterface::class);
-        $reader->method('fromFile')->willReturn([]);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->method('readFile')->with('file')->willReturn('');
 
-        $appConfig = new AppConfig($reader, '/file');
+        $appConfig = new AppConfig($filesystem, 'file');
         $this->assertEquals([], $appConfig->getAll());
         $this->assertEquals([], $appConfig->debug);
     }
 
     public function testValidSections()
     {
-        $config = [
-            'database' => [
-                'databaseOption' => 'databaseValue',
-            ],
-            'debug' => [
-                'debugOption' => 'debugValue',
-            ],
-        ];
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->method('readFile')->willReturn(
+            "[database]\ndatabaseOption=databaseValue\n[debug]\ndebugOption=debugValue"
+        );
 
-        $reader = $this->createStub(ReaderInterface::class);
-        $reader->method('fromFile')->willReturn($config);
-
-        $appConfig = new AppConfig($reader, 'file');
+        $appConfig = new AppConfig($filesystem, 'file');
         $this->assertEquals(['databaseOption' => 'databaseValue'], $appConfig->database);
         $this->assertEquals(['debugOption' => 'debugValue'], $appConfig->debug);
     }
 
     public function testInvalidKey()
     {
-        $reader = $this->createStub(ReaderInterface::class);
-        $reader->method('fromFile')->willReturn([]);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->method('readFile')->willReturn("[section]\nkey=true");
 
-        $appConfig = new AppConfig($reader, '/file');
+        $appConfig = new AppConfig($filesystem, 'file');
 
         $this->expectException(UnhandledMatchError::class);
         $appConfig->invalid;
+    }
+
+    public function testParseError()
+    {
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem->method('readFile')->willReturn('=');
+
+        $appConfig = new AppConfig($filesystem, 'file');
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Error parsing config file file');
+        @$appConfig->getAll();
     }
 }

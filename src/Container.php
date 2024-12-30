@@ -11,7 +11,6 @@ use Composer\InstalledVersions;
 use Console\Template\TemplateLoader;
 use DI\Container as DIContainer;
 use Laminas\Authentication\AuthenticationServiceInterface;
-use Laminas\Config\Reader\Ini as IniReader;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Mvc\Application as MvcApplication;
 use Laminas\Translator\TranslatorInterface;
@@ -28,6 +27,7 @@ use Nyholm\Psr7\Response;
 use Psr\Clock\ClockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 use function DI\create;
 use function DI\factory;
@@ -43,7 +43,7 @@ class Container extends DIContainer
             AbstractDatabase::class => factory(DatabaseFactory::class),
             Adapter::class => factory(AdapterFactory::class),
             AppConfig::class => create(AppConfig::class)->constructor(
-                new IniReader(),
+                new Filesystem(),
                 getenv('BRAINTACLE_CONFIG') ?: InstalledVersions::getRootPackage()['install_path'] . '/config/braintacle.ini',
             ),
             AuthenticationServiceInterface::class => get(AuthenticationService::class),

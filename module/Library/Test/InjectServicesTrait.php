@@ -8,10 +8,10 @@ use Braintacle\Legacy\I18nTranslator;
 use Braintacle\Template\Function\AssetUrlFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
 use Composer\InstalledVersions;
-use Laminas\Config\Reader\ReaderInterface;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Inject services which are normally injected during MVC bootstrapping.
@@ -34,21 +34,9 @@ trait InjectServicesTrait
     {
         // Inject empty dummy config. Tests that evaluate config set up their
         // own.
-        $appConfig = new AppConfig(
-            new class implements ReaderInterface
-            {
-                public function fromFile($filename)
-                {
-                    return [];
-                }
-
-                public function fromString($string)
-                {
-                    return [];
-                }
-            },
-            ''
-        );
+        $filesystem = Mockery::mock(Filesystem::class);
+        $filesystem->shouldReceive('readFile')->andReturn('');
+        $appConfig = new AppConfig($filesystem, '');
         $serviceManager->setService(AppConfig::class, $appConfig);
 
         $assetUrlFunction = Mockery::mock(AssetUrlFunction::class);
