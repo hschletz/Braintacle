@@ -9,6 +9,10 @@ without any warranty.
 CHANGES IN VERSION 1.13
 =======================
 
+Upgrading from previous versions:
+
+- Required: Braintacle 1.13 requires PHP 8.2 or later.
+
 Fixed bugs:
 
 - Fixed exception with Android client export.

@@ -26,7 +26,7 @@ Requirements
 - [Apache httpd](http://httpd.apache.org) with [mod_perl](https://perl.apache.org) and a database-specific DBD module for the
   main server component.
 
-- A web server with [PHP](https://php.net) 8.1 or later for the administration
+- A web server with [PHP](https://php.net) 8.2 or later for the administration
   console. PHP is also required for most of the command line tools. The following
   PHP extensions are required:
 
