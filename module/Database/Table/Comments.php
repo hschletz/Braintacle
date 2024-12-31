@@ -43,16 +43,16 @@ class Comments extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function preSetSchema($logger, $schema, $database, $prune)
+    protected function preSetSchema($schema, $database, $prune)
     {
         // Migration: if the "visible" column still exists, permanently delete
         // rows that are marked as deleted before the column gets dropped.
         if (in_array($this->table, $database->getTableNames())) {
             $columns = $database->getTable($this->table)->getColumns();
             if (isset($columns['visible'])) {
-                $logger->info('Pruning deleted comments');
+                $this->logger->info('Pruning deleted comments');
                 $this->delete(array('visible' => 0));
-                $logger->info('done.');
+                $this->logger->info('done.');
             }
         }
     }

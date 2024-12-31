@@ -55,7 +55,7 @@ class SoftwareDefinitions extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function preSetSchema($logger, $schema, $database, $prune)
+    protected function preSetSchema($schema, $database, $prune)
     {
         $tables = $database->getTableNames();
         $tableExists = in_array('software_definitions', $tables);
@@ -67,24 +67,24 @@ class SoftwareDefinitions extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema($schema, $database, $prune)
     {
         if ($this->_migrateAccepted) {
-            $logger->info('Migrating accepted software definitions');
+            $this->logger->info('Migrating accepted software definitions');
             $this->adapter->query(
                 'INSERT INTO software_definitions (name, display) SELECT extracted, TRUE FROM dico_soft',
                 \Laminas\Db\Adapter\Adapter::QUERY_MODE_EXECUTE
             );
-            $logger->info('done.');
+            $this->logger->info('done.');
         }
         if ($this->_migrateIgnored) {
-            $logger->info('Migrating ignored software definitions');
+            $this->logger->info('Migrating ignored software definitions');
             $query = <<<'EOT'
                 INSERT INTO software_definitions (name, display)
                 SELECT extracted, FALSE FROM dico_ignored WHERE extracted NOT IN(SELECT name FROM software_definitions)
 EOT;
             $this->adapter->query($query, \Laminas\Db\Adapter\Adapter::QUERY_MODE_EXECUTE);
-            $logger->info('done.');
+            $this->logger->info('done.');
         }
 
         $tables = $database->getTableNames();
@@ -92,7 +92,7 @@ EOT;
             // Create rows for names which are not already defined.
             // softwares.name may contain NULL which is not allowed here and
             // will be mapped to an empty string instead.
-            $logger->info('Migrating uncategorized software definitions');
+            $this->logger->info('Migrating uncategorized software definitions');
             $query = <<<'EOT'
                 INSERT INTO software_definitions (name)
                 SELECT DISTINCT COALESCE(name, '')
@@ -100,7 +100,7 @@ EOT;
                 WHERE COALESCE(name, '') NOT IN(SELECT name FROM software_definitions)
 EOT;
             $result = $this->adapter->query($query, \Laminas\Db\Adapter\Adapter::QUERY_MODE_EXECUTE);
-            $logger->info(sprintf('done, %d definitions migrated.', $result->getAffectedRows()));
+            $this->logger->info(sprintf('done, %d definitions migrated.', $result->getAffectedRows()));
         }
     }
 }

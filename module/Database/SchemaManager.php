@@ -50,8 +50,12 @@ class SchemaManager
      */
     const SCHEMA_VERSION = 8;
 
-    public function __construct(private ContainerInterface $container)
-    {
+    private LoggerInterface $logger;
+
+    public function __construct(
+        private ContainerInterface $container,
+    ) {
+        $this->logger = $container->get(LoggerInterface::class);
     }
 
     /**
@@ -74,7 +78,7 @@ class SchemaManager
         try {
             $convertedTimestamps = $nada->convertTimestampColumns();
             if ($convertedTimestamps) {
-                $this->container->get(LoggerInterface::class)->info(
+                $this->logger->info(
                     sprintf(
                         '%d columns converted to %s.',
                         $convertedTimestamps,
@@ -118,17 +122,14 @@ class SchemaManager
         $this->container->get(WindowsInstallations::class)->updateSchema();
         $this->container->get(Software::class)->updateSchema();
 
-        $logger = $this->container->get(LoggerInterface::class);
-
         // Server tables have no table class
         $glob = new \GlobIterator(Module::getPath('data/Tables/Server') . '/*.json');
         foreach ($glob as $fileinfo) {
             $schema = AbstractTable::loadTableDefinition($fileinfo->getPathname());
-            self::setSchema(
-                $logger,
+            $this->setSchema(
                 $schema,
                 $database,
-                \Database\AbstractTable::getObsoleteColumns($logger, $schema, $database),
+                AbstractTable::getObsoleteColumns($schema, $database),
                 $prune
             );
             $handledTables[] = $schema['name'];
@@ -138,11 +139,7 @@ class SchemaManager
         $glob = new \GlobIterator(Module::getPath('data/Tables/Snmp') . '/*.json');
         foreach ($glob as $fileinfo) {
             $schema = AbstractTable::loadTableDefinition($fileinfo->getPathname());
-            $obsoleteColumns = \Database\AbstractTable::getObsoleteColumns(
-                $logger,
-                $schema,
-                $database
-            );
+            $obsoleteColumns = AbstractTable::getObsoleteColumns($schema, $database);
 
             if ($schema['name'] == 'snmp_accountinfo') {
                 // Preserve columns which were added through the user interface.
@@ -165,8 +162,7 @@ class SchemaManager
                     $obsoleteColumns = array_diff($obsoleteColumns, $preserveColumns);
                 }
             }
-            self::setSchema(
-                $logger,
+            $this->setSchema(
                 $schema,
                 $database,
                 $obsoleteColumns,
@@ -180,11 +176,11 @@ class SchemaManager
         $obsoleteTables = array_diff($database->getTableNames(), $handledTables);
         foreach ($obsoleteTables as $table) {
             if ($prune) {
-                $logger->notice("Dropping table $table...");
+                $this->logger->notice("Dropping table $table...");
                 $database->dropTable($table);
-                $logger->notice("Done.");
+                $this->logger->notice("Done.");
             } else {
-                $logger->warn("Obsolete table $table detected.");
+                $this->logger->warning("Obsolete table $table detected.");
             }
         }
     }
@@ -192,14 +188,12 @@ class SchemaManager
     /**
      * Create or update table according to schema
      *
-     * @param LoggerInterface $logger Logger instance
      * @param array $schema Parsed table schema
      * @param \Nada\Database\AbstractDatabase $database Database object
      * @param string[] $obsoleteColumns List of obsolete columns to prune or warn about
      * @param bool $prune Drop obsolete tables/columns
      */
-    public static function setSchema(
-        $logger,
+    public function setSchema(
         $schema,
         $database,
         array $obsoleteColumns = array(),
@@ -211,15 +205,15 @@ class SchemaManager
             $table = $database->getTable($tableName);
 
             // Drop obsolete indexes which might prevent subsequent transformations.
-            static::dropIndexes($logger, $table, $schema);
+            $this->dropIndexes($table, $schema);
 
             // Update table engine
             if ($table instanceof Mysql and $table->getEngine() != $schema['mysql']['engine']) {
-                $logger->info(
+                $this->logger->info(
                     "Setting engine for table $tableName to {$schema['mysql']['engine']}..."
                 );
                 $table->setEngine($schema['mysql']['engine']);
-                $logger->info('done.');
+                $this->logger->info('done.');
             }
 
             // Update table and column comments
@@ -234,20 +228,20 @@ class SchemaManager
                     $columnObj->setComment($column['comment']);
                     // Change datatype if different.
                     if ($columnObj->isDifferent($column, ['type', 'length'])) {
-                        $logger->info(
+                        $this->logger->info(
                             "Setting column $tableName.$column[name] type to $column[type]($column[length])..."
                         );
                         $columnObj->setDatatype($column['type'], $column['length']);
-                        $logger->info('done.');
+                        $this->logger->info('done.');
                     }
                     // Change constraints if different.
                     if ($columnObj->getNotNull() != $column['notnull']) {
-                        $logger->info(
+                        $this->logger->info(
                             ($column['notnull'] ? 'Setting' : 'Removing') .
                                 " NOT NULL constraint on column $tableName.$column[name]..."
                         );
                         $columnObj->setNotNull($column['notnull']);
-                        $logger->info('done.');
+                        $this->logger->info('done.');
                     }
                     // Change default if different.
                     // Since SQL types cannot be completely mapped to PHP
@@ -258,19 +252,19 @@ class SchemaManager
                         $columnObj->getDefault() !== null and $column['default'] === null or
                         $columnObj->getDefault() != $column['default']
                     ) {
-                        $logger->info(
+                        $this->logger->info(
                             sprintf(
                                 "Setting default value of column $tableName.$column[name] to %s...",
                                 ($column['default'] === null) ? 'NULL' : "'$column[default]'"
                             )
                         );
                         $columnObj->setDefault($column['default']);
-                        $logger->info('done.');
+                        $this->logger->info('done.');
                     }
                 } else {
-                    $logger->info("Creating column $tableName.$column[name]...");
+                    $this->logger->info("Creating column $tableName.$column[name]...");
                     $table->addColumnObject($database->createColumnFromArray($column));
-                    $logger->info('done.');
+                    $this->logger->info('done.');
                 }
             }
 
@@ -286,7 +280,7 @@ class SchemaManager
             }
             if ($schema['primary_key'] != $primaryKey) {
                 /** @psalm-suppress InvalidArgument $primaryKey is really array<string> */
-                $logger->info(
+                $this->logger->info(
                     sprintf(
                         'Changing PK of %s from (%s) to (%s)...',
                         $tableName,
@@ -295,27 +289,27 @@ class SchemaManager
                     )
                 );
                 $table->setPrimaryKey($schema['primary_key']);
-                $logger->info('done.');
+                $this->logger->info('done.');
             }
         } else {
             // Table does not exist, create it
-            $logger->info("Creating table '$tableName'...");
+            $this->logger->info("Creating table '$tableName'...");
             $table = $database->createTable($tableName, $schema['columns'], $schema['primary_key']);
             $table->setComment($schema['comment']);
             if ($table instanceof Mysql) {
                 $table->setEngine($schema['mysql']['engine']);
                 $table->setCharset('utf8');
             }
-            $logger->info('done.');
+            $this->logger->info('done.');
         }
 
         // Create missing indexes. Ignore name for comparision with existing indexes.
         if (isset($schema['indexes'])) {
             foreach ($schema['indexes'] as $index) {
                 if (!$table->hasIndex($index['columns'], $index['unique'])) {
-                    $logger->info("Creating index '$index[name]'...");
+                    $this->logger->info("Creating index '$index[name]'...");
                     $table->createIndex($index['name'], $index['columns'], $index['unique']);
-                    $logger->info('done.');
+                    $this->logger->info('done.');
                 }
             }
         }
@@ -324,11 +318,11 @@ class SchemaManager
         // the current schema.
         foreach ($obsoleteColumns as $column) {
             if ($prune) {
-                $logger->notice("Dropping column $tableName.$column...");
+                $this->logger->notice("Dropping column $tableName.$column...");
                 $table->dropColumn($column);
-                $logger->notice('done.');
+                $this->logger->notice('done.');
             } else {
-                $logger->warning("Obsolete column $tableName.$column detected.");
+                $this->logger->warning("Obsolete column $tableName.$column detected.");
             }
         }
     }
@@ -336,11 +330,8 @@ class SchemaManager
     /**
      * Drop indexes which are not defined in the schema.
      */
-    protected static function dropIndexes(
-        LoggerInterface $logger,
-        NadaTable $table,
-        array $schema
-    ) {
+    private function dropIndexes(NadaTable $table, array $schema)
+    {
         if (!isset($schema['indexes'])) {
             return;
         }
@@ -358,9 +349,9 @@ class SchemaManager
             $name = $index['name'];
             unset($index['name']);
             if (!in_array($index, $indexes)) {
-                $logger->info("Dropping index $name...");
+                $this->logger->info("Dropping index $name...");
                 $table->dropIndex($name);
-                $logger->info('done.');
+                $this->logger->info('done.');
             }
         }
     }

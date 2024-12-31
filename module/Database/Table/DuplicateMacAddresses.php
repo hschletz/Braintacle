@@ -43,9 +43,9 @@ class DuplicateMacAddresses extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function preSetSchema($logger, $schema, $database, $prune)
+    protected function preSetSchema($schema, $database, $prune)
     {
         // Drop obsolete autoincrement column to avoid MySQL error when setting new PK
-        $this->dropColumnIfExists($logger, $database, 'id');
+        $this->dropColumnIfExists($database, 'id');
     }
 }

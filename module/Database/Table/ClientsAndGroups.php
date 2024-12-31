@@ -46,11 +46,11 @@ class ClientsAndGroups extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema($schema, $database, $prune)
     {
         // obsolete feature which was never supported.
         if ($this->delete(array('deviceid' => '_DOWNLOADGROUP_'))) {
-            $logger->warning('Obsolete download groups found and deleted.');
+            $this->logger->warning('Obsolete download groups found and deleted.');
         }
     }
 }

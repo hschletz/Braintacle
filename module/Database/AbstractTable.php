@@ -34,6 +34,8 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGateway
 {
+    protected LoggerInterface $logger;
+
     /**
      * Hydrator
      */
@@ -51,6 +53,8 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
             $this->table = strtolower(preg_replace('/(.)([A-Z])/', '$1_$2', $this->getClassName()));
         }
         $this->adapter = $container->get(Adapter::class);
+        $this->logger = $container->get(LoggerInterface::class);
+
         $this->initialize();
     }
 
@@ -116,25 +120,23 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      */
     public function updateSchema($prune = false)
     {
-        $logger = $this->container->get(LoggerInterface::class);
         $schema = static::loadTableDefinition(Module::getPath('data/Tables/' . $this->getClassName() . '.json'));
         $database = $this->container->get(AbstractDatabase::class);
 
-        $this->preSetSchema($logger, $schema, $database, $prune);
-        $this->setSchema($logger, $schema, $database, $prune);
-        $this->postSetSchema($logger, $schema, $database, $prune);
+        $this->preSetSchema($schema, $database, $prune);
+        $this->setSchema($schema, $database, $prune);
+        $this->postSetSchema($schema, $database, $prune);
     }
 
     /**
      * Hook to be called before creating/altering table schema
      *
-     * @param LoggerInterface $logger Logger instance
      * @param array $schema Parsed table schema
      * @param AbstractDatabase $database Database object
      * @param bool $prune Drop obsolete columns
      * @codeCoverageIgnore
      */
-    protected function preSetSchema($logger, $schema, $database, $prune)
+    protected function preSetSchema($schema, $database, $prune)
     {
     }
 
@@ -143,19 +145,19 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      *
      * The default implementation calls \Database\SchemaManager::setSchema().
      *
-     * @param LoggerInterface $logger Logger instance
      * @param array $schema Parsed table schema
      * @param AbstractDatabase $database Database object
      * @param bool $prune Drop obsolete columns
      * @codeCoverageIgnore
      */
-    protected function setSchema($logger, $schema, $database, $prune)
+    protected function setSchema($schema, $database, $prune)
     {
-        \Database\SchemaManager::setSchema(
-            $logger,
+        /** @var SchemaManager */
+        $schemaManager = $this->container->get(SchemaManager::class);
+        $schemaManager->setSchema(
             $schema,
             $database,
-            static::getObsoleteColumns($logger, $schema, $database),
+            static::getObsoleteColumns($schema, $database),
             $prune
         );
     }
@@ -163,13 +165,12 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
     /**
      * Hook to be called after creating/altering table schema
      *
-     * @param LoggerInterface $logger Logger instance
      * @param array $schema Parsed table schema
      * @param AbstractDatabase $database Database object
      * @param bool $prune Drop obsolete columns
      * @codeCoverageIgnore
      */
-    protected function postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema($schema, $database, $prune)
     {
     }
 
@@ -177,13 +178,12 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      * Get names of columns that are present in the current database but not in
      * the given schema
      *
-     * @param LoggerInterface $logger Logger instance
      * @param array $schema Parsed table schema
      * @param AbstractDatabase $database Database object
      * @return string[]
      * @codeCoverageIgnore
      */
-    public static function getObsoleteColumns($logger, $schema, $database)
+    public static function getObsoleteColumns($schema, $database)
     {
         // Table may not exist yet if it's just about to be created
         if (in_array($schema['name'], $database->getTableNames())) {
@@ -199,34 +199,30 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      * Rename table.
      * @codeCoverageIgnore
      */
-    protected function rename(
-        LoggerInterface $logger,
-        AbstractDatabase $database,
-        string $oldName
-    ): void {
-        $logger->info("Renaming table $oldName to $this->table...");
+    protected function rename(AbstractDatabase $database, string $oldName): void
+    {
+        $this->logger->info("Renaming table $oldName to $this->table...");
         $database->renameTable($oldName, $this->table);
-        $logger->info('done.');
+        $this->logger->info('done.');
     }
 
     /**
      * Drop a column if it exists
      *
-     * @param LoggerInterface $logger Logger instance
      * @param AbstractDatabase $database Database object
      * @param string $column column name
      * @codeCoverageIgnore
      */
-    protected function dropColumnIfExists($logger, $database, $column)
+    protected function dropColumnIfExists($database, $column)
     {
         $tables = $database->getTables();
         if (isset($tables[$this->table])) {
             $table = $tables[$this->table];
             $columns = $table->getColumns();
             if (isset($columns[$column])) {
-                $logger->notice("Dropping column $this->table.$column...");
+                $this->logger->notice("Dropping column $this->table.$column...");
                 $table->dropColumn($column);
-                $logger->notice('done.');
+                $this->logger->notice('done.');
             }
         }
     }

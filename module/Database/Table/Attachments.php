@@ -53,7 +53,7 @@ class Attachments extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function preSetSchema($logger, $schema, $database, $prune)
+    protected function preSetSchema($schema, $database, $prune)
     {
         if (in_array($this->table, $database->getTableNames())) {
             $count = $this->delete(
@@ -63,7 +63,7 @@ class Attachments extends \Database\AbstractTable
                 )
             );
             if ($count) {
-                $logger->info("Deleted $count unsupported attachments.");
+                $this->logger->info("Deleted $count unsupported attachments.");
             }
         }
     }

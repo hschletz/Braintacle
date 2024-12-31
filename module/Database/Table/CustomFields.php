@@ -43,9 +43,9 @@ class CustomFields extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public static function getObsoleteColumns($logger, $schema, $database)
+    public static function getObsoleteColumns($schema, $database)
     {
-        $obsoleteColumns = parent::getObsoleteColumns($logger, $schema, $database);
+        $obsoleteColumns = parent::getObsoleteColumns($schema, $database);
         // Preserve columns which were added through the user interface.
         $preserveColumns = array();
         // accountinfo_config may not exist yet when populating an empty

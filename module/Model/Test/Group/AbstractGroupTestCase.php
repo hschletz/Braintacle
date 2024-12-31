@@ -22,6 +22,7 @@
 
 namespace Model\Test\Group;
 
+use Database\SchemaManager;
 use Laminas\Db\Adapter\Adapter;
 use Model\Config;
 use Model\Group\Group;
@@ -49,13 +50,22 @@ abstract class AbstractGroupTestCase extends AbstractTestCase
             $this->_config = $this->createMock('Model\Config');
             $this->_config->method('__get')->willReturnMap(array(array('groupCacheExpirationInterval', 30)));
 
+            $logger = $this->createStub(LoggerInterface::class);
+
+            $container = $this->createStub(ContainerInterface::class);
+            $container->method('get')->willReturnMap([
+                [LoggerInterface::class, $logger],
+            ]);
+            $schemaManager = new SchemaManager($container);
+
             $serviceManager = $this->createStub(ContainerInterface::class);
             $serviceManager->method('get')->willReturnMap([
                 [Adapter::class, static::$serviceManager->get(Adapter::class)],
                 [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
                 [Config::class, $this->_config],
                 [Group::class, static::$serviceManager->get(Group::class)],
-                [LoggerInterface::class, $this->createStub(LoggerInterface::class)],
+                [LoggerInterface::class, $logger],
+                [SchemaManager::class, $schemaManager],
             ]);
 
             $this->_groupInfo = new \Database\Table\GroupInfo($serviceManager);

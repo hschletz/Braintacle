@@ -66,10 +66,10 @@ class CustomFieldConfig extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema($schema, $database, $prune)
     {
         // If table is empty, create default entries
-        $logger->debug('Checking for existing custom field config.');
+        $this->logger->debug('Checking for existing custom field config.');
         if ($this->select()->count() == 0) {
             $this->insert(
                 array(
@@ -87,9 +87,7 @@ class CustomFieldConfig extends \Database\AbstractTable
                     'show_order' => 1,
                 )
             );
-            $logger->info(
-                'Default custom field config created.'
-            );
+            $this->logger->info('Default custom field config created.');
         }
     }
 

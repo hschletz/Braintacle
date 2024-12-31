@@ -73,10 +73,10 @@ class Operators extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function preSetSchema($logger, $schema, $database, $prune)
+    protected function preSetSchema($schema, $database, $prune)
     {
         // Drop non-admin accounts
-        $logger->debug('Checking for non-admin accounts.');
+        $this->logger->debug('Checking for non-admin accounts.');
         if (in_array($this->table, $database->getTableNames())) {
             $dropped = 0;
             $columns = $database->getTable($this->table)->getColumns();
@@ -87,7 +87,7 @@ class Operators extends \Database\AbstractTable
                 $dropped += $this->delete(new Where([new Operator('new_accesslvl', '!=', 'sadmin')]));
             }
             if ($dropped) {
-                $logger->warning("$dropped non-admin accounts dropped.");
+                $this->logger->warning("$dropped non-admin accounts dropped.");
             }
         }
     }
@@ -96,7 +96,7 @@ class Operators extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function setSchema($logger, $schema, $database, $prune)
+    protected function setSchema($schema, $database, $prune)
     {
         $index = array_search('password_version', array_column($schema['columns'], 'name'));
         if (
@@ -105,12 +105,12 @@ class Operators extends \Database\AbstractTable
         ) {
             $schema['columns'][$index]['notnull'] = false;
         }
-        parent::setSchema($logger, $schema, $database, $prune);
+        parent::setSchema($schema, $database, $prune);
         if ($schema['columns'][$index]['notnull'] == false) {
-            $logger->info('Setting legacy hash type on existing accounts');
+            $this->logger->info('Setting legacy hash type on existing accounts');
             $this->update(array('password_version' => self::HASH_LEGACY));
             $schema['columns'][$index]['notnull'] = true;
-            parent::setSchema($logger, $schema, $database, $prune);
+            parent::setSchema($schema, $database, $prune);
         }
     }
 
@@ -118,29 +118,29 @@ class Operators extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema($schema, $database, $prune)
     {
-        $logger->debug('Checking for existing account.');
+        $this->logger->debug('Checking for existing account.');
         if ($this->select()->count() == 0) {
             // No account exists yet, create a default account.
             $this->container->get(OperatorManager::class)->createOperator(
                 array('Id' => 'admin'),
                 'admin'
             );
-            $logger->notice(
+            $this->logger->notice(
                 'Default account \'admin\' created with password \'admin\'.'
             );
         }
 
         // Warn about default password 'admin'
-        $logger->debug('Checking for accounts with default password.');
+        $this->logger->debug('Checking for accounts with default password.');
         $md5Default = md5('admin');
         $sql = $this->getSql();
         $select = $sql->select();
         $select->columns(array('id', 'passwd', 'password_version'));
         foreach ($sql->prepareStatementForSqlObject($select)->execute() as $operator) {
             if ($operator['password_version'] == self::HASH_LEGACY) {
-                $logger->warning(
+                $this->logger->warning(
                     sprintf(
                         'Account "%s" has an unsafe hash and should log in to have it automatically updated.',
                         $operator['id']
@@ -151,7 +151,7 @@ class Operators extends \Database\AbstractTable
                 ($operator['password_version'] == self::HASH_LEGACY and $operator['passwd'] == $md5Default) or
                 ($operator['password_version'] == self::HASH_DEFAULT and password_verify('admin', $operator['passwd']))
             ) {
-                $logger->warning(
+                $this->logger->warning(
                     sprintf(
                         'Account "%s" has default password. It should be changed as soon as possible!',
                         $operator['id']

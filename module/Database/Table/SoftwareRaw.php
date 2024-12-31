@@ -47,7 +47,7 @@ class SoftwareRaw extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    public function preSetSchema($logger, $schema, $database, $prune)
+    public function preSetSchema($schema, $database, $prune)
     {
         // Create/update softwareDefinitions table first because this table depends on it.
         $softwareDefinitions = $this->container->get(SoftwareDefinitions::class);
@@ -56,7 +56,7 @@ class SoftwareRaw extends \Database\AbstractTable
         // Extra transitions on already existing table. Not necessary on table creation.
         $tables = $database->getTableNames();
         if (in_array('softwares', $tables)) {
-            $this->rename($logger, $database, 'softwares');
+            $this->rename($database, 'softwares');
 
             $table = $database->getTable($this->table);
             $columns = $table->getColumns();
@@ -65,16 +65,16 @@ class SoftwareRaw extends \Database\AbstractTable
                 // constraint. Otherwise creation would fail if rows exist. The
                 // constraint will later be added automatically, after the
                 // column has been populated.
-                $logger->info("Creating column {$this->table}.definition_id...");
+                $this->logger->info("Creating column {$this->table}.definition_id...");
                 $columnData = $schema['columns'][array_search('definition_id', array_column($schema['columns'], 'name'))];
                 $columnData['notnull'] = false;
                 $table->addColumnObject($database->createColumnFromArray($columnData));
-                $logger->info('done.');
+                $this->logger->info('done.');
 
                 // Populate column. The old "name" column may contain NULL which
                 // is not allowed in software_definitions.name and will be
                 // mapped to an empty string instead.
-                $logger->info("Transitioning {$this->table}.name values to {$this->table}.definition_id...");
+                $this->logger->info("Transitioning {$this->table}.name values to {$this->table}.definition_id...");
                 $query = <<<EOT
                     UPDATE {$this->table} SET definition_id = (
                         SELECT id
@@ -83,7 +83,7 @@ class SoftwareRaw extends \Database\AbstractTable
                     )
 EOT;
                 $result = $this->adapter->query($query, \Laminas\Db\Adapter\Adapter::QUERY_MODE_EXECUTE);
-                $logger->info(sprintf('done, %d names transitioned.', $result->getAffectedRows()));
+                $this->logger->info(sprintf('done, %d names transitioned.', $result->getAffectedRows()));
             }
         }
     }

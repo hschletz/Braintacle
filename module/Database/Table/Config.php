@@ -160,13 +160,13 @@ class Config extends \Database\AbstractTable
      * {@inheritdoc}
      * @codeCoverageIgnore
      */
-    protected function postSetSchema($logger, $schema, $database, $prune)
+    protected function postSetSchema($schema, $database, $prune)
     {
         // If packagePath has not been converted yet, append /download directory
         // with had previously been appended automatically.
         if ($this->get('schemaVersion') < 8) {
             $packagePath = $this->get('packagePath') . '/download';
-            $logger->info('Setting packagePath option to ' . $packagePath);
+            $this->logger->info('Setting packagePath option to ' . $packagePath);
             $this->set('packagePath', $packagePath);
         }
 
@@ -188,9 +188,7 @@ class Config extends \Database\AbstractTable
             $uri->setPath('/braintacle-server');
             $uri = $uri->toString();
 
-            $logger->info(
-                'Converting communicationServerUri option to ' . $uri
-            );
+            $this->logger->info('Converting communicationServerUri option to ' . $uri);
             $this->insert(
                 array(
                     'name' => 'LOCAL_URI_SERVER',
@@ -202,7 +200,7 @@ class Config extends \Database\AbstractTable
         $autoMergeDuplicates = $this->get('autoMergeDuplicates');
         if ($autoMergeDuplicates != 0 and $autoMergeDuplicates != 63) {
             // Set nonzero bitmask to 63 (all criteria), making it an all-or-nothing option.
-            $logger->info('Changing criteria for automatic duplicate removal; use all criteria');
+            $this->logger->info('Changing criteria for automatic duplicate removal; use all criteria');
             $this->set('autoMergeDuplicates', 63);
         }
 
@@ -234,7 +232,7 @@ class Config extends \Database\AbstractTable
             )
         );
         if ($count) {
-            $logger->info("Deleted $count deprecated options, using defaults");
+            $this->logger->info("Deleted $count deprecated options, using defaults");
         }
     }
 

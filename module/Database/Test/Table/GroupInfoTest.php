@@ -29,6 +29,7 @@ use Model\Config;
 use Model\Group\Group;
 use Nada\Database\AbstractDatabase;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class GroupInfoTest extends AbstractTestCase
 {
@@ -58,6 +59,7 @@ class GroupInfoTest extends AbstractTestCase
             [Adapter::class, $this->createMock(Adapter::class)],
             [Config::class, $config],
             [Group::class, new Group()],
+            [LoggerInterface::class, $this->createStub(LoggerInterface::class)],
         ]);
 
         $table = new \Database\Table\GroupInfo($serviceManager);
