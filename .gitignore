@@ -20,3 +20,7 @@ tools/
 
 # managed by phpdoc
 build/
+
+# Optional override of global PHPStan config
+# https://phpstan.org/config-reference#multiple-files
+phpstan.neon

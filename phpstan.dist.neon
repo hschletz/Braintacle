@@ -1,0 +1,13 @@
+parameters:
+    level: 0
+    paths:
+        - development
+        - module
+        - public
+        - src
+        - tests
+    ignoreErrors:
+        -
+            # False positives for $this in view scripts
+            identifier: variable.undefined
+            path: module/Console/views/

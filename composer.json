@@ -92,6 +92,7 @@
         "sort-packages": true
     },
     "scripts": {
+        "phpstan": "phpstan",
         "psalm": "psalm"
     }
 }
