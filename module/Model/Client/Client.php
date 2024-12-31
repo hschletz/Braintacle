@@ -803,11 +803,9 @@ class Client extends \Model\ClientOrGroup
     }
 
     /**
-     * Export to DOM document
-     *
-     * @return \Protocol\Message\InventoryRequest
+     * Export to DOM document.
      */
-    public function toDomDocument()
+    public function toDomDocument(): InventoryRequest
     {
         $document = clone $this->container->get(InventoryRequest::class);
         $document->formatOutput = true;

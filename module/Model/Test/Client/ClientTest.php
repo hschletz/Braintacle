@@ -1249,7 +1249,7 @@ class ClientTest extends AbstractTestCase
         $client = new Client();
         $client->setContainer($serviceManager);
 
-        // DomDocument constructor must be preserved. Otherwise setting the
+        // DOMDocument constructor must be preserved. Otherwise setting the
         // formatOutput property would have no effect for whatever reason.
         $inventoryRequest = $this->getMockBuilder(InventoryRequest::class)
             ->setConstructorArgs([$this->createStub(Content::class)])

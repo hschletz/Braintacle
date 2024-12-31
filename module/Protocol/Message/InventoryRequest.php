@@ -22,23 +22,24 @@
 
 namespace Protocol\Message;
 
+use Braintacle\Dom\Document;
 use Model\Client\Client;
 use Protocol\Message\InventoryRequest\Content;
+use Protocol\Module;
 
 /**
  * Send inventory data
  */
-class InventoryRequest extends \Library\DomDocument
+class InventoryRequest extends Document
 {
     public function __construct(protected Content $contentPrototype)
     {
         parent::__construct();
     }
 
-    /** {@inheritdoc} */
-    public function getSchemaFilename()
+    public function getSchemaFilename(): string
     {
-        return \Protocol\Module::getPath('data/RelaxNG/InventoryRequest.rng');
+        return Module::getPath('data/RelaxNG/InventoryRequest.rng');
     }
 
     /**

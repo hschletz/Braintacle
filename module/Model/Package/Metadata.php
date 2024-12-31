@@ -22,18 +22,20 @@
 
 namespace Model\Package;
 
+use Braintacle\Dom\Document;
+use Model\Module;
+
 /**
  * Package metadata XML
  *
  * The schema defines a single element with all metadata in its attributes.
  * These should be accessed via setPackageData() and getPackageData().
  */
-class Metadata extends \Library\DomDocument
+class Metadata extends Document
 {
-    /** {@inheritdoc} */
-    public function getSchemaFilename()
+    public function getSchemaFilename(): string
     {
-        return \Model\Module::getPath('data/RelaxNG/PackageMetadata.rng');
+        return Module::getPath('data/RelaxNG/PackageMetadata.rng');
     }
 
     /**

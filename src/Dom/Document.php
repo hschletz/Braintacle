@@ -1,33 +1,16 @@
 <?php
 
-/**
- * DOM document
- *
- * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the Free
- * Software Foundation; either version 2 of the License, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
+namespace Braintacle\Dom;
 
-namespace Library;
-
-use Braintacle\Dom\Element;
+use DOMDocument;
+use LogicException;
+use RuntimeException;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * DOM document
+ * DOMDocument extension with convenience functions.
  */
-class DomDocument extends \DOMDocument
+class Document extends DOMDocument
 {
     public function __construct(string $version = '1.0', string $encoding = 'utf-8')
     {
@@ -46,47 +29,44 @@ class DomDocument extends \DOMDocument
     }
 
     /**
-     * Retrieve full path to the RELAX NG schema file defining this document type
+     * Retrieve full path to the RELAX NG schema file defining this document type.
      *
      * This is not implemented (throws an exception). Subclasses can override
      * this method to support validation.
      *
-     * @return string
-     * @throws \LogicException if not implemented
+     * @throws LogicException if not implemented
      */
-    public function getSchemaFilename()
+    public function getSchemaFilename(): string
     {
-        throw new \LogicException(get_class($this) . ' has no schema defined');
+        throw new LogicException(get_class($this) . ' has no schema defined');
     }
 
     /**
-     * Validate document, return status
+     * Validate document, return status.
      *
      * The document is validated against the RELAX NG schema defined by
      * getSchemaFilename() which must be implemented by a subclass. Details are
      * available from the generated warnings.
-     *
-     * @return bool Validation result
      */
-    public function isValid()
+    public function isValid(): bool
     {
         return $this->relaxNGValidate($this->getSchemaFilename());
     }
 
     /**
-     * Validate document, throw exception on error
+     * Validate document, throw exception on error.
      *
      * The document gets validated against the RELAX NG schema defined by
-     * getSchemaFilename() which must be implemented by a subclass.
-     * A \RuntimeException is thrown on error. Details are shown in the
-     * exception message.
+     * getSchemaFilename() which must be implemented by a subclass. A
+     * RuntimeException is thrown on error. Details are shown in the exception
+     * message.
      *
      * **Warning:** The libXML error buffer gets reset before validation. It
      * will only contain errors relevant to the current validation afterwards.
      *
-     * @throws \RuntimeException if document is not valid
+     * @throws RuntimeException if document is not valid
      */
-    public function forceValid()
+    public function forceValid(): void
     {
         libxml_clear_errors();
         $useErrors = libxml_use_internal_errors(true);
@@ -99,27 +79,24 @@ class DomDocument extends \DOMDocument
         }
         libxml_use_internal_errors($useErrors);
         if (!$isValid) {
-            throw new \RuntimeException($message);
+            throw new RuntimeException($message);
         }
     }
 
     /**
-     * Write XML content to file
+     * Write XML content to file.
      *
      * This is a replacement for save() with improved error handling. An
      * exception is thrown on error, and no file remains on disk.
      *
-     * save() cannot be overridden because its signatures are incompatible
-     * between PHP 8.1 and prior versions.
-     *
-     * @throws \RuntimeException if a write error occurs
+     * @throws RuntimeException if a write error occurs
      */
     public function write(string $filename): void
     {
         // Don't use parent::save(). It won't report a disk full condition, and
         // a truncated file would remain on disk.
         $xml = $this->saveXml();
-        $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
+        $fileSystem = new Filesystem();
         $fileSystem->dumpFile($filename, $xml);
     }
 }
