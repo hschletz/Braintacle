@@ -22,6 +22,8 @@
 
 namespace Database\Test\Table;
 
+use InvalidArgumentException;
+
 /**
  * Tests for the Config class
  */
@@ -106,10 +108,9 @@ class ConfigTest extends AbstractTestCase
 
     public function testSetInvalidValue()
     {
-        $this->expectException(
-            'InvalidArgumentException',
-            'Tried to set non-integer value "invalid" to integer option "inventoryInterval"'
-        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Tried to set non-integer value "invalid" to integer option "inventoryInterval"');
+
         static::$_table->set('inventoryInterval', 'invalid');
     }
 

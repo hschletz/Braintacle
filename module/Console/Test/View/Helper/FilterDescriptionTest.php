@@ -22,6 +22,7 @@
 
 namespace Console\Test\View\Helper;
 
+use InvalidArgumentException;
 use Library\Test\View\Helper\AbstractTestCase;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -105,19 +106,17 @@ class FilterDescriptionTest extends AbstractTestCase
 
     public function testInvalidArrayFilter()
     {
-        $this->expectException(
-            'InvalidArgumentException',
-            'No description available for this set of multiple filters'
-        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No description available for this set of multiple filters');
+
         $this->getHelper()(array('NetworkInterface.Subnet'), null, 42);
     }
 
     public function testInvalidStringFilter()
     {
-        $this->expectException(
-            'InvalidArgumentException',
-            'No description available for filter invalid'
-        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No description available for filter invalid');
+
         $this->getHelper()('invalid', null, 42);
     }
 }

@@ -1,5 +1,5 @@
 parameters:
-    level: 0
+    level: 1
     paths:
         - development
         - module
@@ -7,6 +7,10 @@ parameters:
         - src
         - tests
     ignoreErrors:
+        -
+            # Undetectable magic methods for controller plugins
+            identifier: method.notFound
+            path: module/Console/Controller/
         -
             # False positives for $this in view scripts
             identifier: variable.undefined

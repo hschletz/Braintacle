@@ -22,6 +22,7 @@
 
 namespace Library;
 
+use RuntimeException;
 use Throwable;
 use ZipArchive;
 
@@ -119,16 +120,11 @@ class ArchiveManager
         }
         switch ($type) {
             case self::ZIP:
-                $archive = new \ZipArchive();
-                // open() may throw an error on PHP 8 while earlier versions
-                // return FALSE. Handle both cases uniformly.
+                $archive = new ZipArchive();
                 try {
-                    $result = $archive->open($filename, \ZipArchive::CREATE | \ZipArchive::EXCL);
-                    if ($result !== true) {
-                        throw new \RuntimeException("Error creating ZIP archive '$filename', code $result");
-                    }
+                    $archive->open($filename, ZipArchive::CREATE | ZipArchive::EXCL);
                 } catch (Throwable $t) {
-                    throw new \RuntimeException("Error creating ZIP archive '$filename', code $result", 0, $t);
+                    throw new RuntimeException("Error creating ZIP archive '$filename', code {$t->getCode()}", 0, $t);
                 }
                 break;
             default:

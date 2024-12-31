@@ -1014,7 +1014,8 @@ class ClientManagerTest extends AbstractTestCase
      */
     public function testGetClientsExceptions($order, $filter, $operator, $exceptionType, $message)
     {
-        $this->expectException($exceptionType, $message);
+        $this->expectException($exceptionType);
+        $this->expectExceptionMessage($message);
 
         $customFieldManager = $this->createMock('Model\Client\CustomFieldManager');
         $customFieldManager->method('getFields')->willReturn(

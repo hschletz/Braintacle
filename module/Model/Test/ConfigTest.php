@@ -22,6 +22,8 @@
 
 namespace Model\Test;
 
+use InvalidArgumentException;
+
 /**
  * Tests for Model\Config
  */
@@ -86,10 +88,8 @@ class ConfigTest extends AbstractTestCase
 
     public function testMagicSetInvalidValue()
     {
-        $this->expectException(
-            'InvalidArgumentException',
-            'Tried to set non-integer value "invalid" to integer option "inventoryInterval"'
-        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Tried to set non-integer value "invalid" to integer option "inventoryInterval"');
         $this->getModel()->inventoryInterval = 'invalid';
     }
 

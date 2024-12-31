@@ -22,6 +22,9 @@
 
 namespace Library\Test\Form\Element;
 
+use Library\Form\Element\SelectSimple;
+use LogicException;
+
 /**
  * Tests for \Library\Form\Element\SelectSimple
  */
@@ -43,10 +46,9 @@ class SelectSimpleTest extends \PHPUnit\Framework\TestCase
 
     public function testUncallableCode()
     {
-        $this->expectException(
-            'LogicException',
-            'Library\Form\Element\SelectSimple::getOptionValue() should never be called'
-        );
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(SelectSimple::class . '::getOptionValue() should never be called');
+
         $method = new \ReflectionMethod('Library\Form\Element\SelectSimple', 'getOptionValue');
         $method->setAccessible(true);
         $method->invoke(new \Library\Form\Element\SelectSimple(), '', array());

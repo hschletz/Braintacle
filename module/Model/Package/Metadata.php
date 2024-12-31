@@ -119,11 +119,8 @@ class Metadata extends Document
      * HTML attributes which should be enclosed in single quotes instead. There
      * is no easy way to distinct between attribute delimiters and literal
      * quotation marks.
-     *
-     * @param string $message User notification message
-     * @return string Escaped string
      */
-    protected function escapeMessage($message)
+    protected function escapeMessage(?string $message): string
     {
         $message = str_replace('"', '&quot;', $message ?? '');
         $message = str_replace(array("\r\n", "\n\r", "\n", "\r"), '<br>', $message);

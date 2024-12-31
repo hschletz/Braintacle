@@ -36,6 +36,7 @@ use Laminas\Db\Sql\Sql;
 use Laminas\Http\Client as HttpClient;
 use Model\Config;
 use Model\Group\Group;
+use Model\Package\Assignment;
 use Nada\Database\AbstractDatabase;
 use Psr\Container\ContainerInterface;
 
@@ -638,20 +639,13 @@ class ClientManager
      */
     protected function filterByPackage($select, $filter, $package, $addSearchColumns)
     {
-        switch ($filter) {
-            case 'PackagePending':
-                $condition = new Predicate\IsNull('devices.tvalue');
-                break;
-            case 'PackageRunning':
-                $condition = array('devices.tvalue' => \Model\Package\Assignment::RUNNING);
-                break;
-            case 'PackageSuccess':
-                $condition = array('devices.tvalue' => \Model\Package\Assignment::SUCCESS);
-                break;
-            case 'PackageError':
-                $condition = new Predicate\Like('devices.tvalue', \Model\Package\Assignment::ERROR_PREFIX . '%');
-                break;
-        }
+        $condition = match ($filter) {
+            'PackagePending' => new Predicate\IsNull('devices.tvalue'),
+            'PackageRunning' => ['devices.tvalue' => Assignment::RUNNING],
+            'PackageSuccess' => ['devices.tvalue' => Assignment::SUCCESS],
+            'PackageError' => new Predicate\Like('devices.tvalue', Assignment::ERROR_PREFIX . '%'),
+        };
+
         return $select->join(
             'devices',
             'devices.hardware_id = clients.id',
@@ -719,6 +713,7 @@ class ClientManager
         }
 
         if (!isset($tableGateway)) {
+            assert(isset($table));
             $tableGateway = $this->container->get("Database\Table\\$table");
         }
         $table = $tableGateway->getTable();
@@ -744,6 +739,7 @@ class ClientManager
                 }
             }
             if (!$tablePresent) {
+                assert(isset($fk));
                 $rewriteJoins = true;
                 $joinedTable = array(
                     'name' => $table,
@@ -752,6 +748,7 @@ class ClientManager
                     'type' => Select::JOIN_INNER
                 );
             }
+            assert(isset($joinedTable));
             // Add column if not already present with the same alias
             if ($addSearchColumns and @$joinedTable['columns'][$columnAlias] != $column) {
                 $rewriteJoins = true;

@@ -29,6 +29,7 @@ use Model\Client\Client;
 use Protocol\Message\InventoryRequest;
 use Protocol\Message\InventoryRequest\Content;
 use ReflectionProperty;
+use UnexpectedValueException;
 
 class InventoryRequestTest extends \PHPUnit\Framework\TestCase
 {
@@ -79,10 +80,9 @@ class InventoryRequestTest extends \PHPUnit\Framework\TestCase
 
     public function testGetFilenameInvalidName()
     {
-        $this->expectException(
-            'UnexpectedValueException',
-            '!Name2015-06-04-18-22-06 is not a valid filename part'
-        );
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('!Name2015-06-04-18-22-06 is not a valid filename part');
+
         $document = new InventoryRequest($this->createStub(Content::class));
         $document->appendChild($document->createElement('DEVICEID', '!Name2015-06-04-18-22-06'));
         $document->getFilename();

@@ -104,7 +104,7 @@ class ClientOrGroupTest extends AbstractTestCase
             $queryRow = $queryTable->getRow($i);
             $dataSetDate = new \DateTime($dataSetRow['since']);
             $queryDate = new \DateTime($queryRow['since']);
-            $this->assertThat($queryDate->getTimestamp(), $this->equalTo($dataSetDate->getTimestamp(), 1));
+            $this->assertThat($queryDate->getTimestamp(), $this->equalToWithDelta($dataSetDate->getTimestamp(), 1));
             $this->assertEquals($dataSetRow['hardware_id'], $queryRow['hardware_id']);
         }
     }

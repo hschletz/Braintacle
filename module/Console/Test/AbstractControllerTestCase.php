@@ -45,7 +45,7 @@ abstract class AbstractControllerTestCase extends AbstractHttpControllerTestCase
         parent::setUp();
 
         $this->setTraceError(true);
-        $this->setApplicationConfig(\Library\Application::getApplicationConfig('Console', false));
+        $this->setApplicationConfig(Application::getApplicationConfig('Console'));
 
         // Put application in authenticated state
         $auth = $this->createMock('Model\Operator\AuthenticationService');
