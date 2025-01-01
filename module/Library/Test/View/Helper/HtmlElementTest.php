@@ -3,7 +3,7 @@
 /**
  * Tests for the HtmlElement helper
  *
- * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2025 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
