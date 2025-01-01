@@ -34,6 +34,7 @@ use Model\Client\Client;
 use Model\Client\ClientManager;
 use Model\Config;
 use Psr\Clock\ClockInterface;
+use Random\Randomizer;
 
 /**
  * A group of clients
@@ -251,10 +252,7 @@ class Group extends \Model\ClientOrGroup
         $minExpires = $now->modify(
             sprintf(
                 '+%d seconds',
-                $this->container->get('Library\Random')->getInteger(
-                    0,
-                    $config->groupCacheExpirationFuzz
-                )
+                $this->container->get(Randomizer::class)->getInt(0, $config->groupCacheExpirationFuzz)
             )
         );
         $groupInfo->update(

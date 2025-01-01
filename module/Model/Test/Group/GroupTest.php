@@ -30,16 +30,20 @@ use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\Db\Adapter\Driver\DriverInterface;
 use Laminas\Db\Adapter\Platform\AbstractPlatform;
-use Library\Random;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\Client\ClientManager;
 use Model\Config;
 use Model\Group\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
+use Random\Randomizer;
 
 class GroupTest extends AbstractGroupTestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /** {@inheritdoc} */
     protected static $_tables = array(
         'ClientConfig',
@@ -322,8 +326,9 @@ class GroupTest extends AbstractGroupTestCase
         $clock = $this->createStub(ClockInterface::class);
         $clock->method('now')->willReturn($now);
 
-        $random = $this->createMock(Random::class);
-        $random->method('getInteger')->willReturn(42);
+        // Builtin Randomizer class final and cannot be mocked. Create proxy instead.
+        $randomizer = Mockery::mock(new Randomizer());
+        $randomizer->shouldReceive('getInt')->with(0, 60)->andReturn(42);
 
         $config = $this->createMock('Model\Config');
         $config->method('__get')->will(
@@ -342,7 +347,7 @@ class GroupTest extends AbstractGroupTestCase
                 [GroupInfo::class, $this->_groupInfo],
                 [GroupMemberships::class, static::$serviceManager->get(GroupMemberships::class)],
                 [ClockInterface::class, $clock],
-                ['Library\Random', $random],
+                [Randomizer::class, $randomizer],
                 [Config::class, $config],
             ]);
 
