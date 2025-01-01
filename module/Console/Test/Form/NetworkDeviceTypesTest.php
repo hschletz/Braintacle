@@ -24,9 +24,9 @@ namespace Console\Test\Form;
 
 use Console\Form\NetworkDeviceTypes;
 use Console\Test\AbstractFormTestCase;
-use Laminas\Dom\Document\Query as Query;
 use Laminas\Form\FieldsetInterface;
 use Laminas\Form\View\Helper\FormElementErrors;
+use Library\Test\DomMatcherTrait;
 use Model\Network\DeviceManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -35,6 +35,8 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class NetworkDeviceTypesTest extends AbstractFormTestCase
 {
+    use DomMatcherTrait;
+
     /**
      * DeviceManager mock
      * @var MockObject|DeviceManager
@@ -321,22 +323,19 @@ class NetworkDeviceTypesTest extends AbstractFormTestCase
     public function testRenderFieldsetNoMessages()
     {
         $html = $this->_form->renderFieldset($this->createView(), $this->_form);
-        $document = new \Laminas\Dom\Document(static::HTML_HEADER . $html);
-        $this->assertCount(1, Query::execute('//div[@class="table"]', $document));
-        $this->assertCount(
+        $xPath = $this->createXpath($html);
+        $this->assertXpathCount(1, $xPath, '//div[@class="table"]');
+        $this->assertXpathCount(
             1,
-            Query::execute(
-                '//input[@name="name0"]/following-sibling::a' .
-                    '[@href="/console/preferences/deletedevicetype/?name=name0"][text()="Löschen"]',
-                $document
-            )
+            $xPath,
+            '//input[@name="name0"]/following-sibling::a[@href="/console/preferences/deletedevicetype/?name=name0"][text()="Löschen"]',
         );
-        $this->assertCount(1, Query::execute('//input[@name="name1"]', $document));
-        $this->assertCount(1, Query::execute('//input[@name="Add"]', $document));
-        $this->assertCount(1, Query::execute('//a', $document));
-        $this->assertCount(1, Query::execute('//input[@type="submit"]', $document));
-        $this->assertCount(0, Query::execute('//input[@class="input-error"]', $document));
-        $this->assertCount(0, Query::execute('//ul', $document));
+        $this->assertXpathCount(1, $xPath, '//input[@name="name1"]');
+        $this->assertXpathCount(1, $xPath, '//input[@name="Add"]');
+        $this->assertXpathCount(1, $xPath, '//a');
+        $this->assertXpathCount(1, $xPath, '//input[@type="submit"]');
+        $this->assertXpathCount(0, $xPath, '//input[@class="input-error"]');
+        $this->assertXpathCount(0, $xPath, '//ul');
     }
 
     public function testRenderFieldsetMessages()
@@ -354,23 +353,11 @@ class NetworkDeviceTypesTest extends AbstractFormTestCase
         $view->getHelperPluginManager()->setService('formElementErrors', $formElementErrors);
 
         $html = $this->_form->renderFieldset($view, $this->_form);
-        $document = new \Laminas\Dom\Document($html);
-        $this->assertCount(
-            1,
-            Query::execute(
-                '//input[@name="name0"]/following::ul[1][@class="errorMock"]/li[text()="message_name0"]',
-                $document
-            )
-        );
-        $this->assertCount(
-            1,
-            Query::execute(
-                '//input[@name="Add"]/following::ul[1][@class="errorMock"]/li[text()="message_add"]',
-                $document
-            )
-        );
-        $this->assertCount(2, Query::execute('//input[@class="input-error"]', $document));
-        $this->assertCount(2, Query::execute('//ul', $document));
+        $xPath = $this->createXpath($html);
+        $this->assertXpathCount(1, $xPath, '//input[@name="name0"]/following::ul[1][@class="errorMock"]/li[text()="message_name0"]');
+        $this->assertXpathCount(1, $xPath, '//input[@name="Add"]/following::ul[1][@class="errorMock"]/li[text()="message_add"]');
+        $this->assertXpathCount(2, $xPath, '//input[@class="input-error"]');
+        $this->assertXpathCount(2, $xPath, '//ul');
     }
 
     public function testProcessRenameNoAdd()

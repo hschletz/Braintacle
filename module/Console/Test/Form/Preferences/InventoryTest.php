@@ -23,9 +23,12 @@
 namespace Console\Test\Form\Preferences;
 
 use Console\Test\AbstractFormTestCase;
+use Library\Test\DomMatcherTrait;
 
 class InventoryTest extends AbstractFormTestCase
 {
+    use DomMatcherTrait;
+
     public function testInit()
     {
         $preferences = $this->_form->get('Preferences');
@@ -43,14 +46,11 @@ class InventoryTest extends AbstractFormTestCase
     {
         $view = $this->createView();
         $html = $this->_form->render($view);
-        $document = new \Laminas\Dom\Document($html);
-        $this->assertCount(
+        $xPath = $this->createXpath($html);
+        $this->assertXpathCount(
             1,
-            \Laminas\Dom\Document\Query::execute(
-                "//a[@href='/console/preferences/registryvalues/']" .
-                    "[text()='\n[Inventarisierte Registry-Werte verwalten]\n']",
-                $document
-            )
+            $xPath,
+            "//a[@href='/console/preferences/registryvalues/'][text()='\n[Inventarisierte Registry-Werte verwalten]\n']",
         );
     }
 }

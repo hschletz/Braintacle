@@ -24,8 +24,8 @@ namespace Console\Test\Form;
 
 use Console\Form\DeleteClient;
 use Console\Test\AbstractFormTestCase;
-use Laminas\Dom\Document\Query as Query;
 use Laminas\Form\Element\Checkbox;
+use Library\Test\DomMatcherTrait;
 use Model\Config;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -34,6 +34,8 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class DeleteClientTest extends AbstractFormTestCase
 {
+    use DomMatcherTrait;
+
     private function createConfig(int $defaultDeleteInterfaces): Config
     {
         /** @var MockObject&Config */
@@ -90,18 +92,9 @@ class DeleteClientTest extends AbstractFormTestCase
     public function testRender()
     {
         $output = $this->_form->render($this->createView());
-        $document = new \Laminas\Dom\Document($output);
-        $this->assertCount(
-            1,
-            Query::Execute('//input[@type="checkbox"][@name="DeleteInterfaces"]', $document)
-        );
-        $this->assertCount(
-            1,
-            Query::Execute('//input[@type="submit"][@name="yes"]', $document)
-        );
-        $this->assertCount(
-            1,
-            Query::Execute('//input[@type="submit"][@name="no"]', $document)
-        );
+        $xPath = $this->createXpath($output);
+        $this->assertXpathCount(1, $xPath, '//input[@type="checkbox"][@name="DeleteInterfaces"]');
+        $this->assertXpathCount(1, $xPath, '//input[@type="submit"][@name="yes"]');
+        $this->assertXpathCount(1, $xPath, '//input[@type="submit"][@name="no"]');
     }
 }

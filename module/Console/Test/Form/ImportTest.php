@@ -24,12 +24,15 @@ namespace Console\Test\Form;
 
 use Console\Test\AbstractFormTestCase;
 use Laminas\InputFilter\FileInput;
+use Library\Test\DomMatcherTrait;
 
 /**
  * Tests for Import form
  */
 class ImportTest extends AbstractFormTestCase
 {
+    use DomMatcherTrait;
+
     public function testInit()
     {
         $this->assertInstanceOf('Laminas\Form\Element\File', $this->_form->get('File'));
@@ -79,10 +82,7 @@ class ImportTest extends AbstractFormTestCase
     public function testEnctypeAttribute()
     {
         $html = $this->_form->render($this->createView());
-        $document = new \Laminas\Dom\Document($html);
-        $this->assertCount(
-            1,
-            \Laminas\Dom\Document\Query::execute('//form[@enctype="multipart/form-data"]', $document)
-        );
+        $xPath = $this->createXpath($html);
+        $this->assertXpathCount(1, $xPath, '//form[@enctype="multipart/form-data"]');
     }
 }

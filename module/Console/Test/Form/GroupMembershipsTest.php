@@ -24,14 +24,16 @@ namespace Console\Test\Form;
 
 use Console\Form\GroupMemberships;
 use Console\Test\AbstractFormTestCase;
-use Laminas\Dom\Document\Query;
 use Laminas\Form\FieldsetInterface;
+use Library\Test\DomMatcherTrait;
 
 /**
  * Tests for GroupMemberships form
  */
 class GroupMembershipsTest extends AbstractFormTestCase
 {
+    use DomMatcherTrait;
+
     public function testInit()
     {
         $this->assertInstanceOf('\Library\Form\Element\Submit', $this->_form->get('Submit'));
@@ -105,28 +107,16 @@ class GroupMembershipsTest extends AbstractFormTestCase
         $form->prepare();
         $view = $this->createView();
         $html = $form->renderFieldset($view, $form);
-        $document = new \Laminas\Dom\Document($html);
-        $this->assertCount(1, Query::execute('//div', $document));
-        $this->assertCount(
-            1,
-            Query::execute(
-                "//fieldset/legend/a[@href='/console/group/general/?name=group1'][text()='\ngroup1\n']",
-                $document
-            )
-        );
-        $this->assertCount(1, Query::execute('//input[@type="radio"][@name="Groups[group1]"][@value="0"]', $document));
-        $this->assertCount(1, Query::execute('//input[@type="radio"][@name="Groups[group1]"][@value="1"]', $document));
-        $this->assertCount(1, Query::execute('//input[@type="radio"][@name="Groups[group1]"][@value="2"]', $document));
-        $this->assertCount(
-            1,
-            Query::execute(
-                "//fieldset/legend/a[@href='/console/group/general/?name=group2'][text()='\ngroup2\n']",
-                $document
-            )
-        );
-        $this->assertCount(1, Query::execute('//input[@type="radio"][@name="Groups[group2]"][@value="0"]', $document));
-        $this->assertCount(1, Query::execute('//input[@type="radio"][@name="Groups[group2]"][@value="1"]', $document));
-        $this->assertCount(1, Query::execute('//input[@type="radio"][@name="Groups[group2]"][@value="2"]', $document));
-        $this->assertCount(1, Query::execute('//input[@type="submit"]', $document));
+        $xPath = $this->createXpath($html);
+        $this->assertXpathCount(1, $xPath, '//div');
+        $this->assertXpathCount(1, $xPath, "//fieldset/legend/a[@href='/console/group/general/?name=group1'][text()='\ngroup1\n']");
+        $this->assertXpathCount(1, $xPath, '//input[@type="radio"][@name="Groups[group1]"][@value="0"]');
+        $this->assertXpathCount(1, $xPath, '//input[@type="radio"][@name="Groups[group1]"][@value="1"]');
+        $this->assertXpathCount(1, $xPath, '//input[@type="radio"][@name="Groups[group1]"][@value="2"]');
+        $this->assertXpathCount(1, $xPath, "//fieldset/legend/a[@href='/console/group/general/?name=group2'][text()='\ngroup2\n']");
+        $this->assertXpathCount(1, $xPath, '//input[@type="radio"][@name="Groups[group2]"][@value="0"]');
+        $this->assertXpathCount(1, $xPath, '//input[@type="radio"][@name="Groups[group2]"][@value="1"]');
+        $this->assertXpathCount(1, $xPath, '//input[@type="radio"][@name="Groups[group2]"][@value="2"]');
+        $this->assertXpathCount(1, $xPath, '//input[@type="submit"]');
     }
 }

@@ -2,35 +2,42 @@
 
 namespace Library\Test;
 
-use Laminas\Dom\Document;
-use Laminas\Dom\Document\Query;
+use DOMXPath;
+use Masterminds\HTML5;
 
 trait DomMatcherTrait
 {
-    private function createDocument(string $content): Document
+    private function createXpath(string $content): DOMXPath
     {
-        // Document (and DOMDocument::loadHtml() which is used for HTML parsing)
-        // ignores the specified encoding and always interprets content as
-        // ISO 8859-1, causing any matches against UTF-8 strings to fail. As a
-        // workaround, non-ASCII characters (and only those) are encoded as HTML
-        // entities first.
-        return new Document(mb_encode_numericentity($content, [0x7f, 0x10ffff, 0, 0x1fffff], 'UTF-8'));
+        $html = new HTML5(['disable_html_ns' => true]);
+        $this->assertFalse($html->hasErrors());
+
+        return new DOMXPath($html->loadHTML($content));
     }
 
-    private function assertXpathMatches(Document $document, string $xPath): void
+    private function assertXpathCount(int $count, DOMXPath $xPath, string $expression): void
+    {
+        $this->assertEquals(
+            $count,
+            $xPath->query($expression)->count(),
+            "Failed asserting that XPath expression matches exactly $count times.",
+        );
+    }
+
+    private function assertXpathMatches(DOMXPath $xPath, string $expression): void
     {
         $this->assertGreaterThan(
             0,
-            count(Query::execute($xPath, $document)),
+            $xPath->query($expression)->count(),
             'Failed asserting that XPath expression matches.'
         );
     }
 
-    private function assertNotXpathMatches(Document $document, string $xPath): void
+    private function assertNotXpathMatches(DOMXPath $xPath, string $expression): void
     {
         $this->assertEquals(
             0,
-            count(Query::execute($xPath, $document)),
+            $xPath->query($expression)->count(),
             'Failed asserting that XPath expression does not match.'
         );
     }

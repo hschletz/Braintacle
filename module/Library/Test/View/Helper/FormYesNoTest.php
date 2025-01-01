@@ -22,8 +22,8 @@
 
 namespace Library\Test\View\Helper;
 
-use Laminas\Dom\Document\Query as Query;
 use Laminas\I18n\View\Helper\Translate;
+use Library\Test\DomMatcherTrait;
 use Library\View\Helper\HtmlElement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
@@ -33,6 +33,8 @@ use PHPUnit\Framework\MockObject\Stub;
  */
 class FormYesNoTest extends AbstractTestCase
 {
+    use DomMatcherTrait;
+
     public static function invokeAttributesProvider()
     {
         return array(
@@ -74,15 +76,12 @@ class FormYesNoTest extends AbstractTestCase
         $helper = new \Library\View\Helper\FormYesNo($translate, $htmlElement);
 
         $result = $helper('TestCaption', array('hiddenName' => 'hiddenValue'), $attributesOrig);
-        $document = new \Laminas\Dom\Document($result);
+        $xPath = $this->createXpath($result);
 
-        $this->assertCount(1, Query::execute('//p[text()="TestCaption"]', $document));
-        $this->assertCount(1, Query::execute('//form[@method="_method"]', $document));
-        $this->assertCount(
-            1,
-            Query::execute('//input[@type="hidden"][@name="hiddenName"][@value="hiddenValue"]', $document)
-        );
-        $this->assertCount(1, Query::execute('//input[@type="submit"][@name="yes"][@value="_(Yes)"]', $document));
-        $this->assertCount(1, Query::execute('//input[@type="submit"][@name="no"][@value="_(No)"]', $document));
+        $this->assertXpathCount(1, $xPath, '//p[text()="TestCaption"]');
+        $this->assertXpathCount(1, $xPath, '//form[@method="_method"]');
+        $this->assertXpathCount(1, $xPath, '//input[@type="hidden"][@name="hiddenName"][@value="hiddenValue"]');
+        $this->assertXpathCount(1, $xPath, '//input[@type="submit"][@name="yes"][@value="_(Yes)"]');
+        $this->assertXpathCount(1, $xPath, '//input[@type="submit"][@name="no"][@value="_(No)"]');
     }
 }

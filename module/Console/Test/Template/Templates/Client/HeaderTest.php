@@ -39,13 +39,13 @@ class HeaderTest extends TestCase
 
         $engine = $this->createEngine();
         $content = $engine->renderToString('Client/Header.latte', ['client' => $client, 'currentAction' => '']);
-        $document = $this->createDocument($content);
+        $xPath = $this->createXpath($content);
 
         $query = '//ul[contains(concat(" ", normalize-space(@class), " "), " navigation_details ")]/li';
-        $this->assertXpathMatches($document, $query . '/a[@href="/client/windows/?id=1"]');
-        $this->assertXpathMatches($document, $query . '/a[@href="/client/msoffice/?id=1"]');
-        $this->assertXpathMatches($document, $query . '/a[@href="/client/registry/?id=1"]');
-        $this->assertXpathMatches($document, $query . '/a[@href="/client/1/export"]');
+        $this->assertXpathMatches($xPath, $query . '/a[@href="/client/windows/?id=1"]');
+        $this->assertXpathMatches($xPath, $query . '/a[@href="/client/msoffice/?id=1"]');
+        $this->assertXpathMatches($xPath, $query . '/a[@href="/client/registry/?id=1"]');
+        $this->assertXpathMatches($xPath, $query . '/a[@href="/client/1/export"]');
     }
 
     public function testMenuForNonWindowsClients()
@@ -57,12 +57,12 @@ class HeaderTest extends TestCase
 
         $engine = $this->createEngine();
         $content = $engine->renderToString('Client/Header.latte', ['client' => $client, 'currentAction' => '']);
-        $document = $this->createDocument($content);
+        $xPath = $this->createXpath($content);
 
         $query = '//ul[contains(concat(" ", normalize-space(@class), " "), " navigation_details ")]/li';
-        $this->assertXpathMatches($document, $query . '/a[@href="/client/1/export"]');
-        $this->assertNotXpathMatches($document, $query . '/a[@href="/client/windows/?id=1"]');
-        $this->assertNotXpathMatches($document, $query . '/a[@href="/client/msoffice/?id=1"]');
-        $this->assertNotXpathMatches($document, $query . '/a[@href="/client/registry/?id=1"]');
+        $this->assertXpathMatches($xPath, $query . '/a[@href="/client/1/export"]');
+        $this->assertNotXpathMatches($xPath, $query . '/a[@href="/client/windows/?id=1"]');
+        $this->assertNotXpathMatches($xPath, $query . '/a[@href="/client/msoffice/?id=1"]');
+        $this->assertNotXpathMatches($xPath, $query . '/a[@href="/client/registry/?id=1"]');
     }
 }

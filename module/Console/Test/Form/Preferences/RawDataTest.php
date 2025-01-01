@@ -23,11 +23,13 @@
 namespace Console\Test\Form\Preferences;
 
 use Console\Test\AbstractFormTestCase;
+use Library\Test\DomMatcherTrait;
 use org\bovigo\vfs\vfsStream;
-use Laminas\Dom\Document\Query;
 
 class RawDataTest extends AbstractFormTestCase
 {
+    use DomMatcherTrait;
+
     public function testInit()
     {
         $preferences = $this->_form->get('Preferences');
@@ -103,21 +105,9 @@ class RawDataTest extends AbstractFormTestCase
         $view = $this->createView();
         $preferences = $this->_form->get('Preferences');
         $html = $this->_form->renderFieldset($view, $preferences);
-        $document = new \Laminas\Dom\Document($html);
-        $this->assertCount(2, Query::execute('//select[@name="saveFormat"]/option', $document));
-        $this->assertCount(
-            1,
-            Query::execute(
-                '//select[@name="saveFormat"]/option[@value="XML"][text()="XML, unkomprimiert"]',
-                $document
-            )
-        );
-        $this->assertCount(
-            1,
-            Query::execute(
-                '//select[@name="saveFormat"]/option[@value="OCS"][text()="XML, zlib-komprimiert"]',
-                $document
-            )
-        );
+        $xPath = $this->createXpath($html);
+        $this->assertXpathCount(2, $xPath, '//select[@name="saveFormat"]/option');
+        $this->assertXpathCount(1, $xPath, '//select[@name="saveFormat"]/option[@value="XML"][text()="XML, unkomprimiert"]');
+        $this->assertXpathCount(1, $xPath, '//select[@name="saveFormat"]/option[@value="OCS"][text()="XML, zlib-komprimiert"]');
     }
 }

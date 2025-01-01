@@ -23,8 +23,8 @@
 namespace Console\Test\Form;
 
 use Console\Test\AbstractFormTestCase;
-use Laminas\Dom\Document\Query as Query;
 use Laminas\Form\Element\Date;
+use Library\Test\DomMatcherTrait;
 use Model\Client\CustomFieldManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -33,6 +33,8 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class CustomFieldsTest extends AbstractFormTestCase
 {
+    use DomMatcherTrait;
+
     /**
      * CustomFields mock object
      * @var MockObject|CustomFieldManager
@@ -183,12 +185,12 @@ class CustomFieldsTest extends AbstractFormTestCase
     public function testRenderFieldset()
     {
         $html = $this->_form->renderFieldset($this->createView(), $this->_form);
-        $document = new \Laminas\Dom\Document($html);
-        $this->assertCount(3, Query::execute('//input[@type="text"]', $document));
-        $this->assertCount(1, Query::execute('//input[@type="date"]', $document));
-        $this->assertCount(1, Query::execute('//textarea', $document));
-        $this->assertCount(1, Query::execute('//input[@type="submit"]', $document));
+        $xPath = $this->createXpath($html);
+        $this->assertXpathCount(3, $xPath, '//input[@type="text"]');
+        $this->assertXpathCount(1, $xPath, '//input[@type="date"]');
+        $this->assertXpathCount(1, $xPath, '//textarea');
+        $this->assertXpathCount(1, $xPath, '//input[@type="submit"]');
         // Check for manual translation
-        $this->assertCount(1, Query::execute('//label/span[text()="Kategorie"]', $document));
+        $this->assertXpathCount(1, $xPath, '//label/span[text()="Kategorie"]');
     }
 }

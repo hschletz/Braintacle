@@ -24,9 +24,9 @@ namespace Console\Test\Form;
 
 use Console\Form\DefineFields;
 use Console\Test\AbstractFormTestCase;
-use Laminas\Dom\Document\Query as Query;
 use Laminas\Form\FieldsetInterface;
 use Laminas\Form\View\Helper\FormElementErrors;
+use Library\Test\DomMatcherTrait;
 use Model\Client\CustomFieldManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -35,6 +35,8 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class DefineFieldsTest extends AbstractFormTestCase
 {
+    use DomMatcherTrait;
+
     /**
      * CustomFieldManager mock object
      * @var MockObject|CustomFieldManager
@@ -340,64 +342,34 @@ class DefineFieldsTest extends AbstractFormTestCase
     {
         $view = $this->createView();
         $html = $this->_form->renderFieldset($view, $this->_form);
-        $document = new \Laminas\Dom\Document($html);
-        $this->assertCount(5, Query::execute('//select[@name="NewType"]/option', $document));
-        $this->assertCount(
-            1,
-            Query::execute('//select[@name="NewType"]/option[@value="text"][text()="Text"]', $document)
-        );
-        $this->assertCount(
-            1,
-            Query::execute('//select[@name="NewType"]/option[@value="clob"][text()="Langer Text"]', $document)
-        );
-        $this->assertCount(
-            1,
-            Query::execute('//select[@name="NewType"]/option[@value="integer"][text()="Ganzzahl"]', $document)
-        );
-        $this->assertCount(
-            1,
-            Query::execute('//select[@name="NewType"]/option[@value="float"][text()="Kommazahl"]', $document)
-        );
-        $this->assertCount(
-            1,
-            Query::execute('//select[@name="NewType"]/option[@value="date"][text()="Datum"]', $document)
-        );
+        $xPath = $this->createXpath($html);
+        $this->assertXpathCount(5, $xPath, '//select[@name="NewType"]/option');
+        $this->assertXpathCount(1, $xPath, '//select[@name="NewType"]/option[@value="text"][text()="Text"]');
+        $this->assertXpathCount(1, $xPath, '//select[@name="NewType"]/option[@value="clob"][text()="Langer Text"]');
+        $this->assertXpathCount(1, $xPath, '//select[@name="NewType"]/option[@value="integer"][text()="Ganzzahl"]');
+        $this->assertXpathCount(1, $xPath, '//select[@name="NewType"]/option[@value="float"][text()="Kommazahl"]');
+        $this->assertXpathCount(1, $xPath, '//select[@name="NewType"]/option[@value="date"][text()="Datum"]');
     }
 
     public function testRenderFieldsetNoMessages()
     {
         $html = $this->_form->renderFieldset($this->createView(), $this->_form);
-        $document = new \Laminas\Dom\Document(static::HTML_HEADER . $html);
-        $this->assertCount(1, Query::execute('//div[@class="table"]', $document));
-        $this->assertCount(
+        $xPath = $this->createXpath($html);
+        $this->assertXpathCount(1, $xPath, '//div[@class="table"]');
+        $this->assertXpathCount(1, $xPath, "//input[@name='name0']/following-sibling::span[1][text()='\nText\n']");
+        $this->assertXpathCount(1, $xPath, "//input[@name='name1']/following-sibling::span[1][text()='\nGanzzahl\n']");
+        $this->assertXpathCount(
             1,
-            Query::execute(
-                "//input[@name='name0']/following-sibling::span[1][text()='\nText\n']",
-                $document
-            )
+            $xPath,
+            '//input[@name="name0"]/following-sibling::span[2]/a[@href="/console/preferences/deletefield/?name=name0"][text()="Löschen"]',
         );
-        $this->assertCount(
-            1,
-            Query::execute(
-                "//input[@name='name1']/following-sibling::span[1][text()='\nGanzzahl\n']",
-                $document
-            )
-        );
-        $this->assertCount(
-            1,
-            Query::execute(
-                '//input[@name="name0"]/following-sibling::span[2]/a' .
-                    '[@href="/console/preferences/deletefield/?name=name0"][text()="Löschen"]',
-                $document
-            )
-        );
-        $this->assertCount(1, Query::execute('//input[@name="name1"]', $document));
-        $this->assertCount(1, Query::execute('//input[@name="NewName"]', $document));
-        $this->assertCount(1, Query::execute('//select[@name="NewType"]', $document));
-        $this->assertCount(2, Query::execute('//a', $document));
-        $this->assertCount(1, Query::execute('//input[@type="submit"]', $document));
-        $this->assertCount(0, Query::execute('//input[@class="input-error"]', $document));
-        $this->assertCount(0, Query::execute('//ul', $document));
+        $this->assertXpathCount(1, $xPath, '//input[@name="name1"]');
+        $this->assertXpathCount(1, $xPath, '//input[@name="NewName"]');
+        $this->assertXpathCount(1, $xPath, '//select[@name="NewType"]');
+        $this->assertXpathCount(2, $xPath, '//a');
+        $this->assertXpathCount(1, $xPath, '//input[@type="submit"]');
+        $this->assertXpathCount(0, $xPath, '//input[@class="input-error"]');
+        $this->assertXpathCount(0, $xPath, '//ul');
     }
 
     public function testRenderFieldsetMessages()
@@ -415,23 +387,11 @@ class DefineFieldsTest extends AbstractFormTestCase
         $view->getHelperPluginManager()->setService('formElementErrors', $formElementErrors);
 
         $html = $this->_form->renderFieldset($view, $this->_form);
-        $document = new \Laminas\Dom\Document($html);
-        $this->assertCount(
-            1,
-            Query::execute(
-                '//input[@name="name0"]/following::ul[1][@class="errorMock"]/li[text()="message_name0"]',
-                $document
-            )
-        );
-        $this->assertCount(
-            1,
-            Query::execute(
-                '//input[@name="NewName"]/following::ul[1][@class="errorMock"]/li[text()="message_add"]',
-                $document
-            )
-        );
-        $this->assertCount(2, Query::execute('//input[@class="input-error"]', $document));
-        $this->assertCount(2, Query::execute('//ul', $document));
+        $xPath = $this->createXpath($html);
+        $this->assertXpathCount(1, $xPath, '//input[@name="name0"]/following::ul[1][@class="errorMock"]/li[text()="message_name0"]');
+        $this->assertXpathCount(1, $xPath, '//input[@name="NewName"]/following::ul[1][@class="errorMock"]/li[text()="message_add"]');
+        $this->assertXpathCount(2, $xPath, '//input[@class="input-error"]');
+        $this->assertXpathCount(2, $xPath, '//ul');
     }
 
     public function testProcessRenameNoAdd()

@@ -4,7 +4,6 @@ namespace Console\Test\Inputfilter;
 
 use Console\Form\Package\AssignPackagesForm;
 use Console\Template\TemplateRenderer;
-use Laminas\Dom\Document;
 use Laminas\Session\Validator\Csrf;
 use Laminas\Validator\InArray;
 use Laminas\Validator\NotEmpty;
@@ -42,14 +41,6 @@ class AssignPackageFormTest extends TestCase
         $content = $renderer->render('Forms/AssignPackage.latte', $values);
 
         return $content;
-    }
-
-    private function renderToDocument(array $values): Document
-    {
-        $content = $this->renderToString($values);
-        $document = $this->createDocument($content);
-
-        return $document;
     }
 
     public function testProcessValid()
@@ -143,18 +134,18 @@ class AssignPackageFormTest extends TestCase
 
     public function testTemplateWithPackages()
     {
-        $document = $this->renderToDocument([
+        $xPath = $this->createXpath($this->renderToString([
             'action' => 'action',
             'csrfToken' => 'token',
             'packages' => ['package1', 'package2']
-        ]);
-        $this->assertXpathMatches($document, '//h2[text()="_Assign packages_"]');
-        $this->assertXpathMatches($document, '//form[@action="action"]');
-        $this->assertXpathMatches($document, '//form/input[@name="csrf"][@value="token"]');
-        $this->assertXpathMatches($document, '//form/div[@class="table"]');
-        $this->assertXpathMatches($document, '//label/input[@type="checkbox"][@name="packages[]"][@value="package1"]');
-        $this->assertXpathMatches($document, '//label/span[text()="package1"]');
-        $this->assertXpathMatches($document, '//label/input[@type="checkbox"][@name="packages[]"][@value="package2"]');
-        $this->assertXpathMatches($document, '//label/span[text()="package2"]');
+        ]));
+        $this->assertXpathMatches($xPath, '//h2[text()="_Assign packages_"]');
+        $this->assertXpathMatches($xPath, '//form[@action="action"]');
+        $this->assertXpathMatches($xPath, '//form/input[@name="csrf"][@value="token"]');
+        $this->assertXpathMatches($xPath, '//form/div[@class="table"]');
+        $this->assertXpathMatches($xPath, '//label/input[@type="checkbox"][@name="packages[]"][@value="package1"]');
+        $this->assertXpathMatches($xPath, '//label/span[text()="package1"]');
+        $this->assertXpathMatches($xPath, '//label/input[@type="checkbox"][@name="packages[]"][@value="package2"]');
+        $this->assertXpathMatches($xPath, '//label/span[text()="package2"]');
     }
 }

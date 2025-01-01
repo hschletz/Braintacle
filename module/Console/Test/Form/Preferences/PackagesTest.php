@@ -23,13 +23,15 @@
 namespace Console\Test\Form\Preferences;
 
 use Console\Test\AbstractFormTestCase;
-use Laminas\Dom\Document\Query;
+use Library\Test\DomMatcherTrait;
 
 /**
  * Tests for Packages form
  */
 class PackagesTest extends AbstractFormTestCase
 {
+    use DomMatcherTrait;
+
     /**
      * Dummy data for Deploy fieldset
      * @var array
@@ -173,12 +175,12 @@ class PackagesTest extends AbstractFormTestCase
     {
         $view = $this->createView();
         $html = $this->_form->render($view);
-        $document = new \Laminas\Dom\Document($html);
+        $xPath = $this->createXpath($html);
 
         // Custom rendering of Deploy fieldset - labels are appended instead of prepended
-        $this->assertCount(5, Query::execute('//fieldset//input[@type="checkbox"]/following-sibling::span', $document));
+        $this->assertXpathCount(5, $xPath, '//fieldset//input[@type="checkbox"]/following-sibling::span');
 
         // Assert that other elements are rendered
-        $this->assertCount(1, Query::execute('//select[@name="Preferences[defaultAction]"]', $document));
+        $this->assertXpathCount(1, $xPath, '//select[@name="Preferences[defaultAction]"]');
     }
 }
