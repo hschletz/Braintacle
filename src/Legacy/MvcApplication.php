@@ -20,6 +20,7 @@ use Nada\Database\AbstractDatabase;
 use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Slim\Exception\HttpNotFoundException;
 
@@ -49,6 +50,7 @@ class MvcApplication
         $serviceManager->setService(ContainerInterface::class, $serviceManager);
         $serviceManager->setService(Group::class, $this->container->get(Group::class));
         $serviceManager->setService(I18nTranslatorInterface::class, $this->container->get(I18nTranslator::class));
+        $serviceManager->setService(LoggerInterface::class, $this->container->get(LoggerInterface::class));
         $serviceManager->setService(PathForRouteFunction::class, $this->container->get(PathForRouteFunction::class));
         $serviceManager->setService(TranslatorInterface::class, $this->container->get(TranslatorInterface::class));
     }

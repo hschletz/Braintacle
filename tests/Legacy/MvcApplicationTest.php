@@ -36,6 +36,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 use ReflectionProperty;
 use RuntimeException;
 use Slim\Exception\HttpNotFoundException;
@@ -69,6 +70,7 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
             Client::class => $this->createStub(Client::class),
             ClockInterface::class => $this->createStub(ClockInterface::class),
             Group::class => $this->createStub(Group::class),
+            LoggerInterface::class => $this->createStub(LoggerInterface::class),
             PathForRouteFunction::class => $this->createStub(PathForRouteFunction::class),
             TranslatorInterface::class => $this->createStub(TranslatorInterface::class),
         ];
@@ -84,6 +86,7 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
         $this->assertSame($services[Client::class], $serviceManager->get(Client::class));
         $this->assertSame($services[ClockInterface::class], $serviceManager->get(ClockInterface::class));
         $this->assertSame($services[Group::class], $serviceManager->get(Group::class));
+        $this->assertSame($services[LoggerInterface::class], $serviceManager->get(LoggerInterface::class));
         $this->assertSame($services[PathForRouteFunction::class], $serviceManager->get(PathForRouteFunction::class));
         $this->assertSame($services[TranslatorInterface::class], $serviceManager->get(TranslatorInterface::class));
         $this->assertSame($serviceManager, $serviceManager->get(ContainerInterface::class));
