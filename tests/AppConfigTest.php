@@ -74,7 +74,7 @@ class AppConfigTest extends TestCase
         $appConfig = new AppConfig($filesystem, 'file');
 
         $this->expectException(UnhandledMatchError::class);
-        $appConfig->invalid;
+        $appConfig->invalid; // @phpstan-ignore property.notFound (intentionally invalid)
     }
 
     public function testParseError()

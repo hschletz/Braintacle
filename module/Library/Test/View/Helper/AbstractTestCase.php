@@ -51,7 +51,7 @@ abstract class AbstractTestCase extends TestCase
         parent::setUpBeforeClass();
 
         static::$serviceManager = Application::init('Console')->getServiceManager();
-        static::injectServices(static::$serviceManager);
+        self::injectServices(static::$serviceManager);
         static::$_helperManager = static::$serviceManager->get('ViewHelperManager');
     }
 

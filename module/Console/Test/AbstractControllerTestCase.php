@@ -54,7 +54,7 @@ abstract class AbstractControllerTestCase extends AbstractHttpControllerTestCase
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setService('Model\Operator\AuthenticationService', $auth);
         Application::addAbstractFactories($serviceManager);
-        static::injectServices($serviceManager);
+        self::injectServices($serviceManager);
 
         // Prevent the MVC application from applying a layout. Unlike in the
         // real application, the listener must not be attached to the

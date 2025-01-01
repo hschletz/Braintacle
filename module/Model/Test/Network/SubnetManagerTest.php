@@ -22,6 +22,7 @@
 
 namespace Model\Test\Network;
 
+use ArrayObject;
 use Database\Table\Subnets;
 use InvalidArgumentException;
 use Library\Validator\IpNetworkAddress;
@@ -48,6 +49,8 @@ class SubnetManagerTest extends AbstractTestCase
         $model = $this->getModel();
         $subnets = $model->getSubnets('CidrAddress', 'desc');
         $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $subnets);
+
+        /** @var ArrayObject[] */
         $subnets = iterator_to_array($subnets);
         $this->assertCount(4, $subnets);
         $this->assertContainsOnlyInstancesOf('Model\Network\Subnet', $subnets);
@@ -147,7 +150,7 @@ class SubnetManagerTest extends AbstractTestCase
             $values,
             array_column(
                 array_map(
-                    function ($object) {
+                    function (ArrayObject $object) {
                         $subnet = $object->getArrayCopy();
                         $subnet['CidrAddress'] = "$subnet[Address]/$subnet[Mask]";
                         return $subnet;
@@ -247,7 +250,7 @@ class SubnetManagerTest extends AbstractTestCase
             static::$serviceManager->get(Subnets::class),
             $validator
         );
-        $model->saveSubnet($address, $mask, $name, $dataSet);
+        $model->saveSubnet($address, $mask, $name);
         $this->assertTablesEqual(
             $this->loadDataSet($dataSet)->getTable('subnet'),
             $this->getConnection()->createQueryTable(

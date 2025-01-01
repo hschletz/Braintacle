@@ -87,6 +87,7 @@ namespace Model;
  * @property integer $sessionValidity  Maximum server session duration. Default: 3600
  * @property bool $setGroupPackageStatus  Set Client status for group-assigned packages. Default: true
  * @property bool $trustedNetworksOnly  Let server reject clients from untrusted networks. Default: false
+ * @property bool $validateXml  Validate XML data. Default: false
 
  * @property integer $contactInterval  Default hours between agent contacts. Default: 12
  * @property integer $downloadCycleDelay  Default delay in seconds between download cycles. Default: 60

@@ -51,7 +51,7 @@ class GroupManager
      * @param string $direction one of [asc|desc]. Default: asc
      * @return iterable<Group>|Countable
      */
-    public function getGroups($filter = null, $filterArg = null, $order = null, $direction = 'asc'): iterable
+    public function getGroups($filter = null, $filterArg = null, $order = null, $direction = 'asc')
     {
         /** @var GroupInfo */
         $groupInfo = $this->container->get('Database\Table\GroupInfo');

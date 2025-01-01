@@ -1,17 +1,31 @@
 parameters:
-    level: 1
+    level: 2
     paths:
         - development
         - module
         - public
         - src
         - tests
+    universalObjectCratesClasses:
+        - Laminas\View\Model\ViewModel
+        - Model\AbstractModel # ArrayObject with ARRAY_AS_PROPS
     ignoreErrors:
         -
-            # Undetectable magic methods for controller plugins
+            # Undetectable magic methods for controller plugins and incomplete Laminas interfaces
             identifier: method.notFound
-            path: module/Console/Controller/
+            path: module/
         -
             # False positives for $this in view scripts
             identifier: variable.undefined
             path: module/Console/views/
+        -
+            # Legacy type annotations for mock objects
+            identifier: varTag.nativeType
+            path: module/
+        -
+            # View helper translator methods
+            message: '#^Cannot call method (isTranslatorEnabled|setTranslator|setTranslatorEnabled)\(\) on \(callable\)\|Laminas\\View\\Helper\\HelperInterface\.$#'
+            path: module/
+        -
+            # https://github.com/mockery/mockery/issues/991
+            message: '#Call to an undefined method Mockery\\ExpectationInterface\|Mockery\\HigherOrderMessage::[a-zA-Z0-9_]+\(\)#'

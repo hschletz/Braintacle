@@ -86,7 +86,7 @@ abstract class AbstractTestCase extends \PHPUnit\DbUnit\TestCase
      */
     protected static function createServiceManager(): ServiceManager
     {
-        if (!isset(static::$serviceManagerConfig)) {
+        if (!isset(self::$serviceManagerConfig)) {
             $adapter = new Adapter(
                 json_decode(
                     getenv('BRAINTACLE_TEST_DATABASE'),
@@ -103,11 +103,11 @@ abstract class AbstractTestCase extends \PHPUnit\DbUnit\TestCase
                 new Logger(['writers' => [['name' => NoopWriter::class]]])
             );
 
-            static::$serviceManagerConfig = $config;
+            self::$serviceManagerConfig = $config;
         }
 
-        $serviceManager = new ServiceManager(static::$serviceManagerConfig);
-        $serviceManager->setService('config', static::$serviceManagerConfig);
+        $serviceManager = new ServiceManager(self::$serviceManagerConfig);
+        $serviceManager->setService('config', self::$serviceManagerConfig);
         $serviceManager->setService(ContainerInterface::class, $serviceManager);
 
         return $serviceManager;

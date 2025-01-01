@@ -43,7 +43,7 @@ class AuthenticationAdapterTest extends AbstractTestCase
     /**
      * Assert that authenticate() will yield result with given properties
      *
-     * @param Result result object to test
+     * @param Result $result object to test
      * @param integer $code Expected code
      * @param mixed $identity Expected identity
      * @param array $messages Expected messages

@@ -95,6 +95,8 @@ class GroupManagerTest extends AbstractGroupTestCase
 
         $resultSet = $model->getGroups($filter, $filterArg, $order, $direction);
         $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $resultSet);
+
+        /** @var Group[] */
         $groups = iterator_to_array($resultSet);
         $this->assertContainsOnlyInstancesOf('Model\Group\Group', $groups);
         $this->assertCount(count($expected), $groups);

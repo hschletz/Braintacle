@@ -54,7 +54,7 @@ class InventoryRequestTest extends \PHPUnit\Framework\TestCase
         $content->expects($this->once())->method('appendSections');
 
         $request = Mockery::mock(Element::class);
-        $request->shouldReceive('appendTextNode')->once()->with('DEVICEID', 'id_string', true);
+        $request->shouldReceive('appendTextNode')->once()->with('DEVICEID', 'id_string');
         $request->shouldReceive('appendTextNode')->once()->with('QUERY', 'INVENTORY');
         // prototype should have been cloned
         $request->shouldReceive('appendChild')->once()->withArgs(fn ($arg) => $arg instanceof Content && $arg !== $content);

@@ -54,8 +54,8 @@ class ClientsBiosTest extends AbstractHydratorTestCase
     {
         return [
             [
-                static::$extracted + ['IGNORED' => 'ignored'],
-                static::$hydrated
+                self::$extracted + ['IGNORED' => 'ignored'],
+                self::$hydrated
             ],
         ];
     }
@@ -91,7 +91,7 @@ class ClientsBiosTest extends AbstractHydratorTestCase
     public static function extractProvider()
     {
         return [
-            [static::$hydrated, static::$extracted],
+            [self::$hydrated, self::$extracted],
         ];
     }
 }

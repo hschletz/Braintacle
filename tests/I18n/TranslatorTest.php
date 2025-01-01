@@ -18,12 +18,12 @@ class TranslatorTest extends TestCase
     #[BeforeClass]
     public static function setI18nPath()
     {
-        static::$i18nPath = InstalledVersions::getRootPackage()['install_path'] . '/i18n';
+        self::$i18nPath = InstalledVersions::getRootPackage()['install_path'] . '/i18n';
     }
 
     public function testGetTranslations()
     {
-        $translator = new Translator('de', static::$i18nPath, $this->createStub(AppConfig::class));
+        $translator = new Translator('de', self::$i18nPath, $this->createStub(AppConfig::class));
         $translations = $translator->getTranslations();
 
         $this->assertEquals('Beschreibung', $translations['Description']); // extracted
@@ -33,7 +33,7 @@ class TranslatorTest extends TestCase
 
     public function testMissingLanguage()
     {
-        $translator = new Translator('missing', static::$i18nPath, $this->createStub(AppConfig::class));
+        $translator = new Translator('missing', self::$i18nPath, $this->createStub(AppConfig::class));
         $this->assertEquals([], $translator->getTranslations());
     }
 
@@ -57,13 +57,13 @@ class TranslatorTest extends TestCase
 
     public function testTranslateTranslated()
     {
-        $translator = new Translator('de', static::$i18nPath, $this->createStub(AppConfig::class));
+        $translator = new Translator('de', self::$i18nPath, $this->createStub(AppConfig::class));
         $this->assertEquals('Beschreibung', $translator->translate('Description'));
     }
 
     public function testTranslateLanguageNotAvailable()
     {
-        $translator = new Translator('en', static::$i18nPath, $this->createStub(AppConfig::class));
+        $translator = new Translator('en', self::$i18nPath, $this->createStub(AppConfig::class));
         $this->assertEquals('Description', $translator->translate('Description'));
     }
 
@@ -72,7 +72,7 @@ class TranslatorTest extends TestCase
         $appConfig = $this->createMock(AppConfig::class);
         $appConfig->expects($this->once())->method('__get')->with('debug')->willReturn([]);
 
-        $translator = new Translator('de', static::$i18nPath, $appConfig);
+        $translator = new Translator('de', self::$i18nPath, $appConfig);
         $this->assertEquals('_missing_', $translator->translate('_missing_'));
     }
 
@@ -84,13 +84,13 @@ class TranslatorTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Missing translation: _missing_');
 
-        $translator = new Translator('de', static::$i18nPath, $appConfig);
+        $translator = new Translator('de', self::$i18nPath, $appConfig);
         $this->assertEquals('_missing_', $translator->translate('_missing_'));
     }
 
     public function testTranslatePlural()
     {
-        $translator = new Translator('en', static::$i18nPath, $this->createStub(AppConfig::class));
+        $translator = new Translator('en', self::$i18nPath, $this->createStub(AppConfig::class));
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('translatePlural() is not implemented yet.');

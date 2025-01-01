@@ -52,7 +52,7 @@ class InventoryRequest extends Document
         // Root element
         $request = $this->createRoot('REQUEST');
         // Additional elements
-        $request->appendTextNode('DEVICEID', $client['IdString'], true);
+        $request->appendTextNode('DEVICEID', $client['IdString']);
         $request->appendTextNode('QUERY', 'INVENTORY');
         // Main inventory section
         $content = clone $this->contentPrototype;

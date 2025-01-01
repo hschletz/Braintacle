@@ -57,7 +57,7 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $content->shouldReceive('appendDownloadSection')->once();
         $content->shouldReceive('appendAllItemSections')->once();
 
-        $content->appendSections($this->createStub(Client::class));
+        $content->appendSections();
     }
 
     public static function appendSystemSectionProvider()

@@ -25,9 +25,6 @@ namespace Model\Test;
 use Braintacle\Database\DatabaseFactory;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Di\Container\ServiceManager\AutowireFactory;
-use Laminas\Log\Logger;
-use Laminas\Log\PsrLoggerAdapter;
-use Laminas\Log\Writer\Noop as NoopWriter;
 use Laminas\ServiceManager\ServiceManager;
 use Library\Application;
 use Nada\Database\AbstractDatabase;
@@ -37,6 +34,7 @@ use PHPUnit\DbUnit\TestCase;
 use PHPUnit\Framework\Attributes\Before;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Base class for model tests
@@ -66,7 +64,7 @@ abstract class AbstractTestCase extends TestCase
     {
         parent::setUpBeforeClass();
 
-        static::$adapter = new Adapter(
+        self::$adapter = new Adapter(
             json_decode(
                 getenv('BRAINTACLE_TEST_DATABASE'),
                 true
@@ -76,13 +74,11 @@ abstract class AbstractTestCase extends TestCase
         // Extend module-generated service manager config with required entries.
         $config = Application::init('Model')->getServiceManager()->get('config')['service_manager'];
         $config['abstract_factories'][] = AutowireFactory::class;
-        $config['services'][AbstractDatabase::class] = (new DatabaseFactory(new Factory(), static::$adapter))();
-        $config['services'][Adapter::class] = static::$adapter;
-        $config['services'][LoggerInterface::class] = new PsrLoggerAdapter(
-            new Logger(['writers' => [['name' => NoopWriter::class]]])
-        );
+        $config['services'][AbstractDatabase::class] = (new DatabaseFactory(new Factory(), self::$adapter))();
+        $config['services'][Adapter::class] = self::$adapter;
+        $config['services'][LoggerInterface::class] = new NullLogger();
         // Store config for creation of temporary service manager instances.
-        static::$serviceManagerConfig = $config;
+        self::$serviceManagerConfig = $config;
 
         // Create necessary tables.
         $serviceManager = static::createServiceManager();
@@ -108,8 +104,8 @@ abstract class AbstractTestCase extends TestCase
      */
     protected static function createServiceManager(): ServiceManager
     {
-        $serviceManager = new ServiceManager(static::$serviceManagerConfig);
-        $serviceManager->setService('config', static::$serviceManagerConfig);
+        $serviceManager = new ServiceManager(self::$serviceManagerConfig);
+        $serviceManager->setService('config', self::$serviceManagerConfig);
         $serviceManager->setService(ContainerInterface::class, $serviceManager);
 
         return $serviceManager;
@@ -121,7 +117,7 @@ abstract class AbstractTestCase extends TestCase
     public function getConnection(): Connection
     {
         if (!isset($this->_db)) {
-            $pdo = static::$adapter->getDriver()->getConnection()->getResource();
+            $pdo = self::$adapter->getDriver()->getConnection()->getResource();
             $this->_db = $this->createDefaultDBConnection($pdo, ':memory:');
         }
         return $this->_db;
@@ -177,7 +173,7 @@ abstract class AbstractTestCase extends TestCase
         $falseValue,
         $trueValue
     ) {
-        switch (static::$adapter->getPlatform()->getName()) {
+        switch (self::$adapter->getPlatform()->getName()) {
             case 'MySQL':
                 $falseReplacement = 0;
                 $trueReplacement = 1;

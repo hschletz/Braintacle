@@ -86,5 +86,7 @@ class GroupInfo extends \Database\AbstractTable
         );
 
         parent::initialize();
+
+        return; // satisfy parent return type declaration
     }
 }

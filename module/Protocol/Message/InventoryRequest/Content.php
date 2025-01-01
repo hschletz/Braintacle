@@ -204,10 +204,10 @@ class Content extends Element
      */
     public function appendItemSections(string $itemType, string $section): void
     {
+        /** @var iterable<object> */
         $items = $this->client->getItems($itemType, 'id', 'asc');
         $table = $this->container->get(ItemManager::class)->getTableName($itemType);
         $hydrator = $this->getHydrator($table);
-        /** @var object */
         foreach ($items as $item) {
             $this->appendSection($section, $hydrator->extract($item));
         }

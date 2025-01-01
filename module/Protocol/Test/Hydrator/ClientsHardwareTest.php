@@ -26,7 +26,6 @@ use AssertionError;
 use DateTime;
 use Model\Client\Client;
 use Model\Client\WindowsInstallation;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -34,9 +33,8 @@ class ClientsHardwareTest extends TestCase
 {
     /**
      * WindowsInstallation prototype injected into hydrator
-     * @param Model\Client\WindowsInstallation
      */
-    protected $_windowsInstallation;
+    private WindowsInstallation $_windowsInstallation;
 
     public function setUp(): void
     {
@@ -123,7 +121,6 @@ class ClientsHardwareTest extends TestCase
     {
         if (isset($objectData['windows'])) {
             // Set up prototype with new mock object to validate hydrated data.
-            /** @var MockObject|WindowsInstallation */
             $this->_windowsInstallation = $this->createMock(WindowsInstallation::class);
             $this->_windowsInstallation->expects($this->once())->method('exchangeArray')->with($objectData['windows']);
         }

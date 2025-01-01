@@ -49,79 +49,65 @@ class MacAddressTest extends \PHPUnit\Framework\TestCase
 
         $expected = [
             [
-                'address' => '5e005300',
-                'mask' => 'ffffffffffff',
+                'address' => 0x5e005300,
+                'mask' => 0xffffffffffff,
                 'vendor' => 'short1',
             ],
             [
-                'address' => '5e005301',
-                'mask' => 'ffffffffffff',
+                'address' => 0x5e005301,
+                'mask' => 0xffffffffffff,
                 'vendor' => 'long2',
             ],
             [
-                'address' => '5e005302',
-                'mask' => 'ffffffffffff',
+                'address' => 0x5e005302,
+                'mask' => 0xffffffffffff,
                 'vendor' => 'long3 ',
             ],
             [
-                'address' => '5e005303',
-                'mask' => 'ffffffffffff',
+                'address' => 0x5e005303,
+                'mask' => 0xffffffffffff,
                 'vendor' => 'long4 ',
             ],
             [
-                'address' => '10200000000',
-                'mask' => 'ffff00000000',
+                'address' => 0x10200000000,
+                'mask' => 0xffff00000000,
                 'vendor' => 'short5',
             ],
             [
-                'address' => '102abcd0000',
-                'mask' => 'ffffffff0000',
+                'address' => 0x102abcd0000,
+                'mask' => 0xffffffff0000,
                 'vendor' => 'short6',
             ],
             [
-                'address' => '123456000000',
-                'mask' => 'ffffff000000',
+                'address' => 0x123456000000,
+                'mask' => 0xffffff000000,
                 'vendor' => 'short7',
             ],
             [
-                'address' => 'abcdef000000',
-                'mask' => 'ffffff000000',
+                'address' => 0xabcdef000000,
+                'mask' => 0xffffff000000,
                 'vendor' => 'short8',
             ],
             [
-                'address' => 'deadbeef0000',
-                'mask' => 'ffffffffff00',
+                'address' => 0xdeadbeef0000,
+                'mask' => 0xffffffffff00,
                 'vendor' => 'short9',
             ],
             [
-                'address' => '123400000000',
-                'mask' => 'ffff80000000',
+                'address' => 0x123400000000,
+                'mask' => 0xffff80000000,
                 'vendor' => 'short10',
             ],
             [
-                'address' => '5e000000',
-                'mask' => 'ffffff000000',
+                'address' => 0x5e000000,
+                'mask' => 0xffffff000000,
                 'vendor' => 'long11',
             ],
         ];
 
         MacAddress::loadVendorDatabase($input);
 
-        // Builtin assertions don't work with GMP objects. Iterate and compare manually.
-        $vendorList = MacAddress::getVendorDatabase();
-        $this->assertCount(count($expected), $vendorList);
-        foreach ($vendorList as $key => $entry) {
-            $expectedEntry = $expected[$key];
-            $this->assertCount(count($expectedEntry), $entry);
-            if (PHP_INT_SIZE < 8) {
-                $this->assertEquals($expectedEntry['address'], gmp_strval($entry['address'], 16));
-                $this->assertEquals($expectedEntry['mask'], gmp_strval($entry['mask'], 16));
-            } else {
-                $this->assertEquals(hexdec($expectedEntry['address']), $entry['address']);
-                $this->assertEquals(hexdec($expectedEntry['mask']), $entry['mask']);
-            }
-            $this->assertEquals($expectedEntry['vendor'], $entry['vendor']);
-        }
+        $this->assertEquals($expected, MacAddress::getVendorDatabase());
     }
 
     public function testLoadVendorDatabaseFromFile()

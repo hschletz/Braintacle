@@ -170,26 +170,12 @@ class MacAddress
             );
         }
 
-        // Convert raw data to platform-specific values. Use native 64 bit
-        // integers if available, GMP objects otherwise (requires GMP
-        // extension).
-        // The mask length is converted to a bitmask.
-        // @codeCoverageIgnoreStart
-        if (PHP_INT_SIZE < 8) {
-            if (!extension_loaded('gmp')) {
-                throw new \ErrorException('64 bit integers not available, install GMP extension');
-            }
-            foreach (self::$_vendorList as &$entry) {
-                $entry['address'] = gmp_init($entry['address'], 16);
-                $entry['mask'] = ((gmp_init(1) << $entry['mask']) - 1) << (self::LENGTH_BITS - $entry['mask']);
-            }
-        } else {
-            foreach (self::$_vendorList as &$entry) {
-                $entry['address'] = hexdec($entry['address']);
-                $entry['mask'] = ((1 << $entry['mask']) - 1) << (self::LENGTH_BITS - $entry['mask']);
-            }
+        // Convert mask length to bitmask.
+        assert(PHP_INT_SIZE >= 8);
+        foreach (self::$_vendorList as &$entry) {
+            $entry['address'] = hexdec($entry['address']);
+            $entry['mask'] = ((1 << $entry['mask']) - 1) << (self::LENGTH_BITS - $entry['mask']);
         }
-        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -210,13 +196,8 @@ class MacAddress
         }
         $addr = str_replace(':', '', $this->_address);
 
-        // @codeCoverageIgnoreStart
-        if (PHP_INT_SIZE < 8) {
-            $addr = gmp_init($addr, 16);
-        } else {
-            $addr = hexdec($addr);
-        }
-        // @codeCoverageIgnoreEnd
+        assert(PHP_INT_SIZE >= 8);
+        $addr = hexdec($addr);
 
         $longest = 0;
         $vendor = null;

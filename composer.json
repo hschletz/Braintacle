@@ -20,7 +20,7 @@
         }
     },
     "require": {
-        "php": "^8.2 || ^8.3",
+        "php-64bit": "^8.2 || ^8.3",
         "ext-dom": "*",
         "ext-intl": "*",
         "ext-zip": "*",
@@ -79,8 +79,7 @@
         "symfony/process": "^6.4"
     },
     "suggest": {
-        "ext-zlib": "Required for 'braintacle-tool.php decode'",
-        "ext-gmp": "Required for PHP installations without 64 bit integer support"
+        "ext-zlib": "Required for 'braintacle-tool.php decode'"
     },
     "bin": [
         "braintacle-tool.php"

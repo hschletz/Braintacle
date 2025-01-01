@@ -247,7 +247,7 @@ class DuplicatesManagerTest extends AbstractTestCase
         $model->expects($this->never())->method('mergePackages');
         $model->expects($this->never())->method('mergeProductKey');
 
-        $model->merge($clientIds, static::$allOptions);
+        $model->merge($clientIds, self::$allOptions);
     }
 
     public function testMergeLockingError()
@@ -289,7 +289,7 @@ class DuplicatesManagerTest extends AbstractTestCase
         $model->expects($this->never())->method('mergePackages');
         $model->expects($this->never())->method('mergeProductKey');
 
-        $model->merge([2, 3], static::$allOptions);
+        $model->merge([2, 3], self::$allOptions);
     }
 
     public function testMergeThrowsOnIdenticalTimestamps()
@@ -346,7 +346,7 @@ class DuplicatesManagerTest extends AbstractTestCase
         $duplicatesManager->expects($this->never())->method('mergePackages');
         $duplicatesManager->expects($this->never())->method('mergeProductKey');
 
-        $duplicatesManager->merge([1, 2], static::$allOptions);
+        $duplicatesManager->merge([1, 2], self::$allOptions);
     }
 
     public static function mergeWithoutMergingAttributesProvider()
@@ -429,7 +429,7 @@ class DuplicatesManagerTest extends AbstractTestCase
             [[\Model\Client\DuplicatesManager::MERGE_GROUPS]],
             [[\Model\Client\DuplicatesManager::MERGE_PACKAGES]],
             [[\Model\Client\DuplicatesManager::MERGE_PRODUCT_KEY]],
-            [static::$allOptions]
+            [self::$allOptions]
         ];
     }
 
@@ -479,7 +479,7 @@ class DuplicatesManagerTest extends AbstractTestCase
             ]
         )->makePartial();
 
-        foreach (static::$allOptions as $option) {
+        foreach (self::$allOptions as $option) {
             if (in_array($option, $options)) {
                 $model->shouldReceive($option)->once()->with($client3, [$client1, $client2]);
             } else {

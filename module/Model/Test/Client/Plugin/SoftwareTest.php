@@ -54,7 +54,7 @@ class SoftwareTest extends \PHPUnit\Framework\TestCase
         $table = $this->createStub(AbstractTable::class);
         $table->method('getSql')->willReturn($sql);
 
-        /** @var MockObject$Software */
+        /** @var MockObject|Software */
         $model = $this->getMockBuilder(Software::class)
             ->setConstructorArgs([$table])
             ->onlyMethods(['getIsAndroidExpression'])

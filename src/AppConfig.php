@@ -21,8 +21,8 @@ use Symfony\Component\Filesystem\Filesystem;
  *      'hostname': ?string,
  *      'port': ?int,
  * }
- * @property-read DebugOptions debug
- * @property-read DatabaseOptions database
+ * @property-read DebugOptions $debug
+ * @property-read DatabaseOptions $database
  */
 class AppConfig
 {

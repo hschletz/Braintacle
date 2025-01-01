@@ -340,6 +340,7 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
         $vars = $this->getOrder('name');
         $vars['client'] = $this->_currentClient;
 
+        /** @var iterable<Software> */
         $items = $this->_currentClient->getItems(
             'Software',
             $vars['order'],
@@ -348,7 +349,6 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
         );
         // Compact list by suppressing duplicate entries, adding the number of instances for each entry.
         $list = [];
-        /** @var Software */
         foreach ($items as $item) {
             $key = json_encode($item);
             if (isset($list[$key])) {

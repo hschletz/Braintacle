@@ -26,9 +26,9 @@ Requirements
 - [Apache httpd](http://httpd.apache.org) with [mod_perl](https://perl.apache.org) and a database-specific DBD module for the
   main server component.
 
-- A web server with [PHP](https://php.net) 8.2 or later for the administration
-  console. PHP is also required for most of the command line tools. The following
-  PHP extensions are required:
+- A web server with 64-bit [PHP](https://php.net) 8.2 or later for the
+  administration console. PHP is also required for most of the command line
+  tools. The following PHP extensions are required:
 
   - A database-specific PHP extension, see
     https://docs.laminas.dev/laminas-db/adapter/#creating-an-adapter-using-configuration
@@ -39,8 +39,6 @@ Requirements
 
   - The "zip" extension is optional. If present, the package builder can create ZIP
     archives on the fly.
-
-  - The "gmp" extension is required on 32 bit PHP installations only.
 
 - [Composer](https://getcomposer.org/)
 
