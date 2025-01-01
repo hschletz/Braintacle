@@ -25,9 +25,6 @@ namespace Database\Test\Table;
 use Braintacle\Database\DatabaseFactory;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Di\Container\ServiceManager\AutowireFactory;
-use Laminas\Log\Logger;
-use Laminas\Log\PsrLoggerAdapter;
-use Laminas\Log\Writer\Noop as NoopWriter;
 use Laminas\ServiceManager\ServiceManager;
 use Library\Application;
 use Nada\Database\AbstractDatabase;
@@ -36,6 +33,7 @@ use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\Framework\Attributes\Before;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Base class for table interface tests
@@ -99,9 +97,7 @@ abstract class AbstractTestCase extends \PHPUnit\DbUnit\TestCase
             $config['abstract_factories'][] = AutowireFactory::class;
             $config['services'][AbstractDatabase::class] = (new DatabaseFactory(new Factory(), $adapter))();
             $config['services'][Adapter::class] = $adapter;
-            $config['services'][LoggerInterface::class] = new PsrLoggerAdapter(
-                new Logger(['writers' => [['name' => NoopWriter::class]]])
-            );
+            $config['services'][LoggerInterface::class] = new NullLogger();
 
             self::$serviceManagerConfig = $config;
         }

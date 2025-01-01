@@ -63,9 +63,6 @@ class Module implements Feature\ConfigProviderInterface
                 'factories' => [
                     ConfigInterface::class => ConfigFactory::class,
                     InjectorInterface::class => InjectorFactory::class,
-                    'Library\Log\Writer\StdErr' => function () {
-                        return new \Laminas\Log\Writer\Stream('php://stderr');
-                    },
                 ],
             ),
             'validators' => array(

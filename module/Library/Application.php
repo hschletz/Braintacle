@@ -57,6 +57,8 @@ class Application
      *
      * This method must be called after the service manager has been completely
      * configured.
+     *
+     * @codeCoverageIgnore
      */
     public static function addAbstractFactories(ServiceManager $serviceManager)
     {
@@ -80,7 +82,6 @@ class Application
                 'Laminas\Filter',
                 'Laminas\Form',
                 'Laminas\I18n',
-                'Laminas\Log',
                 'Laminas\Mvc\I18n',
                 'Laminas\Mvc\Plugin\FlashMessenger',
                 'Laminas\Router',

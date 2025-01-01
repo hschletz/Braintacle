@@ -23,13 +23,10 @@
 namespace Tools\Controller;
 
 use Database\SchemaManager;
-use Laminas\Log\Filter\Priority as PriorityFilter;
-use Laminas\Log\Formatter\Simple as SimpleFormatter;
-use Laminas\Log\Logger;
-use Laminas\Log\PsrLoggerAdapter;
-use Laminas\Log\Writer\WriterInterface;
-use Library\Filter\LogLevel as LogLevelFilter;
 use Library\Validator\LogLevel as LogLevelValidator;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -43,7 +40,6 @@ class Database implements ControllerInterface
     public function __construct(
         private SchemaManager $schemaManager,
         private LoggerInterface $logger,
-        private LogLevelFilter $loglevelFilter,
         private LogLevelValidator $loglevelValidator
     ) {
     }
@@ -60,20 +56,10 @@ class Database implements ControllerInterface
         }
 
         // Assume logger as set up during container initialization.
-        assert($this->logger instanceof PsrLoggerAdapter);
-        $logger = $this->logger->getLogger();
-        assert($logger instanceof Logger);
-        $loglevel = $this->loglevelFilter->filter($loglevel);
-
-        // Clone the writers queue because it's an SplPriorityQueue which will
-        // be emptied upon iteration. Cloning is shallow; the writer objects
-        // will be the same instances, and the modifications will apply to the
-        // original queue.
-        /** @var WriterInterface $writer */
-        foreach (clone $logger->getWriters() as $writer) {
-            $writer->addFilter(new PriorityFilter($loglevel));
-            $writer->setFormatter(new SimpleFormatter('%priorityName%: %message%'));
-        }
+        assert($this->logger instanceof Logger);
+        $handler = new StreamHandler('php://stderr', $loglevel);
+        $handler->setFormatter(new LineFormatter("[%level_name%] %message%\n"));
+        $this->logger->pushHandler($handler);
 
         $this->schemaManager->updateAll($prune);
 

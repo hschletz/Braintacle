@@ -23,15 +23,10 @@
 namespace Tools\Test\Controller;
 
 use Database\SchemaManager;
-use Laminas\Log\Filter\FilterInterface;
-use Laminas\Log\Filter\Priority as PriorityFilter;
-use Laminas\Log\Formatter\FormatterInterface;
-use Laminas\Log\Formatter\Simple as SimpleFormatter;
-use Laminas\Log\Logger;
-use Laminas\Log\PsrLoggerAdapter;
-use Laminas\Log\Writer\WriterInterface;
-use Library\Filter\LogLevel as LogLevelFilter;
 use Library\Validator\LogLevel as LogLevelValidator;
+use Monolog\Handler\StreamHandler;
+use Monolog\Level;
+use Monolog\Logger;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -45,7 +40,7 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     {
         $input = $this->createStub(InputInterface::class);
         $input->method('getOption')->willReturnMap([
-            ['loglevel', 'log_level_input'],
+            ['loglevel', 'emergency'],
             ['prune', 'do_prune'],
         ]);
 
@@ -53,42 +48,21 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
 
         /** @var LogLevelValidator|MockObject */
         $validator = $this->createMock(LogLevelValidator::class);
-        $validator->method('isValid')->with('log_level_input')->willReturn(true);
+        $validator->method('isValid')->with('emergency')->willReturn(true);
 
-        /** @var LogLevelFilter|MockObject */
-        $filter = $this->createMock(LogLevelFilter::class);
-        $filter->method('filter')->with('log_level_input')->willReturn(Logger::EMERG);
-
-        /** @var WriterInterface|MockObject */
-        $writer = $this->createMock(WriterInterface::class);
-        $writer->expects($this->once())->method('addFilter')->with(
-            $this->callback(function (FilterInterface $filter) {
-                $this->assertInstanceOf(PriorityFilter::class, $filter);
-                $this->assertTrue($filter->filter(['priority' => Logger::EMERG]));
-                $this->assertFalse($filter->filter(['priority' => Logger::ALERT]));
+        $logger = $this->createMock(Logger::class);
+        $logger->expects($this->once())->method('pushHandler')->with($this->callback(
+            function (StreamHandler $handler): bool {
+                $this->assertEquals('php://stderr', $handler->getUrl());
+                $this->assertEquals(Level::Emergency, $handler->getLevel());
                 return true;
-            })
-        );
-        $writer->expects($this->once())->method('setFormatter')->with(
-            $this->callback(function (FormatterInterface $formatter) {
-                $this->assertInstanceOf(SimpleFormatter::class, $formatter);
-                $this->assertEquals('PRI: Message', $formatter->format([
-                    'priorityName' => 'PRI',
-                    'message' => 'Message',
-                ]));
-                return true;
-            })
-        );
+            }
+        ));
 
-        $logger = new Logger();
-        $logger->addWriter($writer);
-        $psrLogger = new PsrLoggerAdapter($logger);
-
-        /** @var SchemaManager|MockObject */
         $schemaManager = $this->createMock(SchemaManager::class);
         $schemaManager->expects($this->once())->method('updateAll')->with('do_prune');
 
-        $controller = new \Tools\Controller\Database($schemaManager, $psrLogger, $filter, $validator);
+        $controller = new DatabaseController($schemaManager, $logger, $validator);
         $this->assertSame(Command::SUCCESS, $controller($input, $output));
     }
 
@@ -108,17 +82,13 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         $validator->method('isValid')->with('log_level_input')->willReturn(false);
         $validator->method('getMessages')->willReturn([LogLevelValidator::LOG_LEVEL => 'error message']);
 
-        /** @var LogLevelFilter|MockObject */
-        $filter = $this->createMock(LogLevelFilter::class);
-        $filter->expects($this->never())->method('filter');
-
         $logger = $this->createStub(LoggerInterface::class);
 
         /** @var SchemaManager|MockObject */
         $schemaManager = $this->createMock(SchemaManager::class);
         $schemaManager->expects($this->never())->method('updateAll');
 
-        $controller = new DatabaseController($schemaManager, $logger, $filter, $validator);
+        $controller = new DatabaseController($schemaManager, $logger, $validator);
         $this->assertSame(Command::FAILURE, $controller($input, $output));
     }
 }

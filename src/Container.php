@@ -6,7 +6,6 @@ use Braintacle\Database\AdapterFactory;
 use Braintacle\Database\DatabaseFactory;
 use Braintacle\I18n\Translator;
 use Braintacle\Legacy\ClientOrGroupFactory;
-use Braintacle\Logger\LoggerFactory;
 use Composer\InstalledVersions;
 use Console\Template\TemplateLoader;
 use DI\Container as DIContainer;
@@ -22,6 +21,7 @@ use Model\Group\Group;
 use Model\Operator\AuthenticationService;
 use Model\Package\Storage\Direct as DirectStorage;
 use Model\Package\Storage\StorageInterface;
+use Monolog\Logger;
 use Nada\Database\AbstractDatabase;
 use Nyholm\Psr7\Response;
 use Psr\Clock\ClockInterface;
@@ -51,7 +51,7 @@ class Container extends DIContainer
             ClockInterface::class => get(Clock::class),
             Csrf::class => create(Csrf::class)->constructor(['timeout' => null]),
             Group::class => factory(ClientOrGroupFactory::class),
-            LoggerInterface::class => factory(LoggerFactory::class),
+            LoggerInterface::class => create(Logger::class)->constructor('Braintacle'),
             MvcApplication::class => factory(Application::init(...))->parameter('module', 'Console'),
             ResponseInterface::class => get(Response::class),
             StorageInterface::class => get(DirectStorage::class),
