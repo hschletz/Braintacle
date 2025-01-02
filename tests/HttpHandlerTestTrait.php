@@ -12,7 +12,7 @@ use Console\Template\Functions\TranslateFunction;
 use Console\Template\TemplateLoader;
 use DI\Container;
 use DOMXPath;
-use Formotron\FormProcessor;
+use Formotron\DataProcessor;
 use Latte\Engine;
 use Masterminds\HTML5;
 use Nyholm\Psr7\Response;
@@ -42,16 +42,16 @@ trait HttpHandlerTestTrait
     }
 
     /**
-     * Create FormProcessor with the CsrfProcessor stupped out.
+     * Create DataProcessor with the CsrfProcessor stubbed out.
      */
-    private function createFormProcessor(): FormProcessor
+    private function createDataProcessor(): DataProcessor
     {
         $csrfProcessor = $this->createStub(CsrfProcessor::class);
         $csrfProcessor->method('process')->willReturnArgument(0);
         $container = new Container([CsrfProcessor::class => $csrfProcessor]);
-        $formProcessor = $container->get(FormProcessor::class);
+        $dataProcessor = $container->get(DataProcessor::class);
 
-        return $formProcessor;
+        return $dataProcessor;
     }
 
     private function createTemplateEngine(array $templateFunctions = []): TemplateEngine

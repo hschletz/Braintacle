@@ -32,7 +32,10 @@ class ExportHandlerTest extends \PHPUnit\Framework\TestCase
 
         $clientManager = $this->createStub(ClientManager::class);
 
-        /** @var Mock|ExportHandler */
+        /**
+         * @var Mock|ExportHandler
+         * @psalm-suppress InvalidArgument (Mockery bug)
+         */
         $handler = Mockery::mock(ExportHandler::class, [$this->response, $config, $clientManager])->makePartial();
         $handler->shouldReceive('getClient')->once()->with($this->request)->andReturn($client);
 
@@ -61,7 +64,10 @@ class ExportHandlerTest extends \PHPUnit\Framework\TestCase
 
         $clientManager = $this->createStub(ClientManager::class);
 
-        /** @var Mock|ExportHandler */
+        /**
+         * @var Mock|ExportHandler
+         * @psalm-suppress InvalidArgument (Mockery bug)
+         */
         $handler = Mockery::mock(ExportHandler::class, [$this->response, $config, $clientManager])->makePartial();
         $handler->shouldReceive('getClient')->once()->with($this->request)->andReturn($client);
         $handler->handle($this->request);
@@ -81,7 +87,10 @@ class ExportHandlerTest extends \PHPUnit\Framework\TestCase
 
         $clientManager = $this->createStub(ClientManager::class);
 
-        /** @var Mock|ExportHandler */
+        /**
+         * @var Mock|ExportHandler
+         * @psalm-suppress InvalidArgument (Mockery bug)
+         */
         $handler = Mockery::mock(ExportHandler::class, [$this->response, $config, $clientManager])->makePartial();
         $handler->shouldReceive('getClient')->once()->with($this->request)->andReturn($client);
         $handler->handle($this->request);

@@ -2,7 +2,7 @@
 
 namespace Braintacle\Software;
 
-use Formotron\FormProcessor;
+use Formotron\DataProcessor;
 use Model\SoftwareManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -15,7 +15,7 @@ class SoftwareManagementHandler implements RequestHandlerInterface
 {
     public function __construct(
         private ResponseInterface $response,
-        private FormProcessor $formProcessor,
+        private DataProcessor $dataProcessor,
         private SoftwareManager $softwareManager,
     ) {
     }
@@ -24,7 +24,7 @@ class SoftwareManagementHandler implements RequestHandlerInterface
     {
         $postData = $request->getParsedBody();
 
-        $formData = $this->formProcessor->process($postData, SoftwareFormData::class);
+        $formData = $this->dataProcessor->process($postData, SoftwareFormData::class);
         $action = match ($formData->action) {
             Action::Accept => true,
             Action::Ignore => false,

@@ -14,7 +14,7 @@ class SoftwareFormDataTest extends TestCase
 
     public function testDefaultSoftware()
     {
-        $formData = $this->processFormData(
+        $formData = $this->processData(
             ['action' => 'accept'],
             SoftwareFormData::class
         );
@@ -23,7 +23,7 @@ class SoftwareFormDataTest extends TestCase
 
     public function testExplicitSoftware()
     {
-        $formData = $this->processFormData(
+        $formData = $this->processData(
             [
                 'action' => 'accept',
                 'software' => ['software1', 'software2'],
@@ -56,7 +56,7 @@ class SoftwareFormDataTest extends TestCase
 
     public function testAcceptAction()
     {
-        $formData = $this->processFormData(
+        $formData = $this->processData(
             ['action' => 'accept'],
             SoftwareFormData::class
         );
@@ -65,7 +65,7 @@ class SoftwareFormDataTest extends TestCase
 
     public function testIgnoreAction()
     {
-        $formData = $this->processFormData(
+        $formData = $this->processData(
             ['action' => 'ignore'],
             SoftwareFormData::class
         );

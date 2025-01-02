@@ -4,19 +4,19 @@ namespace Braintacle\Test;
 
 use DI\Container;
 use Formotron\AssertionFailedException;
-use Formotron\FormProcessor;
+use Formotron\DataProcessor;
 
 /**
  * Helpers for testing Formotron data objects.
  */
-trait FormProcessorTestTrait
+trait DataProcessorTestTrait
 {
-    protected function createFormProcessor(array $services = []): FormProcessor
+    protected function createDataProcessor(array $services = []): DataProcessor
     {
         $container = new Container($services);
-        $formProcessor = $container->get(FormProcessor::class);
+        $dataProcessor = $container->get(DataProcessor::class);
 
-        return $formProcessor;
+        return $dataProcessor;
     }
 
     /**
@@ -24,14 +24,14 @@ trait FormProcessorTestTrait
      * @param class-string<T> $className
      * @return T
      */
-    protected function processFormData(array $input, string $className, array $services = []): object
+    protected function processData(array $input, string $className, array $services = []): object
     {
-        return $this->createFormProcessor($services)->process($input, $className);
+        return $this->createDataProcessor($services)->process($input, $className);
     }
 
     protected function assertInvalidFormData(array $input, string $className, array $services = []): void
     {
         $this->expectException(AssertionFailedException::class);
-        $this->processFormData($input, $className, $services);
+        $this->processData($input, $className, $services);
     }
 }

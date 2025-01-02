@@ -7,7 +7,7 @@ use Braintacle\Group\Packages\AssignPackagesHandler;
 use Braintacle\Http\RouteHelper;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Console\Form\Package\AssignPackagesForm;
-use Formotron\FormProcessor;
+use Formotron\DataProcessor;
 use Model\Group\Group;
 use PHPUnit\Framework\TestCase;
 
@@ -26,8 +26,8 @@ class AssignPackagesHandlerTest extends TestCase
         $groupRequestParameters = new GroupRequestParameters();
         $groupRequestParameters->group = $group;
 
-        $formProcessor = $this->createMock(FormProcessor::class);
-        $formProcessor
+        $dataProcessor = $this->createMock(DataProcessor::class);
+        $dataProcessor
             ->method('process')
             ->with($queryParams, GroupRequestParameters::class)
             ->willReturn($groupRequestParameters);
@@ -41,7 +41,7 @@ class AssignPackagesHandlerTest extends TestCase
             ->with('showGroupPackages', [], ['name' => 'groupName'])
             ->willReturn('/showGroupPackages');
 
-        $handler = new AssignPackagesHandler($this->response, $formProcessor, $assignPackagesForm, $routeHelper);
+        $handler = new AssignPackagesHandler($this->response, $dataProcessor, $assignPackagesForm, $routeHelper);
         $response = $handler->handle($this->request->withQueryParams($queryParams)->withParsedBody($formData));
 
         $this->assertResponseStatusCode(302, $response);

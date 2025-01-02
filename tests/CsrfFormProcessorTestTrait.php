@@ -3,15 +3,15 @@
 namespace Braintacle\Test;
 
 use Braintacle\CsrfProcessor;
-use Formotron\FormProcessor;
+use Formotron\DataProcessor;
 
 /**
  * Helpers for testing Formotron data objects with CSRF token.
  */
 trait CsrfFormProcessorTestTrait
 {
-    use FormProcessorTestTrait {
-        FormProcessorTestTrait::createFormProcessor as private createBaseFormProcessor;
+    use DataProcessorTestTrait {
+        DataProcessorTestTrait::createDataProcessor as private createBaseDataProcessor;
     }
 
     /**
@@ -20,12 +20,12 @@ trait CsrfFormProcessorTestTrait
      * Testing against this form processor will ensure the presence of the
      * CsrfProcessor in the data object.
      */
-    protected function createFormProcessor(array $services = []): FormProcessor
+    protected function createDataProcessor(array $services = []): DataProcessor
     {
         $csrfProcessor = $this->createMock(CsrfProcessor::class);
         $csrfProcessor->expects($this->once())->method('process')->willReturnArgument(0);
         $services[CsrfProcessor::class] = $csrfProcessor;
 
-        return $this->createBaseFormProcessor($services);
+        return $this->createBaseDataProcessor($services);
     }
 }

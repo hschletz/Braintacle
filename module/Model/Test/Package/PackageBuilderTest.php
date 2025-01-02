@@ -54,6 +54,7 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $storage = Mockery::mock(StorageInterface::class);
         $packagesTable = Mockery::mock(Packages::class);
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $model = Mockery::mock(
             PackageBuilder::class,
             [$packageManager, $archiveManager, $storage, $packagesTable]
@@ -94,6 +95,7 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $storage = Mockery::mock(StorageInterface::class);
         $packagesTable = Mockery::mock(Packages::class);
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $model = Mockery::mock(
             PackageBuilder::class,
             [$packageManager, $archiveManager, $storage, $packagesTable]
@@ -134,6 +136,7 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $storage = Mockery::mock(StorageInterface::class);
         $packagesTable = Mockery::mock(Packages::class);
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $model = Mockery::mock(
             PackageBuilder::class,
             [$packageManager, $archiveManager, $storage, $packagesTable]
@@ -171,6 +174,7 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $storage = Mockery::mock(StorageInterface::class);
         $packagesTable = Mockery::mock(Packages::class);
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $model = Mockery::mock(
             PackageBuilder::class,
             [$packageManager, $archiveManager, $storage, $packagesTable]
@@ -204,6 +208,7 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $storage = Mockery::mock(StorageInterface::class);
         $packagesTable = Mockery::mock(Packages::class);
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $model = Mockery::mock(
             PackageBuilder::class,
             [$packageManager, $archiveManager, $storage, $packagesTable]

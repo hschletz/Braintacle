@@ -4,13 +4,13 @@ namespace Braintacle\Test\Group\Packages;
 
 use Braintacle\Group\GroupTransformer;
 use Braintacle\Group\Packages\RemovePackagesParameters;
-use Braintacle\Test\FormProcessorTestTrait;
+use Braintacle\Test\DataProcessorTestTrait;
 use Model\Group\Group;
 use PHPUnit\Framework\TestCase;
 
 class RemovePackagesParametersTest extends TestCase
 {
-    use FormProcessorTestTrait;
+    use DataProcessorTestTrait;
 
     public function testValid()
     {
@@ -19,8 +19,8 @@ class RemovePackagesParametersTest extends TestCase
         $groupTransformer = $this->createMock(GroupTransformer::class);
         $groupTransformer->method('transform')->with('groupName')->willReturn($group);
 
-        $formProcessor = $this->createFormProcessor([GroupTransformer::class => $groupTransformer]);
-        $removePackageParameters = $formProcessor->process([
+        $dataProcessor = $this->createDataProcessor([GroupTransformer::class => $groupTransformer]);
+        $removePackageParameters = $dataProcessor->process([
             'name' => 'groupName',
             'package' => 'packageName',
         ], RemovePackagesParameters::class);

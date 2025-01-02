@@ -2,7 +2,7 @@
 
 namespace Braintacle\Group\Packages;
 
-use Formotron\FormProcessor;
+use Formotron\DataProcessor;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -14,14 +14,14 @@ class RemovePackagesHandler implements RequestHandlerInterface
 {
     public function __construct(
         private ResponseInterface $response,
-        private FormProcessor $formProcessor,
+        private DataProcessor $dataProcessor,
     ) {
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $queryParams = $request->getQueryParams();
-        $params = $this->formProcessor->process($queryParams, RemovePackagesParameters::class);
+        $params = $this->dataProcessor->process($queryParams, RemovePackagesParameters::class);
 
         $params->group->removePackage($params->packageName);
 

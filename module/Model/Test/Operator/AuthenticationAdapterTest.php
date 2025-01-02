@@ -262,6 +262,7 @@ class AuthenticationAdapterTest extends AbstractTestCase
 
     public function testUpdateHash()
     {
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $adapter = Mockery::mock(
             AuthenticationAdapter::class,
             [static::$serviceManager->get(Operators::class)]
@@ -286,6 +287,7 @@ class AuthenticationAdapterTest extends AbstractTestCase
 
     public function testUpdateHashUninitializedIdentity()
     {
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $adapter = Mockery::mock(
             AuthenticationAdapter::class,
             [static::$serviceManager->get(Operators::class)]
@@ -312,6 +314,7 @@ class AuthenticationAdapterTest extends AbstractTestCase
 
     public function testUpdateHashUninitializedCredential()
     {
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $adapter = Mockery::mock(
             AuthenticationAdapter::class,
             [static::$serviceManager->get(Operators::class)]

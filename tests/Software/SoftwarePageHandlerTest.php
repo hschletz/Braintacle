@@ -7,7 +7,7 @@ use Braintacle\Software\SoftwareFilter;
 use Braintacle\Software\SoftwarePageColumn;
 use Braintacle\Software\SoftwarePageHandler;
 use Braintacle\Test\HttpHandlerTestTrait;
-use Formotron\FormProcessor;
+use Formotron\DataProcessor;
 use Model\SoftwareManager;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -20,11 +20,11 @@ class SoftwarePageHandlerTest extends TestCase
 
     private function getResponseForFilter(string $filter): ResponseInterface
     {
-        $formProcessor = new FormProcessor($this->createStub(ContainerInterface::class));
+        $dataProcessor = new DataProcessor($this->createStub(ContainerInterface::class));
 
         $handler = new SoftwarePageHandler(
             $this->response,
-            $formProcessor,
+            $dataProcessor,
             $this->createTemplateEngine(),
             $this->createStub(SoftwareManager::class),
         );
@@ -85,7 +85,7 @@ class SoftwarePageHandlerTest extends TestCase
 
     public function testSoftwareList()
     {
-        $formProcessor = new FormProcessor($this->createStub(ContainerInterface::class));
+        $dataProcessor = new DataProcessor($this->createStub(ContainerInterface::class));
 
         $softwareManager = $this->createMock(SoftwareManager::class);
         $softwareManager
@@ -97,7 +97,7 @@ class SoftwarePageHandlerTest extends TestCase
             ]);
         $handler = new SoftwarePageHandler(
             $this->response,
-            $formProcessor,
+            $dataProcessor,
             $this->createTemplateEngine(),
             $softwareManager,
         );

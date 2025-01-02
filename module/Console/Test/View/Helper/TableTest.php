@@ -105,7 +105,10 @@ class TableTest extends AbstractTestCase
 
     public function testInvokeWithDefaultParams()
     {
-        /** @var MockInterface|Table|callable */
+        /**
+         * @var MockInterface|Table|callable
+         * @psalm-suppress InvalidArgument (Mockery bug)
+         */
         $table = Mockery::mock(
             Table::class,
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
@@ -124,7 +127,10 @@ class TableTest extends AbstractTestCase
         $rowClassCallback = function () {
         };
 
-        /** @var MockInterface|Table|callable */
+        /**
+         * @var MockInterface|Table|callable
+         * @psalm-suppress InvalidArgument (Mockery bug)
+         */
         $table = Mockery::mock(
             Table::class,
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
@@ -168,6 +174,7 @@ class TableTest extends AbstractTestCase
 
     public function testHeaderRowWithDefaultParams()
     {
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $table = Mockery::mock(
             Table::class,
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
@@ -180,6 +187,7 @@ class TableTest extends AbstractTestCase
 
     public function testHeaderRowWithExplicitParams()
     {
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $table = Mockery::mock(
             Table::class,
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
@@ -194,6 +202,7 @@ class TableTest extends AbstractTestCase
     {
         $this->_escapeHtml->method('__invoke')->willReturnOnConsecutiveCalls('1a', '2a', '1b', '2b');
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $table = Mockery::mock(
             Table::class,
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
@@ -212,6 +221,7 @@ class TableTest extends AbstractTestCase
     {
         $this->_escapeHtml->method('__invoke')->willReturnOnConsecutiveCalls('1a', '2a', '1b', '2b');
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $table = Mockery::mock(
             Table::class,
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
@@ -233,6 +243,7 @@ class TableTest extends AbstractTestCase
     {
         $this->_escapeHtml->method('__invoke')->willReturnOnConsecutiveCalls('1a', '2a', '1b', '2b');
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $table = Mockery::mock(
             Table::class,
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
@@ -262,6 +273,7 @@ class TableTest extends AbstractTestCase
 
         $this->_escapeHtml->method('__invoke')->with('date_formatted')->willReturn('escaped_date');
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $table = Mockery::mock(
             Table::class,
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
@@ -281,6 +293,7 @@ class TableTest extends AbstractTestCase
         $this->_dateFormat->expects($this->never())->method('__invoke');
         $this->_escapeHtml->expects($this->never())->method('__invoke');
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $table = Mockery::mock(
             Table::class,
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
@@ -305,6 +318,7 @@ class TableTest extends AbstractTestCase
 
     public function testPrepareHeadersWithoutSorting()
     {
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $table = Mockery::mock(
             Table::class,
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]
@@ -316,6 +330,7 @@ class TableTest extends AbstractTestCase
 
     public function testPrepareHeadersWithSorting()
     {
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $table = Mockery::mock(
             Table::class,
             [$this->_escapeHtml, $this->_htmlElement, $this->_consoleUrl, $this->_dateFormat]

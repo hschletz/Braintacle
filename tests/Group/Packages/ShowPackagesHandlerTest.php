@@ -7,7 +7,7 @@ use Braintacle\Group\Packages\ShowPackagesHandler;
 use Braintacle\Template\Function\PathForRouteFunction;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Console\Template\Functions\TranslateFunction;
-use Formotron\FormProcessor;
+use Formotron\DataProcessor;
 use Model\Group\Group;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -42,10 +42,10 @@ class ShowPackagesHandlerTest extends TestCase
             TranslateFunction::class => $translateFunction,
         ]);
 
-        $formProcessor = $this->createMock(FormProcessor::class);
-        $formProcessor->method('process')->with($queryParams, GroupRequestParameters::class)->willReturn($formData);
+        $dataProcessor = $this->createMock(DataProcessor::class);
+        $dataProcessor->method('process')->with($queryParams, GroupRequestParameters::class)->willReturn($formData);
 
-        $handler = new ShowPackagesHandler($this->response, $formProcessor, $templateEngine);
+        $handler = new ShowPackagesHandler($this->response, $dataProcessor, $templateEngine);
         $request = $this->request->withQueryParams($queryParams);
 
         return $handler->handle($request);

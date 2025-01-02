@@ -37,7 +37,7 @@ class SoftwareManagementHandlerTest extends TestCase
                 'software' => ['software1', 'software2'],
             ]);
 
-        $handler = new SoftwareManagementHandler($this->response, $this->createFormProcessor(), $softwareManager);
+        $handler = new SoftwareManagementHandler($this->response, $this->createDataProcessor(), $softwareManager);
         $response = $handler->handle($request);
         $this->assertResponseStatusCode(302, $response);
         $this->assertEquals([(string) $this->uri], $response->getHeader('Location'));

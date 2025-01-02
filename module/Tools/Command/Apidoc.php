@@ -36,7 +36,7 @@ use Symfony\Component\Process\Process;
 #[AsCommand('apidoc', 'Generates API documentation in the build/api directory')]
 class Apidoc extends Command
 {
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $process = new Process(['tools/phpDocumentor'], \Library\Application::getPath());
         $process->run(function ($type, $buffer) use ($output) {

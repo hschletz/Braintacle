@@ -55,6 +55,7 @@ class ClientConfigTest extends AbstractTestCase
 
         $form = $this->createStub(ClientConfigForm::class);
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $helper = Mockery::mock(ClientConfigHelper::class, [$consoleScript])->makePartial();
         $helper->shouldReceive('renderForm')->with($form)->andReturn('rendered form');
 

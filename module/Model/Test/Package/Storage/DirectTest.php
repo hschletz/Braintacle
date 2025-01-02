@@ -204,6 +204,7 @@ class DirectTest extends AbstractTestCase
 
         $config = $this->createMock('Model\Config');
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $model = Mockery::mock(Direct::class, [$config, $metadata])->makePartial();
         $model->shouldReceive('getPath')->with(42)->andReturn('/path');
 
@@ -240,6 +241,7 @@ class DirectTest extends AbstractTestCase
 
         $config = $this->createMock('Model\Config');
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $model = Mockery::mock(Direct::class, [$config, $metadata])->makePartial();
         $model->shouldReceive('getPath')->with(42)->andReturn('/path');
 

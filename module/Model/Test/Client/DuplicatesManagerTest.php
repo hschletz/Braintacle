@@ -465,6 +465,7 @@ class DuplicatesManagerTest extends AbstractTestCase
         $clients = $this->createMock('Database\Table\Clients');
         $clients->method('getConnection')->willReturn($connection);
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $model = Mockery::mock(
             DuplicatesManager::class,
             [

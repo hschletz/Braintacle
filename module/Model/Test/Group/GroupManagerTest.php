@@ -90,6 +90,7 @@ class GroupManagerTest extends AbstractGroupTestCase
             [Config::class, $this->_config],
         ]);
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $model = Mockery::mock(GroupManager::class, [$serviceManager])->makePartial();
         $model->shouldReceive('updateCache')->$updateCache();
 

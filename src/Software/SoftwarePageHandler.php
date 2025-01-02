@@ -3,7 +3,7 @@
 namespace Braintacle\Software;
 
 use Braintacle\Template\TemplateEngine;
-use Formotron\FormProcessor;
+use Formotron\DataProcessor;
 use Model\SoftwareManager;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -17,7 +17,7 @@ class SoftwarePageHandler implements RequestHandlerInterface
 {
     public function __construct(
         private ResponseInterface $response,
-        private FormProcessor $formProcessor,
+        private DataProcessor $dataProcessor,
         private TemplateEngine $templateEngine,
         private SoftwareManager $softwareManager,
     ) {
@@ -25,7 +25,7 @@ class SoftwarePageHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $queryParams = $this->formProcessor->process($request->getQueryParams(), SoftwarePageFormData::class);
+        $queryParams = $this->dataProcessor->process($request->getQueryParams(), SoftwarePageFormData::class);
 
         $software = $this->softwareManager->getSoftware(
             $queryParams->filter,

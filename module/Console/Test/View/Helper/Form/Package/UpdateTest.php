@@ -60,7 +60,7 @@ class UpdateTest extends AbstractTestCase
         $view = $this->createMock(PhpRenderer::class);
         $view->method('plugin')->with(BuildHelper::class)->willReturn($build);
 
-        /** @var Mock|Update */
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $helper = Mockery::mock(Update::class, [$consoleScript])->makePartial();
         $helper->shouldReceive('getView')->andReturn($view);
         $helper->shouldReceive('renderForm')->with($form)->andReturn('rendered form');

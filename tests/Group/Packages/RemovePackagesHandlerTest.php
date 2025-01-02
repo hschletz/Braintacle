@@ -5,7 +5,7 @@ namespace Braintacle\Test\Group\Packages;
 use Braintacle\Group\Packages\RemovePackagesHandler;
 use Braintacle\Group\Packages\RemovePackagesParameters;
 use Braintacle\Test\HttpHandlerTestTrait;
-use Formotron\FormProcessor;
+use Formotron\DataProcessor;
 use Model\Group\Group;
 use PHPUnit\Framework\TestCase;
 
@@ -24,13 +24,13 @@ class RemovePackagesHandlerTest extends TestCase
         $removePackagesParameters->group = $group;
         $removePackagesParameters->packageName = 'packageName';
 
-        $formProcessor = $this->createMock(FormProcessor::class);
-        $formProcessor
+        $dataProcessor = $this->createMock(DataProcessor::class);
+        $dataProcessor
             ->method('process')
             ->with($queryParams, RemovePackagesParameters::class)
             ->willReturn($removePackagesParameters);
 
-        $handler = new RemovePackagesHandler($this->response, $formProcessor);
+        $handler = new RemovePackagesHandler($this->response, $dataProcessor);
         $response = $handler->handle($this->request->withQueryParams($queryParams));
 
         $this->assertResponseStatusCode(200, $response);

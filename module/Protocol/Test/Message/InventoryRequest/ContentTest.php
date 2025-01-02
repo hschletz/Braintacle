@@ -86,6 +86,7 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $container = $this->createMock(ContainerInterface::class);
         $container->method('get')->with($hydratorService)->willReturn($hydrator);
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $content = Mockery::mock(Content::class, [$container])->makePartial();
         $content->shouldReceive('appendSection')->once()->with($section, $data);
 
@@ -121,6 +122,7 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $container = $this->createMock(ContainerInterface::class);
         $container->method('get')->with(Exporter::class)->willReturn($exporter);
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $content = Mockery::mock(Content::class, [$container])->makePartial();
         $content->shouldReceive('appendSection')->once()->with('JAVAINFOS', $data);
 
@@ -136,6 +138,7 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $container = $this->createMock(ContainerInterface::class);
         $container->expects($this->never())->method('get');
 
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
         $content = Mockery::mock(Content::class, [$container])->makePartial();
         $content->shouldNotReceive('appendSection');
 
@@ -271,7 +274,10 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $client = $this->createMock(Client::class);
         $client->method('getItems')->with('type', 'id', 'asc')->willReturn($items);
 
-        /** @var Mock|Content */
+        /**
+         * @var Mock|Content
+         * @psalm-suppress InvalidArgument (Mockery bug)
+         */
         $content = Mockery::mock(Content::class, [$container])->makePartial();
         $content->shouldReceive('appendSection')->once()->with('section', $itemExtracted1);
         $content->shouldReceive('appendSection')->once()->with('section', $itemExtracted2);

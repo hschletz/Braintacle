@@ -52,7 +52,10 @@ class BuildTest extends AbstractTestCase
         $view = Mockery::mock(PhpRenderer::class);
         $view->shouldReceive('consoleForm')->once()->with($form)->andReturn('rendered form');
 
-        /** @var Mock|BuildHelper|callable */
+        /**
+         * @var Mock|BuildHelper|callable
+         * @psalm-suppress InvalidArgument (Mockery bug)
+         */
         $helper = Mockery::mock(BuildHelper::class, [$consoleScript])->makePartial();
         $helper->shouldReceive('getView')->andReturn($view);
         $helper->shouldReceive('initLabels')->once()->with($form);
