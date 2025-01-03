@@ -35,6 +35,14 @@ class RouteHelperTest extends TestCase
         $this->assertEquals('/base', $routeHelper->getBasePath());
     }
 
+    public function testRouteArguments()
+    {
+        $routeArguments = ['key' => 'value'];
+        $routeHelper = new RouteHelper();
+        $routeHelper->setRouteArguments($routeArguments);
+        $this->assertEquals($routeArguments, $routeHelper->getRouteArguments());
+    }
+
     public function testGetPathForRoute()
     {
         $routeParser = $this->createMock(RouteParserInterface::class);

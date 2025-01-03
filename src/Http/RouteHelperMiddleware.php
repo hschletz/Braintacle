@@ -29,6 +29,7 @@ class RouteHelperMiddleware implements MiddlewareInterface
         $routeContext = RouteContext::fromRequest($request);
         $this->routeHelper->setRouteParser($routeContext->getRouteParser());
         $this->routeHelper->setBasePath(RouteHelper::detectBasePath($request->getServerParams()));
+        $this->routeHelper->setRouteArguments($routeContext->getRoutingResults()->getRouteArguments());
 
         return $handler->handle($request);
     }

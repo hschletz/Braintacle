@@ -7,6 +7,7 @@ use Slim\Interfaces\RouteParserInterface;
 class RouteHelper
 {
     private string $basePath;
+    private array $routeArguments;
     private RouteParserInterface $routeParser;
 
     /**
@@ -36,6 +37,16 @@ class RouteHelper
     public function getBasePath(): string
     {
         return $this->basePath;
+    }
+
+    public function setRouteArguments(array $routeArguments): void
+    {
+        $this->routeArguments = $routeArguments;
+    }
+
+    public function getRouteArguments(): array
+    {
+        return $this->routeArguments;
     }
 
     public function setRouteParser(RouteParserInterface $routeParser): void
