@@ -2,20 +2,41 @@
 
 namespace Braintacle\Test\Client;
 
+use Braintacle\Client\ClientRequestParameters;
 use Braintacle\Client\ExportHandler;
+use Braintacle\Http\RouteHelper;
 use Braintacle\Test\HttpHandlerTestTrait;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\Mock;
+use Formotron\DataProcessor;
 use Model\Client\Client;
-use Model\Client\ClientManager;
 use Model\Config;
 use Protocol\Message\InventoryRequest;
+use Psr\Http\Message\ResponseInterface;
 
 class ExportHandlerTest extends \PHPUnit\Framework\TestCase
 {
     use HttpHandlerTestTrait;
-    use MockeryPHPUnitIntegration;
+
+    private function getResponse(Config $config, InventoryRequest $document): ResponseInterface
+    {
+        $routeArguments = ['id' => '42'];
+
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $routeHelper->method('getRouteArguments')->willReturn($routeArguments);
+
+        $client = $this->createStub(Client::class);
+        $client->method('toDomDocument')->willReturn($document);
+
+        $requestParameters = new ClientRequestParameters();
+        $requestParameters->client = $client;
+
+        $dataProcessor = $this->createMock(DataProcessor::class);
+        $dataProcessor->method('process')->with($routeArguments, ClientRequestParameters::class)->willReturn($requestParameters);
+
+        $handler = new ExportHandler($this->response, $routeHelper, $config, $dataProcessor);
+        $response = $handler->handle($this->request);
+
+        return $response;
+    }
 
     public function testResponse()
     {
@@ -27,19 +48,7 @@ class ExportHandlerTest extends \PHPUnit\Framework\TestCase
         $document->method('getFilename')->willReturn('filename.xml');
         $document->method('saveXml')->willReturn($xmlContent);
 
-        $client = $this->createStub(Client::class);
-        $client->method('toDomDocument')->willReturn($document);
-
-        $clientManager = $this->createStub(ClientManager::class);
-
-        /**
-         * @var Mock|ExportHandler
-         * @psalm-suppress InvalidArgument (Mockery bug)
-         */
-        $handler = Mockery::mock(ExportHandler::class, [$this->response, $config, $clientManager])->makePartial();
-        $handler->shouldReceive('getClient')->once()->with($this->request)->andReturn($client);
-
-        $response = $handler->handle($this->request);
+        $response = $this->getResponse($config, $document);
 
         $this->assertResponseStatusCode(200, $response);
         $this->assertEquals([
@@ -59,18 +68,7 @@ class ExportHandlerTest extends \PHPUnit\Framework\TestCase
         $document->method('saveXml')->willReturn('xml');
         $document->expects($this->never())->method('forceValid');
 
-        $client = $this->createStub(Client::class);
-        $client->method('toDomDocument')->willReturn($document);
-
-        $clientManager = $this->createStub(ClientManager::class);
-
-        /**
-         * @var Mock|ExportHandler
-         * @psalm-suppress InvalidArgument (Mockery bug)
-         */
-        $handler = Mockery::mock(ExportHandler::class, [$this->response, $config, $clientManager])->makePartial();
-        $handler->shouldReceive('getClient')->once()->with($this->request)->andReturn($client);
-        $handler->handle($this->request);
+        $this->getResponse($config, $document);
     }
 
     public function testValidation()
@@ -82,17 +80,6 @@ class ExportHandlerTest extends \PHPUnit\Framework\TestCase
         $document->method('saveXml')->willReturn('xml');
         $document->expects($this->once())->method('forceValid');
 
-        $client = $this->createStub(Client::class);
-        $client->method('toDomDocument')->willReturn($document);
-
-        $clientManager = $this->createStub(ClientManager::class);
-
-        /**
-         * @var Mock|ExportHandler
-         * @psalm-suppress InvalidArgument (Mockery bug)
-         */
-        $handler = Mockery::mock(ExportHandler::class, [$this->response, $config, $clientManager])->makePartial();
-        $handler->shouldReceive('getClient')->once()->with($this->request)->andReturn($client);
-        $handler->handle($this->request);
+        $this->getResponse($config, $document);
     }
 }

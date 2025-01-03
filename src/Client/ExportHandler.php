@@ -2,7 +2,8 @@
 
 namespace Braintacle\Client;
 
-use Model\Client\ClientManager;
+use Braintacle\Http\RouteHelper;
+use Formotron\DataProcessor;
 use Model\Config;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -13,18 +14,19 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class ExportHandler implements RequestHandlerInterface
 {
-    use GetClientTrait;
-
     public function __construct(
         private ResponseInterface $response,
+        private RouteHelper $routeHelper,
         private Config $config,
-        private ClientManager $clientManager,
+        private DataProcessor $dataProcessor,
     ) {
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $client = $this->getClient($request);
+        $routeArguments = $this->routeHelper->getRouteArguments();
+        $client = $this->dataProcessor->process($routeArguments, ClientRequestParameters::class)->client;
+
         $document = $client->toDomDocument();
         if ($this->config->validateXml) {
             $document->forceValid();

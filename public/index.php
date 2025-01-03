@@ -35,7 +35,7 @@ $container = new Container();
 
 /** @var App<ContainerInterface> */
 $app = AppFactory::createFromContainer($container);
-$app->getRouteCollector()->setDefaultInvocationStrategy(new RequestHandler(true));
+$app->getRouteCollector()->setDefaultInvocationStrategy(new RequestHandler());
 $app->setBasePath(RouteHelper::detectBasePath($_SERVER));
 
 $app->add(RouteHelperMiddleware::class);
