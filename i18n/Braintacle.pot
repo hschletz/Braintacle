@@ -310,8 +310,8 @@ msgstr ""
 #: module/Console/views/console/network/showidentified.php
 #: module/Console/views/console/network/showunknown.php
 #: module/Console/views/console/package/index.php
-#: templates/Group/Header.latte
 #: templates/Pages/Client/Header.latte
+#: templates/Pages/Group/Header.latte
 msgid "Delete"
 msgstr ""
 
@@ -1752,35 +1752,6 @@ msgstr ""
 msgid "Merge selected clients"
 msgstr ""
 
-#: templates/Group/Header.latte
-msgid "Details for group '%s'"
-msgstr ""
-
-#: templates/Group/Header.latte
-#: templates/Pages/Client/Header.latte
-msgid "General"
-msgstr ""
-
-#: templates/Group/Header.latte
-msgid "Members"
-msgstr ""
-
-#: templates/Group/Header.latte
-msgid "Excluded"
-msgstr ""
-
-#: templates/Group/Header.latte
-#: templates/Layout.latte
-#: templates/Pages/Client/Header.latte
-#: templates/PreferencesMenuLayout.latte
-msgid "Packages"
-msgstr ""
-
-#: templates/Group/Header.latte
-#: templates/Pages/Client/Header.latte
-msgid "Configuration"
-msgstr ""
-
 #: templates/InventoryMenuLayout.latte
 msgid "Clients"
 msgstr ""
@@ -1805,6 +1776,13 @@ msgid "Inventory"
 msgstr ""
 
 #: templates/Layout.latte
+#: templates/Pages/Client/Header.latte
+#: templates/Pages/Group/Header.latte
+#: templates/PreferencesMenuLayout.latte
+msgid "Packages"
+msgstr ""
+
+#: templates/Layout.latte
 msgid "Licenses"
 msgstr ""
 
@@ -1822,6 +1800,11 @@ msgstr ""
 
 #: templates/Pages/Client/Header.latte
 msgid "Details for client '%s'"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
+#: templates/Pages/Group/Header.latte
+msgid "General"
 msgstr ""
 
 #: templates/Pages/Client/Header.latte
@@ -1871,7 +1854,24 @@ msgid "User defined"
 msgstr ""
 
 #: templates/Pages/Client/Header.latte
+#: templates/Pages/Group/Header.latte
+msgid "Configuration"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
 msgid "Export"
+msgstr ""
+
+#: templates/Pages/Group/Header.latte
+msgid "Details for group '%s'"
+msgstr ""
+
+#: templates/Pages/Group/Header.latte
+msgid "Members"
+msgstr ""
+
+#: templates/Pages/Group/Header.latte
+msgid "Excluded"
 msgstr ""
 
 #: templates/Pages/Group/Packages.latte

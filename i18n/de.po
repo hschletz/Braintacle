@@ -291,8 +291,8 @@ msgstr "Datum"
 #: module/Console/views/console/accounts/index.php
 #: module/Console/views/console/network/showidentified.php
 #: module/Console/views/console/network/showunknown.php
-#: module/Console/views/console/package/index.php templates/Group/Header.latte
-#: templates/Pages/Client/Header.latte
+#: module/Console/views/console/package/index.php
+#: templates/Pages/Client/Header.latte templates/Pages/Group/Header.latte
 msgid "Delete"
 msgstr "Löschen"
 
@@ -1700,31 +1700,6 @@ msgstr "Ausgewählte Clients zusammenführen"
 msgid "Merge user supplied information"
 msgstr "Benutzerdefinierte Informationen übernehmen"
 
-#: templates/Group/Header.latte templates/Pages/Client/Header.latte
-msgid "Configuration"
-msgstr "Konfiguration"
-
-#: templates/Group/Header.latte
-msgid "Details for group '%s'"
-msgstr "Einzelheiten für Gruppe '%s'"
-
-#: templates/Group/Header.latte
-msgid "Excluded"
-msgstr "Ausgeschlossen"
-
-#: templates/Group/Header.latte templates/Pages/Client/Header.latte
-msgid "General"
-msgstr "Allgemein"
-
-#: templates/Group/Header.latte
-msgid "Members"
-msgstr "Mitglieder"
-
-#: templates/Group/Header.latte templates/Layout.latte
-#: templates/Pages/Client/Header.latte templates/PreferencesMenuLayout.latte
-msgid "Packages"
-msgstr "Pakete"
-
 #: templates/InventoryMenuLayout.latte
 msgid "Clients"
 msgstr "Clients"
@@ -1753,6 +1728,11 @@ msgstr "Lizenzen"
 msgid "Logout"
 msgstr "Abmelden"
 
+#: templates/Layout.latte templates/Pages/Client/Header.latte
+#: templates/Pages/Group/Header.latte templates/PreferencesMenuLayout.latte
+msgid "Packages"
+msgstr "Pakete"
+
 #: templates/Layout.latte
 msgid "Preferences"
 msgstr "Einstellungen"
@@ -1765,6 +1745,10 @@ msgstr "Übersicht"
 msgid "BIOS"
 msgstr "BIOS"
 
+#: templates/Pages/Client/Header.latte templates/Pages/Group/Header.latte
+msgid "Configuration"
+msgstr "Konfiguration"
+
 #: templates/Pages/Client/Header.latte
 msgid "Details for client '%s'"
 msgstr "Einzelheiten für Client '%s'"
@@ -1776,6 +1760,10 @@ msgstr "Anzeige"
 #: templates/Pages/Client/Header.latte
 msgid "Export"
 msgstr "Exportieren"
+
+#: templates/Pages/Client/Header.latte templates/Pages/Group/Header.latte
+msgid "General"
+msgstr "Allgemein"
 
 #: templates/Pages/Client/Header.latte
 msgid "MS Office"
@@ -1812,6 +1800,18 @@ msgstr "Virtuelle Maschinen"
 #: templates/Pages/Client/Header.latte
 msgid "Windows"
 msgstr "Windows"
+
+#: templates/Pages/Group/Header.latte
+msgid "Details for group '%s'"
+msgstr "Einzelheiten für Gruppe '%s'"
+
+#: templates/Pages/Group/Header.latte
+msgid "Excluded"
+msgstr "Ausgeschlossen"
+
+#: templates/Pages/Group/Header.latte
+msgid "Members"
+msgstr "Mitglieder"
 
 #: templates/Pages/Group/Packages.latte
 msgid "Package '{}' will no longer be assigned to this group. Continue?"

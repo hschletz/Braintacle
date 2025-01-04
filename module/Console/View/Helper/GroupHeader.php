@@ -43,7 +43,7 @@ class GroupHeader extends AbstractHelper
     public function __invoke(Group $group): string
     {
         return $this->templateRenderer->render(
-            'Group/Header.latte',
+            'Pages/Group/Header.latte',
             [
                 'group' => $group,
                 'currentAction' => $this->currentAction,
