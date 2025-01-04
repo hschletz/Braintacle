@@ -23,7 +23,7 @@ class ClientHeader extends AbstractHelper
     public function __invoke(Client $client): string
     {
         return $this->templateRenderer->render(
-            'Client/Header.latte',
+            'Pages/Client/Header.latte',
             [
                 'client' => $client,
                 'currentAction' => $this->currentAction

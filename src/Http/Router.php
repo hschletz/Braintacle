@@ -42,9 +42,27 @@ class Router
             // Legacy routes handled by MVC application, which are listed here
             // to provide a route name.
             $group->get('/console/accounts/index', ApplicationBridge::class)->setName('preferencesUsersList');
+            $group->get('/console/client/bios', ApplicationBridge::class)->setName('showClientBios');
+            $group->get('/console/client/configuration', ApplicationBridge::class)->setName('showClientConfiguration');
+            $group->get('/console/client/customfields', ApplicationBridge::class)->setName('showClientCustomFields');
+            $group->get('/console/client/delete', ApplicationBridge::class)->setName('deleteClient');
+            $group->get('/console/client/display', ApplicationBridge::class)->setName('showClientDisplay');
+            $group->get('/console/client/general', ApplicationBridge::class)->setName('showClientGeneral');
+            $group->get('/console/client/groups', ApplicationBridge::class)->setName('showClientGroups');
             $group->get('/console/client/import', ApplicationBridge::class)->setName('importPage');
             $group->get('/console/client/index', ApplicationBridge::class)->setName('clientList');
+            $group->get('/console/client/misc', ApplicationBridge::class)->setName('showClientMisc');
+            $group->get('/console/client/msoffice', ApplicationBridge::class)->setName('showClientMsOffice');
+            $group->get('/console/client/network', ApplicationBridge::class)->setName('showClientNetwork');
+            $group->get('/console/client/packages', ApplicationBridge::class)->setName('showClientPackages');
+            $group->get('/console/client/printers', ApplicationBridge::class)->setName('showClientPrinters');
+            $group->get('/console/client/registry', ApplicationBridge::class)->setName('showClientRegistry');
             $group->get('/console/client/search', ApplicationBridge::class)->setName('searchPage');
+            $group->get('/console/client/software', ApplicationBridge::class)->setName('showClientSoftware');
+            $group->get('/console/client/storage', ApplicationBridge::class)->setName('showClientStorage');
+            $group->get('/console/client/system', ApplicationBridge::class)->setName('showClientSystem');
+            $group->get('/console/client/virtualmachines', ApplicationBridge::class)->setName('showClientVirtualMachines');
+            $group->get('/console/client/windows', ApplicationBridge::class)->setName('showClientWindows');
             $group->get('/console/duplicates/index', ApplicationBridge::class)->setName('duplicatesList');
             $group->get('/console/group/index', ApplicationBridge::class)->setName('groupList');
             $group->get('/console/group/general', ApplicationBridge::class)->setName('showGroupGeneral');

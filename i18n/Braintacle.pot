@@ -310,8 +310,8 @@ msgstr ""
 #: module/Console/views/console/network/showidentified.php
 #: module/Console/views/console/network/showunknown.php
 #: module/Console/views/console/package/index.php
-#: templates/Client/Header.latte
 #: templates/Group/Header.latte
+#: templates/Pages/Client/Header.latte
 msgid "Delete"
 msgstr ""
 
@@ -490,8 +490,8 @@ msgstr ""
 
 #: module/Console/Form/Package/Update.php
 #: module/Console/Form/Preferences/Packages.php
-#: templates/Client/Header.latte
 #: templates/Layout.latte
+#: templates/Pages/Client/Header.latte
 #: templates/PreferencesMenuLayout.latte
 msgid "Groups"
 msgstr ""
@@ -1694,87 +1694,6 @@ msgstr ""
 msgid "Last user logged in"
 msgstr ""
 
-#: templates/Client/Header.latte
-msgid "Details for client '%s'"
-msgstr ""
-
-#: templates/Client/Header.latte
-#: templates/Group/Header.latte
-msgid "General"
-msgstr ""
-
-#: templates/Client/Header.latte
-msgid "Windows"
-msgstr ""
-
-#: templates/Client/Header.latte
-#: templates/InventoryMenuLayout.latte
-msgid "Network"
-msgstr ""
-
-#: templates/Client/Header.latte
-msgid "Storage"
-msgstr ""
-
-#: templates/Client/Header.latte
-#: templates/PreferencesMenuLayout.latte
-msgid "Display"
-msgstr ""
-
-#: templates/Client/Header.latte
-msgid "BIOS"
-msgstr ""
-
-#: templates/Client/Header.latte
-#: templates/PreferencesMenuLayout.latte
-msgid "System"
-msgstr ""
-
-#: templates/Client/Header.latte
-msgid "Printers"
-msgstr ""
-
-#: templates/Client/Header.latte
-#: templates/InventoryMenuLayout.latte
-msgid "Software"
-msgstr ""
-
-#: templates/Client/Header.latte
-msgid "MS Office"
-msgstr ""
-
-#: templates/Client/Header.latte
-msgid "Registry"
-msgstr ""
-
-#: templates/Client/Header.latte
-msgid "Virtual machines"
-msgstr ""
-
-#: templates/Client/Header.latte
-msgid "Misc"
-msgstr ""
-
-#: templates/Client/Header.latte
-msgid "User defined"
-msgstr ""
-
-#: templates/Client/Header.latte
-#: templates/Group/Header.latte
-#: templates/Layout.latte
-#: templates/PreferencesMenuLayout.latte
-msgid "Packages"
-msgstr ""
-
-#: templates/Client/Header.latte
-#: templates/Group/Header.latte
-msgid "Configuration"
-msgstr ""
-
-#: templates/Client/Header.latte
-msgid "Export"
-msgstr ""
-
 #: templates/Client/Packages.latte
 #: templates/Pages/Group/Packages.latte
 msgid "Assigned packages"
@@ -1838,6 +1757,11 @@ msgid "Details for group '%s'"
 msgstr ""
 
 #: templates/Group/Header.latte
+#: templates/Pages/Client/Header.latte
+msgid "General"
+msgstr ""
+
+#: templates/Group/Header.latte
 msgid "Members"
 msgstr ""
 
@@ -1845,8 +1769,30 @@ msgstr ""
 msgid "Excluded"
 msgstr ""
 
+#: templates/Group/Header.latte
+#: templates/Layout.latte
+#: templates/Pages/Client/Header.latte
+#: templates/PreferencesMenuLayout.latte
+msgid "Packages"
+msgstr ""
+
+#: templates/Group/Header.latte
+#: templates/Pages/Client/Header.latte
+msgid "Configuration"
+msgstr ""
+
 #: templates/InventoryMenuLayout.latte
 msgid "Clients"
+msgstr ""
+
+#: templates/InventoryMenuLayout.latte
+#: templates/Pages/Client/Header.latte
+msgid "Software"
+msgstr ""
+
+#: templates/InventoryMenuLayout.latte
+#: templates/Pages/Client/Header.latte
+msgid "Network"
 msgstr ""
 
 #: templates/InventoryMenuLayout.latte
@@ -1872,6 +1818,60 @@ msgstr ""
 
 #: templates/PackagesMenuLayout.latte
 msgid "Overview"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
+msgid "Details for client '%s'"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
+msgid "Windows"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
+msgid "Storage"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
+#: templates/PreferencesMenuLayout.latte
+msgid "Display"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
+msgid "BIOS"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
+#: templates/PreferencesMenuLayout.latte
+msgid "System"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
+msgid "Printers"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
+msgid "MS Office"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
+msgid "Registry"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
+msgid "Virtual machines"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
+msgid "Misc"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
+msgid "User defined"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
+msgid "Export"
 msgstr ""
 
 #: templates/Pages/Group/Packages.latte

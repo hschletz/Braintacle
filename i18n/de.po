@@ -291,8 +291,8 @@ msgstr "Datum"
 #: module/Console/views/console/accounts/index.php
 #: module/Console/views/console/network/showidentified.php
 #: module/Console/views/console/network/showunknown.php
-#: module/Console/views/console/package/index.php templates/Client/Header.latte
-#: templates/Group/Header.latte
+#: module/Console/views/console/package/index.php templates/Group/Header.latte
+#: templates/Pages/Client/Header.latte
 msgid "Delete"
 msgstr "Löschen"
 
@@ -461,8 +461,8 @@ msgid "Error"
 msgstr "Fehler"
 
 #: module/Console/Form/Package/Update.php
-#: module/Console/Form/Preferences/Packages.php templates/Client/Header.latte
-#: templates/Layout.latte templates/PreferencesMenuLayout.latte
+#: module/Console/Form/Preferences/Packages.php templates/Layout.latte
+#: templates/Pages/Client/Header.latte templates/PreferencesMenuLayout.latte
 msgid "Groups"
 msgstr "Gruppen"
 
@@ -1644,79 +1644,6 @@ msgstr "Arbeitsspeicher lt. Betriebssystem"
 msgid "User Agent"
 msgstr "User-Agent"
 
-#: templates/Client/Header.latte
-msgid "BIOS"
-msgstr "BIOS"
-
-#: templates/Client/Header.latte templates/Group/Header.latte
-msgid "Configuration"
-msgstr "Konfiguration"
-
-#: templates/Client/Header.latte
-msgid "Details for client '%s'"
-msgstr "Einzelheiten für Client '%s'"
-
-#: templates/Client/Header.latte templates/PreferencesMenuLayout.latte
-msgid "Display"
-msgstr "Anzeige"
-
-#: templates/Client/Header.latte
-msgid "Export"
-msgstr "Exportieren"
-
-#: templates/Client/Header.latte templates/Group/Header.latte
-msgid "General"
-msgstr "Allgemein"
-
-#: templates/Client/Header.latte
-msgid "MS Office"
-msgstr "MS Office"
-
-#: templates/Client/Header.latte
-msgid "Misc"
-msgstr "Verschiedenes"
-
-#: templates/Client/Header.latte templates/InventoryMenuLayout.latte
-msgid "Network"
-msgstr "Netzwerk"
-
-#: templates/Client/Header.latte templates/Group/Header.latte
-#: templates/Layout.latte templates/PreferencesMenuLayout.latte
-msgid "Packages"
-msgstr "Pakete"
-
-#: templates/Client/Header.latte
-msgid "Printers"
-msgstr "Drucker"
-
-#: templates/Client/Header.latte
-msgid "Registry"
-msgstr "Registry"
-
-#: templates/Client/Header.latte templates/InventoryMenuLayout.latte
-msgid "Software"
-msgstr "Software"
-
-#: templates/Client/Header.latte
-msgid "Storage"
-msgstr "Massenspeicher"
-
-#: templates/Client/Header.latte templates/PreferencesMenuLayout.latte
-msgid "System"
-msgstr "System"
-
-#: templates/Client/Header.latte
-msgid "User defined"
-msgstr "Benutzerdefiniert"
-
-#: templates/Client/Header.latte
-msgid "Virtual machines"
-msgstr "Virtuelle Maschinen"
-
-#: templates/Client/Header.latte
-msgid "Windows"
-msgstr "Windows"
-
 #: templates/Client/Packages.latte templates/Pages/Group/Packages.latte
 msgid "Assigned packages"
 msgstr "Zugewiesene Pakete"
@@ -1773,6 +1700,10 @@ msgstr "Ausgewählte Clients zusammenführen"
 msgid "Merge user supplied information"
 msgstr "Benutzerdefinierte Informationen übernehmen"
 
+#: templates/Group/Header.latte templates/Pages/Client/Header.latte
+msgid "Configuration"
+msgstr "Konfiguration"
+
 #: templates/Group/Header.latte
 msgid "Details for group '%s'"
 msgstr "Einzelheiten für Gruppe '%s'"
@@ -1781,9 +1712,18 @@ msgstr "Einzelheiten für Gruppe '%s'"
 msgid "Excluded"
 msgstr "Ausgeschlossen"
 
+#: templates/Group/Header.latte templates/Pages/Client/Header.latte
+msgid "General"
+msgstr "Allgemein"
+
 #: templates/Group/Header.latte
 msgid "Members"
 msgstr "Mitglieder"
+
+#: templates/Group/Header.latte templates/Layout.latte
+#: templates/Pages/Client/Header.latte templates/PreferencesMenuLayout.latte
+msgid "Packages"
+msgstr "Pakete"
 
 #: templates/InventoryMenuLayout.latte
 msgid "Clients"
@@ -1792,6 +1732,14 @@ msgstr "Clients"
 #: templates/InventoryMenuLayout.latte
 msgid "Duplicates"
 msgstr "Duplikate"
+
+#: templates/InventoryMenuLayout.latte templates/Pages/Client/Header.latte
+msgid "Network"
+msgstr "Netzwerk"
+
+#: templates/InventoryMenuLayout.latte templates/Pages/Client/Header.latte
+msgid "Software"
+msgstr "Software"
 
 #: templates/Layout.latte templates/PreferencesMenuLayout.latte
 msgid "Inventory"
@@ -1812,6 +1760,58 @@ msgstr "Einstellungen"
 #: templates/PackagesMenuLayout.latte
 msgid "Overview"
 msgstr "Übersicht"
+
+#: templates/Pages/Client/Header.latte
+msgid "BIOS"
+msgstr "BIOS"
+
+#: templates/Pages/Client/Header.latte
+msgid "Details for client '%s'"
+msgstr "Einzelheiten für Client '%s'"
+
+#: templates/Pages/Client/Header.latte templates/PreferencesMenuLayout.latte
+msgid "Display"
+msgstr "Anzeige"
+
+#: templates/Pages/Client/Header.latte
+msgid "Export"
+msgstr "Exportieren"
+
+#: templates/Pages/Client/Header.latte
+msgid "MS Office"
+msgstr "MS Office"
+
+#: templates/Pages/Client/Header.latte
+msgid "Misc"
+msgstr "Verschiedenes"
+
+#: templates/Pages/Client/Header.latte
+msgid "Printers"
+msgstr "Drucker"
+
+#: templates/Pages/Client/Header.latte
+msgid "Registry"
+msgstr "Registry"
+
+#: templates/Pages/Client/Header.latte
+msgid "Storage"
+msgstr "Massenspeicher"
+
+#: templates/Pages/Client/Header.latte templates/PreferencesMenuLayout.latte
+msgid "System"
+msgstr "System"
+
+#: templates/Pages/Client/Header.latte
+msgid "User defined"
+msgstr "Benutzerdefiniert"
+
+#: templates/Pages/Client/Header.latte
+msgid "Virtual machines"
+msgstr "Virtuelle Maschinen"
+
+#: templates/Pages/Client/Header.latte
+msgid "Windows"
+msgstr "Windows"
 
 #: templates/Pages/Group/Packages.latte
 msgid "Package '{}' will no longer be assigned to this group. Continue?"

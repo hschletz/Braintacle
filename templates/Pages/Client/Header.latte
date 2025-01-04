@@ -1,0 +1,42 @@
+{* Header for Client subpages *}
+{define navigationItem, string $action, string $label, string $route}
+    {* Legacy routes have the client ID as a query parameter, while newer routes
+    use a route argument. To generate the correct URL, the legacy route is tried
+    first. If the route requires a route argument, this will fail, and the
+    route is created with arguments. *}
+    {try}
+        {var $url = pathForRoute($route, [], [id: $client->id])}
+    {/try}
+    {default $url = pathForRoute($route, [id: $client->id])}
+    <li n:class="$action == $currentAction ? active">
+        <a href="{$url}" n:attr="download => $action == export">{$label}</a>
+    </li>
+{/define}
+
+<h1>{translate("Details for client '%s'", $client->name)}</h1>
+
+<ul class="navigation navigation_details">
+    {include navigationItem, 'general', translate('General'), 'showClientGeneral'}
+    {if $client->windows}
+        {include navigationItem, 'windows', translate('Windows'), 'showClientWindows'}
+    {/if}
+    {include navigationItem, 'network', translate('Network'), 'showClientNetwork'}
+    {include navigationItem, 'storage', translate('Storage'), 'showClientStorage'}
+    {include navigationItem, 'display', translate('Display'), 'showClientDisplay'}
+    {include navigationItem, 'bios', translate('BIOS'), 'showClientBios'}
+    {include navigationItem, 'system', translate('System'), 'showClientSystem'}
+    {include navigationItem, 'printers', translate('Printers'), 'showClientPrinters'}
+    {include navigationItem, 'software', translate('Software'), 'showClientSoftware'}
+    {if $client->windows}
+        {include navigationItem, 'msoffice', translate('MS Office'), 'showClientMsOffice'}
+        {include navigationItem, 'registry', translate('Registry'), 'showClientRegistry'}
+    {/if}
+    {include navigationItem, 'virtualmachines', translate('Virtual machines'), 'showClientVirtualMachines'}
+    {include navigationItem, 'misc', translate('Misc'), 'showClientMisc'}
+    {include navigationItem, 'customfields', translate('User defined'), 'showClientCustomFields'}
+    {include navigationItem, 'packages', translate('Packages'), 'showClientPackages'}
+    {include navigationItem, 'groups', translate('Groups'), 'showClientGroups'}
+    {include navigationItem, 'configuration', translate('Configuration'), 'showClientConfiguration'}
+    {include navigationItem, 'export', translate('Export'), 'export'}
+    {include navigationItem, 'delete', translate('Delete'), 'deleteClient'}
+</ul>
