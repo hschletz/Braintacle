@@ -67,7 +67,7 @@ class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionControl
     public function onDispatch(MvcEvent $e)
     {
         $event = $this->getEvent();
-        $event->setParam('template', 'InventoryMenuLayout.latte');
+        $event->setParam('template', 'MainMenu/InventoryMenuLayout.latte');
         $event->setParam('subMenuRoute', 'duplicatesList');
 
         return parent::onDispatch($e);

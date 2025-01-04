@@ -208,7 +208,7 @@ msgid "The name already exists"
 msgstr ""
 
 #: module/Console/Form/ClientConfig.php
-#: templates/PreferencesMenuLayout.latte
+#: templates/MainMenu/PreferencesMenuLayout.latte
 msgid "Agent"
 msgstr ""
 
@@ -223,7 +223,7 @@ msgid "Inventory interval (in days, 0 = always, -1 = never)"
 msgstr ""
 
 #: module/Console/Form/ClientConfig.php
-#: templates/PreferencesMenuLayout.latte
+#: templates/MainMenu/PreferencesMenuLayout.latte
 msgid "Download"
 msgstr ""
 
@@ -257,7 +257,7 @@ msgid "Timeout (in days)"
 msgstr ""
 
 #: module/Console/Form/ClientConfig.php
-#: templates/PreferencesMenuLayout.latte
+#: templates/MainMenu/PreferencesMenuLayout.latte
 msgid "Network scanning"
 msgstr ""
 
@@ -354,7 +354,7 @@ msgid "File (*.ocs, *.xml)"
 msgstr ""
 
 #: module/Console/Form/Import.php
-#: templates/InventoryMenuLayout.latte
+#: templates/MainMenu/InventoryMenuLayout.latte
 msgid "Import"
 msgstr ""
 
@@ -453,7 +453,7 @@ msgid "Post-installation message"
 msgstr ""
 
 #: module/Console/Form/Package/Build.php
-#: templates/PackagesMenuLayout.latte
+#: templates/MainMenu/PackagesMenuLayout.latte
 msgid "Build"
 msgstr ""
 
@@ -491,8 +491,8 @@ msgstr ""
 #: module/Console/Form/Package/Update.php
 #: module/Console/Form/Preferences/Packages.php
 #: templates/Layout.latte
+#: templates/MainMenu/PreferencesMenuLayout.latte
 #: templates/Pages/Client/Header.latte
-#: templates/PreferencesMenuLayout.latte
 msgid "Groups"
 msgstr ""
 
@@ -1752,33 +1752,15 @@ msgstr ""
 msgid "Merge selected clients"
 msgstr ""
 
-#: templates/InventoryMenuLayout.latte
-msgid "Clients"
-msgstr ""
-
-#: templates/InventoryMenuLayout.latte
-#: templates/Pages/Client/Header.latte
-msgid "Software"
-msgstr ""
-
-#: templates/InventoryMenuLayout.latte
-#: templates/Pages/Client/Header.latte
-msgid "Network"
-msgstr ""
-
-#: templates/InventoryMenuLayout.latte
-msgid "Duplicates"
-msgstr ""
-
 #: templates/Layout.latte
-#: templates/PreferencesMenuLayout.latte
+#: templates/MainMenu/PreferencesMenuLayout.latte
 msgid "Inventory"
 msgstr ""
 
 #: templates/Layout.latte
+#: templates/MainMenu/PreferencesMenuLayout.latte
 #: templates/Pages/Client/Header.latte
 #: templates/Pages/Group/Header.latte
-#: templates/PreferencesMenuLayout.latte
 msgid "Packages"
 msgstr ""
 
@@ -1794,8 +1776,48 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: templates/PackagesMenuLayout.latte
+#: templates/MainMenu/InventoryMenuLayout.latte
+msgid "Clients"
+msgstr ""
+
+#: templates/MainMenu/InventoryMenuLayout.latte
+#: templates/Pages/Client/Header.latte
+msgid "Software"
+msgstr ""
+
+#: templates/MainMenu/InventoryMenuLayout.latte
+#: templates/Pages/Client/Header.latte
+msgid "Network"
+msgstr ""
+
+#: templates/MainMenu/InventoryMenuLayout.latte
+msgid "Duplicates"
+msgstr ""
+
+#: templates/MainMenu/PackagesMenuLayout.latte
 msgid "Overview"
+msgstr ""
+
+#: templates/MainMenu/PreferencesMenuLayout.latte
+#: templates/Pages/Client/Header.latte
+msgid "Display"
+msgstr ""
+
+#: templates/MainMenu/PreferencesMenuLayout.latte
+msgid "Raw data"
+msgstr ""
+
+#: templates/MainMenu/PreferencesMenuLayout.latte
+msgid "Filters"
+msgstr ""
+
+#: templates/MainMenu/PreferencesMenuLayout.latte
+#: templates/Pages/Client/Header.latte
+msgid "System"
+msgstr ""
+
+#: templates/MainMenu/PreferencesMenuLayout.latte
+msgid "Users"
 msgstr ""
 
 #: templates/Pages/Client/Header.latte
@@ -1816,17 +1838,7 @@ msgid "Storage"
 msgstr ""
 
 #: templates/Pages/Client/Header.latte
-#: templates/PreferencesMenuLayout.latte
-msgid "Display"
-msgstr ""
-
-#: templates/Pages/Client/Header.latte
 msgid "BIOS"
-msgstr ""
-
-#: templates/Pages/Client/Header.latte
-#: templates/PreferencesMenuLayout.latte
-msgid "System"
 msgstr ""
 
 #: templates/Pages/Client/Header.latte
@@ -1928,16 +1940,4 @@ msgstr ""
 
 #: templates/Pages/Software.latte
 msgid "The following software will be marked as known but ignored. Continue?"
-msgstr ""
-
-#: templates/PreferencesMenuLayout.latte
-msgid "Raw data"
-msgstr ""
-
-#: templates/PreferencesMenuLayout.latte
-msgid "Filters"
-msgstr ""
-
-#: templates/PreferencesMenuLayout.latte
-msgid "Users"
 msgstr ""

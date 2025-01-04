@@ -77,7 +77,7 @@ class PackageController extends \Laminas\Mvc\Controller\AbstractActionController
 
     public function onDispatch(MvcEvent $e)
     {
-        $this->getEvent()->setParam('template', 'PackagesMenuLayout.latte');
+        $this->getEvent()->setParam('template', 'MainMenu/PackagesMenuLayout.latte');
 
         return parent::onDispatch($e);
     }

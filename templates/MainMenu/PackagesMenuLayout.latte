@@ -1,6 +1,6 @@
 {* Layout for a subpage from the "Packages" menu *}
-{layout MvcLayout.latte}
-{import MenuItem.latte}
+{layout ../MvcLayout.latte}
+{import ../MenuItem.latte}
 {var $mainMenuRoute = 'packagesList'}
 {block subMenu}
     {include menuItem, $subMenuRoute, 'packagesList', translate('Overview')}

@@ -51,7 +51,7 @@ class LicensesController extends \Laminas\Mvc\Controller\AbstractActionControlle
      */
     public function indexAction()
     {
-        $this->getEvent()->setParam('template', 'LicensesMenuLayout.latte');
+        $this->getEvent()->setParam('template', 'MainMenu/LicensesMenuLayout.latte');
 
         return array(
             'windowsProductKeys' => $this->_softwareManager->getNumManualProductKeys()

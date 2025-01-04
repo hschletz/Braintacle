@@ -66,7 +66,7 @@ class AccountsController extends \Laminas\Mvc\Controller\AbstractActionControlle
 
     public function onDispatch(MvcEvent $e)
     {
-        $e->setParam('template', 'PreferencesMenuLayout.latte');
+        $e->setParam('template', 'MainMenu/PreferencesMenuLayout.latte');
         $e->setParam('subMenuRoute', 'preferencesUsersList');
 
         return parent::onDispatch($e);

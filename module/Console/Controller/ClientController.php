@@ -114,7 +114,7 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
             }
         }
 
-        $event->setParam('template', 'InventoryMenuLayout.latte');
+        $event->setParam('template', 'MainMenu/InventoryMenuLayout.latte');
         $event->setParam('subMenuRoute', 'clientList');
 
         return parent::dispatch($request, $response);
@@ -657,7 +657,7 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
      */
     public function searchAction()
     {
-        $this->getEvent()->setParam('template', 'SearchMenuLayout.latte');
+        $this->getEvent()->setParam('template', 'MainMenu/SearchMenuLayout.latte');
 
         $form = $this->_formManager->get('Console\Form\Search');
         $form->remove('_csrf');

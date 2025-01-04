@@ -76,7 +76,7 @@ class NetworkController extends \Laminas\Mvc\Controller\AbstractActionController
     public function onDispatch(MvcEvent $e)
     {
         $event = $this->getEvent();
-        $event->setParam('template', 'InventoryMenuLayout.latte');
+        $event->setParam('template', 'MainMenu/InventoryMenuLayout.latte');
         $event->setParam('subMenuRoute', 'networkPage');
 
         return parent::onDispatch($e);

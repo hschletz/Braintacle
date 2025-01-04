@@ -1,6 +1,6 @@
 {* Layout for a subpage from the "Preferences" menu *}
-{layout MvcLayout.latte}
-{import MenuItem.latte}
+{layout ../MvcLayout.latte}
+{import ../MenuItem.latte}
 {var $mainMenuRoute = 'preferencesPage'}
 {block subMenu}
     {include menuItem, $subMenuRoute, 'preferencesDisplayPage', translate('Display')}

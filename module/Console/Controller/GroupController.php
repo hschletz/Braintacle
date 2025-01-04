@@ -96,7 +96,7 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
             }
         }
 
-        $event->setParam('template', 'GroupMenuLayout.latte');
+        $event->setParam('template', 'MainMenu/GroupMenuLayout.latte');
 
         return parent::dispatch($request, $response);
     }

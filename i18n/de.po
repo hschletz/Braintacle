@@ -209,7 +209,8 @@ msgstr "Die Eingabe ist länger als 255 Zeichen"
 msgid "The name already exists"
 msgstr "Der Name existiert bereits"
 
-#: module/Console/Form/ClientConfig.php templates/PreferencesMenuLayout.latte
+#: module/Console/Form/ClientConfig.php
+#: templates/MainMenu/PreferencesMenuLayout.latte
 msgid "Agent"
 msgstr "Agent"
 
@@ -241,7 +242,8 @@ msgstr "Pause (in Sekunden) zwischen Fragmenten"
 msgid "Delay (in seconds) between periods"
 msgstr "Pause (in Sekunden) zwischen Perioden"
 
-#: module/Console/Form/ClientConfig.php templates/PreferencesMenuLayout.latte
+#: module/Console/Form/ClientConfig.php
+#: templates/MainMenu/PreferencesMenuLayout.latte
 msgid "Download"
 msgstr "Download"
 
@@ -259,7 +261,8 @@ msgstr "Inventar-Intervall (in Tagen, 0 = immer, -1 = nie)"
 msgid "Maximum package priority"
 msgstr "Maximale Paket-Priorität"
 
-#: module/Console/Form/ClientConfig.php templates/PreferencesMenuLayout.latte
+#: module/Console/Form/ClientConfig.php
+#: templates/MainMenu/PreferencesMenuLayout.latte
 msgid "Network scanning"
 msgstr "Netzwerk-Scans"
 
@@ -348,7 +351,7 @@ msgstr "nie"
 msgid "File (*.ocs, *.xml)"
 msgstr "Datei (*.ocs, *.xml)"
 
-#: module/Console/Form/Import.php templates/InventoryMenuLayout.latte
+#: module/Console/Form/Import.php templates/MainMenu/InventoryMenuLayout.latte
 msgid "Import"
 msgstr "Import"
 
@@ -394,7 +397,8 @@ msgstr "Erlaube Abbruch durch Benutzer"
 msgid "Allow delay by user"
 msgstr "Erlaube Aufschub durch Benutzer"
 
-#: module/Console/Form/Package/Build.php templates/PackagesMenuLayout.latte
+#: module/Console/Form/Package/Build.php
+#: templates/MainMenu/PackagesMenuLayout.latte
 msgid "Build"
 msgstr "Erstellen"
 
@@ -462,7 +466,8 @@ msgstr "Fehler"
 
 #: module/Console/Form/Package/Update.php
 #: module/Console/Form/Preferences/Packages.php templates/Layout.latte
-#: templates/Pages/Client/Header.latte templates/PreferencesMenuLayout.latte
+#: templates/MainMenu/PreferencesMenuLayout.latte
+#: templates/Pages/Client/Header.latte
 msgid "Groups"
 msgstr "Gruppen"
 
@@ -1700,23 +1705,7 @@ msgstr "Ausgewählte Clients zusammenführen"
 msgid "Merge user supplied information"
 msgstr "Benutzerdefinierte Informationen übernehmen"
 
-#: templates/InventoryMenuLayout.latte
-msgid "Clients"
-msgstr "Clients"
-
-#: templates/InventoryMenuLayout.latte
-msgid "Duplicates"
-msgstr "Duplikate"
-
-#: templates/InventoryMenuLayout.latte templates/Pages/Client/Header.latte
-msgid "Network"
-msgstr "Netzwerk"
-
-#: templates/InventoryMenuLayout.latte templates/Pages/Client/Header.latte
-msgid "Software"
-msgstr "Software"
-
-#: templates/Layout.latte templates/PreferencesMenuLayout.latte
+#: templates/Layout.latte templates/MainMenu/PreferencesMenuLayout.latte
 msgid "Inventory"
 msgstr "Inventar"
 
@@ -1728,8 +1717,8 @@ msgstr "Lizenzen"
 msgid "Logout"
 msgstr "Abmelden"
 
-#: templates/Layout.latte templates/Pages/Client/Header.latte
-#: templates/Pages/Group/Header.latte templates/PreferencesMenuLayout.latte
+#: templates/Layout.latte templates/MainMenu/PreferencesMenuLayout.latte
+#: templates/Pages/Client/Header.latte templates/Pages/Group/Header.latte
 msgid "Packages"
 msgstr "Pakete"
 
@@ -1737,9 +1726,49 @@ msgstr "Pakete"
 msgid "Preferences"
 msgstr "Einstellungen"
 
-#: templates/PackagesMenuLayout.latte
+#: templates/MainMenu/InventoryMenuLayout.latte
+msgid "Clients"
+msgstr "Clients"
+
+#: templates/MainMenu/InventoryMenuLayout.latte
+msgid "Duplicates"
+msgstr "Duplikate"
+
+#: templates/MainMenu/InventoryMenuLayout.latte
+#: templates/Pages/Client/Header.latte
+msgid "Network"
+msgstr "Netzwerk"
+
+#: templates/MainMenu/InventoryMenuLayout.latte
+#: templates/Pages/Client/Header.latte
+msgid "Software"
+msgstr "Software"
+
+#: templates/MainMenu/PackagesMenuLayout.latte
 msgid "Overview"
 msgstr "Übersicht"
+
+#: templates/MainMenu/PreferencesMenuLayout.latte
+#: templates/Pages/Client/Header.latte
+msgid "Display"
+msgstr "Anzeige"
+
+#: templates/MainMenu/PreferencesMenuLayout.latte
+msgid "Filters"
+msgstr "Filter"
+
+#: templates/MainMenu/PreferencesMenuLayout.latte
+msgid "Raw data"
+msgstr "Rohdaten"
+
+#: templates/MainMenu/PreferencesMenuLayout.latte
+#: templates/Pages/Client/Header.latte
+msgid "System"
+msgstr "System"
+
+#: templates/MainMenu/PreferencesMenuLayout.latte
+msgid "Users"
+msgstr "Benutzer"
 
 #: templates/Pages/Client/Header.latte
 msgid "BIOS"
@@ -1752,10 +1781,6 @@ msgstr "Konfiguration"
 #: templates/Pages/Client/Header.latte
 msgid "Details for client '%s'"
 msgstr "Einzelheiten für Client '%s'"
-
-#: templates/Pages/Client/Header.latte templates/PreferencesMenuLayout.latte
-msgid "Display"
-msgstr "Anzeige"
 
 #: templates/Pages/Client/Header.latte
 msgid "Export"
@@ -1784,10 +1809,6 @@ msgstr "Registry"
 #: templates/Pages/Client/Header.latte
 msgid "Storage"
 msgstr "Massenspeicher"
-
-#: templates/Pages/Client/Header.latte templates/PreferencesMenuLayout.latte
-msgid "System"
-msgstr "System"
 
 #: templates/Pages/Client/Header.latte
 msgid "User defined"
@@ -1870,15 +1891,3 @@ msgstr "neu oder nicht kategorisiert"
 #: templates/Pages/Software.latte
 msgid "selected for display"
 msgstr "für Anzeige ausgewählt"
-
-#: templates/PreferencesMenuLayout.latte
-msgid "Filters"
-msgstr "Filter"
-
-#: templates/PreferencesMenuLayout.latte
-msgid "Raw data"
-msgstr "Rohdaten"
-
-#: templates/PreferencesMenuLayout.latte
-msgid "Users"
-msgstr "Benutzer"

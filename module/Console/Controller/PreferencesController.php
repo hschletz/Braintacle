@@ -85,7 +85,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
 
     public function dispatch(RequestInterface $request, ?ResponseInterface $response = null)
     {
-        $this->getEvent()->setParam('template', 'PreferencesMenuLayout.latte');
+        $this->getEvent()->setParam('template', 'MainMenu/PreferencesMenuLayout.latte');
 
         return parent::dispatch($request, $response);
     }
@@ -218,7 +218,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
     public function customfieldsAction()
     {
         $event = $this->getEvent();
-        $event->setParam('template', 'InventoryMenuLayout.latte');
+        $event->setParam('template', 'MainMenu/InventoryMenuLayout.latte');
         $event->setParam('subMenuRoute', 'clientList');
 
         $form = $this->_formManager->get('Console\Form\DefineFields');
@@ -241,7 +241,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
     public function deletefieldAction()
     {
         $event = $this->getEvent();
-        $event->setParam('template', 'InventoryMenuLayout.latte');
+        $event->setParam('template', 'MainMenu/InventoryMenuLayout.latte');
         $event->setParam('subMenuRoute', 'clientList');
 
         $field = $this->params()->fromQuery('name');
@@ -263,7 +263,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
     public function networkdevicesAction()
     {
         $event = $this->getEvent();
-        $event->setParam('template', 'InventoryMenuLayout.latte');
+        $event->setParam('template', 'MainMenu/InventoryMenuLayout.latte');
         $event->setParam('subMenuRoute', 'networkPage');
 
         $form = $this->_formManager->get('Console\Form\NetworkDeviceTypes');
@@ -286,7 +286,7 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
     public function deletedevicetypeAction()
     {
         $event = $this->getEvent();
-        $event->setParam('template', 'InventoryMenuLayout.latte');
+        $event->setParam('template', 'MainMenu/InventoryMenuLayout.latte');
         $event->setParam('subMenuRoute', 'networkPage');
 
         if ($this->getRequest()->isPost()) {

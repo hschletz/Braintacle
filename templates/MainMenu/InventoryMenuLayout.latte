@@ -1,6 +1,6 @@
 {* Layout for a subpage from the "Inventory" menu *}
-{layout MvcLayout.latte}
-{import MenuItem.latte}
+{layout ../MvcLayout.latte}
+{import ../MenuItem.latte}
 {var $mainMenuRoute = 'clientList'}
 {block subMenu}
     {include menuItem, $subMenuRoute, 'clientList', translate('Clients')}
