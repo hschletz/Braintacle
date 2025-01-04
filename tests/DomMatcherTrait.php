@@ -1,10 +1,13 @@
 <?php
 
-namespace Library\Test;
+namespace Braintacle\Test;
 
 use DOMXPath;
 use Masterminds\HTML5;
 
+/**
+ * Utility trait for testing DOM trees via XPath.
+ */
 trait DomMatcherTrait
 {
     private function createXpath(string $content): DOMXPath

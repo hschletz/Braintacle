@@ -22,8 +22,8 @@
 
 namespace Console\Test\Form\Preferences;
 
+use Braintacle\Test\DomMatcherTrait;
 use Console\Test\AbstractFormTestCase;
-use Library\Test\DomMatcherTrait;
 use org\bovigo\vfs\vfsStream;
 
 class RawDataTest extends AbstractFormTestCase

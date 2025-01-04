@@ -22,10 +22,10 @@
 
 namespace Console\Test\Form;
 
+use Braintacle\Test\DomMatcherTrait;
 use Console\Form\DeleteClient;
 use Console\Test\AbstractFormTestCase;
 use Laminas\Form\Element\Checkbox;
-use Library\Test\DomMatcherTrait;
 use Model\Config;
 use PHPUnit\Framework\MockObject\MockObject;
 

@@ -22,9 +22,9 @@
 
 namespace Console\Test\Form;
 
+use Braintacle\Test\DomMatcherTrait;
 use Console\Test\AbstractFormTestCase;
 use Laminas\InputFilter\FileInput;
-use Library\Test\DomMatcherTrait;
 
 /**
  * Tests for Import form

@@ -22,8 +22,8 @@
 
 namespace Library\Test\View\Helper;
 
+use Braintacle\Test\DomMatcherTrait;
 use Laminas\I18n\View\Helper\Translate;
-use Library\Test\DomMatcherTrait;
 use Library\View\Helper\HtmlElement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;

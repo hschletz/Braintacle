@@ -22,11 +22,11 @@
 
 namespace Console\Test\Form;
 
+use Braintacle\Test\DomMatcherTrait;
 use Console\Form\NetworkDeviceTypes;
 use Console\Test\AbstractFormTestCase;
 use Laminas\Form\FieldsetInterface;
 use Laminas\Form\View\Helper\FormElementErrors;
-use Library\Test\DomMatcherTrait;
 use Model\Network\DeviceManager;
 use PHPUnit\Framework\MockObject\MockObject;
 

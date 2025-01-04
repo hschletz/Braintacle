@@ -2,13 +2,13 @@
 
 namespace Console\Test\Inputfilter;
 
+use Braintacle\Test\DomMatcherTrait;
 use Console\Form\Package\AssignPackagesForm;
 use Console\Template\TemplateRenderer;
 use Laminas\Session\Validator\Csrf;
 use Laminas\Validator\InArray;
 use Laminas\Validator\NotEmpty;
 use Latte\Engine;
-use Library\Test\DomMatcherTrait;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\ClientOrGroup;

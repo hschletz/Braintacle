@@ -22,8 +22,8 @@
 
 namespace Console\Test\Form\Preferences;
 
+use Braintacle\Test\DomMatcherTrait;
 use Console\Test\AbstractFormTestCase;
-use Library\Test\DomMatcherTrait;
 
 /**
  * Tests for Packages form

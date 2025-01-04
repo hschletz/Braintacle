@@ -22,10 +22,10 @@
 
 namespace Console\Test\Form;
 
+use Braintacle\Test\DomMatcherTrait;
 use Console\Form\GroupMemberships;
 use Console\Test\AbstractFormTestCase;
 use Laminas\Form\FieldsetInterface;
-use Library\Test\DomMatcherTrait;
 
 /**
  * Tests for GroupMemberships form

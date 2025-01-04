@@ -22,9 +22,9 @@
 
 namespace Console\Test\Form;
 
+use Braintacle\Test\DomMatcherTrait;
 use Console\Test\AbstractFormTestCase;
 use Laminas\Form\Element\Date;
-use Library\Test\DomMatcherTrait;
 use Model\Client\CustomFieldManager;
 use PHPUnit\Framework\MockObject\MockObject;
 

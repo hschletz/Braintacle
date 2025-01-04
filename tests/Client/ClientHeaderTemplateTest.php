@@ -3,10 +3,10 @@
 namespace Braintacle\Test\Client;
 
 use Braintacle\Template\Function\PathForRouteFunction;
+use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\TemplateTestTrait;
 use Console\Template\Functions\TranslateFunction;
 use Exception;
-use Library\Test\DomMatcherTrait;
 use Model\Client\Client;
 use Model\Client\WindowsInstallation;
 use PHPUnit\Framework\TestCase;
