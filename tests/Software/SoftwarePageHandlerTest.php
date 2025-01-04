@@ -7,6 +7,7 @@ use Braintacle\Software\SoftwareFilter;
 use Braintacle\Software\SoftwarePageColumn;
 use Braintacle\Software\SoftwarePageHandler;
 use Braintacle\Test\HttpHandlerTestTrait;
+use Braintacle\Test\TemplateTestTrait;
 use Formotron\DataProcessor;
 use Model\SoftwareManager;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -17,6 +18,7 @@ use Psr\Http\Message\ResponseInterface;
 class SoftwarePageHandlerTest extends TestCase
 {
     use HttpHandlerTestTrait;
+    use TemplateTestTrait;
 
     private function getResponseForFilter(string $filter): ResponseInterface
     {

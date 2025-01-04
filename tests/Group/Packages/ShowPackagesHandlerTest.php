@@ -6,6 +6,7 @@ use Braintacle\Group\GroupRequestParameters;
 use Braintacle\Group\Packages\ShowPackagesHandler;
 use Braintacle\Template\Function\PathForRouteFunction;
 use Braintacle\Test\HttpHandlerTestTrait;
+use Braintacle\Test\TemplateTestTrait;
 use Console\Template\Functions\TranslateFunction;
 use Formotron\DataProcessor;
 use Model\Group\Group;
@@ -15,6 +16,7 @@ use Psr\Http\Message\ResponseInterface;
 class ShowPackagesHandlerTest extends TestCase
 {
     use HttpHandlerTestTrait;
+    use TemplateTestTrait;
 
     private function handleRequest(
         array $assignedPackages,

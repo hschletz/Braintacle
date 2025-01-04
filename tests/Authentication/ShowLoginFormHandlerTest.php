@@ -8,6 +8,7 @@ use Braintacle\Template\Function\CsrfTokenFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Test\HttpHandlerTestTrait;
+use Braintacle\Test\TemplateTestTrait;
 use Laminas\Authentication\AuthenticationServiceInterface;
 use Laminas\Session\Container as Session;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -19,6 +20,7 @@ use PHPUnit\Framework\TestCase;
 class ShowLoginFormHandlerTest extends TestCase
 {
     use HttpHandlerTestTrait;
+    use TemplateTestTrait;
 
     public function testRedirectIfAlreadyLoggedIn()
     {

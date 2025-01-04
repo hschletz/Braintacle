@@ -6,6 +6,7 @@ use Braintacle\AppConfig;
 use Braintacle\Http\ErrorHandlingMiddleware;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Test\HttpHandlerTestTrait;
+use Braintacle\Test\TemplateTestTrait;
 use Exception;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\UploadedFile;
@@ -22,6 +23,7 @@ use Slim\Exception\HttpException;
 class ErrorHandlingMiddlewareTest extends TestCase
 {
     use HttpHandlerTestTrait;
+    use TemplateTestTrait;
 
     public function testNoError()
     {
