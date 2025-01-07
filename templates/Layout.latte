@@ -9,7 +9,10 @@
     </head>
     <body>
         <div id='content'>
-            {block content}{/block}
+            {block content}
+                {* Fallback content for legacy MVC pages *}
+                {$content|noescape}
+            {/block}
         </div>
         <div id='menu'>
             <ul class="navigation">
