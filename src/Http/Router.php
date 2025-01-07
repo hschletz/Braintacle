@@ -33,6 +33,10 @@ class Router
         // All other routes get LoginMiddleware.
         $app->group('', function (RouteCollectorProxyInterface $group) {
             $group->get('/client/{id}/export', Client\ExportHandler::class)->setName('export');
+            $group->get('/client/{id}/packages', Client\Packages\ShowPackagesHandler::class)->setName('showClientPackages');
+            $group->post('/client/{id}/packages', Client\Packages\AssignPackagesHandler::class)->setName('assignPackageToClient');
+            $group->put('/client/{id}/packages', Client\Packages\ResetPackageHandler::class)->setName('resetPackageOnClient');
+            $group->delete('/client/{id}/packages', Client\Packages\RemovePackageHandler::class)->setName('removePackageFromClient');
             $group->get('/group/packages', Group\Packages\ShowPackagesHandler::class)->setName('showGroupPackages');
             $group->post('/group/packages', Group\Packages\AssignPackagesHandler::class)->setName('assignPackageToGroup');
             $group->delete('/group/packages', Group\Packages\RemovePackagesHandler::class)->setName('removePackageFromGroup');
@@ -54,7 +58,6 @@ class Router
             $group->get('/console/client/misc', ApplicationBridge::class)->setName('showClientMisc');
             $group->get('/console/client/msoffice', ApplicationBridge::class)->setName('showClientMsOffice');
             $group->get('/console/client/network', ApplicationBridge::class)->setName('showClientNetwork');
-            $group->get('/console/client/packages', ApplicationBridge::class)->setName('showClientPackages');
             $group->get('/console/client/printers', ApplicationBridge::class)->setName('showClientPrinters');
             $group->get('/console/client/registry', ApplicationBridge::class)->setName('showClientRegistry');
             $group->get('/console/client/search', ApplicationBridge::class)->setName('searchPage');

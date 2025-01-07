@@ -16,6 +16,7 @@ use Latte\Engine;
 class TemplateEngine
 {
     public function __construct(
+        private string $locale,
         private Engine $engine,
         private TemplateLoader $templateLoader,
         private AssetUrlFunction $assetUrlFunction,
@@ -23,6 +24,7 @@ class TemplateEngine
         private PathForRouteFunction $pathForRouteFunction,
         private TranslateFunction $translateFunction,
     ) {
+        $this->engine->setLocale($locale);
         $this->engine->setLoader($templateLoader);
 
         $engine->addFunction('assetUrl', $this->assetUrlFunction);

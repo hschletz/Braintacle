@@ -135,12 +135,10 @@ class AssignPackageFormTest extends TestCase
     public function testTemplateWithPackages()
     {
         $xPath = $this->createXpath($this->renderToString([
-            'action' => 'action',
             'csrfToken' => 'token',
             'packages' => ['package1', 'package2']
         ]));
         $this->assertXpathMatches($xPath, '//h2[text()="_Assign packages_"]');
-        $this->assertXpathMatches($xPath, '//form[@action="action"]');
         $this->assertXpathMatches($xPath, '//form/input[@name="csrf"][@value="token"]');
         $this->assertXpathMatches($xPath, '//form/div[@class="table"]');
         $this->assertXpathMatches($xPath, '//label/input[@type="checkbox"][@name="packages[]"][@value="package1"]');

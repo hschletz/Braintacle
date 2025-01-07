@@ -173,8 +173,8 @@ msgstr "Gruppe"
 #: module/Console/views/console/group/members.php
 #: module/Console/views/console/network/index.php
 #: module/Console/views/console/package/index.php
-#: templates/Client/Packages.latte templates/Client/Software.latte
-#: templates/Forms/ShowDuplicates.latte templates/Pages/Software.latte
+#: templates/Client/Software.latte templates/Forms/ShowDuplicates.latte
+#: templates/Pages/Client/Packages.latte templates/Pages/Software.latte
 msgid "Name"
 msgstr "Name"
 
@@ -322,14 +322,16 @@ msgstr "Interfaces aus Netzwerkliste löschen"
 #: module/Console/Form/DeleteClient.php
 #: module/Console/View/Helper/Form/ClientConfig.php
 #: module/Library/View/Helper/FormYesNo.php
-#: templates/Pages/Group/Packages.latte templates/Pages/Software.latte
+#: templates/Pages/Client/Packages.latte templates/Pages/Group/Packages.latte
+#: templates/Pages/Software.latte
 msgid "No"
 msgstr "Nein"
 
 #: module/Console/Form/DeleteClient.php
 #: module/Console/View/Helper/Form/ClientConfig.php
 #: module/Library/View/Helper/FormYesNo.php
-#: templates/Pages/Group/Packages.latte templates/Pages/Software.latte
+#: templates/Pages/Client/Packages.latte templates/Pages/Group/Packages.latte
+#: templates/Pages/Software.latte
 msgid "Yes"
 msgstr "Ja"
 
@@ -474,21 +476,21 @@ msgstr "Gruppen"
 #: module/Console/Form/Package/Update.php
 #: module/Console/Form/Preferences/Packages.php
 #: module/Console/views/console/package/index.php
-#: templates/Client/Packages.latte
+#: templates/Pages/Client/Packages.latte
 msgid "Pending"
 msgstr "Ausstehend"
 
 #: module/Console/Form/Package/Update.php
 #: module/Console/Form/Preferences/Packages.php
 #: module/Console/views/console/package/index.php
-#: templates/Client/Packages.latte
+#: templates/Pages/Client/Packages.latte
 msgid "Running"
 msgstr "Laufend"
 
 #: module/Console/Form/Package/Update.php
 #: module/Console/Form/Preferences/Packages.php
 #: module/Console/views/console/package/index.php
-#: templates/Client/Packages.latte
+#: templates/Pages/Client/Packages.latte
 msgid "Success"
 msgstr "Erfolg"
 
@@ -1296,7 +1298,7 @@ msgstr "Netzwerkschnittstellen"
 #: module/Console/views/console/client/network.php
 #: module/Console/views/console/client/system.php
 #: module/Console/views/console/client/virtualmachines.php
-#: templates/Client/Packages.latte
+#: templates/Pages/Client/Packages.latte
 msgid "Status"
 msgstr "Status"
 
@@ -1319,17 +1321,6 @@ msgstr "Inventarisierte Werte verwalten"
 #: module/Console/views/console/client/registry.php
 msgid "Registry Keys"
 msgstr "Registry-Schlüssel"
-
-#: module/Console/views/console/client/removepackage.php
-#, php-format
-msgid "Package '%s' will no longer be assigned to this client. Continue?"
-msgstr "Paket '%s' wird nicht mehr diesem Client zugewiesen sein. Fortfahren?"
-
-#: module/Console/views/console/client/resetpackage.php
-#, php-format
-msgid "Status of package '%s' will be reset to 'Pending'. Continue?"
-msgstr ""
-"Der Status des Pakets '%s' wird auf 'Ausstehend' zurückgesetzt. Fortfahren?"
 
 #: module/Console/views/console/client/storage.php
 #: module/Console/views/console/group/general.php
@@ -1649,22 +1640,6 @@ msgstr "Arbeitsspeicher lt. Betriebssystem"
 msgid "User Agent"
 msgstr "User-Agent"
 
-#: templates/Client/Packages.latte templates/Pages/Group/Packages.latte
-msgid "Assigned packages"
-msgstr "Zugewiesene Pakete"
-
-#: templates/Client/Packages.latte
-msgid "Timestamp"
-msgstr "Zeitpunkt"
-
-#: templates/Client/Packages.latte templates/Pages/Group/Packages.latte
-msgid "remove"
-msgstr "entfernen"
-
-#: templates/Client/Packages.latte
-msgid "reset"
-msgstr "zurücksetzen"
-
 #: templates/Client/Software.latte
 msgid "Location"
 msgstr "Ort"
@@ -1821,6 +1796,31 @@ msgstr "Virtuelle Maschinen"
 #: templates/Pages/Client/Header.latte
 msgid "Windows"
 msgstr "Windows"
+
+#: templates/Pages/Client/Packages.latte templates/Pages/Group/Packages.latte
+msgid "Assigned packages"
+msgstr "Zugewiesene Pakete"
+
+#: templates/Pages/Client/Packages.latte
+msgid "Package '{}' will no longer be assigned to this client. Continue?"
+msgstr "Paket '{}' wird nicht mehr diesem Client zugewiesen sein. Fortfahren?"
+
+#: templates/Pages/Client/Packages.latte
+msgid "Status of package '{}' will be reset to 'Pending'. Continue?"
+msgstr ""
+"Der Status des Pakets '{}' wird auf 'Ausstehend' zurückgesetzt. Fortfahren?"
+
+#: templates/Pages/Client/Packages.latte
+msgid "Timestamp"
+msgstr "Zeitpunkt"
+
+#: templates/Pages/Client/Packages.latte templates/Pages/Group/Packages.latte
+msgid "remove"
+msgstr "entfernen"
+
+#: templates/Pages/Client/Packages.latte
+msgid "reset"
+msgstr "zurücksetzen"
 
 #: templates/Pages/Group/Header.latte
 msgid "Details for group '%s'"

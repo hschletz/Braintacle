@@ -45,6 +45,7 @@ class TemplateEngineTest extends TestCase
         $translateFunction = $this->createStub(TranslateFunction::class);
 
         $engine = Mockery::mock(Engine::class);
+        $engine->shouldReceive('setLocale')->once()->with('locale');
         $engine->shouldReceive('setLoader')->once()->with($templateLoader);
         $engine->shouldReceive('addFunction')->once()->with('assetUrl', $assetUrlFunction);
         $engine->shouldReceive('addFunction')->once()->with('csrfToken', $csrfTokenFunction);
@@ -54,6 +55,7 @@ class TemplateEngineTest extends TestCase
         $engine->shouldReceive('renderToString')->with('template', ['key' => 'value'])->andReturn('content');
 
         new TemplateEngine(
+            'locale',
             $engine,
             $templateLoader,
             $assetUrlFunction,
@@ -65,6 +67,7 @@ class TemplateEngineTest extends TestCase
     private function createInstance(Engine $engine)
     {
         return new TemplateEngine(
+            'de-DE',
             $engine,
             $this->createStub(TemplateLoader::class),
             $this->createStub(AssetUrlFunction::class),

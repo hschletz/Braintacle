@@ -6,6 +6,7 @@ use Braintacle\Database\AdapterFactory;
 use Braintacle\Database\DatabaseFactory;
 use Braintacle\I18n\Translator;
 use Braintacle\Legacy\ClientOrGroupFactory;
+use Braintacle\Template\TemplateEngine;
 use Composer\InstalledVersions;
 use Console\Template\TemplateLoader;
 use DI\Container as DIContainer;
@@ -29,6 +30,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
+use function DI\autowire;
 use function DI\create;
 use function DI\factory;
 use function DI\get;
@@ -38,6 +40,7 @@ class Container extends DIContainer
     public function __construct()
     {
         $rootPath = InstalledVersions::getRootPackage()['install_path'];
+        $locale = Locale::getDefault();
 
         parent::__construct([
             AbstractDatabase::class => factory(DatabaseFactory::class),
@@ -55,9 +58,10 @@ class Container extends DIContainer
             MvcApplication::class => factory(Application::init(...))->parameter('module', 'Console'),
             ResponseInterface::class => get(Response::class),
             StorageInterface::class => get(DirectStorage::class),
+            TemplateEngine::class => autowire()->constructor(locale: $locale),
             TemplateLoader::class => create(TemplateLoader::class)->constructor($rootPath . 'templates'),
             TranslatorInterface::class => create(Translator::class)->constructor(
-                Locale::getDefault(),
+                $locale,
                 $rootPath . '/i18n',
                 get(AppConfig::class)
             ),

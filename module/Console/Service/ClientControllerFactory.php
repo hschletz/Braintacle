@@ -22,8 +22,6 @@
 
 namespace Console\Service;
 
-use Console\Form\Package\AssignPackagesForm;
-
 /**
  * Factory for ClientController
  */
@@ -41,7 +39,6 @@ class ClientControllerFactory implements \Laminas\ServiceManager\Factory\Factory
             $container->get('Model\Registry\RegistryManager'),
             $container->get('Model\SoftwareManager'),
             $container->get('FormElementManager'),
-            $container->get(AssignPackagesForm::class),
             $container->get('Model\Config')
         );
     }

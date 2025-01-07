@@ -101,7 +101,6 @@ class ShowPackagesHandlerTest extends TestCase
         $this->assertCount(1, $headings);
         $this->assertEquals('_Assign packages', $headings->item(0)->nodeValue);
 
-        $this->assertCount(1, $xPath->query('//form[@action="/assignPackageToGroup?name=%3CgroupName%3E"]'));
         $this->assertCount(1, $xPath->query('//form//input[@name="packages[]"][@value="package1"]/following-sibling::span[text()="package1"]'));
         $this->assertCount(1, $xPath->query('//form//input[@name="packages[]"][@value="package2"]/following-sibling::span[text()="package2"]'));
     }

@@ -20,16 +20,16 @@
         </table>
     {/if}
 
-    {include ../../Forms/AssignPackage.latte,
-        action: pathForRoute('assignPackageToGroup', [], [name: $group->name]),
-        packages: $assignablePackages
-    }
+    {include ../../Forms/AssignPackage.latte, packages: $assignablePackages}
 
-    <dialog class="confirmRemovePackage">
-        <p data-template="{translate('Package \'{}\' will no longer be assigned to this group. Continue?')}"></p>
+    <dialog class="confirmPackageAction">
+        <p>{* Message placeholder *}</p>
         <form method="dialog">
             <button value='yes'>{translate('Yes')}</button>
             <button value='no'>{translate('No')}</button>
         </form>
     </dialog>
+    <template id="confirmRemovePackage">
+        {translate("Package '{}' will no longer be assigned to this group. Continue?")}
+    </template>
 {/block}

@@ -23,7 +23,6 @@
 namespace Console\Test\Controller;
 
 use Console\Form\Import;
-use Console\Form\Package\AssignPackagesForm;
 use Console\Form\ProductKey;
 use Console\Form\Search as SearchForm;
 use Console\Mvc\Controller\Plugin\PrintForm;
@@ -32,9 +31,7 @@ use Console\Test\AbstractControllerTestCase;
 use Console\View\Helper\Form\ClientConfig;
 use Console\View\Helper\Form\Search as SearchHelper;
 use DateTime;
-use EmptyIterator;
 use IntlDateFormatter;
-use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Text;
 use Laminas\Hydrator\ObjectPropertyHydrator;
@@ -48,7 +45,6 @@ use Model\Client\Item\Software;
 use Model\Client\WindowsInstallation;
 use Model\Config;
 use Model\Group\GroupManager;
-use Model\Package\Assignment;
 use Model\Registry\RegistryManager;
 use Model\SoftwareManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -2534,134 +2530,6 @@ class ClientControllerTest extends AbstractControllerTestCase
         );
     }
 
-    public function testPackagesActionNoPackages()
-    {
-        $assignments = new ResultSet();
-        $assignments->initialize(new EmptyIterator());
-
-        /** @var MockObject|Client */
-        $client = $this->createMock(Client::class);
-        $client->id = 1;
-        $client->name = 'test';
-        $client->expects($this->once())
-            ->method('getPackageAssignments')
-            ->with('packageName', 'asc')
-            ->willReturn($assignments);
-        $client->expects($this->once())
-            ->method('getAssignablePackages')
-            ->willReturn([]);
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/packages/?id=1');
-        $this->assertResponseStatusCode(200);
-        $this->assertNotXpathQuery('//h2');
-        $this->assertNotXpathQuery('//table');
-        $this->assertNotXpathQuery('//form');
-    }
-
-    public function testPackagesActionAssigned()
-    {
-        $timestamp = new DateTime('2022-11-09T20:29:33');
-        $hydrator = new ObjectPropertyHydrator();
-        $assignments = [
-            $hydrator->hydrate([
-                'packageName' => 'package1',
-                'status' => Assignment::PENDING,
-                'timestamp' => $timestamp,
-            ], new Assignment()),
-            $hydrator->hydrate([
-                'packageName' => 'package2',
-                'status' => Assignment::RUNNING,
-                'timestamp' => $timestamp,
-            ], new Assignment()),
-            $hydrator->hydrate([
-                'packageName' => 'package3',
-                'status' => Assignment::SUCCESS,
-                'timestamp' => $timestamp,
-            ], new Assignment()),
-            $hydrator->hydrate([
-                'packageName' => 'package4',
-                'status' => '<ERROR>',
-                'timestamp' => $timestamp,
-            ], new Assignment()),
-        ];
-
-        /** @var MockObject|Client */
-        $client = $this->createMock(Client::class);
-        $client->id = 1;
-        $client->name = 'test';
-        $client->expects($this->once())
-            ->method('getPackageAssignments')
-            ->with('packageName', 'asc')
-            ->willReturn($assignments);
-        $client->expects($this->once())
-            ->method('getAssignablePackages')
-            ->willReturn([]);
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/packages/?id=1');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//h2', 'Zugewiesene Pakete');
-        $this->assertXpathQueryCount('//h2', 1);
-
-        $this->assertXpathQueryContentContains('//tr[2]/td[2][@class="package_pending"]', 'Ausstehend');
-        $this->assertXpathQueryContentContains('//tr[3]/td[2][@class="package_running"]', 'Laufend');
-        $this->assertXpathQueryContentContains('//tr[4]/td[2][@class="package_success"]', 'Erfolg');
-        $this->assertXpathQueryContentContains('//tr[5]/td[2][@class="package_error"]', '<ERROR>');
-
-        $this->assertXpathQueryContentContains('//td', '09.11.22, 20:29');
-
-        // Pending package must not have "reset" link
-        $this->assertXpathQueryContentRegex('//tr[2]/td[4]', '/^\s*$/');
-        // Other packages must have "reset" link
-        $this->assertXpathQueryContentRegex(
-            '//tr[3]/td[4]/a[@href="/console/client/resetpackage/?id=1&package=package2"]',
-            '/zurücksetzen/'
-        );
-        $this->assertXpathQueryContentRegex(
-            '//tr[4]/td[4]/a[@href="/console/client/resetpackage/?id=1&package=package3"]',
-            '/zurücksetzen/'
-        );
-        $this->assertXpathQueryContentRegex(
-            '//tr[5]/td[4]/a[@href="/console/client/resetpackage/?id=1&package=package4"]',
-            '/zurücksetzen/'
-        );
-
-        // "remove" link
-        $this->assertXpathQueryCount('//tr/td[5]/a', 4);
-        $this->assertXpathQueryContentRegex(
-            '//tr[3]/td[5]/a[@href="/console/client/removepackage/?id=1&package=package2"]',
-            '/entfernen/'
-        );
-    }
-
-    public function testPackagesActionAssignable()
-    {
-        $assignablePackages = ['package'];
-
-        $assignments = new ResultSet();
-        $assignments->initialize(new EmptyIterator());
-
-        /** @var MockObject|Client */
-        $client = $this->createMock(Client::class);
-        $client->id = 1;
-        $client->name = 'test';
-        $client->expects($this->once())
-            ->method('getPackageAssignments')
-            ->with('packageName', 'asc')
-            ->willReturn($assignments);
-        $client->expects($this->once())
-            ->method('getAssignablePackages')
-            ->willReturn($assignablePackages);
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/packages/?id=1');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//h2', 'Pakete zuweisen');
-        $this->assertXpathQueryCount('//h2', 1);
-        $this->assertXPathQuery('//form');
-    }
-
     public function testGroupsActionNoGroups()
     {
         $resultSet = new \Laminas\Db\ResultSet\ResultSet();
@@ -2974,116 +2842,6 @@ class ClientControllerTest extends AbstractControllerTestCase
             ["Client 'name' konnte nicht gelöscht werden."],
             $flashMessenger->getCurrentErrorMessages()
         );
-    }
-
-    public function testRemovepackageActionGet()
-    {
-        $client = $this->createMock('Model\Client\Client');
-        $client->expects($this->never())->method('removePackage');
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/removepackage/?id=1&package=name');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains(
-            '//p',
-            "Paket 'name' wird nicht mehr diesem Client zugewiesen sein. Fortfahren?"
-        );
-    }
-
-    public function testRemovepackageActionPostNo()
-    {
-        $map = array(
-            array('Id', 1),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
-        $client->expects($this->never())->method('removePackage');
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/removepackage/?id=1&package=name', 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/client/packages/?id=1');
-    }
-
-    public function testRemovepackageActionPostYes()
-    {
-        $map = array(
-            array('Id', 1),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
-        $client->expects($this->once())->method('removePackage')->with('name');
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/removepackage/?id=1&package=name', 'POST', array('yes' => 'Yes'));
-        $this->assertRedirectTo('/console/client/packages/?id=1');
-    }
-
-    public function testAssignpackageActionGet()
-    {
-        $client = new Client();
-        $client->id = 1;
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        /** @var MockObject|AssignPackagesForm */
-        $form = $this->createMock(AssignPackagesForm::class);
-        $form->expects($this->never())->method('process');
-        $this->getApplicationServiceLocator()->setService(AssignPackagesForm::class, $form);
-
-        $this->dispatch('/console/client/assignpackage/?id=1', 'GET');
-        $this->assertRedirectTo('/console/client/packages/?id=1');
-    }
-
-    public function testAssignpackageActionPost()
-    {
-        $postData = ['packages' => ['package1', 'package2']];
-
-        $client = new Client();
-        $client->id = 1;
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        /** @var MockObject|AssignPackagesForm */
-        $form = $this->createMock(AssignPackagesForm::class);
-        $form->expects($this->once())->method('process')->with($postData, $client);
-        $this->getApplicationServiceLocator()->setService(AssignPackagesForm::class, $form);
-
-        $this->dispatch('/console/client/assignpackage/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/client/packages/?id=1');
-    }
-
-    public function testResetpackageActionGet()
-    {
-        $client = $this->createMock('Model\Client\Client');
-        $client->expects($this->never())->method('resetPackage');
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/resetpackage/?id=1&package=name');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains(
-            '//p',
-            "Der Status des Pakets 'name' wird auf 'Ausstehend' zurückgesetzt. Fortfahren?"
-        );
-    }
-
-    public function testResetpackageActionPostNo()
-    {
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->with('Id')->willReturn(1);
-        $client->expects($this->never())->method('resetPackage');
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/resetpackage/?id=1&package=name', 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/client/packages/?id=1');
-    }
-
-    public function testResetpackageActionPostYes()
-    {
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->with('Id')->willReturn(1);
-        $client->expects($this->once())->method('resetPackage')->with('name');
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/resetpackage/?id=1&package=name', 'POST', array('yes' => 'Yes'));
-        $this->assertRedirectTo('/console/client/packages/?id=1');
     }
 
     public function testManagegroupsActionGet()

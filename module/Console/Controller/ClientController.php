@@ -23,7 +23,6 @@
 namespace Console\Controller;
 
 use Braintacle\Direction;
-use Console\Form\Package\AssignPackagesForm;
 use Console\Template\TemplateViewModel;
 use Console\View\Helper\Form\Search;
 use Model\Client\Item\Software;
@@ -75,15 +74,12 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
      */
     protected $_currentClient;
 
-    private AssignPackagesForm $assignPackagesForm;
-
     public function __construct(
         \Model\Client\ClientManager $clientManager,
         \Model\Group\GroupManager $groupManager,
         \Model\Registry\RegistryManager $registryManager,
         \Model\SoftwareManager $softwareManager,
         \Laminas\Form\FormElementManager $formManager,
-        AssignPackagesForm $assignPackagesForm,
         \Model\Config $config
     ) {
         $this->_clientManager = $clientManager;
@@ -92,7 +88,6 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
         $this->_softwareManager = $softwareManager;
         $this->_formManager = $formManager;
         $this->_config = $config;
-        $this->assignPackagesForm = $assignPackagesForm;
     }
 
     /** {@inheritdoc} */
@@ -439,19 +434,6 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Status and management of assigned packages
-     */
-    public function packagesAction(): TemplateViewModel
-    {
-        $vars = $this->getOrder('packageName');
-        $vars['client'] = $this->_currentClient;
-        $vars['assignments'] = $this->_currentClient->getPackageAssignments($vars['order'], $vars['direction']);
-        $vars['assignablePackages'] = $this->_currentClient->getAssignablePackages();
-
-        return new TemplateViewModel('Client/Packages.latte', $vars);
-    }
-
-    /**
      * Display and manage group memberships
      *
      * @return array client, order, direction [, form (Console\Form\GroupMemberships) if groups are available]
@@ -561,68 +543,6 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
                 'client' => $this->_currentClient,
                 'form' => $form
             );
-        }
-    }
-
-    /**
-     * Remove package assignment, display confirmation form
-     *
-     * @return array|\Laminas\Http\Response array(packageName) or redirect response
-     */
-    public function removepackageAction()
-    {
-        $params = $this->params();
-        if ($this->getRequest()->isPost()) {
-            if ($params->fromPost('yes')) {
-                $this->_currentClient->removePackage($params->fromQuery('package'));
-            }
-            return $this->redirectToRoute(
-                'client',
-                'packages',
-                array('id' => $this->_currentClient['Id'])
-            );
-        } else {
-            return array('packageName' => $params->fromQuery('package'));
-        }
-    }
-
-    /**
-     * Assign packages (POST only)
-     *
-     * @return \Laminas\Http\Response redirect response
-     */
-    public function assignpackageAction()
-    {
-        if ($this->getRequest()->isPost()) {
-            $formData = $this->params()->fromPost();
-            $this->assignPackagesForm->process($formData, $this->_currentClient);
-        }
-        return $this->redirectToRoute(
-            'client',
-            'packages',
-            ['id' => $this->_currentClient->id]
-        );
-    }
-
-    /**
-     * Reset package status to 'pending', display confirmation form
-     *
-     * @return array|\Laminas\Http\Response array(packageName) or redirect response
-     */
-    public function resetpackageAction()
-    {
-        $params = $this->params();
-        if ($this->getRequest()->isPost()) {
-            if ($params->fromPost('yes')) {
-                $this->_currentClient->resetPackage($params->fromQuery('package'));
-            }
-            return $this->redirectToRoute(
-                'client',
-                'packages',
-                array('id' => $this->_currentClient['Id'])
-            );
-        } else {
-            return array('packageName' => $params->fromQuery('package'));
         }
     }
 

@@ -19,6 +19,7 @@ trait TemplateTestTrait
     private function createTemplateEngine(array $templateFunctions = []): TemplateEngine
     {
         return new TemplateEngine(
+            'de-DE',
             new Engine(),
             new TemplateLoader(InstalledVersions::getRootPackage()['install_path'] . 'templates'),
             $templateFunctions[AssetUrlFunction::class] ?? $this->createStub(AssetUrlFunction::class),

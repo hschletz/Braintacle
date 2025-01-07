@@ -1,0 +1,65 @@
+{layout ClientMenuLayout.latte}
+{block content}
+
+{include Header.latte}
+
+{if count($assignedPackages)}
+    <link rel="stylesheet" href="{assetUrl('css/assigned_packages.css')}">
+    <script type="module" src="{assetUrl('js/assigned_packages.js')}"></script>
+
+    <h2>{translate('Assigned packages')}</h2>
+    <table class="alternating assignedPackages">
+        <tr>
+            <th>{translate('Name')}</th>
+            <th>{translate('Status')}</th>
+            <th>{translate('Timestamp')}</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr n:foreach="$assignedPackages as $assignment">
+            <td>{$assignment->packageName}</td>
+            {switch $assignment->status}
+                {case $assignment::PENDING}
+                    <td class="package_pending">{translate('Pending')}</td>
+                {case $assignment::RUNNING}
+                    <td class="package_running">{translate('Running')}</td>
+                {case $assignment::SUCCESS}
+                    <td class="package_success">{translate('Success')}</td>
+                {default} {* ERR_* *}
+                    <td class="package_error">{$assignment->status}</td>
+            {/switch}
+            <td>{$assignment->timestamp|localDate: date: short, time: short}</td>
+            <td>
+                <button
+                    n:if="$assignment->status != $assignment::PENDING"
+                    type="button"
+                    data-package="{$assignment->packageName}"
+                    data-action="reset"
+                >
+                    {translate('reset')}
+                </button>
+            </td>
+            <td>
+                <button type="button" data-package="{$assignment->packageName}" data-action="remove">
+                    {translate('remove')}
+                </button>
+            </td>
+        </tr>
+    </table>
+{/if}
+
+{include ../../Forms/AssignPackage.latte, packages: $assignablePackages}
+
+<dialog class="confirmPackageAction">
+    <p>{* Message placeholder *}</p>
+    <form method="dialog">
+        <button value='yes'>{translate('Yes')}</button>
+        <button value='no'>{translate('No')}</button>
+    </form>
+</dialog>
+<template id="confirmRemovePackage">
+    {translate("Package '{}' will no longer be assigned to this client. Continue?")}
+</template>
+<template id="confirmResetPackage">
+    {translate("Status of package '{}' will be reset to 'Pending'. Continue?")}
+</template>
