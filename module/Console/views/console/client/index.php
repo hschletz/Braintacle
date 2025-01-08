@@ -20,6 +20,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Braintacle\Http\RouteHelper;
+
+/** @var RouteHelper */
+$routeHelper = $this->routeHelper;
+
 foreach (array('error', 'success') as $namespace) {
     $messages = $this->flashMessenger()->getMessagesFromNamespace($namespace);
     if ($messages) {
@@ -113,17 +118,11 @@ $columnClasses = array(
 
 $headers = array();
 $renderCallbacks = array(
-    'Name' => function ($view, $client) {
+    'Name' => function ($view, $client) use ($routeHelper) {
         return $view->htmlElement(
             'a',
             $view->escapeHtml($client['Name']),
-            array(
-                'href' => $view->consoleUrl(
-                    'client',
-                    $view->jumpto,
-                    array('id' => $client['Id'])
-                )
-            ),
+            ['href' => $routeHelper->getPathForRoute('showClientGeneral', ['id' => $client['Id']])],
             true
         );
     },

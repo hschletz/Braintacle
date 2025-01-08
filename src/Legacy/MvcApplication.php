@@ -3,6 +3,7 @@
 namespace Braintacle\Legacy;
 
 use Braintacle\AppConfig;
+use Braintacle\Http\RouteHelper;
 use Braintacle\Template\Function\AssetUrlFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
 use Closure;
@@ -52,6 +53,7 @@ class MvcApplication
         $serviceManager->setService(I18nTranslatorInterface::class, $this->container->get(I18nTranslator::class));
         $serviceManager->setService(LoggerInterface::class, $this->container->get(LoggerInterface::class));
         $serviceManager->setService(PathForRouteFunction::class, $this->container->get(PathForRouteFunction::class));
+        $serviceManager->setService(RouteHelper::class, $this->container->get(RouteHelper::class));
         $serviceManager->setService(TranslatorInterface::class, $this->container->get(TranslatorInterface::class));
     }
 

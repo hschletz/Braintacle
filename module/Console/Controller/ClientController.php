@@ -23,6 +23,7 @@
 namespace Console\Controller;
 
 use Braintacle\Direction;
+use Braintacle\Http\RouteHelper;
 use Console\Template\TemplateViewModel;
 use Console\View\Helper\Form\Search;
 use Model\Client\Item\Software;
@@ -75,6 +76,7 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
     protected $_currentClient;
 
     public function __construct(
+        private RouteHelper $routeHelper,
         \Model\Client\ClientManager $clientManager,
         \Model\Group\GroupManager $groupManager,
         \Model\Registry\RegistryManager $registryManager,
@@ -215,24 +217,9 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
         $vars['invert'] = $invert;
         $vars['isCustomSearch'] = $isCustomSearch;
         $vars['columns'] = $columns;
+        $vars['routeHelper'] = $this->routeHelper;
 
         return $vars;
-    }
-
-    /**
-     * General information about a client
-     */
-    public function generalAction()
-    {
-        $physicalRam = 0;
-        foreach ($this->_currentClient['MemorySlot'] as $slot) {
-            $physicalRam += $slot->size;
-        }
-
-        return new TemplateViewModel('Client/General.latte', [
-            'client' => $this->_currentClient,
-            'physicalRam' => $physicalRam,
-        ]);
     }
 
     /**

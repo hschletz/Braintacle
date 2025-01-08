@@ -22,16 +22,15 @@
 
 namespace Console\Test\Controller;
 
+use Braintacle\Http\RouteHelper;
 use Console\Form\Import;
 use Console\Form\ProductKey;
 use Console\Form\Search as SearchForm;
 use Console\Mvc\Controller\Plugin\PrintForm;
-use Console\Template\Filters\DateFormatFilter;
 use Console\Test\AbstractControllerTestCase;
 use Console\View\Helper\Form\ClientConfig;
 use Console\View\Helper\Form\Search as SearchHelper;
 use DateTime;
-use IntlDateFormatter;
 use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Text;
 use Laminas\Hydrator\ObjectPropertyHydrator;
@@ -143,6 +142,10 @@ class ClientControllerTest extends AbstractControllerTestCase
         $serviceManager->setService('Model\SoftwareManager', $this->_softwareManager);
         $serviceManager->setService('Model\Config', $this->_config);
 
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $routeHelper->method('getPathForRoute')->willReturnCallback(fn ($name, $routeArguments) => "{$name}/{$routeArguments['id']}");
+        $serviceManager->setService(RouteHelper::class, $routeHelper);
+
         $formManager = $serviceManager->get('FormElementManager');
         $formManager->setService('Console\Form\ClientConfig', $this->createMock('Console\Form\ClientConfig'));
         $formManager->setService('Console\Form\CustomFields', $this->createMock('Console\Form\CustomFields'));
@@ -192,7 +195,7 @@ class ClientControllerTest extends AbstractControllerTestCase
         $this->assertXpathQueryCount('//th', 7);
         $this->assertXpathQueryCount('//th[@class="textright"]', 2); // CpuClock and PhysicalMemory
         $this->assertXpathQueryContentContains(
-            '//td/a[@href="/console/client/general/?id=2"]',
+            '//td/a[@href="showClientGeneral/2"]',
             'name2'
         );
     }
@@ -258,7 +261,7 @@ class ClientControllerTest extends AbstractControllerTestCase
         $this->dispatch('/console/client/index/?jumpto=software');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
-            '//td/a[@href="/console/client/software/?id=2"]',
+            '//td/a[@href="showClientGeneral/2"]',
             'name2'
         );
     }
@@ -273,7 +276,7 @@ class ClientControllerTest extends AbstractControllerTestCase
         $this->dispatch('/console/client/index/?jumpto=invalid');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
-            '//td/a[@href="/console/client/general/?id=2"]',
+            '//td/a[@href="showClientGeneral/2"]',
             'name2'
         );
     }
@@ -773,310 +776,6 @@ class ClientControllerTest extends AbstractControllerTestCase
         $this->dispatch('/console/client/index/');
         $this->assertXpathQuery('//ul[@class="error"]/li[text()="error"]');
         $this->assertXpathQuery('//ul[@class="success"]/li[text()="success"]');
-    }
-
-    public function testGeneralActionDefault()
-    {
-        $inventoryDate = new \DateTime('2014-05-29 11:16:15');
-        $lastContactDate = new \DateTime('2014-05-29 11:17:34');
-
-        /** @var MockObject|DateFormatFilter */
-        $dateFormat = $this->createMock(DateFormatFilter::class);
-        $dateFormat->method('__invoke')->willReturnMap([
-            [$inventoryDate, IntlDateFormatter::FULL, IntlDateFormatter::LONG, 'inventory_date'],
-            [$lastContactDate, IntlDateFormatter::FULL, IntlDateFormatter::LONG, 'last_contact_date'],
-        ]);
-        $this->getApplicationServiceLocator()->setService(DateFormatFilter::class, $dateFormat);
-
-        /** @var MockObject|Client */
-        $client = $this->createMock(Client::class);
-        $client->id = 1;
-        $client->name = 'name';
-        $client->idString = 'id_string';
-        $client->inventoryDate = $inventoryDate;
-        $client->lastContactDate = $lastContactDate;
-        $client->userAgent = 'user_agent';
-        $client->manufacturer = 'manufacturer';
-        $client->productName = 'product_name';
-        $client->serial = 'serial';
-        $client->assetTag = 'asset_tag';
-        $client->type = 'type';
-        $client->osName = 'os_name';
-        $client->osVersionString = 'os_version_string';
-        $client->osVersionNumber = 'os_version_number';
-        $client->osComment = 'os_comment';
-        $client->cpuType = 'cpu_type';
-        $client->cpuClock = 1234;
-        $client->cpuCores = 2;
-        $client->physicalMemory = 1234;
-        $client->swapMemory = 5678;
-        $client->userName = 'user_name';
-        $client->uuid = 'uuid';
-        $client->method('offsetGet')->willReturnMap([
-            ['IsSerialBlacklisted', false],
-            ['IsAssetTagBlacklisted', false],
-            ['MemorySlot', [(object) ['size' => 2], (object) ['size' => 3]]],
-        ]);
-
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/general/?id=1');
-        $this->assertResponseStatusCode(200);
-
-        $query = '//table/tr/td[text()="%s"]/following::td[1][normalize-space(text())="%s"]';
-        $this->assertXPathQuery(sprintf($query, 'ID', 1));
-        $this->assertXPathQuery(sprintf($query, 'ID-String', 'id_string'));
-        $this->assertXPathQuery(sprintf($query, 'Datum der Inventarinformationen', 'inventory_date'));
-        $this->assertXPathQuery(sprintf($query, 'Letzter Kontakt', 'last_contact_date'));
-        $this->assertXPathQuery(sprintf($query, 'User-Agent', 'user_agent'));
-        $this->assertXPathQuery(sprintf($query, 'Modell', 'manufacturer product_name'));
-        $this->assertXPathQuery(sprintf($query, 'Seriennummer', 'serial'));
-        $this->assertXPathQuery(sprintf($query, 'Asset tag', 'asset_tag'));
-        $this->assertXPathQuery(sprintf($query, 'Typ', 'type'));
-        $this->assertXPathQuery(sprintf($query, 'Betriebssystem', 'os_name os_version_string (os_version_number)'));
-        $this->assertXPathQuery(sprintf($query, 'Kommentar', 'os_comment'));
-        $this->assertXPathQuery(sprintf($query, 'CPU Typ', 'cpu_type'));
-        $this->assertXPathQuery(sprintf($query, 'CPU Takt', "1234\xC2\xA0MHz"));
-        $this->assertXPathQuery(sprintf($query, 'Anzahl der CPU-Kerne', 2));
-        $this->assertXPathQuery(sprintf($query, 'Vom Agenten entdeckter Arbeitsspeicher', "5\xC2\xA0MB"));
-        $this->assertXPathQuery(sprintf($query, 'Arbeitsspeicher lt. Betriebssystem', "1234\xC2\xA0MB"));
-        $this->assertXPathQuery(sprintf($query, 'Auslagerungsspeicher', "5678\xC2\xA0MB"));
-        $this->assertXPathQuery(sprintf($query, 'Letzter angemeldeter Benutzer', 'user_name'));
-        $this->assertXPathQuery(sprintf($query, 'UUID', 'uuid'));
-        $this->assertXpathQuery('//table/tr/td[text()="serial"][not(@class)]');
-        $this->assertXpathQuery('//table/tr/td[text()="asset_tag"][not(@class)]');
-    }
-
-    public function testGeneralActionNoUuid()
-    {
-        /** @var MockObject|Client */
-        $client = $this->createMock(Client::class);
-        $client->id = 1;
-        $client->name = 'name';
-        $client->idString = 'id_string';
-        $client->inventoryDate = new DateTime();
-        $client->lastContactDate = new DateTime();
-        $client->userAgent = 'user_agent';
-        $client->manufacturer = 'manufacturer';
-        $client->productName = 'product_name';
-        $client->serial = 'serial';
-        $client->assetTag = 'asset_tag';
-        $client->type = 'type';
-        $client->osName = 'os_name';
-        $client->osVersionString = 'os_version_string';
-        $client->osVersionNumber = 'os_version_number';
-        $client->osComment = 'os_comment';
-        $client->cpuType = 'cpu_type';
-        $client->cpuClock = 1234;
-        $client->cpuCores = 2;
-        $client->physicalMemory = 1234;
-        $client->swapMemory = 5678;
-        $client->userName = 'user_name';
-        $client->uuid = null;
-        $client->method('offsetGet')->willReturnMap([
-            ['MemorySlot', []],
-        ]);
-
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/general/?id=1');
-        $this->assertResponseStatusCode(200);
-
-        $this->assertNotXpathQuery('//td[text()="UUID"]');
-    }
-
-    public function testGeneralActionSerialBlacklisted()
-    {
-        /** @var MockObject|Client */
-        $client = $this->createMock(Client::class);
-        $client->id = 1;
-        $client->name = 'test';
-        $client->idString = 'id_string';
-        $client->inventoryDate = new DateTime();
-        $client->lastContactDate = new DateTime();
-        $client->userAgent = 'user_agent';
-        $client->manufacturer = 'manufacturer';
-        $client->productName = 'product_name';
-        $client->serial = 'serial';
-        $client->assetTag = 'asset_tag';
-        $client->type = 'type';
-        $client->osName = 'os_name';
-        $client->osVersionString = 'os_version_string';
-        $client->osVersionNumber = 'os_version_number';
-        $client->osComment = 'os_comment';
-        $client->cpuType = 'cpu_type';
-        $client->cpuClock = 1234;
-        $client->cpuCores = 2;
-        $client->physicalMemory = 1234;
-        $client->swapMemory = 5678;
-        $client->userName = 'user_name';
-        $client->uuid = 'uuid';
-        $client->method('offsetGet')->willReturnMap([
-            ['IsSerialBlacklisted', true],
-            ['IsAssetTagBlacklisted', false],
-            ['MemorySlot', []],
-        ]);
-
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/general/?id=1');
-        $this->assertXpathQuery('//td[text()="serial"][@class="blacklisted"]');
-        $this->assertXpathQuery('//td[text()="asset_tag"][not(@class)]');
-    }
-
-    public function testGeneralActionAssetTagBlacklisted()
-    {
-        /** @var MockObject|Client */
-        $client = $this->createMock(Client::class);
-        $client->id = 1;
-        $client->name = 'test';
-        $client->idString = 'id_string';
-        $client->inventoryDate = new DateTime();
-        $client->lastContactDate = new DateTime();
-        $client->userAgent = 'user_agent';
-        $client->manufacturer = 'manufacturer';
-        $client->productName = 'product_name';
-        $client->serial = 'serial';
-        $client->assetTag = 'asset_tag';
-        $client->type = 'type';
-        $client->osName = 'os_name';
-        $client->osVersionString = 'os_version_string';
-        $client->osVersionNumber = 'os_version_number';
-        $client->osComment = 'os_comment';
-        $client->cpuType = 'cpu_type';
-        $client->cpuClock = 1234;
-        $client->cpuCores = 2;
-        $client->physicalMemory = 1234;
-        $client->swapMemory = 5678;
-        $client->userName = 'user_name';
-        $client->uuid = 'uuid';
-        $client->method('offsetGet')->willReturnMap([
-            ['IsSerialBlacklisted', false],
-            ['IsAssetTagBlacklisted', true],
-            ['MemorySlot', []],
-        ]);
-
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/general/?id=1');
-        $this->assertXpathQuery('//td[text()="serial"][not(@class)]');
-        $this->assertXpathQuery('//td[text()="asset_tag"][@class="blacklisted"]');
-    }
-
-    public function testGeneralActionWindowsUser()
-    {
-        /** @var MockObject|Client */
-        $client = $this->createMock(Client::class);
-        $client->id = 1;
-        $client->name = 'test';
-        $client->idString = 'id_string';
-        $client->inventoryDate = new DateTime();
-        $client->lastContactDate = new DateTime();
-        $client->userAgent = 'user_agent';
-        $client->manufacturer = 'manufacturer';
-        $client->productName = 'product_name';
-        $client->serial = 'serial';
-        $client->assetTag = 'asset_tag';
-        $client->type = 'type';
-        $client->osName = 'os_name';
-        $client->osVersionString = 'os_version_string';
-        $client->osVersionNumber = 'os_version_number';
-        $client->osComment = 'os_comment';
-        $client->cpuType = 'cpu_type';
-        $client->cpuClock = 1234;
-        $client->cpuCores = 2;
-        $client->physicalMemory = 1234;
-        $client->swapMemory = 5678;
-        $client->userName = 'user_name';
-        $client->uuid = 'uuid';
-        $client->method('offsetGet')->willReturnMap([
-            ['Windows', ['UserDomain' => 'domain']],
-            ['MemorySlot', []],
-        ]);
-        $client->method('offsetExists')->with('Windows')->willReturn(true);
-
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/general/?id=1');
-        $this->assertXpathQueryContentContains('//td', 'user_name @ domain');
-    }
-
-    public function testGeneralActionWindowsNoArch()
-    {
-        /** @var MockObject|Client */
-        $client = $this->createMock(Client::class);
-        $client->id = 1;
-        $client->name = 'test';
-        $client->idString = 'id_string';
-        $client->inventoryDate = new DateTime();
-        $client->lastContactDate = new DateTime();
-        $client->userAgent = 'user_agent';
-        $client->manufacturer = 'manufacturer';
-        $client->productName = 'product_name';
-        $client->serial = 'serial';
-        $client->assetTag = 'asset_tag';
-        $client->type = 'type';
-        $client->osName = 'os_name';
-        $client->osVersionString = 'os_version_string';
-        $client->osVersionNumber = 'os_version_number';
-        $client->osComment = 'os_comment';
-        $client->cpuType = 'cpu_type';
-        $client->cpuClock = 1234;
-        $client->cpuCores = 2;
-        $client->physicalMemory = 1234;
-        $client->swapMemory = 5678;
-        $client->userName = 'user_name';
-        $client->uuid = 'uuid';
-        $client->method('offsetGet')->willReturnMap([
-            ['Windows', ['CpuArchitecture' => null, 'UserDomain' => 'domain']],
-            ['MemorySlot', []],
-        ]);
-        $client->method('offsetExists')->with('Windows')->willReturn(true);
-
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/general/?id=1');
-        $this->assertXpathQuery('//td[normalize-space(text())="os_name os_version_string (os_version_number)"]');
-    }
-
-    public function testGeneralActionWindowsWithArch()
-    {
-        /** @var MockObject|Client */
-        $client = $this->createMock(Client::class);
-        $client->id = 1;
-        $client->name = 'test';
-        $client->idString = 'id_string';
-        $client->inventoryDate = new DateTime();
-        $client->lastContactDate = new DateTime();
-        $client->userAgent = 'user_agent';
-        $client->manufacturer = 'manufacturer';
-        $client->productName = 'product_name';
-        $client->serial = 'serial';
-        $client->assetTag = 'asset_tag';
-        $client->type = 'type';
-        $client->osName = 'os_name';
-        $client->osVersionString = 'os_version_string';
-        $client->osVersionNumber = 'os_version_number';
-        $client->osComment = 'os_comment';
-        $client->cpuType = 'cpu_type';
-        $client->cpuClock = 1234;
-        $client->cpuCores = 2;
-        $client->physicalMemory = 1234;
-        $client->swapMemory = 5678;
-        $client->userName = 'user_name';
-        $client->uuid = 'uuid';
-        $client->method('offsetGet')->willReturnMap([
-            ['Windows', ['CpuArchitecture' => 'cpu_architecture', 'UserDomain' => 'domain']],
-            ['MemorySlot', []],
-        ]);
-        $client->method('offsetExists')->with('Windows')->willReturn(true);
-
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/general/?id=1');
-        $this->assertXpathQuery(
-            "//td[normalize-space(text())='os_name os_version_string (os_version_number) \xE2\x80\x93 cpu_architecture']"
-        );
     }
 
     public function testWindowsActionGet()

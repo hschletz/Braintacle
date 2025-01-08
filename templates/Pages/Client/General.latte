@@ -1,5 +1,7 @@
-{layout ../Pages/Client/ClientLayout.latte}
-{block clientContent}
+{layout ClientMenuLayout.latte}
+{block content}
+
+{include Header.latte}
 
 <table class="topspacing textnormalsize">
     <tr>
@@ -12,11 +14,11 @@
     </tr>
     <tr>
         <td class="label">{translate('Inventory date')}</td>
-        <td>{$client->inventoryDate|dateFormat: IntlDateFormatter::FULL, IntlDateFormatter::LONG}</td>
+        <td>{$client->inventoryDate|localDate: date: full, time: long}</td>
     </tr>
     <tr>
         <td class="label">{translate('Last contact')}</td>
-        <td>{$client->lastContactDate|dateFormat: IntlDateFormatter::FULL, IntlDateFormatter::LONG}</td>
+        <td>{$client->lastContactDate|localDate: date: full, time: long}</td>
     </tr>
     <tr>
         <td class="label">{translate('User Agent')}</td>

@@ -3,6 +3,7 @@
 namespace Braintacle\Test\Legacy;
 
 use Braintacle\AppConfig;
+use Braintacle\Http\RouteHelper;
 use Braintacle\Legacy\MvcApplication;
 use Braintacle\Template\Function\AssetUrlFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
@@ -72,6 +73,7 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
             Group::class => $this->createStub(Group::class),
             LoggerInterface::class => $this->createStub(LoggerInterface::class),
             PathForRouteFunction::class => $this->createStub(PathForRouteFunction::class),
+            RouteHelper::class => $this->createStub(RouteHelper::class),
             TranslatorInterface::class => $this->createStub(TranslatorInterface::class),
         ];
         $container = new Container($services);
@@ -88,6 +90,7 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
         $this->assertSame($services[Group::class], $serviceManager->get(Group::class));
         $this->assertSame($services[LoggerInterface::class], $serviceManager->get(LoggerInterface::class));
         $this->assertSame($services[PathForRouteFunction::class], $serviceManager->get(PathForRouteFunction::class));
+        $this->assertSame($services[RouteHelper::class], $serviceManager->get(RouteHelper::class));
         $this->assertSame($services[TranslatorInterface::class], $serviceManager->get(TranslatorInterface::class));
         $this->assertSame($serviceManager, $serviceManager->get(ContainerInterface::class));
     }

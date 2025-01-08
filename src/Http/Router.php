@@ -33,6 +33,7 @@ class Router
         // All other routes get LoginMiddleware.
         $app->group('', function (RouteCollectorProxyInterface $group) {
             $group->get('/client/{id}/export', Client\ExportHandler::class)->setName('export');
+            $group->get('/client/{id}/general', Client\SubPage\General::class)->setName('showClientGeneral');
             $group->get('/client/{id}/packages', Client\Packages\ShowPackagesHandler::class)->setName('showClientPackages');
             $group->post('/client/{id}/packages', Client\Packages\AssignPackagesHandler::class)->setName('assignPackageToClient');
             $group->put('/client/{id}/packages', Client\Packages\ResetPackageHandler::class)->setName('resetPackageOnClient');
@@ -51,7 +52,6 @@ class Router
             $group->get('/console/client/customfields', ApplicationBridge::class)->setName('showClientCustomFields');
             $group->get('/console/client/delete', ApplicationBridge::class)->setName('deleteClient');
             $group->get('/console/client/display', ApplicationBridge::class)->setName('showClientDisplay');
-            $group->get('/console/client/general', ApplicationBridge::class)->setName('showClientGeneral');
             $group->get('/console/client/groups', ApplicationBridge::class)->setName('showClientGroups');
             $group->get('/console/client/import', ApplicationBridge::class)->setName('importPage');
             $group->get('/console/client/index', ApplicationBridge::class)->setName('clientList');

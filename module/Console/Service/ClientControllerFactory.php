@@ -22,6 +22,8 @@
 
 namespace Console\Service;
 
+use Braintacle\Http\RouteHelper;
+
 /**
  * Factory for ClientController
  */
@@ -34,6 +36,7 @@ class ClientControllerFactory implements \Laminas\ServiceManager\Factory\Factory
         array $options = null
     ) {
         return new \Console\Controller\ClientController(
+            $container->get(RouteHelper::class),
             $container->get('Model\Client\ClientManager'),
             $container->get('Model\Group\GroupManager'),
             $container->get('Model\Registry\RegistryManager'),
