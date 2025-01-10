@@ -163,9 +163,9 @@ msgstr ""
 #: module/Console/views/console/group/members.php
 #: module/Console/views/console/network/index.php
 #: module/Console/views/console/package/index.php
-#: templates/Client/Software.latte
 #: templates/Forms/ShowDuplicates.latte
 #: templates/Pages/Client/Packages.latte
+#: templates/Pages/Client/Software.latte
 #: templates/Pages/Software.latte
 msgid "Name"
 msgstr ""
@@ -1106,7 +1106,7 @@ msgid "Add user"
 msgstr ""
 
 #: module/Console/views/console/client/bios.php
-#: templates/Client/Software.latte
+#: templates/Pages/Client/Software.latte
 msgid "Version"
 msgstr ""
 
@@ -1296,7 +1296,7 @@ msgid "Product"
 msgstr ""
 
 #: module/Console/views/console/client/msoffice.php
-#: templates/Client/Software.latte
+#: templates/Pages/Client/Software.latte
 msgid "Architecture"
 msgstr ""
 
@@ -1381,7 +1381,7 @@ msgstr ""
 #: module/Console/views/console/client/storage.php
 #: module/Console/views/console/client/system.php
 #: module/Console/views/console/package/index.php
-#: templates/Client/Software.latte
+#: templates/Pages/Client/Software.latte
 msgid "Size"
 msgstr ""
 
@@ -1658,14 +1658,6 @@ msgstr ""
 msgid "'%value%' is not a valid product key"
 msgstr ""
 
-#: templates/Client/Software.latte
-msgid "Publisher"
-msgstr ""
-
-#: templates/Client/Software.latte
-msgid "Location"
-msgstr ""
-
 #: templates/Forms/AssignPackage.latte
 msgid "Assign packages"
 msgstr ""
@@ -1872,6 +1864,14 @@ msgstr ""
 
 #: templates/Pages/Client/Packages.latte
 msgid "Status of package '{}' will be reset to 'Pending'. Continue?"
+msgstr ""
+
+#: templates/Pages/Client/Software.latte
+msgid "Publisher"
+msgstr ""
+
+#: templates/Pages/Client/Software.latte
+msgid "Location"
 msgstr ""
 
 #: templates/Pages/Group/Header.latte

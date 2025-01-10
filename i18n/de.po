@@ -174,8 +174,8 @@ msgstr "Gruppe"
 #: module/Console/views/console/group/members.php
 #: module/Console/views/console/network/index.php
 #: module/Console/views/console/package/index.php
-#: templates/Client/Software.latte templates/Forms/ShowDuplicates.latte
-#: templates/Pages/Client/Packages.latte templates/Pages/Software.latte
+#: templates/Forms/ShowDuplicates.latte templates/Pages/Client/Packages.latte
+#: templates/Pages/Client/Software.latte templates/Pages/Software.latte
 msgid "Name"
 msgstr "Name"
 
@@ -1058,7 +1058,8 @@ msgstr "Benutzer hinzufügen"
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: module/Console/views/console/client/bios.php templates/Client/Software.latte
+#: module/Console/views/console/client/bios.php
+#: templates/Pages/Client/Software.latte
 msgid "Version"
 msgstr "Version"
 
@@ -1242,7 +1243,7 @@ msgid "Ports"
 msgstr "Anschlüsse"
 
 #: module/Console/views/console/client/msoffice.php
-#: templates/Client/Software.latte
+#: templates/Pages/Client/Software.latte
 msgid "Architecture"
 msgstr "Architektur"
 
@@ -1382,7 +1383,7 @@ msgstr "Wechselmedium"
 #: module/Console/views/console/client/storage.php
 #: module/Console/views/console/client/system.php
 #: module/Console/views/console/package/index.php
-#: templates/Client/Software.latte
+#: templates/Pages/Client/Software.latte
 msgid "Size"
 msgstr "Größe"
 
@@ -1615,14 +1616,6 @@ msgstr "'%value%' ist in der Liste ungültiger Werte"
 msgid "'%value%' is not a valid product key"
 msgstr "'%value%' ist kein gültiger Lizenzschlüssel"
 
-#: templates/Client/Software.latte
-msgid "Location"
-msgstr "Ort"
-
-#: templates/Client/Software.latte
-msgid "Publisher"
-msgstr "Herausgeber"
-
 #: templates/Forms/AssignPackage.latte
 msgid "Assign"
 msgstr "Zuweisen"
@@ -1824,6 +1817,14 @@ msgstr "entfernen"
 #: templates/Pages/Client/Packages.latte
 msgid "reset"
 msgstr "zurücksetzen"
+
+#: templates/Pages/Client/Software.latte
+msgid "Location"
+msgstr "Ort"
+
+#: templates/Pages/Client/Software.latte
+msgid "Publisher"
+msgstr "Herausgeber"
 
 #: templates/Pages/Group/Header.latte
 msgid "Details for group '%s'"

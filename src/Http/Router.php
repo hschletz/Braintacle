@@ -38,6 +38,7 @@ class Router
             $group->post('/client/{id}/packages', Client\Packages\AssignPackagesHandler::class)->setName('assignPackageToClient');
             $group->put('/client/{id}/packages', Client\Packages\ResetPackageHandler::class)->setName('resetPackageOnClient');
             $group->delete('/client/{id}/packages', Client\Packages\RemovePackageHandler::class)->setName('removePackageFromClient');
+            $group->get('/client/{id}/software', Client\Software\SoftwarePageHandler::class)->setName('showClientSoftware');
             $group->get('/group/packages', Group\Packages\ShowPackagesHandler::class)->setName('showGroupPackages');
             $group->post('/group/packages', Group\Packages\AssignPackagesHandler::class)->setName('assignPackageToGroup');
             $group->delete('/group/packages', Group\Packages\RemovePackagesHandler::class)->setName('removePackageFromGroup');
@@ -61,7 +62,6 @@ class Router
             $group->get('/console/client/printers', ApplicationBridge::class)->setName('showClientPrinters');
             $group->get('/console/client/registry', ApplicationBridge::class)->setName('showClientRegistry');
             $group->get('/console/client/search', ApplicationBridge::class)->setName('searchPage');
-            $group->get('/console/client/software', ApplicationBridge::class)->setName('showClientSoftware');
             $group->get('/console/client/storage', ApplicationBridge::class)->setName('showClientStorage');
             $group->get('/console/client/system', ApplicationBridge::class)->setName('showClientSystem');
             $group->get('/console/client/virtualmachines', ApplicationBridge::class)->setName('showClientVirtualMachines');

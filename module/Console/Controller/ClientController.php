@@ -22,11 +22,8 @@
 
 namespace Console\Controller;
 
-use Braintacle\Direction;
 use Braintacle\Http\RouteHelper;
-use Console\Template\TemplateViewModel;
 use Console\View\Helper\Form\Search;
-use Model\Client\Item\Software;
 
 /**
  * Controller for all client-related actions.
@@ -312,38 +309,6 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
     public function printersAction()
     {
         return array('client' => $this->_currentClient);
-    }
-
-    /**
-     * Information about a client's software
-     */
-    public function softwareAction(): TemplateViewModel
-    {
-        $vars = $this->getOrder('name');
-        $vars['client'] = $this->_currentClient;
-
-        /** @var iterable<Software> */
-        $items = $this->_currentClient->getItems(
-            'Software',
-            $vars['order'],
-            $vars['direction'],
-            $this->_config->displayBlacklistedSoftware ? [] : ['Software.NotIgnored' => null]
-        );
-        // Compact list by suppressing duplicate entries, adding the number of instances for each entry.
-        $list = [];
-        foreach ($items as $item) {
-            $key = json_encode($item);
-            if (isset($list[$key])) {
-                $list[$key]['count']++;
-            } else {
-                $list[$key] = get_object_vars($item);
-                $list[$key]['count'] = 1;
-            }
-        }
-        $vars['list'] = $list;
-        $vars['direction'] = Direction::from($vars['direction']);
-
-        return new TemplateViewModel('Client/Software.latte', $vars);
     }
 
     /**

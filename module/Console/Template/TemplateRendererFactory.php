@@ -33,7 +33,6 @@ class TemplateRendererFactory implements FactoryInterface
         $translateFunction = new TranslateFunction($translator);
 
         $dateFormatFilter = $container->get(DateFormatFilter::class);
-        $numberFormatFilter = new NumberFormatFilter();
 
         $engine = new Engine();
         $engine->addFunction('assetUrl', $container->get(AssetUrlFunction::class));
@@ -43,7 +42,6 @@ class TemplateRendererFactory implements FactoryInterface
         $engine->addFunction('translate', $translateFunction);
 
         $engine->addFilter('dateFormat', $dateFormatFilter);
-        $engine->addFilter('numberFormat', $numberFormatFilter);
 
         return new TemplateRenderer($engine);
     }

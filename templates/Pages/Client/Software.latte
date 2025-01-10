@@ -1,0 +1,48 @@
+{layout ClientMenuLayout.latte}
+{import ../../SortableHeader.latte}
+{block content}
+
+{include Header.latte}
+
+<table class="alternating">
+    <tr>
+        <th>{include sortableHeader, 'name', translate('Name')}</th>
+        <th>{include sortableHeader, 'version', translate('Version')}</th>
+        {if $client->windows || $client->android}
+            <th>{include sortableHeader, 'publisher', translate('Publisher')}</th>
+            <th>{include sortableHeader, 'installLocation', translate('Location')}</th>
+        {else}
+            <th class="textright">{include sortableHeader, 'size', translate('Size')}</th>
+        {/if}
+        {if $client->windows}
+            <th>{include sortableHeader, 'architecture', translate('Architecture')}</th>
+        {/if}
+    </tr>
+
+    <tr n:foreach="$list as $item">
+        {var $software = $item[0]}
+        {var $count = count($item)}
+        <td n:attr="title: $software->comment ?? null">
+            {$software->name}
+            <span n:if="$count > 1" class="duplicate">({$count})</span>
+        </td>
+        <td>{$software->version}</td>
+        {if $client->windows || $client->android}
+            <td>{$software->publisher}</td>
+            <td>{$software->installLocation}</td>
+        {else}
+            <td class="textright">
+                {if $software->size !== null}
+                    {($software->size * 1024)|bytes:0}
+                {/if}
+            </td>
+        {/if}
+        {if $client->windows}
+            <td>
+                {if $software->architecture}
+                    {$software->architecture}&nbsp;Bit
+                {/if}
+            </td>
+        {/if}
+    </tr>
+</table>
