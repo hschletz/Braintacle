@@ -2,13 +2,14 @@
 
 namespace Console\Test\Inputfilter;
 
+use Braintacle\Template\Function\CsrfTokenFunction;
 use Braintacle\Test\DomMatcherTrait;
+use Braintacle\Test\TemplateTestTrait;
 use Console\Form\Package\AssignPackagesForm;
-use Console\Template\TemplateRenderer;
+use Console\Template\Functions\TranslateFunction;
 use Laminas\Session\Validator\Csrf;
 use Laminas\Validator\InArray;
 use Laminas\Validator\NotEmpty;
-use Latte\Engine;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\ClientOrGroup;
@@ -22,6 +23,7 @@ class AssignPackageFormTest extends TestCase
 {
     use DomMatcherTrait;
     use MockeryPHPUnitIntegration;
+    use TemplateTestTrait;
 
     private function createTarget(array $assignablePackages)
     {
@@ -34,11 +36,17 @@ class AssignPackageFormTest extends TestCase
 
     private function renderToString(array $values): string
     {
-        $engine = new Engine();
-        $engine->addFunction('csrfToken', fn () => 'token');
-        $engine->addFunction('translate', fn ($message) => '_' . $message . '_');
-        $renderer = new TemplateRenderer($engine);
-        $content = $renderer->render('Forms/AssignPackage.latte', $values);
+        $csrfTokenFunction = $this->createStub(CsrfTokenFunction::class);
+        $csrfTokenFunction->method('__invoke')->willReturnCallback(fn () => 'token');
+
+        $translateFunction = $this->createStub(TranslateFunction::class);
+        $translateFunction->method('__invoke')->willReturnCallback(fn ($message) => '_' . $message . '_');
+
+        $templateEngine = $this->createTemplateEngine([
+            CsrfTokenFunction::class => $csrfTokenFunction,
+            TranslateFunction::class => $translateFunction
+        ]);
+        $content = $templateEngine->render('Forms/AssignPackage.latte', $values);
 
         return $content;
     }

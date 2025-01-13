@@ -22,14 +22,12 @@
 
 namespace Console;
 
-use Console\Template\TemplateStrategy;
 use Laminas\Form\View\Helper\FormElementErrors;
 use Laminas\ModuleManager\Feature;
 use Laminas\Mvc\I18n\Translator;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Laminas\Validator\AbstractValidator;
-use Laminas\View\View;
 
 /**
  * This is the module for the web administration console.
@@ -58,26 +56,8 @@ class Module implements
     public function onBootstrap(\Laminas\EventManager\EventInterface $e)
     {
         $eventManager = $e->getParam('application')->getEventManager();
-        $eventManager->attach(MvcEvent::EVENT_RENDER, [$this, 'registerTemplateStrategy']);
         $eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'setTranslators'));
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'forceStrictVars'));
-    }
-
-    /**
-     * Register template strategy.
-     */
-    public function registerTemplateStrategy(MvcEvent $e)
-    {
-        $serviceManager = $e->getApplication()->getServiceManager();
-        /** @var View */
-        $view = $serviceManager->get(View::class);
-        /** @var TemplateStrategy */
-        $templateStategy = $serviceManager->get(TemplateStrategy::class);
-        $templateStategy->attach($view->getEventManager(), 100);
-        $routeMatch = $e->getRouteMatch();
-        if ($routeMatch) {
-            $templateStategy->currentAction = $routeMatch->getParam('action');
-        }
     }
 
     /**

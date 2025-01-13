@@ -22,8 +22,6 @@
 
 use Console\Mvc\Controller\Plugin\Service\TranslateFactory;
 use Console\Mvc\Controller\Plugin\Translate;
-use Console\Template\TemplateRenderer;
-use Console\Template\TemplateRendererFactory;
 use Console\View\Helper\ClientHeader;
 use Console\View\Helper\GroupHeader;
 use Console\View\Helper\Service\ClientHeaderFactory;
@@ -101,11 +99,6 @@ return array(
                     ),
                 ),
             ),
-        ),
-    ),
-    'service_manager' => array(
-        'factories' => array(
-            TemplateRenderer::class => TemplateRendererFactory::class,
         ),
     ),
     'view_helpers' => array(

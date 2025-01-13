@@ -6,6 +6,7 @@ use Braintacle\AppConfig;
 use Braintacle\Http\RouteHelper;
 use Braintacle\Template\Function\AssetUrlFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
+use Braintacle\Template\TemplateEngine;
 use Closure;
 use DI\Container;
 use Laminas\Db\Adapter\Adapter;
@@ -54,6 +55,7 @@ class MvcApplication
         $serviceManager->setService(LoggerInterface::class, $this->container->get(LoggerInterface::class));
         $serviceManager->setService(PathForRouteFunction::class, $this->container->get(PathForRouteFunction::class));
         $serviceManager->setService(RouteHelper::class, $this->container->get(RouteHelper::class));
+        $serviceManager->setService(TemplateEngine::class, $this->container->get(TemplateEngine::class));
         $serviceManager->setService(TranslatorInterface::class, $this->container->get(TranslatorInterface::class));
     }
 

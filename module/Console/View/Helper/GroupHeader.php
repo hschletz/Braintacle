@@ -22,7 +22,7 @@
 
 namespace Console\View\Helper;
 
-use Console\Template\TemplateRenderer;
+use Braintacle\Template\TemplateEngine;
 use Laminas\View\Helper\AbstractHelper;
 use Model\Group\Group;
 
@@ -31,13 +31,8 @@ use Model\Group\Group;
  */
 class GroupHeader extends AbstractHelper
 {
-    private TemplateRenderer $templateRenderer;
-    private string $currentAction;
-
-    public function __construct(TemplateRenderer $templateRenderer, string $currentAction)
+    public function __construct(private TemplateEngine $templateRenderer, private string $currentAction)
     {
-        $this->templateRenderer = $templateRenderer;
-        $this->currentAction = $currentAction;
     }
 
     public function __invoke(Group $group): string

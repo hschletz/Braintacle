@@ -2,7 +2,7 @@
 
 namespace Console\View\Helper\Service;
 
-use Console\Template\TemplateRenderer;
+use Braintacle\Template\TemplateEngine;
 use Console\View\Helper\ClientHeader;
 use Laminas\Mvc\Application;
 use Laminas\ServiceManager\Factory\FactoryInterface;
@@ -19,7 +19,7 @@ class ClientHeaderFactory implements FactoryInterface
         $application = $container->get('Application');
 
         return new ClientHeader(
-            $container->get(TemplateRenderer::class),
+            $container->get(TemplateEngine::class),
             $application->getMvcEvent()->getRouteMatch()->getParam('action')
         );
     }

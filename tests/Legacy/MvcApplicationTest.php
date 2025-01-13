@@ -7,6 +7,7 @@ use Braintacle\Http\RouteHelper;
 use Braintacle\Legacy\MvcApplication;
 use Braintacle\Template\Function\AssetUrlFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
+use Braintacle\Template\TemplateEngine;
 use Braintacle\Test\ErrorHandlerTestTrait;
 use Closure;
 use DI\Container;
@@ -74,6 +75,7 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
             LoggerInterface::class => $this->createStub(LoggerInterface::class),
             PathForRouteFunction::class => $this->createStub(PathForRouteFunction::class),
             RouteHelper::class => $this->createStub(RouteHelper::class),
+            TemplateEngine::class => $this->createStub(TemplateEngine::class),
             TranslatorInterface::class => $this->createStub(TranslatorInterface::class),
         ];
         $container = new Container($services);

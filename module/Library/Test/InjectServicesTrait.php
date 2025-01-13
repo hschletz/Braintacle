@@ -6,10 +6,15 @@ use Braintacle\AppConfig;
 use Braintacle\I18n\Translator;
 use Braintacle\Legacy\I18nTranslator;
 use Braintacle\Template\Function\AssetUrlFunction;
+use Braintacle\Template\Function\CsrfTokenFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
+use Braintacle\Template\TemplateEngine;
 use Composer\InstalledVersions;
+use Console\Template\Functions\TranslateFunction;
+use Console\Template\TemplateLoader;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\ServiceManager\ServiceManager;
+use Latte\Engine;
 use Mockery;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -32,6 +37,8 @@ trait InjectServicesTrait
      */
     private static function injectServices(ServiceManager $serviceManager): void
     {
+        $rootPath = InstalledVersions::getRootPackage()['install_path'];
+
         // Inject empty dummy config. Tests that evaluate config set up their
         // own.
         $filesystem = Mockery::mock(Filesystem::class);
@@ -55,10 +62,21 @@ trait InjectServicesTrait
         $translator = new I18nTranslator(
             new Translator(
                 'de',
-                InstalledVersions::getRootPackage()['install_path'] . '/i18n',
+                $rootPath . '/i18n',
                 $appConfig,
             )
         );
         $serviceManager->setService(TranslatorInterface::class, $translator);
+
+        $templateEngine = new TemplateEngine(
+            'de-DE',
+            new Engine(),
+            new TemplateLoader($rootPath . '/templates'),
+            $assetUrlFunction,
+            Mockery::mock(CsrfTokenFunction::class),
+            $pathForRouteFunction,
+            new TranslateFunction($translator),
+        );
+        $serviceManager->setService(TemplateEngine::class, $templateEngine);
     }
 }
