@@ -74,6 +74,9 @@ abstract class AbstractControllerTestCase extends AbstractHttpControllerTestCase
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function (MvcEvent $event) {
             throw $event->getParam('exception');
         }, -10);
+        $eventManager->attach(MvcEvent::EVENT_RENDER_ERROR, function (MvcEvent $event) {
+            throw $event->getParam('exception');
+        }, -10);
     }
 
     /**
