@@ -1,3 +1,5 @@
+import { replaceDocument } from './functions.js'
+
 let packageName
 let action
 
@@ -23,11 +25,7 @@ dialog.addEventListener('close', async () => {
         if (response.ok) {
             location.reload()
         } else {
-            const newDocument = Document.parseHTMLUnsafe(await response.text())
-            document.replaceChild(
-                document.adoptNode(newDocument.documentElement, true),
-                document.documentElement
-            )
+            replaceDocument(await response.text())
         }
     }
 })

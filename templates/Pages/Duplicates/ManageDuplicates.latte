@@ -1,37 +1,35 @@
-{* Show duplicates and provide merge options. *}
+{* Show duplicates details and provide merge options. *}
 
-{import ../SortableHeader.latte}
+{layout DuplicatesMenuLayout.latte}
+{import ../../SortableHeader.latte}
 
+{block content}
 <script type="module" src="{assetUrl('js/form_showduplicates.js')}"></script>
 
 {* Generate link to allow duplicate criteria value *}
-{define allowLink, string $criteria, ?string $value}
+{define allowLink, string $criterion, ?string $value}
     {* NULL values are never considered for duplicates and cannot be excluded. *}
-    <a n:if="$value !== null" href="{consoleUrl('duplicates', 'allow', ['criteria' => $criteria, 'value' => $value])}">{$value}</a>
+    <a n:ifset="$value" href="{pathForRoute(duplicatesAllow, [], [criteria: $criterion, value: $value])}">{$value}</a>
 {/define}
 {define mergeOption, string $name, bool $checked, string $label}
-    <label><input type="checkbox" name="mergeOptions[]" value="{$name}" n:attr="checked => $checked">{$label}</label>
+    <label><input type="checkbox" name="mergeOptions[]" value="{$name}" n:attr="checked => $checked == 1">{$label}</label>
 {/define}
 
-{var $extraParams = [criteria: $criteria]}
+<ul class="error"></ul>
 
-<ul n:ifcontent class="error">
-    <li n:foreach="$messages as $message">{$message}</li>
-</ul>
-
-<form method="post" class="form form_showduplicates">
-    <input type="hidden" name="_csrf" value="{$csrfToken}">
+<form data-action="{pathForRoute(mergeDuplicates)}" data-redirect="{pathForRoute(duplicatesList)}" class="form form_showduplicates">
+    <input type="hidden" name="csrfToken" value="{csrfToken()}">
     <table class="alternating">
         <tr>
             <th>
                 <input type="checkbox" class="checkAll">
-                {include sortableHeader, 'Id', translate('ID'), $extraParams}
+                {include sortableHeader, 'id', translate('ID')}
             </th>
-            <th>{include sortableHeader, 'Name', translate('Name'), $extraParams}</th>
-            <th>{include sortableHeader, 'NetworkInterface.MacAddress', translate('MAC Address'), $extraParams}</th>
-            <th>{include sortableHeader, 'Serial', translate('Serial number'), $extraParams}</th>
-            <th>{include sortableHeader, 'AssetTag', translate('Asset tag'), $extraParams}</th>
-            <th>{include sortableHeader, 'LastContactDate', translate('Last contact'), $extraParams}</th>
+            <th>{include sortableHeader, 'name', translate('Name')}</th>
+            <th>{include sortableHeader, 'mac_address', translate('MAC Address')}</th>
+            <th>{include sortableHeader, 'serial', translate('Serial number')}</th>
+            <th>{include sortableHeader, 'asset_tag', translate('Asset tag')}</th>
+            <th>{include sortableHeader, 'last_contact', translate('Last contact')}</th>
         </tr>
         <tr n:foreach="$clients as $client">
             <td>
@@ -39,7 +37,7 @@
                 {$client->id}
             </td>
             <td>
-                <a href="{consoleUrl('client', 'customfields', ['id' => $client->id])}">{$client->name}</a>
+                <a href="{pathForRoute(showClientCustomFields, [], [id: $client->id])}">{$client->name}</a>
             </td>
             <td>
                 {include allowLink, 'MacAddress', $client['NetworkInterface.MacAddress']}
@@ -51,7 +49,7 @@
                 {include allowLink, 'AssetTag', $client->assetTag}
             </td>
             <td>
-                {$client->lastContactDate|dateFormat: IntlDateFormatter::SHORT, IntlDateFormatter::SHORT}
+                {$client->lastContactDate|localDate: date: short, time: short}
             <td>
         </tr>
     </table>

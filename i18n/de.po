@@ -34,10 +34,6 @@ msgstr "Der angeforderte Client existiert nicht."
 msgid "'%s' is no longer considered duplicate."
 msgstr "'%s' wird nicht mehr als Duplikat betrachtet."
 
-#: module/Console/Controller/DuplicatesController.php
-msgid "The selected clients have been merged."
-msgstr "Die ausgewählten Clients wurden zusammengeführt."
-
 #: module/Console/Controller/GroupController.php
 #, php-format
 msgid "Group '%s' could not be deleted. Try again later."
@@ -174,8 +170,9 @@ msgstr "Gruppe"
 #: module/Console/views/console/group/members.php
 #: module/Console/views/console/network/index.php
 #: module/Console/views/console/package/index.php
-#: templates/Forms/ShowDuplicates.latte templates/Pages/Client/Packages.latte
-#: templates/Pages/Client/Software.latte templates/Pages/Software.latte
+#: templates/Pages/Client/Packages.latte templates/Pages/Client/Software.latte
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+#: templates/Pages/Software.latte
 msgid "Name"
 msgstr "Name"
 
@@ -708,7 +705,8 @@ msgstr "Lizenzschlüssel (falls verschieden)"
 
 #: module/Console/Form/Search.php module/Console/views/console/client/index.php
 #: module/Console/views/console/duplicates/index.php
-#: templates/Forms/ShowDuplicates.latte templates/Pages/Client/General.latte
+#: templates/Pages/Client/General.latte
+#: templates/Pages/Duplicates/ManageDuplicates.latte
 msgid "Asset tag"
 msgstr "Asset tag"
 
@@ -780,7 +778,8 @@ msgid "Invert results"
 msgstr "Ergebnisse invertieren"
 
 #: module/Console/Form/Search.php module/Console/views/console/client/index.php
-#: templates/Forms/ShowDuplicates.latte templates/Pages/Client/General.latte
+#: templates/Pages/Client/General.latte
+#: templates/Pages/Duplicates/ManageDuplicates.latte
 msgid "Last contact"
 msgstr "Letzter Kontakt"
 
@@ -906,7 +905,8 @@ msgstr "Suche nach"
 #: module/Console/views/console/client/storage.php
 #: module/Console/views/console/client/system.php
 #: module/Console/views/console/duplicates/index.php
-#: templates/Forms/ShowDuplicates.latte templates/Pages/Client/General.latte
+#: templates/Pages/Client/General.latte
+#: templates/Pages/Duplicates/ManageDuplicates.latte
 msgid "Serial number"
 msgstr "Seriennummer"
 
@@ -1156,7 +1156,8 @@ msgstr "Freier Speicherplatz (MB)"
 
 #: module/Console/views/console/client/index.php
 #: module/Console/views/console/group/general.php
-#: templates/Forms/ShowDuplicates.latte templates/Pages/Client/General.latte
+#: templates/Pages/Client/General.latte
+#: templates/Pages/Duplicates/ManageDuplicates.latte
 msgid "ID"
 msgstr "ID"
 
@@ -1451,13 +1452,17 @@ msgid "Exclude serial number '%s' from duplicates search?"
 msgstr "Seriennummer '%s' von Duplikatsuche ausschließen?"
 
 #: module/Console/views/console/duplicates/index.php
-#: templates/Forms/ShowDuplicates.latte
+#: templates/Pages/Duplicates/ManageDuplicates.latte
 msgid "MAC Address"
 msgstr "MAC-Adresse"
 
 #: module/Console/views/console/duplicates/index.php
 msgid "No duplicates present."
 msgstr "Keine Duplikate vorhanden."
+
+#: module/Console/views/console/duplicates/index.php
+msgid "The selected clients have been merged."
+msgstr "Die ausgewählten Clients wurden zusammengeführt."
 
 #: module/Console/views/console/group/delete.php
 #, php-format
@@ -1623,30 +1628,6 @@ msgstr "Zuweisen"
 #: templates/Forms/AssignPackage.latte
 msgid "Assign packages"
 msgstr "Pakete zuweisen"
-
-#: templates/Forms/ShowDuplicates.latte
-msgid "Keep manually entered Windows product key"
-msgstr "Manuell eingegebenen Windows-Lizenzschlüssel beibehalten"
-
-#: templates/Forms/ShowDuplicates.latte
-msgid "Merge configuration"
-msgstr "Konfiguration übernehmen"
-
-#: templates/Forms/ShowDuplicates.latte
-msgid "Merge manual group assignments"
-msgstr "Manuelle Gruppenzuweisungen übernehmen"
-
-#: templates/Forms/ShowDuplicates.latte
-msgid "Merge missing package assignments"
-msgstr "Fehlende Paketzuweisungen übernehmen"
-
-#: templates/Forms/ShowDuplicates.latte
-msgid "Merge selected clients"
-msgstr "Ausgewählte Clients zusammenführen"
-
-#: templates/Forms/ShowDuplicates.latte
-msgid "Merge user supplied information"
-msgstr "Benutzerdefinierte Informationen übernehmen"
 
 #: templates/Layout.latte templates/MainMenu/PreferencesMenuLayout.latte
 msgid "Inventory"
@@ -1825,6 +1806,30 @@ msgstr "Ort"
 #: templates/Pages/Client/Software.latte
 msgid "Publisher"
 msgstr "Herausgeber"
+
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+msgid "Keep manually entered Windows product key"
+msgstr "Manuell eingegebenen Windows-Lizenzschlüssel beibehalten"
+
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+msgid "Merge configuration"
+msgstr "Konfiguration übernehmen"
+
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+msgid "Merge manual group assignments"
+msgstr "Manuelle Gruppenzuweisungen übernehmen"
+
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+msgid "Merge missing package assignments"
+msgstr "Fehlende Paketzuweisungen übernehmen"
+
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+msgid "Merge selected clients"
+msgstr "Ausgewählte Clients zusammenführen"
+
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+msgid "Merge user supplied information"
+msgstr "Benutzerdefinierte Informationen übernehmen"
 
 #: templates/Pages/Group/Header.latte
 msgid "Details for group '%s'"

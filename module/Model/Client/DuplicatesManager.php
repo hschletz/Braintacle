@@ -22,7 +22,11 @@
 
 namespace Model\Client;
 
+use Braintacle\Direction;
+use Braintacle\Duplicates\Criterion;
+use Braintacle\Duplicates\DuplicatesColumn;
 use Database\Table;
+use Laminas\Db\ResultSet\AbstractResultSet;
 use Model\SoftwareManager;
 use RuntimeException;
 
@@ -236,20 +240,17 @@ class DuplicatesManager
     /**
      * Retrieve duplicate clients with given criteria
      *
-     * @param string $criteria One of Name|MacAddress|Serial|AssetTag
-     * @param string $order Sorting order (default: 'Id')
-     * @param string $direction One of asc|desc (default: 'asc')
-     * @return \Laminas\Db\ResultSet\AbstractResultSet \Model\Client\Client iterator
+     * @return AbstractResultSet|iterable<Client>
      */
-    public function find($criteria, $order = 'Id', $direction = 'asc')
+    public function find(Criterion $criterion, DuplicatesColumn $order, Direction $direction = Direction::Ascending)
     {
-        $subQuery = $this->getDuplicateValues($criteria);
+        $subQuery = $this->getDuplicateValues($criterion->name);
         $column = $subQuery->getRawState($subQuery::COLUMNS)[0];
 
         $select = $this->_clientManager->getClients(
             array('Id', 'Name', 'LastContactDate', 'Serial', 'AssetTag'),
-            $order,
-            $direction,
+            $order == DuplicatesColumn::MacAddress ? 'NetworkInterface.MacAddress' : $order->name,
+            $direction->value,
             null,
             null,
             null,
@@ -266,11 +267,11 @@ class DuplicatesManager
             $select::JOIN_LEFT
         )
             ->where(array(new \Laminas\Db\Sql\Predicate\In($column, $subQuery)));
-        if ($order != 'Name') {
+        if ($order != DuplicatesColumn::Name) {
             // Secondary ordering by name
             $select->order('name');
         }
-        if ($order != 'Id') {
+        if ($order != DuplicatesColumn::Id) {
             // Additional ordering by ID, to ensure multiple rows for the same
             // client are kept together where primary ordering allows
             $select->order('clients.id');

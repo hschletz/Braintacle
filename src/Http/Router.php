@@ -4,6 +4,7 @@ namespace Braintacle\Http;
 
 use Braintacle\Authentication;
 use Braintacle\Client;
+use Braintacle\Duplicates;
 use Braintacle\Group;
 use Braintacle\Legacy\ApplicationBridge;
 use Braintacle\Software;
@@ -39,6 +40,8 @@ class Router
             $group->put('/client/{id}/packages', Client\Packages\ResetPackageHandler::class)->setName('resetPackageOnClient');
             $group->delete('/client/{id}/packages', Client\Packages\RemovePackageHandler::class)->setName('removePackageFromClient');
             $group->get('/client/{id}/software', Client\Software\SoftwarePageHandler::class)->setName('showClientSoftware');
+            $group->post('/duplicates', Duplicates\MergeDuplicatesHandler::class)->setName('mergeDuplicates');
+            $group->get('/duplicates/{criterion}', Duplicates\ManageDuplicatesHandler::class)->setName('manageDuplicates');
             $group->get('/group/packages', Group\Packages\ShowPackagesHandler::class)->setName('showGroupPackages');
             $group->post('/group/packages', Group\Packages\AssignPackagesHandler::class)->setName('assignPackageToGroup');
             $group->delete('/group/packages', Group\Packages\RemovePackagesHandler::class)->setName('removePackageFromGroup');
@@ -66,6 +69,7 @@ class Router
             $group->get('/console/client/system', ApplicationBridge::class)->setName('showClientSystem');
             $group->get('/console/client/virtualmachines', ApplicationBridge::class)->setName('showClientVirtualMachines');
             $group->get('/console/client/windows', ApplicationBridge::class)->setName('showClientWindows');
+            $group->get('/console/duplicates/allow', ApplicationBridge::class)->setName('duplicatesAllow');
             $group->get('/console/duplicates/index', ApplicationBridge::class)->setName('duplicatesList');
             $group->get('/console/group/index', ApplicationBridge::class)->setName('groupList');
             $group->get('/console/group/general', ApplicationBridge::class)->setName('showGroupGeneral');

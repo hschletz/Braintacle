@@ -1,44 +1,25 @@
 <?php
 
-/**
- * Form for merging duplicate clients
- *
- * Copyright (C) 2011-2025 Holger Schletz <holger.schletz@web.de>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the Free
- * Software Foundation; either version 2 of the License, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- */
-
 namespace Console\Form;
 
 use Laminas\Form\Element;
+use Laminas\Form\Form;
+use Laminas\Translator\TranslatorInterface;
 use Model\Client\DuplicatesManager;
 
 /**
- * Form for displaying duplicate clients by given criteria and selection of
- * clients/options for merging
+ * Validate form data for merging duplicate clients.
  *
- * The form requires the following options to be set:
- *
- * - **config:** \Model\Config instance, required by init(). The factory injects
- *   this automatically.
- * - **clients:** Array of Client objects to display, required by render().
- * - **order, direction:** Sorting of result table, required by render().
+ * @extends Form<array>
  */
 class ShowDuplicates extends Form
 {
+    public function __construct(private TranslatorInterface $translator)
+    {
+        parent::__construct();
+        $this->init();
+    }
+
     /** {@inheritdoc} */
     public function init()
     {
@@ -75,7 +56,7 @@ class ShowDuplicates extends Form
                 new \Laminas\Validator\Explode(['validator' => new \Laminas\Validator\Digits()]),
             ],
             // Explicit message in case of missing field (no clients selected)
-            'error_message' => $arrayCount->getDefaultTranslator()->translate(
+            'error_message' => $this->translator->translate(
                 $arrayCount->getMessageTemplates()[\Laminas\Validator\Callback::INVALID_VALUE]
             )
         ]);

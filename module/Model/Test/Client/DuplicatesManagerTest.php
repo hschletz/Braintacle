@@ -22,6 +22,9 @@
 
 namespace Model\Test\Client;
 
+use Braintacle\Direction;
+use Braintacle\Duplicates\Criterion;
+use Braintacle\Duplicates\DuplicatesColumn;
 use Database\Table;
 use Database\Table\ClientConfig;
 use Database\Table\Clients;
@@ -38,6 +41,7 @@ use Model\Client\ClientManager;
 use Model\Client\DuplicatesManager;
 use Model\SoftwareManager;
 use Model\Test\AbstractTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use RuntimeException;
 
@@ -115,39 +119,43 @@ class DuplicatesManagerTest extends AbstractTestCase
             'networkinterface_macaddr' => '00:00:5E:00:53:01',
         );
         $defaultOrder = array('clients.id' => 'asc', 'name');
-        return array(
-            array('MacAddress', 'Id', 'asc', false, $defaultOrder, array()),
-            array('Serial', 'Id', 'asc', false, $defaultOrder, array()),
-            array('AssetTag', 'Id', 'asc', false, $defaultOrder, array()),
-            array('MacAddress', 'Id', 'asc', true, $defaultOrder, array($client2, $client3)),
-            array('Serial', 'Id', 'asc', true, $defaultOrder, array($client2, $client3)),
-            array('AssetTag', 'Id', 'asc', true, $defaultOrder, array($client2, $client3)),
-            array('Name', 'Id', 'asc', false, $defaultOrder, array($client2, $client3)),
-            array('Name', 'Id', 'desc', false, array('clients.id' => 'desc', 'name'), array($client3, $client2)),
-            array(
-                'Name',
-                'Name',
-                'asc',
+        return [
+            [Criterion::MacAddress, DuplicatesColumn::Id, Direction::Ascending, false, $defaultOrder, []],
+            [Criterion::Serial, DuplicatesColumn::Id, Direction::Ascending, false, $defaultOrder, []],
+            [Criterion::AssetTag, DuplicatesColumn::Id, Direction::Ascending, false, $defaultOrder, []],
+            [Criterion::MacAddress, DuplicatesColumn::Id, Direction::Ascending, true, $defaultOrder, [$client2, $client3]],
+            [Criterion::Serial, DuplicatesColumn::Id, Direction::Ascending, true, $defaultOrder, [$client2, $client3]],
+            [Criterion::AssetTag, DuplicatesColumn::Id, Direction::Ascending, true, $defaultOrder, [$client2, $client3]],
+            [Criterion::Name, DuplicatesColumn::Id, Direction::Ascending, false, $defaultOrder, [$client2, $client3]],
+            [Criterion::Name, DuplicatesColumn::Id, Direction::Descending, false, ['clients.id' => 'desc', 'name'], [$client3, $client2]],
+            [
+                Criterion::Name,
+                DuplicatesColumn::Name,
+                Direction::Ascending,
                 false,
-                array('clients.name' => 'asc', 'clients.id'),
-                array($client2, $client3)
-            ),
-            array(
-                'Name',
-                'NetworkInterface.MacAddress',
-                'asc',
+                ['clients.name' => 'asc', 'clients.id'],
+                [$client2, $client3]
+            ],
+            [
+                Criterion::Name,
+                DuplicatesColumn::MacAddress,
+                Direction::Ascending,
                 false,
-                array('networkinterface_macaddr' => 'asc', 'name', 'clients.id'),
-                array($client2, $client3)
-            ),
-        );
+                ['networkinterface_macaddr' => 'asc', 'name', 'clients.id'],
+                [$client2, $client3]
+            ],
+        ];
     }
 
-    /**
-     * @dataProvider findProvider
-     */
-    public function testFind($criteria, $order, $direction, $clearBlacklist, $expectedOrder, $expectedResult)
-    {
+    #[DataProvider('findProvider')]
+    public function testFind(
+        Criterion $criterion,
+        DuplicatesColumn $order,
+        Direction $direction,
+        bool $clearBlacklist,
+        array $expectedOrder,
+        array $expectedResult
+    ) {
         if ($clearBlacklist) {
             static::$serviceManager->get('Database\Table\DuplicateMacAddresses')->delete(true);
             static::$serviceManager->get('Database\Table\DuplicateSerials')->delete(true);
@@ -157,22 +165,22 @@ class DuplicatesManagerTest extends AbstractTestCase
         $ordercolumns = array(
             'Id' => 'clients.id',
             'Name' => 'clients.name',
-            'NetworkInterface.MacAddress' => 'networkinterface_macaddr',
+            'MacAddress' => 'networkinterface_macaddr',
         );
 
         $sql = new \Laminas\Db\Sql\Sql(static::$serviceManager->get(Adapter::class), 'clients');
 
         $select = $sql->select()
             ->columns(array('id', 'name', 'lastcome', 'ssn', 'assettag'))
-            ->order(array($ordercolumns[$order] => $direction));
+            ->order([$ordercolumns[$order->name] => $direction->value]);
 
         /** @var MockObject|ClientManager */
         $clientManager = $this->createMock('Model\Client\ClientManager');
         $clientManager->method('getClients')
             ->with(
                 array('Id', 'Name', 'LastContactDate', 'Serial', 'AssetTag'),
-                $order,
-                $direction,
+                $order == DuplicatesColumn::MacAddress ? 'NetworkInterface.MacAddress' : $order->name,
+                $direction->value,
                 null,
                 null,
                 null,
@@ -213,16 +221,9 @@ class DuplicatesManagerTest extends AbstractTestCase
             static::$serviceManager->get(SoftwareManager::class)
         );
 
-        $resultSet = $duplicates->find($criteria, $order, $direction);
+        $resultSet = $duplicates->find($criterion, $order, $direction);
         $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $resultSet);
         $this->assertEquals($expectedResult, $resultSet->toArray());
-    }
-
-    public function testFindInvalidCriteria()
-    {
-        // Test invalid criteria
-        $this->expectException('InvalidArgumentException');
-        $this->getModel()->find('invalid');
     }
 
     public static function mergeNoneWithLessThan2ClientsProvider()

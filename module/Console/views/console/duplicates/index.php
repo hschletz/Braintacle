@@ -21,6 +21,16 @@
  *
  */
 
+use Braintacle\Duplicates\Criterion;
+use Braintacle\Http\RouteHelper;
+
+/** @var RouteHelper */
+$routeHelper = $this->routeHelper;
+
+if ($this->merged) {
+    echo $this->htmlElement('p', $this->translate('The selected clients have been merged.'), ['class' => 'success']);
+}
+
 foreach (array('error', 'info', 'success') as $namespace) {
     $messages = $this->flashMessenger()->getMessagesFromNamespace($namespace);
     if ($messages) {
@@ -33,29 +43,25 @@ foreach (array('error', 'info', 'success') as $namespace) {
     }
 }
 
-$labels = array(
-    'Name' => $this->translate('Name'),
-    'MacAddress' => $this->translate('MAC Address'),
-    'Serial' => $this->translate('Serial number'),
-    'AssetTag' => $this->translate('Asset tag'),
-);
-
 if (count($this->duplicates)) {
     print "<table class='textnormalsize'>\n";
-    foreach ($this->duplicates as $type => $num) {
+    foreach ($this->duplicates as $criterion => $num) {
         print '<tr>';
         print $this->htmlElement(
             'td',
-            $labels[$type]
+            match (Criterion::from($criterion)) {
+                Criterion::Name => $this->translate('Name'),
+                Criterion::MacAddress => $this->translate('MAC Address'),
+                Criterion::Serial => $this->translate('Serial number'),
+                Criterion::AssetTag => $this->translate('Asset tag'),
+            }
         );
         print $this->htmlElement(
             'td',
             $this->htmlElement(
                 'a',
                 $num,
-                array(
-                    'href' => $this->consoleUrl('duplicates', 'manage', array('criteria' => $type)),
-                )
+                ['href' => $routeHelper->getPathForRoute('manageDuplicates', ['criterion' => $criterion])],
             ),
             array('class' => 'textright')
         );

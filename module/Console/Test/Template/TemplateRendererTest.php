@@ -46,15 +46,10 @@ class TemplateRendererTest extends TestCase
         /** @var Stub|ConsoleScript */
         $consoleScript = $this->createStub(ConsoleScript::class);
 
-        /** @var MockObject|ConsoleUrl */
-        $consoleUrl = $this->createMock(ConsoleUrl::class);
-        $consoleUrl->method('__invoke')->willReturn('url');
-
         /** @var MockObject|HelperPluginManager */
         $viewHelperManager = $this->createMock(HelperPluginManager::class);
         $viewHelperManager->method('get')->willReturnMap([
             [ConsoleScript::class, null, $consoleScript],
-            [ConsoleUrl::class, null, $consoleUrl],
         ]);
 
         /** @var MockObject|ContainerInterface */
@@ -75,7 +70,6 @@ class TemplateRendererTest extends TestCase
 
         $engine = $templateRenderer->getEngine();
         $this->assertEquals('translated', $engine->invokeFunction('translate', ['message']));
-        $this->assertEquals('url', $engine->invokeFunction('consoleUrl', []));
         $this->assertEquals('url', $engine->invokeFunction('assetUrl', ['path']));
         $this->assertEquals('token', $engine->invokeFunction('csrfToken', []));
         $this->assertEquals('path', $engine->invokeFunction('pathForRoute', ['route']));
