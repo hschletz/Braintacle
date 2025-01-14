@@ -40,7 +40,7 @@
                 <a href="{pathForRoute(showClientCustomFields, [], [id: $client->id])}">{$client->name}</a>
             </td>
             <td>
-                {include allowLink, 'MacAddress', $client['NetworkInterface.MacAddress']}
+                {include allowLink, 'MacAddress', (string) $client['NetworkInterface.MacAddress']}
             </td>
             <td>
                 {include allowLink, 'Serial', $client->serial}

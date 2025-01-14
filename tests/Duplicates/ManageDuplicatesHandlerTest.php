@@ -13,6 +13,7 @@ use Braintacle\Test\TemplateTestTrait;
 use DateTime;
 use DOMXPath;
 use Formotron\DataProcessor;
+use Library\MacAddress;
 use Model\Client\Client;
 use Model\Client\DuplicatesManager;
 use Model\Config;
@@ -35,13 +36,19 @@ class ManageDuplicatesHandlerTest extends TestCase
         $dataProcessor = $this->createMock(DataProcessor::class);
         $dataProcessor->method('process')->with(['id' => '42', 'criterion' => 'name'])->willReturn($requestParameters);
 
+        $macAddress1 = $this->createStub(MacAddress::class);
+        $macAddress1->method('__toString')->willReturn('mac1');
+
         $client1 = $this->createMock(Client::class);
         $client1->id = 1;
         $client1->name = 'name1';
         $client1->serial = 'serial1';
         $client1->assetTag = null;
         $client1->lastContactDate = new DateTime('2022-12-22T13:22:00');
-        $client1->method('offsetGet')->with('NetworkInterface.MacAddress')->willReturn('mac1');
+        $client1->method('offsetGet')->with('NetworkInterface.MacAddress')->willReturn($macAddress1);
+
+        $macAddress2 = $this->createStub(MacAddress::class);
+        $macAddress2->method('__toString')->willReturn('mac2');
 
         $client2 = $this->createMock(Client::class);
         $client2->id = 2;
@@ -49,7 +56,7 @@ class ManageDuplicatesHandlerTest extends TestCase
         $client2->serial = null;
         $client2->assetTag = 'at2';
         $client2->lastContactDate = new DateTime('2023-01-28T17:27:00');
-        $client2->method('offsetGet')->with('NetworkInterface.MacAddress')->willReturn('mac2');
+        $client2->method('offsetGet')->with('NetworkInterface.MacAddress')->willReturn($macAddress2);
 
         $duplicatesManager = $this->createStub(DuplicatesManager::class);
         $duplicatesManager->method('find')->willReturn([$client1, $client2]);
