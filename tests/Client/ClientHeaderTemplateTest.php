@@ -3,9 +3,9 @@
 namespace Braintacle\Test\Client;
 
 use Braintacle\Template\Function\PathForRouteFunction;
+use Braintacle\Template\Function\TranslateFunction;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\TemplateTestTrait;
-use Console\Template\Functions\TranslateFunction;
 use Exception;
 use Model\Client\Client;
 use Model\Client\WindowsInstallation;

@@ -5,8 +5,7 @@ namespace Braintacle\Template;
 use Braintacle\Template\Function\AssetUrlFunction;
 use Braintacle\Template\Function\CsrfTokenFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
-use Console\Template\Functions\TranslateFunction;
-use Console\Template\TemplateLoader;
+use Braintacle\Template\Function\TranslateFunction;
 use ErrorException;
 use Latte\Engine;
 

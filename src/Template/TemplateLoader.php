@@ -1,6 +1,6 @@
 <?php
 
-namespace Console\Template;
+namespace Braintacle\Template;
 
 use Latte\Loaders\FileLoader;
 use Latte\RuntimeException;

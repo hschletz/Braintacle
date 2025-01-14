@@ -1,6 +1,6 @@
 <?php
 
-namespace Console\Template\Functions;
+namespace Braintacle\Template\Function;
 
 use Laminas\Translator\TranslatorInterface;
 

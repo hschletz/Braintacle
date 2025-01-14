@@ -3,10 +3,10 @@
 namespace Console\Test\Inputfilter;
 
 use Braintacle\Template\Function\CsrfTokenFunction;
+use Braintacle\Template\Function\TranslateFunction;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\TemplateTestTrait;
 use Console\Form\Package\AssignPackagesForm;
-use Console\Template\Functions\TranslateFunction;
 use Laminas\Session\Validator\Csrf;
 use Laminas\Validator\InArray;
 use Laminas\Validator\NotEmpty;

@@ -1,10 +1,11 @@
 <?php
 
-namespace Console\Test\Template;
+namespace Braintacle\Test\Template;
 
-use Console\Template\TemplateLoader;
+use Braintacle\Template\TemplateLoader;
 use Latte\RuntimeException;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Path;
 
@@ -19,7 +20,7 @@ class TemplateLoaderTest extends TestCase
         ];
     }
 
-    /** @dataProvider getContentProvider */
+    #[DataProvider('getContentProvider')]
     public function testGetContent(int $mtimeOffset)
     {
         $mtime = time() + $mtimeOffset;

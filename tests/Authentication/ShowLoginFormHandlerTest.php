@@ -7,6 +7,7 @@ use Braintacle\Http\RouteHelper;
 use Braintacle\Template\Function\CsrfTokenFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
 use Braintacle\Template\TemplateEngine;
+use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
 use Laminas\Authentication\AuthenticationServiceInterface;
@@ -17,6 +18,7 @@ use PHPUnit\Framework\TestCase;
 
 #[CoversClass(ShowLoginFormHandler::class)]
 #[UsesClass(TemplateEngine::class)]
+#[UsesClass(TemplateLoader::class)]
 class ShowLoginFormHandlerTest extends TestCase
 {
     use HttpHandlerTestTrait;

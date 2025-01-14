@@ -5,10 +5,10 @@ namespace Braintacle\Test;
 use Braintacle\Template\Function\AssetUrlFunction;
 use Braintacle\Template\Function\CsrfTokenFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
+use Braintacle\Template\Function\TranslateFunction;
 use Braintacle\Template\TemplateEngine;
+use Braintacle\Template\TemplateLoader;
 use Composer\InstalledVersions;
-use Console\Template\Functions\TranslateFunction;
-use Console\Template\TemplateLoader;
 use Latte\Engine;
 
 /**

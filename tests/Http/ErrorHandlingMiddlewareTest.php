@@ -5,6 +5,7 @@ namespace Braintacle\Test\Http;
 use Braintacle\AppConfig;
 use Braintacle\Http\ErrorHandlingMiddleware;
 use Braintacle\Template\TemplateEngine;
+use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
 use Exception;
@@ -20,6 +21,7 @@ use Slim\Exception\HttpException;
 
 #[CoversClass(ErrorHandlingMiddleware::class)]
 #[UsesClass(TemplateEngine::class)]
+#[UsesClass(TemplateLoader::class)]
 class ErrorHandlingMiddlewareTest extends TestCase
 {
     use HttpHandlerTestTrait;
