@@ -318,18 +318,14 @@ msgstr ""
 #: module/Console/Form/DeleteClient.php
 #: module/Console/View/Helper/Form/ClientConfig.php
 #: module/Library/View/Helper/FormYesNo.php
-#: templates/Pages/Client/Packages.latte
-#: templates/Pages/Group/Packages.latte
-#: templates/Pages/Software.latte
+#: templates/DialogButtons.latte
 msgid "Yes"
 msgstr ""
 
 #: module/Console/Form/DeleteClient.php
 #: module/Console/View/Helper/Form/ClientConfig.php
 #: module/Library/View/Helper/FormYesNo.php
-#: templates/Pages/Client/Packages.latte
-#: templates/Pages/Group/Packages.latte
-#: templates/Pages/Software.latte
+#: templates/DialogButtons.latte
 msgid "No"
 msgstr ""
 

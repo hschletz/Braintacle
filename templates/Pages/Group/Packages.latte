@@ -24,10 +24,7 @@
 
     <dialog class="confirmPackageAction">
         <p>{* Message placeholder *}</p>
-        <form method="dialog">
-            <button value='yes'>{translate('Yes')}</button>
-            <button value='no'>{translate('No')}</button>
-        </form>
+        {include ../../DialogButtons.latte}
     </dialog>
     <template id="confirmRemovePackage">
         {translate("Package '{}' will no longer be assigned to this group. Continue?")}

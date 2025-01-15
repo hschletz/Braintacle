@@ -319,17 +319,13 @@ msgstr "Interfaces aus Netzwerkliste löschen"
 
 #: module/Console/Form/DeleteClient.php
 #: module/Console/View/Helper/Form/ClientConfig.php
-#: module/Library/View/Helper/FormYesNo.php
-#: templates/Pages/Client/Packages.latte templates/Pages/Group/Packages.latte
-#: templates/Pages/Software.latte
+#: module/Library/View/Helper/FormYesNo.php templates/DialogButtons.latte
 msgid "No"
 msgstr "Nein"
 
 #: module/Console/Form/DeleteClient.php
 #: module/Console/View/Helper/Form/ClientConfig.php
-#: module/Library/View/Helper/FormYesNo.php
-#: templates/Pages/Client/Packages.latte templates/Pages/Group/Packages.latte
-#: templates/Pages/Software.latte
+#: module/Library/View/Helper/FormYesNo.php templates/DialogButtons.latte
 msgid "Yes"
 msgstr "Ja"
 

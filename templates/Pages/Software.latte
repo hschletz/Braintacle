@@ -70,9 +70,6 @@
 
         <ul>{* will be filled by JS *}</ul>
 
-        <form method="dialog">
-            <button value='yes'>{translate('Yes')}</button>
-            <button value='no'>{translate('No')}</button>
-        </form>
+        {include ../DialogButtons.latte}
     </dialog>
 {/block}
