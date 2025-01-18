@@ -23,10 +23,9 @@
 namespace Console\Controller;
 
 use Braintacle\Duplicates\Criterion;
-use Braintacle\Duplicates\MergeDuplicatesHandler;
+use Braintacle\FlashMessages;
 use Braintacle\Http\RouteHelper;
 use Laminas\Mvc\MvcEvent;
-use Laminas\Session\Container as Session;
 
 /**
  * Controller for managing duplicate clients and the criteria for determining duplicates.
@@ -41,7 +40,7 @@ class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionControl
 
     public function __construct(
         private RouteHelper $routeHelper,
-        private Session $session,
+        private FlashMessages $flashMessages,
         \Model\Client\DuplicatesManager $duplicates,
     ) {
         $this->_duplicates = $duplicates;
@@ -74,7 +73,7 @@ class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionControl
         return [
             'routeHelper' => $this->routeHelper,
             'duplicates' => $duplicates,
-            'merged' => isset($this->session[MergeDuplicatesHandler::class]),
+            'message' => $this->flashMessages->get(FlashMessages::Success)[0] ?? null,
         ];
     }
 

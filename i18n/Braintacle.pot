@@ -1491,10 +1491,6 @@ msgid "Exclude asset tag '%s' from duplicates search?"
 msgstr ""
 
 #: module/Console/views/console/duplicates/index.php
-msgid "The selected clients have been merged."
-msgstr ""
-
-#: module/Console/views/console/duplicates/index.php
 #: templates/Pages/Duplicates/ManageDuplicates.latte
 msgid "MAC Address"
 msgstr ""
@@ -1652,6 +1648,10 @@ msgstr ""
 
 #: module/Library/Validator/ProductKey.php
 msgid "'%value%' is not a valid product key"
+msgstr ""
+
+#: src/Duplicates/MergeDuplicatesHandler.php
+msgid "The selected clients have been merged."
 msgstr ""
 
 #: templates/Forms/AssignPackage.latte

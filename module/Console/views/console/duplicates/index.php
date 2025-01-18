@@ -27,8 +27,8 @@ use Braintacle\Http\RouteHelper;
 /** @var RouteHelper */
 $routeHelper = $this->routeHelper;
 
-if ($this->merged) {
-    echo $this->htmlElement('p', $this->translate('The selected clients have been merged.'), ['class' => 'success']);
+if ($this->message) {
+    echo $this->htmlElement('p', $this->message, ['class' => 'success']);
 }
 
 foreach (array('error', 'info', 'success') as $namespace) {

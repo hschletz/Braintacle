@@ -22,8 +22,8 @@
 
 namespace Console\Service;
 
+use Braintacle\FlashMessages;
 use Braintacle\Http\RouteHelper;
-use Laminas\Session\Container as Session;
 
 /**
  * Factory for DuplicatesController
@@ -38,7 +38,7 @@ class DuplicatesControllerFactory implements \Laminas\ServiceManager\Factory\Fac
     ) {
         return new \Console\Controller\DuplicatesController(
             $container->get(RouteHelper::class),
-            $container->get(Session::class),
+            $container->get(FlashMessages::class),
             $container->get('Model\Client\DuplicatesManager'),
         );
     }

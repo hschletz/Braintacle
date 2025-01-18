@@ -1456,10 +1456,6 @@ msgstr "MAC-Adresse"
 msgid "No duplicates present."
 msgstr "Keine Duplikate vorhanden."
 
-#: module/Console/views/console/duplicates/index.php
-msgid "The selected clients have been merged."
-msgstr "Die ausgewählten Clients wurden zusammengeführt."
-
 #: module/Console/views/console/group/delete.php
 #, php-format
 msgid "Group '%s' will be permanently deleted. Continue?"
@@ -1616,6 +1612,10 @@ msgstr "'%value%' ist in der Liste ungültiger Werte"
 #: module/Library/Validator/ProductKey.php
 msgid "'%value%' is not a valid product key"
 msgstr "'%value%' ist kein gültiger Lizenzschlüssel"
+
+#: src/Duplicates/MergeDuplicatesHandler.php
+msgid "The selected clients have been merged."
+msgstr "Die ausgewählten Clients wurden zusammengeführt."
 
 #: templates/Forms/AssignPackage.latte
 msgid "Assign"

@@ -22,12 +22,11 @@
 
 namespace Console\Test\Controller;
 
-use Braintacle\Duplicates\MergeDuplicatesHandler;
+use Braintacle\FlashMessages;
 use Braintacle\Http\RouteHelper;
 use Console\Form\ShowDuplicates;
 use Console\Test\AbstractControllerTestCase;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
-use Laminas\Session\Container as Session;
 use Model\Client\DuplicatesManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -46,7 +45,7 @@ class DuplicatesControllerTest extends AbstractControllerTestCase
      */
     protected $_showDuplicates;
 
-    private MockObject $session;
+    private MockObject $flashMessages;
 
     public function setUp(): void
     {
@@ -57,17 +56,17 @@ class DuplicatesControllerTest extends AbstractControllerTestCase
         $routeHelper = $this->createStub(RouteHelper::class);
         $routeHelper->method('getPathForRoute')->willReturnCallback(fn ($name, $arguments) => $name . json_encode($arguments));
 
-        $this->session = $this->createMock(Session::class);
+        $this->flashMessages = $this->createMock(FlashMessages::class);
 
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setService(RouteHelper::class, $routeHelper);
-        $serviceManager->setService(Session::class, $this->session);
+        $serviceManager->setService(FlashMessages::class, $this->flashMessages);
         $serviceManager->setService('Model\Client\DuplicatesManager', $this->_duplicates);
     }
 
     public function testIndexActionNoDuplicates()
     {
-        $this->session->method('offsetExists')->with(MergeDuplicatesHandler::class)->willReturn(false);
+        $this->flashMessages->method('get')->with(FlashMessages::Success)->willReturn([]);
         $this->_duplicates->expects($this->exactly(4))
             ->method('count')
             ->will($this->returnValue(0));
@@ -78,7 +77,7 @@ class DuplicatesControllerTest extends AbstractControllerTestCase
 
     public function testIndexActionShowDuplicates()
     {
-        $this->session->method('offsetExists')->with(MergeDuplicatesHandler::class)->willReturn(false);
+        $this->flashMessages->method('get')->with(FlashMessages::Success)->willReturn([]);
         $this->_duplicates->expects($this->exactly(4))
             ->method('count')
             ->will($this->returnValue(2));
@@ -133,7 +132,7 @@ class DuplicatesControllerTest extends AbstractControllerTestCase
 
     public function testIndexActionNoMessage()
     {
-        $this->session->method('offsetExists')->with(MergeDuplicatesHandler::class)->willReturn(false);
+        $this->flashMessages->method('get')->with(FlashMessages::Success)->willReturn([]);
         $this->_duplicates->method('count')->willReturn(0);
         $this->dispatch('/console/duplicates/index/');
         $this->assertResponseStatusCode(200);
@@ -142,11 +141,11 @@ class DuplicatesControllerTest extends AbstractControllerTestCase
 
     public function testIndexActionMessage()
     {
-        $this->session->method('offsetExists')->with(MergeDuplicatesHandler::class)->willReturn(true);
+        $this->flashMessages->method('get')->with(FlashMessages::Success)->willReturn(['success message']);
         $this->_duplicates->method('count')->willReturn(0);
         $this->dispatch('/console/duplicates/index/');
         $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery('//p[@class="success"]');
+        $this->assertXpathQuery('//p[@class="success"][normalize-space(text())="success message"]');
     }
 
     public function testAllowActionGet()

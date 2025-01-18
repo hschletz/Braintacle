@@ -4,9 +4,10 @@ namespace Braintacle\Test\Duplicates;
 
 use Braintacle\CsrfProcessor;
 use Braintacle\Duplicates\MergeDuplicatesHandler;
+use Braintacle\FlashMessages;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Console\Form\ShowDuplicates as Validator;
-use Laminas\Session\Container as Session;
+use Laminas\Translator\TranslatorInterface;
 use Model\Client\DuplicatesManager;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -35,18 +36,28 @@ class MergeDuplicatesHandlerTest extends TestCase
         $validator->method('getMessages')->willReturn(['level1' => ['level2' => 'message']]);
 
         $duplicatesManager = $this->createMock(DuplicatesManager::class);
-        $session = $this->createMock(Session::class);
+        $flashMessages = $this->createMock(FlashMessages::class);
+        $message = 'success message';
 
         if ($isValid) {
             $duplicatesManager->expects($this->once())->method('merge')->with($clients, $options);
-            $session->expects($this->once())->method('offsetSet')->with(MergeDuplicatesHandler::class, true);
-            $session->expects($this->once())->method('setExpirationHops')->with(1, MergeDuplicatesHandler::class);
+            $flashMessages->expects($this->once())->method('add')->with(FlashMessages::Success, $message);
         } else {
             $duplicatesManager->expects($this->never())->method('merge');
-            $session->expects($this->never())->method('offsetSet');
+            $flashMessages->expects($this->never())->method('add');
         }
 
-        $handler = new MergeDuplicatesHandler($this->response, $csrfProcessor, $validator, $duplicatesManager, $session);
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->method('translate')->with('The selected clients have been merged.')->willReturn($message);
+
+        $handler = new MergeDuplicatesHandler(
+            $this->response,
+            $csrfProcessor,
+            $validator,
+            $duplicatesManager,
+            $flashMessages,
+            $translator,
+        );
 
         return $handler->handle($this->request->withParsedBody($parsedBody));
     }

@@ -3,8 +3,9 @@
 namespace Braintacle\Duplicates;
 
 use Braintacle\CsrfProcessor;
+use Braintacle\FlashMessages;
 use Console\Form\ShowDuplicates as Validator;
-use Laminas\Session\Container as Session;
+use Laminas\Translator\TranslatorInterface;
 use Model\Client\DuplicatesManager;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -22,7 +23,8 @@ class MergeDuplicatesHandler implements RequestHandlerInterface
         private CsrfProcessor $csrfProcessor,
         private Validator $validator,
         private DuplicatesManager $duplicatesManager,
-        private Session $session,
+        private FlashMessages $flashMessages,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -33,10 +35,7 @@ class MergeDuplicatesHandler implements RequestHandlerInterface
         if ($this->validator->isValid()) {
             $data = $this->validator->getData();
             $this->duplicatesManager->merge($data['clients'], $data['mergeOptions']);
-
-            // Signal redirect target about successful merge.
-            $this->session[__CLASS__] = true;
-            $this->session->setExpirationHops(1, __CLASS__);
+            $this->flashMessages->add(FlashMessages::Success, $this->translator->translate('The selected clients have been merged.'));
 
             return $this->response;
         } else {
