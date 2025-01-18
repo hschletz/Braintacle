@@ -4,12 +4,13 @@
 {import ../../SortableHeader.latte}
 
 {block content}
+<link rel="stylesheet" href="{assetUrl('css/manage_duplicates.css')}">
 <script type="module" src="{assetUrl('js/form_showduplicates.js')}"></script>
 
 {* Generate link to allow duplicate criteria value *}
-{define allowLink, string $criterion, ?string $value}
+{define buttonAllow, string $criterion, ?string $value}
     {* NULL values are never considered for duplicates and cannot be excluded. *}
-    <a n:ifset="$value" href="{pathForRoute(duplicatesAllow, [], [criteria: $criterion, value: $value])}">{$value}</a>
+    <button n:ifset="$value" type="button" class="linkstyle" data-criterion="{$criterion}">{$value}</button>
 {/define}
 {define mergeOption, string $name, bool $checked, string $label}
     <label><input type="checkbox" name="mergeOptions[]" value="{$name}" n:attr="checked => $checked == 1">{$label}</label>
@@ -40,13 +41,13 @@
                 <a href="{pathForRoute(showClientCustomFields, [], [id: $client->id])}">{$client->name}</a>
             </td>
             <td>
-                {include allowLink, 'MacAddress', (string) $client['NetworkInterface.MacAddress']}
+                {include buttonAllow, 'mac_address', (string) $client['NetworkInterface.MacAddress']}
             </td>
             <td>
-                {include allowLink, 'Serial', $client->serial}
+                {include buttonAllow, 'serial', $client->serial}
             </td>
             <td>
-                {include allowLink, 'AssetTag', $client->assetTag}
+                {include buttonAllow, 'asset_tag', $client->assetTag}
             </td>
             <td>
                 {$client->lastContactDate|localDate: date: short, time: short}
@@ -62,3 +63,12 @@
 
     <button type="submit">{translate('Merge selected clients')}</button>
 </form>
+
+<dialog data-allow-href="{pathForRoute(allowDuplicates)}">
+    <p>{* message placeholder *}</p>
+    {include ../../DialogButtons.latte}
+</dialog>
+
+<template id="message_mac_address">{translate('Exclude MAC address {} from duplicates search?')}</template>
+<template id="message_serial">{translate("Exclude serial number '{}' from duplicates search?")}</template>
+<template id="message_asset_tag">{translate("Exclude asset tag '{}' from duplicates search?")}</template>

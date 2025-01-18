@@ -24,9 +24,7 @@ namespace Console\Test\Controller;
 
 use Braintacle\FlashMessages;
 use Braintacle\Http\RouteHelper;
-use Console\Form\ShowDuplicates;
 use Console\Test\AbstractControllerTestCase;
-use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Model\Client\DuplicatesManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -39,11 +37,6 @@ class DuplicatesControllerTest extends AbstractControllerTestCase
      * @var MockObject|DuplicatesManager
      */
     protected $_duplicates;
-
-    /**
-     * @var MockObject|ShowDuplicates
-     */
-    protected $_showDuplicates;
 
     private MockObject $flashMessages;
 
@@ -88,48 +81,6 @@ class DuplicatesControllerTest extends AbstractControllerTestCase
         $this->assertQueryContentContains('td a[href*="manageDuplicates{\"criterion\":"]', "\n2\n");
     }
 
-    public function testIndexActionNoFlashMessages()
-    {
-        $flashMessenger = $this->createMock(FlashMessenger::class);
-        $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
-        $flashMessenger->method('__call')
-            ->with('getMessagesFromNamespace')
-            ->willReturn(array());
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('FlashMessenger', $flashMessenger);
-
-        $this->_duplicates->method('count')
-            ->will($this->returnValue(0));
-        $this->dispatch('/console/duplicates/index/');
-        $this->assertResponseStatusCode(200);
-        $this->assertNotXpathQuery('//ul');
-    }
-
-    public function testIndexActionRenderFlashMessages()
-    {
-        $flashMessenger = $this->createMock(FlashMessenger::class);
-        $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
-        $flashMessenger->method('__call')->willReturnMap([
-            ['getMessagesFromNamespace', ['error'], []],
-            ['getMessagesFromNamespace', ['info'], ['info message']],
-            ['getMessagesFromNamespace', ['success'], ['success message']]
-        ]);
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
-
-        $this->_duplicates->method('count')
-            ->will($this->returnValue(0));
-        $this->dispatch('/console/duplicates/index/');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryCount('//ul', 2);
-        $this->assertXPathQueryContentContains(
-            '//ul[@class="info"]/li',
-            'info message'
-        );
-        $this->assertXPathQueryContentContains(
-            '//ul[@class="success"]/li',
-            "success message"
-        );
-    }
-
     public function testIndexActionNoMessage()
     {
         $this->flashMessages->method('get')->with(FlashMessages::Success)->willReturn([]);
@@ -139,42 +90,12 @@ class DuplicatesControllerTest extends AbstractControllerTestCase
         $this->assertNotXpathQuery('//p[@class="success"]');
     }
 
-    public function testIndexActionMessage()
+    public function testIndexActionMessageMerged()
     {
         $this->flashMessages->method('get')->with(FlashMessages::Success)->willReturn(['success message']);
         $this->_duplicates->method('count')->willReturn(0);
         $this->dispatch('/console/duplicates/index/');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQuery('//p[@class="success"][normalize-space(text())="success message"]');
-    }
-
-    public function testAllowActionGet()
-    {
-        $this->_duplicates->expects($this->never())
-            ->method('allow');
-        $this->dispatch('/console/duplicates/allow/?criteria=Serial&value=12345678');
-        $this->assertResponseStatusCode(200);
-        $this->assertQuery('form');
-    }
-
-    public function testAllowActionPostNo()
-    {
-        $this->_duplicates->expects($this->never())
-            ->method('allow');
-        $this->dispatch('/console/duplicates/allow/?criteria=Serial&value=12345678', 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/duplicates/index/');
-    }
-
-    public function testAllowActionPostYes()
-    {
-        $this->_duplicates->expects($this->once())
-            ->method('allow')
-            ->with('Serial', '12345678');
-        $this->dispatch('/console/duplicates/allow/?criteria=Serial&value=12345678', 'POST', array('yes' => 'Yes'));
-        $this->assertRedirectTo('/console/duplicates/index/');
-        $this->assertEquals(
-            ["'12345678' wird nicht mehr als Duplikat betrachtet."],
-            $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
-        );
     }
 }

@@ -90,16 +90,16 @@ class ManageDuplicatesHandlerTest extends TestCase
 
         $this->assertXpathMatches($xPath, '//tr[2]/td[1]/input[@value="1"]');
         $this->assertXpathMatches($xPath, '//tr[2]/td[2]/a[@href="showClientCustomFields?id=1"][text()="name1"]');
-        $this->assertXpathMatches($xPath, '//tr[2]/td[3]/a[@href="duplicatesAllow?criteria=MacAddress&value=mac1"][text()="mac1"]');
-        $this->assertXpathMatches($xPath, '//tr[2]/td[4]/a[@href="duplicatesAllow?criteria=Serial&value=serial1"][text()="serial1"]');
+        $this->assertXpathMatches($xPath, '//tr[2]/td[3]/button[@data-criterion="mac_address"][text()="mac1"]');
+        $this->assertXpathMatches($xPath, '//tr[2]/td[4]/button[@data-criterion="serial"][text()="serial1"]');
         $this->assertXpathMatches($xPath, '//tr[2]/td[5][not(a)]');
         $this->assertXpathMatches($xPath, '//tr[2]/td[6][normalize-space(text())="22.12.22, 13:22"]');
 
         $this->assertXpathMatches($xPath, '//tr[3]/td[1]/input[@value="2"]');
         $this->assertXpathMatches($xPath, '//tr[3]/td[2]/a[@href="showClientCustomFields?id=2"][text()="name2"]');
-        $this->assertXpathMatches($xPath, '//tr[3]/td[3]/a[@href="duplicatesAllow?criteria=MacAddress&value=mac2"][text()="mac2"]');
+        $this->assertXpathMatches($xPath, '//tr[3]/td[3]/button[@data-criterion="mac_address"][text()="mac2"]');
         $this->assertXpathMatches($xPath, '//tr[3]/td[4][not(a)]');
-        $this->assertXpathMatches($xPath, '//tr[3]/td[5]/a[@href="duplicatesAllow?criteria=AssetTag&value=at2"][text()="at2"]');
+        $this->assertXpathMatches($xPath, '//tr[3]/td[5]/button[@data-criterion="asset_tag"][text()="at2"]');
         $this->assertXpathMatches($xPath, '//tr[3]/td[6][normalize-space(text())="28.01.23, 17:27"]');
     }
 

@@ -36,3 +36,45 @@ form.addEventListener('submit', async event => {
         replaceDocument(await response.text())
     }
 })
+
+const dialog = document.querySelector('dialog')
+dialog.addEventListener('close', async () => {
+    if (dialog.returnValue == 'yes') {
+        const href = dialog.getAttribute('data-allow-href')
+        const formData = new FormData()
+        formData.set('criterion', criterion)
+        formData.set('value', value)
+        const response = await fetch(href, { method: 'POST', body: formData })
+        if (response.ok) {
+            location.assign(form.getAttribute('data-redirect'))
+        } else {
+            replaceDocument(await response.text())
+        }
+    }
+})
+
+let criterion
+let value
+
+for (const button of form.querySelectorAll('table button')) {
+    button.addEventListener('click', () => {
+        criterion = button.getAttribute('data-criterion')
+        value = button.textContent.trim()
+
+        let templateId
+        switch (criterion) {
+            case 'mac_address':
+                templateId = 'message_mac_address'
+                break
+            case 'serial':
+                templateId = 'message_serial'
+                break
+            case 'asset_tag':
+                templateId = 'message_asset_tag'
+                break
+        }
+        const messageTemplate = document.getElementById(templateId).content.textContent
+        dialog.querySelector('p').textContent = messageTemplate.replace('{}', value)
+        dialog.showModal()
+    })
+}

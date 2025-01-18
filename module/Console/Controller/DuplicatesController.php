@@ -76,32 +76,4 @@ class DuplicatesController extends \Laminas\Mvc\Controller\AbstractActionControl
             'message' => $this->flashMessages->get(FlashMessages::Success)[0] ?? null,
         ];
     }
-
-    /**
-     * Allow given criteria and value as duplicate
-     *
-     * @return array|\Laminas\Http\Response criteria/value for GET, redirect response for POST
-     */
-    public function allowAction()
-    {
-        $params = $this->params();
-        $criteria = $params->fromQuery('criteria');
-        $value = $params->fromQuery('value');
-
-        if ($this->getRequest()->isPost()) {
-            if ($params->fromPost('yes')) {
-                $this->_duplicates->allow($criteria, $value);
-                $this->flashMessenger()->addSuccessMessage(
-                    sprintf($this->_("'%s' is no longer considered duplicate."), $value)
-                );
-            }
-            return $this->redirectToRoute('duplicates', 'index');
-        } else {
-            // View script renders form
-            return array(
-                'criteria' => $criteria,
-                'value' => $value,
-            );
-        }
-    }
 }

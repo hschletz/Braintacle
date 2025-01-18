@@ -1,0 +1,6 @@
+.form_showduplicates label,
+.form_showduplicates button[type=submit] {
+    display: block;
+    text-align: center;
+    margin: 2ex auto 0 auto;
+}

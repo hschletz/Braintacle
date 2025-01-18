@@ -65,6 +65,15 @@ dialog {
     opacity: 50%;
 }
 
+button.linkstyle {
+    background-color: transparent;
+    border: none;
+    color: var(--link-color);
+    cursor: pointer;
+    font: unset;
+    margin-top: unset;
+}
+
 /* Main page content */
 #content {
     position: absolute;
@@ -560,12 +569,6 @@ form.form_addtogroup > * {
 }
 .form_package_update fieldset input {
     margin-right: .5em;
-}
-
-.form_showduplicates label, .form_showduplicates button {
-    display: block;
-    text-align: center;
-    margin: 2ex auto 0 auto;
 }
 
 /* The following rules are for forms still using the deprecated render() method. */

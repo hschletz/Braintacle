@@ -29,11 +29,6 @@ msgstr "Die Informationen wurden aktualisiert."
 msgid "The requested client does not exist."
 msgstr "Der angeforderte Client existiert nicht."
 
-#: module/Console/Controller/DuplicatesController.php
-#, php-format
-msgid "'%s' is no longer considered duplicate."
-msgstr "'%s' wird nicht mehr als Duplikat betrachtet."
-
 #: module/Console/Controller/GroupController.php
 #, php-format
 msgid "Group '%s' could not be deleted. Try again later."
@@ -1432,21 +1427,6 @@ msgstr "Besitzer"
 msgid "Product key (reported by agent)"
 msgstr "Lizenzschlüssel (vom Agenten ermittelt)"
 
-#: module/Console/views/console/duplicates/allow.php
-#, php-format
-msgid "Exclude MAC address %s from duplicates search?"
-msgstr "MAC-Adresse %s von Duplikatsuche ausschließen?"
-
-#: module/Console/views/console/duplicates/allow.php
-#, php-format
-msgid "Exclude asset tag '%s' from duplicates search?"
-msgstr "Asset Tag '%s' von Duplikatsuche ausschließen?"
-
-#: module/Console/views/console/duplicates/allow.php
-#, php-format
-msgid "Exclude serial number '%s' from duplicates search?"
-msgstr "Seriennummer '%s' von Duplikatsuche ausschließen?"
-
 #: module/Console/views/console/duplicates/index.php
 #: templates/Pages/Duplicates/ManageDuplicates.latte
 msgid "MAC Address"
@@ -1612,6 +1592,11 @@ msgstr "'%value%' ist in der Liste ungültiger Werte"
 #: module/Library/Validator/ProductKey.php
 msgid "'%value%' is not a valid product key"
 msgstr "'%value%' ist kein gültiger Lizenzschlüssel"
+
+#: src/Duplicates/AllowDuplicatesHandler.php
+#, php-format
+msgid "'%s' is no longer considered duplicate."
+msgstr "'%s' wird nicht mehr als Duplikat betrachtet."
 
 #: src/Duplicates/MergeDuplicatesHandler.php
 msgid "The selected clients have been merged."
@@ -1802,6 +1787,18 @@ msgstr "Ort"
 #: templates/Pages/Client/Software.latte
 msgid "Publisher"
 msgstr "Herausgeber"
+
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+msgid "Exclude MAC address {} from duplicates search?"
+msgstr "MAC-Adresse {} von Duplikatsuche ausschließen?"
+
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+msgid "Exclude asset tag '{}' from duplicates search?"
+msgstr "Asset Tag '{}' von Duplikatsuche ausschließen?"
+
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+msgid "Exclude serial number '{}' from duplicates search?"
+msgstr "Seriennummer '{}' von Duplikatsuche ausschließen?"
 
 #: templates/Pages/Duplicates/ManageDuplicates.latte
 msgid "Keep manually entered Windows product key"

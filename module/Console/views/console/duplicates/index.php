@@ -31,18 +31,6 @@ if ($this->message) {
     echo $this->htmlElement('p', $this->message, ['class' => 'success']);
 }
 
-foreach (array('error', 'info', 'success') as $namespace) {
-    $messages = $this->flashMessenger()->getMessagesFromNamespace($namespace);
-    if ($messages) {
-        print $this->htmlList(
-            $messages,
-            false,
-            array('class' => $namespace),
-            false
-        );
-    }
-}
-
 if (count($this->duplicates)) {
     print "<table class='textnormalsize'>\n";
     foreach ($this->duplicates as $criterion => $num) {

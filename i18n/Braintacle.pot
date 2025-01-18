@@ -22,11 +22,6 @@ msgstr ""
 msgid "Client '%s' could not be deleted."
 msgstr ""
 
-#: module/Console/Controller/DuplicatesController.php
-#, php-format
-msgid "'%s' is no longer considered duplicate."
-msgstr ""
-
 #: module/Console/Controller/GroupController.php
 msgid "The requested group does not exist."
 msgstr ""
@@ -1475,21 +1470,6 @@ msgstr ""
 msgid "Product key (reported by agent)"
 msgstr ""
 
-#: module/Console/views/console/duplicates/allow.php
-#, php-format
-msgid "Exclude MAC address %s from duplicates search?"
-msgstr ""
-
-#: module/Console/views/console/duplicates/allow.php
-#, php-format
-msgid "Exclude serial number '%s' from duplicates search?"
-msgstr ""
-
-#: module/Console/views/console/duplicates/allow.php
-#, php-format
-msgid "Exclude asset tag '%s' from duplicates search?"
-msgstr ""
-
 #: module/Console/views/console/duplicates/index.php
 #: templates/Pages/Duplicates/ManageDuplicates.latte
 msgid "MAC Address"
@@ -1648,6 +1628,11 @@ msgstr ""
 
 #: module/Library/Validator/ProductKey.php
 msgid "'%value%' is not a valid product key"
+msgstr ""
+
+#: src/Duplicates/AllowDuplicatesHandler.php
+#, php-format
+msgid "'%s' is no longer considered duplicate."
 msgstr ""
 
 #: src/Duplicates/MergeDuplicatesHandler.php
@@ -1868,6 +1853,18 @@ msgstr ""
 
 #: templates/Pages/Duplicates/ManageDuplicates.latte
 msgid "Merge selected clients"
+msgstr ""
+
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+msgid "Exclude MAC address {} from duplicates search?"
+msgstr ""
+
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+msgid "Exclude serial number '{}' from duplicates search?"
+msgstr ""
+
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+msgid "Exclude asset tag '{}' from duplicates search?"
 msgstr ""
 
 #: templates/Pages/Group/Header.latte

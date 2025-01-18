@@ -4,7 +4,6 @@
 {include Header.latte}
 
 {if count($assignedPackages)}
-    <link rel="stylesheet" href="{assetUrl('css/assigned_packages.css')}">
     <script type="module" src="{assetUrl('js/assigned_packages.js')}"></script>
 
     <h2>{translate('Assigned packages')}</h2>
@@ -40,7 +39,7 @@
                 </button>
             </td>
             <td>
-                <button type="button" data-package="{$assignment->packageName}" data-action="remove">
+                <button type="button" class="linkstyle" data-package="{$assignment->packageName}" data-action="remove">
                     {translate('remove')}
                 </button>
             </td>

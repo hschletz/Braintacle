@@ -44,6 +44,7 @@ use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use RuntimeException;
+use UnhandledMatchError;
 
 /**
  * Tests for Model\Client\DuplicatesManager
@@ -732,7 +733,7 @@ EOT
         $duplicates = $this->getModel();
 
         // New entry
-        $duplicates->allow('MacAddress', '00:00:5E:00:53:00');
+        $duplicates->allow(Criterion::MacAddress, '00:00:5E:00:53:00');
         $this->assertTablesEqual(
             $dataSet->getTable('blacklist_macaddresses'),
             $connection->createQueryTable(
@@ -741,7 +742,7 @@ EOT
             )
         );
         // Existing entry should produce no error and no duplicate
-        $duplicates->allow('MacAddress', '00:00:5E:00:53:01');
+        $duplicates->allow(Criterion::MacAddress, '00:00:5E:00:53:01');
         $this->assertTablesEqual(
             $dataSet->getTable('blacklist_macaddresses'),
             $connection->createQueryTable(
@@ -751,7 +752,7 @@ EOT
         );
 
         // New entry
-        $duplicates->allow('Serial', 'test');
+        $duplicates->allow(Criterion::Serial, 'test');
         $this->assertTablesEqual(
             $dataSet->getTable('blacklist_serials'),
             $connection->createQueryTable(
@@ -760,7 +761,7 @@ EOT
             )
         );
         // Existing entry should produce no error and no duplicate
-        $duplicates->allow('Serial', 'duplicate');
+        $duplicates->allow(Criterion::Serial, 'duplicate');
         $this->assertTablesEqual(
             $dataSet->getTable('blacklist_serials'),
             $connection->createQueryTable(
@@ -770,7 +771,7 @@ EOT
         );
 
         // New entry
-        $duplicates->allow('AssetTag', 'test');
+        $duplicates->allow(Criterion::AssetTag, 'test');
         $this->assertTablesEqual(
             $dataSet->getTable('braintacle_blacklist_assettags'),
             $connection->createQueryTable(
@@ -779,7 +780,7 @@ EOT
             )
         );
         // Existing entry should produce no error and no duplicate
-        $duplicates->allow('AssetTag', 'duplicate');
+        $duplicates->allow(Criterion::AssetTag, 'duplicate');
         $this->assertTablesEqual(
             $dataSet->getTable('braintacle_blacklist_assettags'),
             $connection->createQueryTable(
@@ -788,7 +789,7 @@ EOT
             )
         );
 
-        $this->expectException('InvalidArgumentException');
-        $duplicates->allow('invalid', 'test');
+        $this->expectException(UnhandledMatchError::class);
+        $duplicates->allow(Criterion::Name, 'test');
     }
 }

@@ -466,31 +466,22 @@ class DuplicatesManager
     /**
      * Exclude a MAC address, serial or asset tag from being used as criteria
      * for duplicates search.
-     *
-     * @param string $criteria One of Name|MacAddress|Serial|AssetTag
-     * @param string $value Value to be excluded
-     * @throws \InvalidArgumentException if $criteria is invalid
      */
-    public function allow($criteria, $value)
+    public function allow(Criterion $criterion, string $value)
     {
-        switch ($criteria) {
-            case 'MacAddress':
-                $table = $this->_duplicateMacaddresses;
-                $column = 'macaddress';
-                break;
-            case 'Serial':
-                $table = $this->_duplicateSerials;
-                $column = 'serial';
-                break;
-            case 'AssetTag':
-                $table = $this->_duplicateAssetTags;
-                $column = 'assettag';
-                break;
-            default:
-                throw new \InvalidArgumentException(
-                    'Invalid criteria : ' . $criteria
-                );
-        }
+        /** @psalm-suppress UnhandledMatchCondition (Criterion::Name is not valid here) */
+        $table = match ($criterion) {
+            Criterion::MacAddress => $this->_duplicateMacaddresses,
+            Criterion::Serial => $this->_duplicateSerials,
+            Criterion::AssetTag => $this->_duplicateAssetTags,
+        };
+        /** @psalm-suppress UnhandledMatchCondition (Criterion::Name is not valid here) */
+        $column = match ($criterion) {
+            Criterion::MacAddress => 'macaddress',
+            Criterion::Serial => 'serial',
+            Criterion::AssetTag => 'assettag',
+        };
+
         // Check for existing record to avoid constraint violation
         $data = array($column => $value);
         if ($table->select($data)->count() == 0) {
