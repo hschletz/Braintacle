@@ -22,8 +22,6 @@
 
 namespace Console\Service;
 
-use Console\Form\Package\AssignPackagesForm;
-
 /**
  * Factory for GroupController
  */
@@ -39,7 +37,6 @@ class GroupControllerFactory implements \Laminas\ServiceManager\Factory\FactoryI
         return new \Console\Controller\GroupController(
             $container->get('Model\Group\GroupManager'),
             $container->get('Model\Client\ClientManager'),
-            $container->get(AssignPackagesForm::class),
             $formManager->get('Console\Form\AddToGroup'),
             $formManager->get('Console\Form\ClientConfig')
         );

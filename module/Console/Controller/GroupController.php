@@ -22,8 +22,6 @@
 
 namespace Console\Controller;
 
-use Console\Form\Package\AssignPackagesForm;
-
 /**
  * Controller for managing groups
  */
@@ -59,12 +57,9 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
      */
     protected $_currentGroup;
 
-    private AssignPackagesForm $assignPackagesForm;
-
     public function __construct(
         \Model\Group\GroupManager $groupManager,
         \Model\Client\ClientManager $clientManager,
-        AssignPackagesForm $assignPackagesForm,
         \Console\Form\AddToGroup $addToGroupForm,
         \Console\Form\ClientConfig $clientConfigForm
     ) {
@@ -72,7 +67,6 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
         $this->_clientManager = $clientManager;
         $this->_addToGroupForm = $addToGroupForm;
         $this->_clientConfigForm = $clientConfigForm;
-        $this->assignPackagesForm = $assignPackagesForm;
     }
 
     /** {@inheritdoc} */
