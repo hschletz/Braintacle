@@ -48,7 +48,6 @@ return array(
         'factories' => array(
             'accounts' => 'Console\Service\AccountsControllerFactory',
             'client' => 'Console\Service\ClientControllerFactory',
-            'duplicates' => 'Console\Service\DuplicatesControllerFactory',
             'group' => 'Console\Service\GroupControllerFactory',
             'licenses' => 'Console\Service\LicensesControllerFactory',
             'network' => 'Console\Service\NetworkControllerFactory',

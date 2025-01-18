@@ -40,6 +40,7 @@ class Router
             $group->put('/client/{id}/packages', Client\Packages\ResetPackageHandler::class)->setName('resetPackageOnClient');
             $group->delete('/client/{id}/packages', Client\Packages\RemovePackageHandler::class)->setName('removePackageFromClient');
             $group->get('/client/{id}/software', Client\Software\SoftwarePageHandler::class)->setName('showClientSoftware');
+            $group->get('/duplicates', Duplicates\OverviewHandler::class)->setName('duplicatesList');
             $group->post('/duplicates', Duplicates\MergeDuplicatesHandler::class)->setName('mergeDuplicates');
             $group->post('/duplicates/allow', Duplicates\AllowDuplicatesHandler::class)->setName('allowDuplicates');
             $group->get('/duplicates/{criterion}', Duplicates\ManageDuplicatesHandler::class)->setName('manageDuplicates');
@@ -70,7 +71,6 @@ class Router
             $group->get('/console/client/system', ApplicationBridge::class)->setName('showClientSystem');
             $group->get('/console/client/virtualmachines', ApplicationBridge::class)->setName('showClientVirtualMachines');
             $group->get('/console/client/windows', ApplicationBridge::class)->setName('showClientWindows');
-            $group->get('/console/duplicates/index', ApplicationBridge::class)->setName('duplicatesList');
             $group->get('/console/group/index', ApplicationBridge::class)->setName('groupList');
             $group->get('/console/group/general', ApplicationBridge::class)->setName('showGroupGeneral');
             $group->get('/console/group/members', ApplicationBridge::class)->setName('showGroupMembers');

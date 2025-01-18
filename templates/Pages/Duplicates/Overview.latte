@@ -1,0 +1,29 @@
+{* Display overview of duplicates. *}
+
+{layout DuplicatesMenuLayout.latte}
+
+{define row, string $criterion, string $label}
+    <tr n:ifset="$duplicates[$criterion]">
+        <td>{$label}</td>
+        <td class="textright">
+            <a href="{pathForRoute(manageDuplicates, [criterion: $criterion])}">{$duplicates[$criterion]}</a>
+        </td>
+    </tr>
+{/define}
+
+{block content}
+
+<p n:ifset="$message" class="success">{$message}</p>
+
+{if $duplicates}
+    <table class="textnormalsize">
+        {include row, name, translate('Name')}
+        {include row, mac_address, translate('MAC Address')}
+        {include row, serial, translate('Serial number')}
+        {include row, asset_tag, translate('Asset tag')}
+    </table>
+{else}
+    <p class="textcenter">
+        {translate('No duplicates present.')}
+    </p>
+{/if}

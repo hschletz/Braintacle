@@ -27,6 +27,7 @@ use Braintacle\Duplicates\Criterion;
 use Braintacle\Duplicates\DuplicatesColumn;
 use Database\Table;
 use Laminas\Db\ResultSet\AbstractResultSet;
+use Laminas\Db\Sql\Select;
 use Model\SoftwareManager;
 use RuntimeException;
 
@@ -162,40 +163,34 @@ class DuplicatesManager
     }
 
     /**
-     * Get query for duplicate values of given griteria
-     *
-     * @param string $criteria One of Name|MacAddress|Serial|AssetTag
-     * @return \Laminas\Db\Sql\Select
-     * @throws \InvalidArgumentException if $criteria is invalid
+     * Get query for duplicate values of given criterion.
      */
-    protected function getDuplicateValues($criteria)
+    protected function getDuplicateValues(Criterion $criterion): Select
     {
-        switch ($criteria) {
-            case 'Name':
+        switch ($criterion) {
+            case Criterion::Name:
                 $table = $this->_clients;
                 $column = 'name';
                 $count = 'name';
                 break;
-            case 'AssetTag':
+            case Criterion::AssetTag:
                 $table = $this->_clients;
                 $column = 'assettag';
                 $count = 'assettag';
                 $where = 'assettag NOT IN(SELECT assettag FROM braintacle_blacklist_assettags)';
                 break;
-            case 'Serial':
+            case Criterion::Serial:
                 $table = $this->_clients;
                 $column = 'ssn';
                 $count = 'ssn';
                 $where = 'ssn NOT IN(SELECT serial FROM blacklist_serials)';
                 break;
-            case 'MacAddress':
+            case Criterion::MacAddress:
                 $table = $this->_networkInterfaces;
                 $column = 'macaddr';
                 $count = 'DISTINCT hardware_id'; // Count MAC addresses only once per client
                 $where = 'macaddr NOT IN(SELECT macaddress FROM blacklist_macaddresses)';
                 break;
-            default:
-                throw new \InvalidArgumentException('Invalid criteria: ' . $criteria);
         }
         $select = $table->getSql()->select();
         $select->columns(array($column))
@@ -208,16 +203,13 @@ class DuplicatesManager
     }
 
     /**
-     * Get number of duplicates with given criteria
-     *
-     * @param string $criteria One of Name|MacAddress|Serial|AssetTag
-     * @return integer Number of duplicates
+     * Get number of duplicates for given criterion.
      */
-    public function count($criteria)
+    public function count(Criterion $criterion): int
     {
-        $subQuery = $this->getDuplicateValues($criteria);
+        $subQuery = $this->getDuplicateValues($criterion);
         $column = $subQuery->getRawState($subQuery::COLUMNS)[0];
-        if ($criteria == 'MacAddress') {
+        if ($criterion == Criterion::MacAddress) {
             $table = $this->_networkInterfaces;
             $count = 'DISTINCT hardware_id'; // Count clients only once
         } else {
@@ -244,7 +236,7 @@ class DuplicatesManager
      */
     public function find(Criterion $criterion, DuplicatesColumn $order, Direction $direction = Direction::Ascending)
     {
-        $subQuery = $this->getDuplicateValues($criterion->name);
+        $subQuery = $this->getDuplicateValues($criterion);
         $column = $subQuery->getRawState($subQuery::COLUMNS)[0];
 
         $select = $this->_clientManager->getClients(

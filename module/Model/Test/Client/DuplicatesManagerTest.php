@@ -81,24 +81,21 @@ class DuplicatesManagerTest extends AbstractTestCase
         $duplicates = $this->getModel();
 
         // These criteria are initially allowed duplicate.
-        $this->assertEquals(0, $duplicates->count('MacAddress'));
-        $this->assertEquals(0, $duplicates->count('Serial'));
-        $this->assertEquals(0, $duplicates->count('AssetTag'));
+        $this->assertEquals(0, $duplicates->count(Criterion::MacAddress));
+        $this->assertEquals(0, $duplicates->count(Criterion::Serial));
+        $this->assertEquals(0, $duplicates->count(Criterion::AssetTag));
 
         // Duplicate names are always counted.
-        $this->assertEquals(2, $duplicates->count('Name'));
+        $this->assertEquals(2, $duplicates->count(Criterion::Name));
 
         // Clear list of allowed duplicate values and re-check.
         static::$serviceManager->get('Database\Table\DuplicateMacAddresses')->delete(true);
         static::$serviceManager->get('Database\Table\DuplicateSerials')->delete(true);
         static::$serviceManager->get('Database\Table\DuplicateAssetTags')->delete(true);
-        $this->assertEquals(2, $duplicates->count('MacAddress'));
-        $this->assertEquals(2, $duplicates->count('Serial'));
-        $this->assertEquals(2, $duplicates->count('AssetTag'));
 
-        // Test invalid criteria
-        $this->expectException('InvalidArgumentException');
-        $duplicates->count('invalid');
+        $this->assertEquals(2, $duplicates->count(Criterion::MacAddress));
+        $this->assertEquals(2, $duplicates->count(Criterion::Serial));
+        $this->assertEquals(2, $duplicates->count(Criterion::AssetTag));
     }
 
     public static function findProvider()
