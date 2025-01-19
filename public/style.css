@@ -101,29 +101,25 @@ ul.navigation {
     padding: 1ex 0 0 0;
     text-align: center;
     background-color: #80c0ff;
-}
 
-/* Level 2 main menu */
-ul.navigation_sub {
-    background-color: #c0e0ff;
-    border-bottom: 1px solid black;
-}
-
-/* Navigation for clients and groups */
-ul.navigation_details {
-    background-color: #ffffff;
-    line-height: 175%;
-    padding-bottom: 3ex;
-}
-
-ul.navigation li {
+    li {
     list-style: none;
     display: inline;
     vertical-align: middle;
     white-space: nowrap;
 }
 
-ul.navigation a {
+    li.active a {
+        border-top-color: black;
+        border-right-color: white;
+        border-bottom-color: white;
+        border-left-color: black;
+        background-color: var(--link-color);
+        color: white;
+    }
+
+    a,
+    button {
     padding: 0.2ex .5em;
     border-width: 1px;
     border-style: solid;
@@ -133,9 +129,10 @@ ul.navigation a {
     border-left-color: white;
     color: var(--link-color);
     text-decoration: none;
+
 }
 
-ul.navigation li.active a{
+    a:hover {
     border-top-color: black;
     border-right-color: white;
     border-bottom-color: white;
@@ -143,31 +140,36 @@ ul.navigation li.active a{
     background-color: var(--link-color);
     color: white;
 }
+}
 
-ul.navigation_sub li.active a{
+/* Level 2 main menu */
+ul.navigation_sub {
+    background-color: #c0e0ff;
+    border-bottom: 1px solid black;
+
+    a:hover {
     background-color: #80c0ff;
 }
 
-ul.navigation a:hover {
-    border-top-color: black;
-    border-right-color: white;
-    border-bottom-color: white;
-    border-left-color: black;
-    background-color: var(--link-color);
-    color: white;
-}
-
-ul.navigation_sub a:hover{
+    li.active a {
     background-color: #80c0ff;
 }
+}
 
-ul.navigation_details a {
+/* Navigation for clients and groups */
+ul.navigation_details {
+    background-color: #ffffff;
+    line-height: 175%;
+    padding-bottom: 3ex;
+
+    a {
     list-style: none;
     display: inline;
     vertical-align: middle;
     background-color: #c0e0ff;
     font-size: 80%;
     font-weight: bold;
+    }
 }
 
 /* Logout button */
