@@ -44,9 +44,11 @@ class Router
             $group->post('/duplicates', Duplicates\MergeDuplicatesHandler::class)->setName('mergeDuplicates');
             $group->post('/duplicates/allow', Duplicates\AllowDuplicatesHandler::class)->setName('allowDuplicates');
             $group->get('/duplicates/{criterion}', Duplicates\ManageDuplicatesHandler::class)->setName('manageDuplicates');
+            $group->delete('/group', Group\DeleteHandler::class)->setName('deleteGroup');
             $group->get('/group/packages', Group\Packages\ShowPackagesHandler::class)->setName('showGroupPackages');
             $group->post('/group/packages', Group\Packages\AssignPackagesHandler::class)->setName('assignPackageToGroup');
             $group->delete('/group/packages', Group\Packages\RemovePackagesHandler::class)->setName('removePackageFromGroup');
+            $group->get('/groups', Group\Overview\OverviewHandler::class)->setName('groupList');
             $group->get('/software', Software\SoftwarePageHandler::class)->setName('softwarePage');
             $group->post('/software', Software\SoftwareManagementHandler::class)->setName('softwareHandler');
 
@@ -71,12 +73,10 @@ class Router
             $group->get('/console/client/system', ApplicationBridge::class)->setName('showClientSystem');
             $group->get('/console/client/virtualmachines', ApplicationBridge::class)->setName('showClientVirtualMachines');
             $group->get('/console/client/windows', ApplicationBridge::class)->setName('showClientWindows');
-            $group->get('/console/group/index', ApplicationBridge::class)->setName('groupList');
             $group->get('/console/group/general', ApplicationBridge::class)->setName('showGroupGeneral');
             $group->get('/console/group/members', ApplicationBridge::class)->setName('showGroupMembers');
             $group->get('/console/group/excluded', ApplicationBridge::class)->setName('showGroupExcluded');
             $group->get('/console/group/configuration', ApplicationBridge::class)->setName('showGroupConfiguration');
-            $group->get('/console/group/delete', ApplicationBridge::class)->setName('showGroupDelete');
             $group->get('/console/licenses/index', ApplicationBridge::class)->setName('licensesPage');
             $group->get('/console/network/index', ApplicationBridge::class)->setName('networkPage');
             $group->get('/console/package/build', ApplicationBridge::class)->setName('packageBuildPage');

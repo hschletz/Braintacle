@@ -96,25 +96,6 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Show table with overview of groups
-     *
-     * @return array Array(groups, sorting)
-     */
-    public function indexAction()
-    {
-        $sorting = $this->getOrder('Name', 'asc');
-        return array(
-            'groups' => $this->_groupManager->getGroups(
-                null,
-                null,
-                $sorting['order'],
-                $sorting['direction']
-            ),
-            'sorting' => $sorting,
-        );
-    }
-
-    /**
      * Show general information about a group
      *
      * @return array group
@@ -213,38 +194,5 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
             'group' => $this->_currentGroup,
             'form' => $this->_clientConfigForm,
         );
-    }
-
-    /**
-     * Group deletion form
-     *
-     * @return array|\Laminas\Http\Response array(name) or redirect response
-     */
-    public function deleteAction()
-    {
-        $name = $this->_currentGroup['Name'];
-        if ($this->getRequest()->isPost()) {
-            if ($this->params()->fromPost('yes')) {
-                try {
-                    $this->_groupManager->deleteGroup($this->_currentGroup);
-                    $this->flashMessenger()->addSuccessMessage(
-                        sprintf($this->_("Group '%s' was successfully deleted."), $name)
-                    );
-                } catch (\Model\Group\RuntimeException $e) {
-                    $this->flashMessenger()->addErrorMessage(
-                        sprintf($this->_("Group '%s' could not be deleted. Try again later."), $name)
-                    );
-                }
-                return $this->redirectToRoute('group', 'index');
-            } else {
-                return $this->redirectToRoute(
-                    'group',
-                    'general',
-                    array('name' => $this->_currentGroup['Name'])
-                );
-            }
-        } else {
-            return array('name' => $name);
-        }
     }
 }

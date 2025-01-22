@@ -5,6 +5,8 @@
     </li>
 {/define}
 
+<script type="module" src="{assetUrl('js/groups.js')}"></script>
+
 <h1>{translate("Details for group '%s'", $group->name)}</h1>
 
 <ul class="navigation navigation_details">
@@ -13,5 +15,16 @@
     {include navigationItem, 'excluded', translate('Excluded'), 'showGroupExcluded'}
     {include navigationItem, 'packages', translate('Packages'), 'showGroupPackages'}
     {include navigationItem, 'configuration', translate('Configuration'), 'showGroupConfiguration'}
-    {include navigationItem, 'delete', translate('Delete'), 'showGroupDelete'}
+    <li>
+        <button type="button" id="button_deleteGroup" class="linkstyle">{translate('Delete')}</button>
+    </li>
 </ul>
+
+<dialog
+    id="dialog_deleteGroup"
+    data-action="{pathForRoute(deleteGroup, [], [name: $group->name])}"
+    data-redirect="{pathForRoute(groupList)}"
+>
+    <p>{translate("Group '%s' will be permanently deleted. Continue?", $group->name)}</p>
+    {include ../../DialogButtons.latte}
+</dialog>

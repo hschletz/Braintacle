@@ -24,14 +24,12 @@ namespace Console\Test\Controller;
 
 use Console\Form\AddToGroup as FormAddToGroup;
 use Console\Form\ClientConfig;
-use Console\Form\Package\AssignPackagesForm;
 use Console\Test\AbstractControllerTestCase;
 use Console\View\Helper\Form\AddToGroup;
 use Console\View\Helper\Form\ClientConfig as FormClientConfig;
 use Console\View\Helper\GroupHeader;
 use IntlDateFormatter;
 use Laminas\I18n\View\Helper\DateFormat;
-use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Model\Client\ClientManager;
 use Model\Group\Group;
 use Model\Group\GroupManager;
@@ -98,82 +96,6 @@ class GroupControllerTest extends AbstractControllerTestCase
             'Die angeforderte Gruppe existiert nicht.',
             $this->getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
         );
-    }
-
-    public function testIndexActionNoData()
-    {
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
-        $resultSet->initialize(new \EmptyIterator());
-        $this->_groupManager->expects($this->once())
-            ->method('getGroups')
-            ->with(null, null, 'Name', 'asc')
-            ->willReturn($resultSet);
-        $this->dispatch('/console/group/index/');
-        $this->assertResponseStatusCode(200);
-        $this->assertNotXpathQuery('//table');
-        $this->assertXpathQuery("//p[@class='textcenter'][text()='\nKeine Gruppen definiert.\n']");
-    }
-
-    public function testIndexActionWithData()
-    {
-        $creationDate = new \DateTime('2014-04-06 11:55:33');
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
-        $resultSet->initialize(
-            array(
-                array(
-                    'Name' => 'test',
-                    'CreationDate' => $creationDate,
-                    'Description' => 'description',
-                )
-            )
-        );
-        $this->_groupManager->expects($this->once())
-            ->method('getGroups')
-            ->with(null, null, 'Name', 'asc')
-            ->willReturn($resultSet);
-
-        $dateFormat = $this->createMock(DateFormat::class);
-        $dateFormat->expects($this->once())
-            ->method('__invoke')
-            ->with($creationDate, \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT)
-            ->willReturn('date_create');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('dateFormat', $dateFormat);
-
-        $this->dispatch('/console/group/index/');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains(
-            '//td/a[@href="/console/group/general/?name=test"]',
-            'test'
-        );
-        $this->assertXpathQueryContentContains(
-            '//td',
-            "\ndate_create\n"
-        );
-        $this->assertXpathQueryContentContains(
-            '//td',
-            "\ndescription\n"
-        );
-        $this->assertNotXpathQuery("//p[@class='textcenter'][text()='\nKeine Gruppen definiert.\n']");
-    }
-
-    public function testIndexActionMessages()
-    {
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
-        $resultSet->initialize(new \EmptyIterator());
-        $this->_groupManager->expects($this->once())->method('getGroups')->willReturn($resultSet);
-
-        $flashMessenger = $this->createMock(FlashMessenger::class);
-        $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
-        $flashMessenger->method('__call')->willReturnMap([
-            ['getMessagesFromNamespace', ['error'], ['error']],
-            ['getMessagesFromNamespace', ['success'], ['success']],
-        ]);
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
-
-        $this->disableTranslator();
-        $this->dispatch('/console/group/index/');
-        $this->assertXpathQuery('//ul[@class="error"]/li[text()="error"]');
-        $this->assertXpathQuery('//ul[@class="success"]/li[text()="success"]');
     }
 
     public function testGeneralAction()
@@ -485,74 +407,5 @@ class GroupControllerTest extends AbstractControllerTestCase
 
         $this->dispatch('/console/group/configuration/?name=test', 'POST', $postData);
         $this->assertRedirectTo('/console/group/configuration/?name=test');
-    }
-
-    public function testDeleteActionGet()
-    {
-        $group = array('Name' => 'test');
-        $this->_groupManager->expects($this->once())
-            ->method('getGroup')
-            ->with('test')
-            ->willReturn($group);
-        $this->dispatch('/console/group/delete/?name=test');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery('//p[contains(text(), "\'test\'")]');
-    }
-
-    public function testDeleteActionPostNo()
-    {
-        $group = array('Name' => 'test');
-        $this->_groupManager->expects($this->once())
-            ->method('getGroup')
-            ->with('test')
-            ->willReturn($group);
-        $this->_groupManager->expects($this->never())->method('deleteGroup');
-        $this->dispatch('/console/group/delete/?name=test', 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/group/general/?name=test');
-    }
-
-    public function testDeleteActionPostYesSuccess()
-    {
-        $group = $this->createMock('Model\Group\Group');
-        $group->method('offsetGet')->with('Name')->willReturn('test');
-        $this->_groupManager->expects($this->once())
-            ->method('getGroup')
-            ->with('test')
-            ->willReturn($group);
-        $this->_groupManager->expects($this->once())->method('deleteGroup')->with($group);
-        $this->dispatch('/console/group/delete/?name=test', 'POST', array('yes' => 'Yes'));
-        $this->assertRedirectTo('/console/group/index/');
-        $this->assertEquals(
-            ["Gruppe 'test' wurde erfolgreich gelöscht."],
-            $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
-        );
-        $this->assertEquals(
-            array(),
-            $this->getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
-        );
-    }
-
-    public function testDeleteActionPostYesError()
-    {
-        $group = $this->createMock('Model\Group\Group');
-        $group->method('offsetGet')->with('Name')->willReturn('test');
-        $this->_groupManager->expects($this->once())
-            ->method('getGroup')
-            ->with('test')
-            ->willReturn($group);
-        $this->_groupManager->expects($this->once())
-            ->method('deleteGroup')
-            ->with($group)
-            ->will($this->throwException(new \Model\Group\RuntimeException()));
-        $this->dispatch('/console/group/delete/?name=test', 'POST', array('yes' => 'Yes'));
-        $this->assertRedirectTo('/console/group/index/');
-        $this->assertEquals(
-            array(),
-            $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
-        );
-        $this->assertEquals(
-            ["Gruppe 'test' konnte nicht gelöscht werden. Bitte erneut versuchen."],
-            $this->getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
-        );
     }
 }

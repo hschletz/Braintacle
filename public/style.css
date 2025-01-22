@@ -120,26 +120,26 @@ ul.navigation {
 
     a,
     button {
-    padding: 0.2ex .5em;
-    border-width: 1px;
-    border-style: solid;
-    border-top-color: white;
-    border-right-color: black;
-    border-bottom-color: black;
-    border-left-color: white;
-    color: var(--link-color);
-    text-decoration: none;
+        padding: 0.2ex .5em;
+        border-width: 1px;
+        border-style: solid;
+        border-top-color: white;
+        border-right-color: black;
+        border-bottom-color: black;
+        border-left-color: white;
+        color: var(--link-color);
+        text-decoration: none;
+    }
 
-}
-
-    a:hover {
-    border-top-color: black;
-    border-right-color: white;
-    border-bottom-color: white;
-    border-left-color: black;
-    background-color: var(--link-color);
-    color: white;
-}
+    a:hover,
+    button:hover {
+        border-top-color: black;
+        border-right-color: white;
+        border-bottom-color: white;
+        border-left-color: black;
+        background-color: var(--link-color);
+        color: white;
+    }
 }
 
 /* Level 2 main menu */
@@ -148,12 +148,12 @@ ul.navigation_sub {
     border-bottom: 1px solid black;
 
     a:hover {
-    background-color: #80c0ff;
-}
+        background-color: #80c0ff;
+    }
 
     li.active a {
-    background-color: #80c0ff;
-}
+        background-color: #80c0ff;
+    }
 }
 
 /* Navigation for clients and groups */
@@ -162,13 +162,14 @@ ul.navigation_details {
     line-height: 175%;
     padding-bottom: 3ex;
 
-    a {
-    list-style: none;
-    display: inline;
-    vertical-align: middle;
-    background-color: #c0e0ff;
-    font-size: 80%;
-    font-weight: bold;
+    a,
+    button {
+        display: inline-block;
+        background-color: #c0e0ff;
+        font-family: inherit;
+        font-size: 80%;
+        font-weight: bold;
+        line-height: 120%;
     }
 }
 

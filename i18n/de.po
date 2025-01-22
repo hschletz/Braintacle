@@ -30,16 +30,6 @@ msgid "The requested client does not exist."
 msgstr "Der angeforderte Client existiert nicht."
 
 #: module/Console/Controller/GroupController.php
-#, php-format
-msgid "Group '%s' could not be deleted. Try again later."
-msgstr "Gruppe '%s' konnte nicht gelöscht werden. Bitte erneut versuchen."
-
-#: module/Console/Controller/GroupController.php
-#, php-format
-msgid "Group '%s' was successfully deleted."
-msgstr "Gruppe '%s' wurde erfolgreich gelöscht."
-
-#: module/Console/Controller/GroupController.php
 msgid "The requested group does not exist."
 msgstr "Die angeforderte Gruppe existiert nicht."
 
@@ -133,8 +123,8 @@ msgstr ""
 #: module/Console/views/console/client/printers.php
 #: module/Console/views/console/client/system.php
 #: module/Console/views/console/group/general.php
-#: module/Console/views/console/group/index.php
 #: module/Console/views/console/network/showidentified.php
+#: templates/Pages/Group/Overview.latte
 msgid "Description"
 msgstr "Beschreibung"
 
@@ -160,13 +150,13 @@ msgstr "Gruppe"
 #: module/Console/views/console/client/virtualmachines.php
 #: module/Console/views/console/group/excluded.php
 #: module/Console/views/console/group/general.php
-#: module/Console/views/console/group/index.php
 #: module/Console/views/console/group/members.php
 #: module/Console/views/console/network/index.php
 #: module/Console/views/console/package/index.php
 #: templates/Pages/Client/Packages.latte templates/Pages/Client/Software.latte
 #: templates/Pages/Duplicates/ManageDuplicates.latte
-#: templates/Pages/Duplicates/Overview.latte templates/Pages/Software.latte
+#: templates/Pages/Duplicates/Overview.latte
+#: templates/Pages/Group/Overview.latte templates/Pages/Software.latte
 msgid "Name"
 msgstr "Name"
 
@@ -1319,7 +1309,7 @@ msgstr "Registry-Schlüssel"
 
 #: module/Console/views/console/client/storage.php
 #: module/Console/views/console/group/general.php
-#: module/Console/views/console/group/index.php
+#: templates/Pages/Group/Overview.latte
 msgid "Creation date"
 msgstr "Erstellungsdatum"
 
@@ -1426,18 +1416,9 @@ msgstr "Besitzer"
 msgid "Product key (reported by agent)"
 msgstr "Lizenzschlüssel (vom Agenten ermittelt)"
 
-#: module/Console/views/console/group/delete.php
-#, php-format
-msgid "Group '%s' will be permanently deleted. Continue?"
-msgstr "Gruppe '%s' wird dauerhaft gelöscht. Fortfahren?"
-
 #: module/Console/views/console/group/general.php
 msgid "SQL query"
 msgstr "SQL-Abfrage"
-
-#: module/Console/views/console/group/index.php
-msgid "No groups defined."
-msgstr "Keine Gruppen definiert."
 
 #: module/Console/views/console/group/members.php
 msgid "Last update:"
@@ -1591,6 +1572,16 @@ msgstr "'%s' wird nicht mehr als Duplikat betrachtet."
 #: src/Duplicates/MergeDuplicatesHandler.php
 msgid "The selected clients have been merged."
 msgstr "Die ausgewählten Clients wurden zusammengeführt."
+
+#: src/Group/DeleteHandler.php
+#, php-format
+msgid "Group '%s' could not be deleted. Try again later."
+msgstr "Gruppe '%s' konnte nicht gelöscht werden. Bitte erneut versuchen."
+
+#: src/Group/DeleteHandler.php
+#, php-format
+msgid "Group '%s' was successfully deleted."
+msgstr "Gruppe '%s' wurde erfolgreich gelöscht."
 
 #: templates/Forms/AssignPackage.latte
 msgid "Assign"
@@ -1832,8 +1823,16 @@ msgid "Excluded"
 msgstr "Ausgeschlossen"
 
 #: templates/Pages/Group/Header.latte
+msgid "Group '%s' will be permanently deleted. Continue?"
+msgstr "Gruppe '%s' wird dauerhaft gelöscht. Fortfahren?"
+
+#: templates/Pages/Group/Header.latte
 msgid "Members"
 msgstr "Mitglieder"
+
+#: templates/Pages/Group/Overview.latte
+msgid "No groups defined."
+msgstr "Keine Gruppen definiert."
 
 #: templates/Pages/Group/Packages.latte
 msgid "Package '{}' will no longer be assigned to this group. Continue?"

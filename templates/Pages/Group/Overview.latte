@@ -1,0 +1,32 @@
+{* Display list of groups. *}
+{layout ../../MainMenu/GroupMenuLayout.latte}
+{import ../../SortableHeader.latte}
+{block content}
+
+<p n:ifset="$message" class="success">{$message}</p>
+
+{if count($groups)}
+    <table class="alternating">
+        <tr>
+            <th>
+                {include sortableHeader, 'Name', translate('Name')}
+            </th>
+            <th class="nowrap">
+                {include sortableHeader, 'CreationDate', translate('Creation date')}
+            </th>
+            <th>
+                {include sortableHeader, 'Description', translate('Description')}
+            </th>
+        </tr>
+
+        <tr n:foreach="$groups as $group">
+            <td>
+                <a href="{pathForRoute(showGroupGeneral, [], [name: $group->name])}">{$group->name}</a>
+            </td>
+            <td class="nowrap">{$group->creationDate|localDate: date: short, time: short}</td>
+            <td>{$group->description}</td>
+        </tr>
+    </table>
+{else}
+    <p class="textcenter">{translate('No groups defined.')}</p>
+{/if}

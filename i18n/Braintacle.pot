@@ -26,16 +26,6 @@ msgstr ""
 msgid "The requested group does not exist."
 msgstr ""
 
-#: module/Console/Controller/GroupController.php
-#, php-format
-msgid "Group '%s' was successfully deleted."
-msgstr ""
-
-#: module/Console/Controller/GroupController.php
-#, php-format
-msgid "Group '%s' could not be deleted. Try again later."
-msgstr ""
-
 #: module/Console/Controller/PackageController.php
 #, php-format
 msgid "Package '%s' was successfully created."
@@ -149,7 +139,6 @@ msgstr ""
 #: module/Console/views/console/client/virtualmachines.php
 #: module/Console/views/console/group/excluded.php
 #: module/Console/views/console/group/general.php
-#: module/Console/views/console/group/index.php
 #: module/Console/views/console/group/members.php
 #: module/Console/views/console/network/index.php
 #: module/Console/views/console/package/index.php
@@ -157,6 +146,7 @@ msgstr ""
 #: templates/Pages/Client/Software.latte
 #: templates/Pages/Duplicates/ManageDuplicates.latte
 #: templates/Pages/Duplicates/Overview.latte
+#: templates/Pages/Group/Overview.latte
 #: templates/Pages/Software.latte
 msgid "Name"
 msgstr ""
@@ -169,8 +159,8 @@ msgstr ""
 #: module/Console/views/console/client/printers.php
 #: module/Console/views/console/client/system.php
 #: module/Console/views/console/group/general.php
-#: module/Console/views/console/group/index.php
 #: module/Console/views/console/network/showidentified.php
+#: templates/Pages/Group/Overview.latte
 msgid "Description"
 msgstr ""
 
@@ -1422,7 +1412,7 @@ msgstr ""
 
 #: module/Console/views/console/client/storage.php
 #: module/Console/views/console/group/general.php
-#: module/Console/views/console/group/index.php
+#: templates/Pages/Group/Overview.latte
 msgid "Creation date"
 msgstr ""
 
@@ -1470,17 +1460,8 @@ msgstr ""
 msgid "Product key (reported by agent)"
 msgstr ""
 
-#: module/Console/views/console/group/delete.php
-#, php-format
-msgid "Group '%s' will be permanently deleted. Continue?"
-msgstr ""
-
 #: module/Console/views/console/group/general.php
 msgid "SQL query"
-msgstr ""
-
-#: module/Console/views/console/group/index.php
-msgid "No groups defined."
 msgstr ""
 
 #: module/Console/views/console/group/members.php
@@ -1628,6 +1609,16 @@ msgstr ""
 
 #: src/Duplicates/MergeDuplicatesHandler.php
 msgid "The selected clients have been merged."
+msgstr ""
+
+#: src/Group/DeleteHandler.php
+#, php-format
+msgid "Group '%s' was successfully deleted."
+msgstr ""
+
+#: src/Group/DeleteHandler.php
+#, php-format
+msgid "Group '%s' could not be deleted. Try again later."
 msgstr ""
 
 #: templates/Forms/AssignPackage.latte
@@ -1877,6 +1868,14 @@ msgstr ""
 
 #: templates/Pages/Group/Header.latte
 msgid "Excluded"
+msgstr ""
+
+#: templates/Pages/Group/Header.latte
+msgid "Group '%s' will be permanently deleted. Continue?"
+msgstr ""
+
+#: templates/Pages/Group/Overview.latte
+msgid "No groups defined."
 msgstr ""
 
 #: templates/Pages/Group/Packages.latte
