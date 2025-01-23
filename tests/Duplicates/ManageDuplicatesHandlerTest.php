@@ -6,6 +6,8 @@ use Braintacle\Duplicates\Criterion;
 use Braintacle\Duplicates\DuplicatesRequestParameters;
 use Braintacle\Duplicates\ManageDuplicatesHandler;
 use Braintacle\Http\RouteHelper;
+use Braintacle\Template\TemplateEngine;
+use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
@@ -16,8 +18,13 @@ use Library\MacAddress;
 use Model\Client\Client;
 use Model\Client\DuplicatesManager;
 use Model\Config;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(ManageDuplicatesHandler::class)]
+#[UsesClass(TemplateEngine::class)]
+#[UsesClass(TemplateLoader::class)]
 class ManageDuplicatesHandlerTest extends TestCase
 {
     use DomMatcherTrait;

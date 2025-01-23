@@ -6,6 +6,8 @@ use Braintacle\Client\ClientRequestParameters;
 use Braintacle\Client\Software\SoftwarePageHandler;
 use Braintacle\Client\Software\SoftwareQueryParams;
 use Braintacle\Http\RouteHelper;
+use Braintacle\Template\TemplateEngine;
+use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
@@ -17,8 +19,13 @@ use Model\Client\Client;
 use Model\Client\Item\Software;
 use Model\Client\WindowsInstallation;
 use Model\Config;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(SoftwarePageHandler::class)]
+#[UsesClass(TemplateEngine::class)]
+#[UsesClass(TemplateLoader::class)]
 class SoftwarePageHandlerTest extends TestCase
 {
     use DomMatcherTrait;

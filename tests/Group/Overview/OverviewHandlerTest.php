@@ -9,6 +9,7 @@ use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Group\Overview\OverviewHandler;
 use Braintacle\Group\Overview\OverviewRequestParameters;
 use Braintacle\Template\TemplateEngine;
+use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
@@ -17,8 +18,13 @@ use DOMXPath;
 use Formotron\DataProcessor;
 use Model\Group\Group;
 use Model\Group\GroupManager;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(OverviewHandler::class)]
+#[UsesClass(TemplateEngine::class)]
+#[UsesClass(TemplateLoader::class)]
 class OverviewHandlerTest extends TestCase
 {
     use DomMatcherTrait;

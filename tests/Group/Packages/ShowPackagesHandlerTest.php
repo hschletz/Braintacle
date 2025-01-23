@@ -4,13 +4,20 @@ namespace Braintacle\Test\Group\Packages;
 
 use Braintacle\Group\GroupRequestParameters;
 use Braintacle\Group\Packages\ShowPackagesHandler;
+use Braintacle\Template\TemplateEngine;
+use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
 use Formotron\DataProcessor;
 use Model\Group\Group;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 
+#[CoversClass(ShowPackagesHandler::class)]
+#[UsesClass(TemplateEngine::class)]
+#[UsesClass(TemplateLoader::class)]
 class ShowPackagesHandlerTest extends TestCase
 {
     use HttpHandlerTestTrait;

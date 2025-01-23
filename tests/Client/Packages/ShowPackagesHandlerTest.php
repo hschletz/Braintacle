@@ -5,6 +5,8 @@ namespace Braintacle\Test\Client\Packages;
 use Braintacle\Client\ClientRequestParameters;
 use Braintacle\Client\Packages\ShowPackagesHandler;
 use Braintacle\Http\RouteHelper;
+use Braintacle\Template\TemplateEngine;
+use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
@@ -12,9 +14,14 @@ use DateTime;
 use Formotron\DataProcessor;
 use Model\Client\Client;
 use Model\Package\Assignment;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 
+#[CoversClass(ShowPackagesHandler::class)]
+#[UsesClass(TemplateEngine::class)]
+#[UsesClass(TemplateLoader::class)]
 class ShowPackagesHandlerTest extends TestCase
 {
     use DomMatcherTrait;

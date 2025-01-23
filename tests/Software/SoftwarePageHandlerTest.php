@@ -6,15 +6,22 @@ use Braintacle\Direction;
 use Braintacle\Software\SoftwareFilter;
 use Braintacle\Software\SoftwarePageColumn;
 use Braintacle\Software\SoftwarePageHandler;
+use Braintacle\Template\TemplateEngine;
+use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
 use Formotron\DataProcessor;
 use Model\SoftwareManager;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 
+#[CoversClass(SoftwarePageHandler::class)]
+#[UsesClass(TemplateEngine::class)]
+#[UsesClass(TemplateLoader::class)]
 class SoftwarePageHandlerTest extends TestCase
 {
     use HttpHandlerTestTrait;

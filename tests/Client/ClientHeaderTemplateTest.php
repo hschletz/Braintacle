@@ -3,13 +3,20 @@
 namespace Braintacle\Test\Client;
 
 use Braintacle\Template\Function\PathForRouteFunction;
+use Braintacle\Template\TemplateEngine;
+use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\TemplateTestTrait;
 use Exception;
 use Model\Client\Client;
 use Model\Client\WindowsInstallation;
+use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
+#[CoversNothing]
+#[UsesClass(TemplateEngine::class)]
+#[UsesClass(TemplateLoader::class)]
 class ClientHeaderTemplateTest extends TestCase
 {
     use DomMatcherTrait;

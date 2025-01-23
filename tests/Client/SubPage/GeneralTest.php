@@ -5,6 +5,8 @@ namespace Braintacle\Test\Client\SubPage;
 use Braintacle\Client\ClientRequestParameters;
 use Braintacle\Client\SubPage\General;
 use Braintacle\Http\RouteHelper;
+use Braintacle\Template\TemplateEngine;
+use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
@@ -12,8 +14,13 @@ use DateTime;
 use DOMXPath;
 use Formotron\DataProcessor;
 use Model\Client\Client;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(General::class)]
+#[UsesClass(TemplateEngine::class)]
+#[UsesClass(TemplateLoader::class)]
 class GeneralTest extends TestCase
 {
     use DomMatcherTrait;

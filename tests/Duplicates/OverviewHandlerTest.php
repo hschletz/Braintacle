@@ -5,14 +5,21 @@ namespace Braintacle\Test\Duplicates;
 use Braintacle\Duplicates\Criterion;
 use Braintacle\Duplicates\OverviewHandler;
 use Braintacle\FlashMessages;
+use Braintacle\Template\TemplateEngine;
+use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
 use DOMXPath;
 use Model\Client\DuplicatesManager;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(OverviewHandler::class)]
+#[UsesClass(TemplateEngine::class)]
+#[UsesClass(TemplateLoader::class)]
 class OverviewHandlerTest extends TestCase
 {
     use DomMatcherTrait;
