@@ -3,7 +3,6 @@
 namespace Braintacle\Test\Client;
 
 use Braintacle\Template\Function\PathForRouteFunction;
-use Braintacle\Template\Function\TranslateFunction;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\TemplateTestTrait;
 use Exception;
@@ -26,38 +25,29 @@ class ClientHeaderTemplateTest extends TestCase
         $client->name = 'name';
         $client->windows = new WindowsInstallation();
 
-        $pathForRouteFunction = $this->createStub(PathForRouteFunction::class);
-        $pathForRouteFunction->method('__invoke')->willReturnCallback(fn ($route) => '/' . $route);
-
-        $translateFunction = $this->createStub(TranslateFunction::class);
-        $translateFunction->method('__invoke')->willReturnCallback(fn ($message) => strtoupper($message));
-
-        $engine = $this->createTemplateEngine([
-            PathForRouteFunction::class => $pathForRouteFunction,
-            TranslateFunction::class => $translateFunction,
-        ]);
+        $engine = $this->createTemplateEngine();
         $content = $engine->render(self::Template, ['client' => $client, 'currentAction' => '']);
         $xPath = $this->createXpath($content);
 
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientGeneral"][contains(text(), "GENERAL")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientWindows"][contains(text(), "WINDOWS")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientNetwork"][contains(text(), "NETWORK")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientStorage"][contains(text(), "STORAGE")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientDisplay"][contains(text(), "DISPLAY")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientBios"][contains(text(), "BIOS")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientSystem"][contains(text(), "SYSTEM")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientPrinters"][contains(text(), "PRINTERS")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientSoftware"][contains(text(), "SOFTWARE")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientMsOffice"][contains(text(), "MS OFFICE")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientRegistry"][contains(text(), "REGISTRY")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientVirtualMachines"][contains(text(), "VIRTUAL MACHINES")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientMisc"][contains(text(), "MISC")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientCustomFields"][contains(text(), "USER DEFINED")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientPackages"][contains(text(), "PACKAGES")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientGroups"][contains(text(), "GROUPS")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientConfiguration"][contains(text(), "CONFIGURATION")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/export"][contains(text(), "EXPORT")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/deleteClient"][contains(text(), "DELETE")]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientGeneral/?id=42"][text()="_General"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientWindows/?id=42"][text()="_Windows"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientNetwork/?id=42"][text()="_Network"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientStorage/?id=42"][text()="_Storage"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientDisplay/?id=42"][text()="_Display"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientBios/?id=42"][text()="_BIOS"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientSystem/?id=42"][text()="_System"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientPrinters/?id=42"][text()="_Printers"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientSoftware/?id=42"][text()="_Software"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientMsOffice/?id=42"][text()="_MS Office"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientRegistry/?id=42"][text()="_Registry"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientVirtualMachines/?id=42"][text()="_Virtual machines"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientMisc/?id=42"][text()="_Misc"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientCustomFields/?id=42"][text()="_User defined"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientPackages/?id=42"][text()="_Packages"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientGroups/?id=42"][text()="_Groups"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientConfiguration/?id=42"][text()="_Configuration"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="export/?id=42"][text()="_Export"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="deleteClient/?id=42"][text()="_Delete"]');
     }
 
     public function testMenuEntriesForNonWindowsClients()
@@ -67,35 +57,26 @@ class ClientHeaderTemplateTest extends TestCase
         $client->name = 'name';
         $client->windows = null;
 
-        $pathForRouteFunction = $this->createStub(PathForRouteFunction::class);
-        $pathForRouteFunction->method('__invoke')->willReturnCallback(fn ($route) => '/' . $route);
-
-        $translateFunction = $this->createStub(TranslateFunction::class);
-        $translateFunction->method('__invoke')->willReturnCallback(fn ($message) => strtoupper($message));
-
-        $engine = $this->createTemplateEngine([
-            PathForRouteFunction::class => $pathForRouteFunction,
-            TranslateFunction::class => $translateFunction,
-        ]);
+        $engine = $this->createTemplateEngine();
         $content = $engine->render(self::Template, ['client' => $client, 'currentAction' => '']);
         $xPath = $this->createXpath($content);
 
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientGeneral"][contains(text(), "GENERAL")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientNetwork"][contains(text(), "NETWORK")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientStorage"][contains(text(), "STORAGE")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientDisplay"][contains(text(), "DISPLAY")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientBios"][contains(text(), "BIOS")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientSystem"][contains(text(), "SYSTEM")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientPrinters"][contains(text(), "PRINTERS")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientSoftware"][contains(text(), "SOFTWARE")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientVirtualMachines"][contains(text(), "VIRTUAL MACHINES")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientMisc"][contains(text(), "MISC")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientCustomFields"][contains(text(), "USER DEFINED")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientPackages"][contains(text(), "PACKAGES")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientGroups"][contains(text(), "GROUPS")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/showClientConfiguration"][contains(text(), "CONFIGURATION")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/export"][contains(text(), "EXPORT")]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/deleteClient"][contains(text(), "DELETE")]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientGeneral/?id=42"][text()="_General"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientNetwork/?id=42"][text()="_Network"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientStorage/?id=42"][text()="_Storage"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientDisplay/?id=42"][text()="_Display"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientBios/?id=42"][text()="_BIOS"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientSystem/?id=42"][text()="_System"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientPrinters/?id=42"][text()="_Printers"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientSoftware/?id=42"][text()="_Software"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientVirtualMachines/?id=42"][text()="_Virtual machines"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientMisc/?id=42"][text()="_Misc"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientCustomFields/?id=42"][text()="_User defined"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientPackages/?id=42"][text()="_Packages"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientGroups/?id=42"][text()="_Groups"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientConfiguration/?id=42"][text()="_Configuration"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="export/?id=42"][text()="_Export"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="deleteClient/?id=42"][text()="_Delete"]');
     }
 
     public function testLegacyRoutes()

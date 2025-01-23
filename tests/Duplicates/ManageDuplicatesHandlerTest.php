@@ -6,7 +6,6 @@ use Braintacle\Duplicates\Criterion;
 use Braintacle\Duplicates\DuplicatesRequestParameters;
 use Braintacle\Duplicates\ManageDuplicatesHandler;
 use Braintacle\Http\RouteHelper;
-use Braintacle\Template\Function\PathForRouteFunction;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
@@ -64,10 +63,7 @@ class ManageDuplicatesHandlerTest extends TestCase
         $config = $this->createStub(Config::class);
         $config->method('__get')->willReturn($optionMerge ? 1 : 0);
 
-        $pathForRouteFunction = $this->createStub(PathForRouteFunction::class);
-        $pathForRouteFunction->method('__invoke')->willReturnCallback(fn ($name, $arguments, $query) => $name . '?' . http_build_query($query));
-
-        $templateEngine = $this->createTemplateEngine([PathForRouteFunction::class => $pathForRouteFunction]);
+        $templateEngine = $this->createTemplateEngine();
 
         $handler = new ManageDuplicatesHandler(
             $this->response,
@@ -89,14 +85,14 @@ class ManageDuplicatesHandlerTest extends TestCase
         $this->assertXpathCount(2, $xPath, '//tr[td]');
 
         $this->assertXpathMatches($xPath, '//tr[2]/td[1]/input[@value="1"]');
-        $this->assertXpathMatches($xPath, '//tr[2]/td[2]/a[@href="showClientCustomFields?id=1"][text()="name1"]');
+        $this->assertXpathMatches($xPath, '//tr[2]/td[2]/a[@href="showClientCustomFields/?id=1"][text()="name1"]');
         $this->assertXpathMatches($xPath, '//tr[2]/td[3]/button[@data-criterion="mac_address"][text()="mac1"]');
         $this->assertXpathMatches($xPath, '//tr[2]/td[4]/button[@data-criterion="serial"][text()="serial1"]');
         $this->assertXpathMatches($xPath, '//tr[2]/td[5][not(a)]');
         $this->assertXpathMatches($xPath, '//tr[2]/td[6][normalize-space(text())="22.12.22, 13:22"]');
 
         $this->assertXpathMatches($xPath, '//tr[3]/td[1]/input[@value="2"]');
-        $this->assertXpathMatches($xPath, '//tr[3]/td[2]/a[@href="showClientCustomFields?id=2"][text()="name2"]');
+        $this->assertXpathMatches($xPath, '//tr[3]/td[2]/a[@href="showClientCustomFields/?id=2"][text()="name2"]');
         $this->assertXpathMatches($xPath, '//tr[3]/td[3]/button[@data-criterion="mac_address"][text()="mac2"]');
         $this->assertXpathMatches($xPath, '//tr[3]/td[4][not(a)]');
         $this->assertXpathMatches($xPath, '//tr[3]/td[5]/button[@data-criterion="asset_tag"][text()="at2"]');

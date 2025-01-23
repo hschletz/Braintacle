@@ -5,7 +5,6 @@ namespace Braintacle\Test\Client\SubPage;
 use Braintacle\Client\ClientRequestParameters;
 use Braintacle\Client\SubPage\General;
 use Braintacle\Http\RouteHelper;
-use Braintacle\Template\Function\TranslateFunction;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
@@ -34,10 +33,7 @@ class GeneralTest extends TestCase
         $dataProcessor = $this->createMock(DataProcessor::class);
         $dataProcessor->method('process')->with($routeArguments, ClientRequestParameters::class)->willReturn($clientRequestParameters);
 
-        $translateFunction = $this->createStub(TranslateFunction::class);
-        $translateFunction->method('__invoke')->willReturnCallback(fn ($message) => '_' . $message);
-
-        $templateEngine = $this->createTemplateEngine([TranslateFunction::class => $translateFunction]);
+        $templateEngine = $this->createTemplateEngine();
 
         $handler = new General($this->response, $routeHelper, $dataProcessor, $templateEngine);
         $response = $handler->handle($this->request);

@@ -16,6 +16,13 @@ use Latte\Engine;
  */
 trait TemplateTestTrait
 {
+    /**
+     * Create fully functional template engine with stubs for template
+     * functions.
+     *
+     * If the default stubs defined in this trait are not suitable, they can be
+     * overridden individually.
+     */
     private function createTemplateEngine(array $templateFunctions = []): TemplateEngine
     {
         return new TemplateEngine(
@@ -23,9 +30,37 @@ trait TemplateTestTrait
             new Engine(),
             new TemplateLoader(InstalledVersions::getRootPackage()['install_path'] . 'templates'),
             $templateFunctions[AssetUrlFunction::class] ?? $this->createStub(AssetUrlFunction::class),
-            $templateFunctions[CsrfTokenFunction::class] ?? $this->createStub(CsrfTokenFunction::class),
-            $templateFunctions[PathForRouteFunction::class] ?? $this->createStub(PathForRouteFunction::class),
-            $templateFunctions[TranslateFunction::class] ?? $this->createStub(TranslateFunction::class),
+            $templateFunctions[CsrfTokenFunction::class] ?? $this->createCsrfTokenFunctionStub(),
+            $templateFunctions[PathForRouteFunction::class] ?? $this->createPathForRouteFunctionStub(),
+            $templateFunctions[TranslateFunction::class] ?? $this->createTranslateFunctionStub(),
         );
+    }
+
+    private function createCsrfTokenFunctionStub(): CsrfTokenFunction
+    {
+        $function = $this->createStub(CsrfTokenFunction::class);
+        $function->method('__invoke')->willReturn('csrf_token');
+
+        return $function;
+    }
+
+    private function createPathForRouteFunctionStub(): PathForRouteFunction
+    {
+        $function = $this->createStub(PathForRouteFunction::class);
+        $function->method('__invoke')->willReturnCallback(
+            function (string $name, array $routeArguments, array $queryParams): string {
+                return $name . '/' . http_build_query($routeArguments) . '?' . http_build_query($queryParams);
+            }
+        );
+
+        return $function;
+    }
+
+    private function createTranslateFunctionStub(): TranslateFunction
+    {
+        $function = $this->createStub(TranslateFunction::class);
+        $function->method('__invoke')->willReturnCallback(fn ($message, ...$args) => '_' . vsprintf($message, $args));
+
+        return $function;
     }
 }

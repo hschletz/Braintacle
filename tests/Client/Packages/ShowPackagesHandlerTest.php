@@ -5,8 +5,6 @@ namespace Braintacle\Test\Client\Packages;
 use Braintacle\Client\ClientRequestParameters;
 use Braintacle\Client\Packages\ShowPackagesHandler;
 use Braintacle\Http\RouteHelper;
-use Braintacle\Template\Function\PathForRouteFunction;
-use Braintacle\Template\Function\TranslateFunction;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
@@ -42,18 +40,7 @@ class ShowPackagesHandlerTest extends TestCase
         $requestData = new ClientRequestParameters();
         $requestData->client = $client;
 
-        $pathForRouteFunction = $this->createMock(PathForRouteFunction::class);
-        $pathForRouteFunction->method('__invoke')->willReturnCallback(
-            fn ($route, $arguments, $query) => $route . json_encode($arguments) . json_encode($query)
-        );
-
-        $translateFunction = $this->createStub(TranslateFunction::class);
-        $translateFunction->method('__invoke')->willReturnCallback(fn ($message, ...$args) => '_' . vsprintf($message, $args));
-
-        $templateEngine = $this->createTemplateEngine([
-            PathForRouteFunction::class => $pathForRouteFunction,
-            TranslateFunction::class => $translateFunction,
-        ]);
+        $templateEngine = $this->createTemplateEngine();
 
         $dataProcessor = $this->createMock(DataProcessor::class);
         $dataProcessor->method('process')->with($routeArguments, ClientRequestParameters::class)->willReturn($requestData);

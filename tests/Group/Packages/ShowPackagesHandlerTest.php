@@ -4,8 +4,6 @@ namespace Braintacle\Test\Group\Packages;
 
 use Braintacle\Group\GroupRequestParameters;
 use Braintacle\Group\Packages\ShowPackagesHandler;
-use Braintacle\Template\Function\PathForRouteFunction;
-use Braintacle\Template\Function\TranslateFunction;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
 use Formotron\DataProcessor;
@@ -33,16 +31,7 @@ class ShowPackagesHandlerTest extends TestCase
         $formData = new GroupRequestParameters();
         $formData->group = $group;
 
-        $pathForRouteFunction = $this->createStub(PathForRouteFunction::class);
-        $pathForRouteFunction->method('__invoke')->willReturnCallback(
-            fn ($route, $routeArguments, $queryParams) => '/' . $route . '?' . http_build_query($queryParams)
-        );
-        $translateFunction = $this->createStub(TranslateFunction::class);
-        $translateFunction->method('__invoke')->willReturnCallback(fn ($message, ...$args) => '_' . vsprintf($message, $args));
-        $templateEngine = $this->createTemplateEngine([
-            PathForRouteFunction::class => $pathForRouteFunction,
-            TranslateFunction::class => $translateFunction,
-        ]);
+        $templateEngine = $this->createTemplateEngine();
 
         $dataProcessor = $this->createMock(DataProcessor::class);
         $dataProcessor->method('process')->with($queryParams, GroupRequestParameters::class)->willReturn($formData);

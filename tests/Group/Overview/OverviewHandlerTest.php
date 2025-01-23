@@ -8,8 +8,6 @@ use Braintacle\FlashMessages;
 use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Group\Overview\OverviewHandler;
 use Braintacle\Group\Overview\OverviewRequestParameters;
-use Braintacle\Template\Function\PathForRouteFunction;
-use Braintacle\Template\Function\TranslateFunction;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\HttpHandlerTestTrait;
@@ -38,16 +36,7 @@ class OverviewHandlerTest extends TestCase
         $groupManager = $this->createMock(GroupManager::class);
         $groupManager->method('getGroups')->with(null, null, 'Name', 'asc')->willReturn(new ArrayIterator($groups));
 
-        $translateFunction = $this->createStub(TranslateFunction::class);
-        $translateFunction->method('__invoke')->willReturnCallback(fn ($message) => '_' . $message);
-
-        $pathForRouteFunction = $this->createStub(PathForRouteFunction::class);
-        $pathForRouteFunction->method('__invoke')->willReturnCallback(fn ($name, $args, $query) => $name . '?' . http_build_query($query));
-
-        $templateEngine = $this->createTemplateEngine([
-            TranslateFunction::class => $translateFunction,
-            PathForRouteFunction::class => $pathForRouteFunction,
-        ]);
+        $templateEngine = $this->createTemplateEngine();
 
         $flashMessages = $this->createMock(FlashMessages::class);
         $flashMessages->method('get')->with(FlashMessages::Success)->willReturn($messages);
@@ -79,11 +68,11 @@ class OverviewHandlerTest extends TestCase
 
         $xPath = $this->getXpath([$group1, $group2], []);
 
-        $this->assertXpathMatches($xPath, '//tr[2]/td[1]/a[@href="showGroupGeneral?name=name1"][text()="name1"]');
+        $this->assertXpathMatches($xPath, '//tr[2]/td[1]/a[@href="showGroupGeneral/?name=name1"][text()="name1"]');
         $this->assertXpathMatches($xPath, '//tr[2]/td[2][text()="06.04.14, 11:55"]');
         $this->assertXpathMatches($xPath, '//tr[2]/td[3][text()="description1"]');
 
-        $this->assertXpathMatches($xPath, '//tr[3]/td[1]/a[@href="showGroupGeneral?name=name2"][text()="name2"]');
+        $this->assertXpathMatches($xPath, '//tr[3]/td[1]/a[@href="showGroupGeneral/?name=name2"][text()="name2"]');
         $this->assertXpathMatches($xPath, '//tr[3]/td[2][text()="20.01.25, 16:44"]');
         $this->assertXpathMatches($xPath, '//tr[3]/td[3][text()="description2"]');
 

@@ -2,8 +2,6 @@
 
 namespace Console\Test\Inputfilter;
 
-use Braintacle\Template\Function\CsrfTokenFunction;
-use Braintacle\Template\Function\TranslateFunction;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\TemplateTestTrait;
 use Console\Form\Package\AssignPackagesForm;
@@ -36,16 +34,7 @@ class AssignPackageFormTest extends TestCase
 
     private function renderToString(array $values): string
     {
-        $csrfTokenFunction = $this->createStub(CsrfTokenFunction::class);
-        $csrfTokenFunction->method('__invoke')->willReturnCallback(fn () => 'token');
-
-        $translateFunction = $this->createStub(TranslateFunction::class);
-        $translateFunction->method('__invoke')->willReturnCallback(fn ($message) => '_' . $message . '_');
-
-        $templateEngine = $this->createTemplateEngine([
-            CsrfTokenFunction::class => $csrfTokenFunction,
-            TranslateFunction::class => $translateFunction
-        ]);
+        $templateEngine = $this->createTemplateEngine();
         $content = $templateEngine->render('Forms/AssignPackage.latte', $values);
 
         return $content;
@@ -146,8 +135,8 @@ class AssignPackageFormTest extends TestCase
             'csrfToken' => 'token',
             'packages' => ['package1', 'package2']
         ]));
-        $this->assertXpathMatches($xPath, '//h2[text()="_Assign packages_"]');
-        $this->assertXpathMatches($xPath, '//form/input[@name="csrf"][@value="token"]');
+        $this->assertXpathMatches($xPath, '//h2[text()="_Assign packages"]');
+        $this->assertXpathMatches($xPath, '//form/input[@name="csrf"][@value="csrf_token"]');
         $this->assertXpathMatches($xPath, '//form/div[@class="table"]');
         $this->assertXpathMatches($xPath, '//label/input[@type="checkbox"][@name="packages[]"][@value="package1"]');
         $this->assertXpathMatches($xPath, '//label/span[text()="package1"]');

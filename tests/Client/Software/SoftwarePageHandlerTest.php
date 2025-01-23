@@ -6,7 +6,6 @@ use Braintacle\Client\ClientRequestParameters;
 use Braintacle\Client\Software\SoftwarePageHandler;
 use Braintacle\Client\Software\SoftwareQueryParams;
 use Braintacle\Http\RouteHelper;
-use Braintacle\Template\Function\TranslateFunction;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
@@ -49,10 +48,7 @@ class SoftwarePageHandlerTest extends TestCase
         $config = $this->createMock(Config::class);
         $config->method('__get')->with('displayBlacklistedSoftware')->willReturn($displayBlacklistedSoftware);
 
-        $translateFunction = $this->createStub(TranslateFunction::class);
-        $translateFunction->method('__invoke')->willReturnCallback(fn ($message) => '_' . $message);
-
-        $templateEngine = $this->createTemplateEngine([TranslateFunction::class => $translateFunction]);
+        $templateEngine = $this->createTemplateEngine();
 
         $handler = new SoftwarePageHandler($this->response, $routeHelper, $dataProcessor, $config, $templateEngine);
         $response = $handler->handle($this->request);

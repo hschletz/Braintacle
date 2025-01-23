@@ -5,8 +5,6 @@ namespace Braintacle\Test\Duplicates;
 use Braintacle\Duplicates\Criterion;
 use Braintacle\Duplicates\OverviewHandler;
 use Braintacle\FlashMessages;
-use Braintacle\Template\Function\PathForRouteFunction;
-use Braintacle\Template\Function\TranslateFunction;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
@@ -23,16 +21,7 @@ class OverviewHandlerTest extends TestCase
 
     private function getXpath(DuplicatesManager $duplicatesManager, array $messages): DOMXPath
     {
-        $pathForRouteFunction = $this->createStub(PathForRouteFunction::class);
-        $pathForRouteFunction->method('__invoke')->willReturnCallback(fn ($name, $arguments) => $name . '/' . ($arguments['criterion'] ?? ''));
-
-        $translateFunction = $this->createStub(TranslateFunction::class);
-        $translateFunction->method('__invoke')->willReturnCallback(fn ($message) => '_' . $message);
-
-        $templateEngine = $this->createTemplateEngine([
-            PathForRouteFunction::class => $pathForRouteFunction,
-            TranslateFunction::class => $translateFunction,
-        ]);
+        $templateEngine = $this->createTemplateEngine();
 
         $flashMessages = $this->createMock(FlashMessages::class);
         $flashMessages->method('get')->with(FlashMessages::Success)->willReturn($messages);
@@ -75,7 +64,7 @@ class OverviewHandlerTest extends TestCase
         $xPath = $this->getXpath($duplicatesManager, []);
         $this->assertXpathCount(1, $xPath, '//tr');
         $this->assertXpathMatches($xPath, "//td[1][normalize-space(text())='$label']");
-        $this->assertXpathMatches($xPath, "//td[2]/a[@href='manageDuplicates/{$criterion->value}'][normalize-space(text())='$count']");
+        $this->assertXpathMatches($xPath, "//td[2]/a[@href='manageDuplicates/criterion={$criterion->value}?'][normalize-space(text())='$count']");
         $this->assertNotXpathMatches($xPath, '//p');
     }
 
