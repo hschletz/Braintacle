@@ -1,0 +1,44 @@
+{layout ClientMenuLayout.latte}
+{block content}
+
+{include Header.latte}
+
+{var $types = [0 => translate('automatic'), 1 => translate('manual'), 2 => translate('never')]}
+
+{if $memberships}
+    <h2>{translate('Group memberships')}</h2>
+    <table class="alternating">
+        <tr>
+            <th>{translate('Group')}</th>
+            <th>{translate('Membership')}</th>
+        </tr>
+        <tr n:foreach="$memberships as $group => $type">
+            <td>
+                <a href="{pathForRoute(showGroupGeneral, [], [name: $group])}">{$group}</a>
+            </td>
+            <td>{$types[$type]}</td>
+        </tr>
+    </table>
+{/if}
+
+{if $formData}
+    <h2>{translate('Manage memberships')}</h2>
+
+    <link rel="stylesheet" href="{assetUrl('css/group_memberships.css')}">
+
+    <form method="POST" action="{pathForRoute(manageGroupMemberships, [id: $client->id])}" class="form form_groupmemberships">
+        <input type="hidden" name="csrfToken" value="{csrfToken()}">
+        <div>
+            <fieldset n:foreach="$formData as $group => $membershipType">
+                <legend>
+                    <a href="{pathForRoute(showGroupGeneral, [], [name: $group])}">{$group}</a>
+                </legend>
+                <label n:foreach="$types as $type => $label">
+                    <input type="radio" name="groups[{$group}]" value="{$type}" n:attr="checked => $membershipType == $type">
+                    {$label}
+                </label>
+            </fieldset>
+            <button type="submit">{translate('OK')}</button>
+        </div>
+    </form>
+{/if}

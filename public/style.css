@@ -610,28 +610,6 @@ form.form_addtogroup > * {
     margin: 4ex 1em;
 }
 
-.form_groupmemberships div {
-    display: table;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.form_groupmemberships fieldset {
-    border: none;
-    padding: .3ex;
-    text-align: right;
-}
-
-.form_groupmemberships legend {
-    float: left;
-}
-
-.form_groupmemberships input[type=submit] {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 .form_login input[type="text"], .form_login input[type="password"] {
     width: 12em;
 }

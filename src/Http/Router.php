@@ -35,6 +35,8 @@ class Router
         $app->group('', function (RouteCollectorProxyInterface $group) {
             $group->get('/client/{id}/export', Client\ExportHandler::class)->setName('export');
             $group->get('/client/{id}/general', Client\SubPage\General::class)->setName('showClientGeneral');
+            $group->get('/client/{id}/groups', Client\Groups\GroupsPageHandler::class)->setName('showClientGroups');
+            $group->post('/client/{id}/groups', Client\Groups\SetMembershipsHandler::class)->setName('manageGroupMemberships');
             $group->get('/client/{id}/packages', Client\Packages\ShowPackagesHandler::class)->setName('showClientPackages');
             $group->post('/client/{id}/packages', Client\Packages\AssignPackagesHandler::class)->setName('assignPackageToClient');
             $group->put('/client/{id}/packages', Client\Packages\ResetPackageHandler::class)->setName('resetPackageOnClient');
@@ -45,6 +47,8 @@ class Router
             $group->post('/duplicates/allow', Duplicates\AllowDuplicatesHandler::class)->setName('allowDuplicates');
             $group->get('/duplicates/{criterion}', Duplicates\ManageDuplicatesHandler::class)->setName('manageDuplicates');
             $group->delete('/group', Group\DeleteHandler::class)->setName('deleteGroup');
+            $group->get('/group/excluded', Group\Members\ExcludedPageHandler::class)->setName('showGroupExcluded');
+            $group->get('/group/members', Group\Members\MembersPageHandler::class)->setName('showGroupMembers');
             $group->get('/group/packages', Group\Packages\ShowPackagesHandler::class)->setName('showGroupPackages');
             $group->post('/group/packages', Group\Packages\AssignPackagesHandler::class)->setName('assignPackageToGroup');
             $group->delete('/group/packages', Group\Packages\RemovePackagesHandler::class)->setName('removePackageFromGroup');
@@ -52,15 +56,15 @@ class Router
             $group->get('/software', Software\SoftwarePageHandler::class)->setName('softwarePage');
             $group->post('/software', Software\SoftwareManagementHandler::class)->setName('softwareHandler');
 
-            // Legacy routes handled by MVC application, which are listed here
-            // to provide a route name.
+            // Legacy routes, listed here to provide a name for MVC routes, or
+            // to provide an alternative MVC-style URL that is composed by
+            // legacy methods.
             $group->get('/console/accounts/index', ApplicationBridge::class)->setName('preferencesUsersList');
             $group->get('/console/client/bios', ApplicationBridge::class)->setName('showClientBios');
             $group->get('/console/client/configuration', ApplicationBridge::class)->setName('showClientConfiguration');
             $group->get('/console/client/customfields', ApplicationBridge::class)->setName('showClientCustomFields');
             $group->get('/console/client/delete', ApplicationBridge::class)->setName('deleteClient');
             $group->get('/console/client/display', ApplicationBridge::class)->setName('showClientDisplay');
-            $group->get('/console/client/groups', ApplicationBridge::class)->setName('showClientGroups');
             $group->get('/console/client/import', ApplicationBridge::class)->setName('importPage');
             $group->get('/console/client/index', ApplicationBridge::class)->setName('clientList');
             $group->get('/console/client/misc', ApplicationBridge::class)->setName('showClientMisc');
@@ -74,8 +78,7 @@ class Router
             $group->get('/console/client/virtualmachines', ApplicationBridge::class)->setName('showClientVirtualMachines');
             $group->get('/console/client/windows', ApplicationBridge::class)->setName('showClientWindows');
             $group->get('/console/group/general', ApplicationBridge::class)->setName('showGroupGeneral');
-            $group->get('/console/group/members', ApplicationBridge::class)->setName('showGroupMembers');
-            $group->get('/console/group/excluded', ApplicationBridge::class)->setName('showGroupExcluded');
+            $group->get('/console/group/members/', Group\Members\MembersPageHandler::class);
             $group->get('/console/group/configuration', ApplicationBridge::class)->setName('showGroupConfiguration');
             $group->get('/console/licenses/index', ApplicationBridge::class)->setName('licensesPage');
             $group->get('/console/network/index', ApplicationBridge::class)->setName('networkPage');

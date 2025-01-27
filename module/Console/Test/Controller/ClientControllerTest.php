@@ -40,7 +40,6 @@ use Model\Client\Client;
 use Model\Client\ClientManager;
 use Model\Client\WindowsInstallation;
 use Model\Config;
-use Model\Group\GroupManager;
 use Model\Registry\RegistryManager;
 use Model\SoftwareManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -54,11 +53,6 @@ class ClientControllerTest extends AbstractControllerTestCase
      * @var MockObject|ClientManager
      */
     protected $_clientManager;
-
-    /**
-     * @var MockObject|GroupManager
-     */
-    protected $_groupManager;
 
     /**
      * @var MockObject|RegistryManager
@@ -127,17 +121,13 @@ class ClientControllerTest extends AbstractControllerTestCase
         parent::setUp();
 
         $this->_clientManager = $this->createMock('Model\Client\ClientManager');
-        $this->_groupManager = $this->createMock('Model\Group\GroupManager');
         $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
         $this->_softwareManager = $this->createMock('Model\SoftwareManager');
-        $this->_config = $this->createMock('Model\Config');
 
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setService('Model\Client\ClientManager', $this->_clientManager);
-        $serviceManager->setService('Model\Group\GroupManager', $this->_groupManager);
         $serviceManager->setService('Model\Registry\RegistryManager', $this->_registryManager);
         $serviceManager->setService('Model\SoftwareManager', $this->_softwareManager);
-        $serviceManager->setService('Model\Config', $this->_config);
 
         $routeHelper = $this->createStub(RouteHelper::class);
         $routeHelper->method('getPathForRoute')->willReturnCallback(fn ($name, $routeArguments) => "{$name}/{$routeArguments['id']}");
@@ -147,7 +137,6 @@ class ClientControllerTest extends AbstractControllerTestCase
         $formManager->setService('Console\Form\ClientConfig', $this->createMock('Console\Form\ClientConfig'));
         $formManager->setService('Console\Form\CustomFields', $this->createMock('Console\Form\CustomFields'));
         $formManager->setService('Console\Form\DeleteClient', $this->createMock('Console\Form\DeleteClient'));
-        $formManager->setService('Console\Form\GroupMemberships', $this->createMock('Console\Form\GroupMemberships'));
         $formManager->setService('Console\Form\Import', $this->createMock(Import::class));
         $formManager->setService('Console\Form\ProductKey', $this->createMock('Console\Form\ProductKey'));
         $formManager->setService('Console\Form\Search', $this->createMock('Console\Form\Search'));
@@ -1961,133 +1950,6 @@ class ClientControllerTest extends AbstractControllerTestCase
         );
     }
 
-    public function testGroupsActionNoGroups()
-    {
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
-        $resultSet->initialize(new \EmptyIterator());
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
-        $form->expects($this->never())
-            ->method('render');
-
-        /** @var MockObject|Client */
-        $client = $this->createMock(Client::class);
-        $client->id = 1;
-        $client->name = 'test';
-        $client->expects($this->never())->method('getGroupMemberships');
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->_groupManager->expects($this->once())
-            ->method('getGroups')
-            ->with(null, null, 'Name')
-            ->willReturn($resultSet);
-        $this->dispatch('/console/client/groups/?id=1');
-        $this->assertResponseStatusCode(200);
-        $this->assertNotXpathQuery('//h2');
-        $this->assertNotXpathQuery('//table');
-    }
-
-    public function testGroupsActionOnlyExcluded()
-    {
-        $groups = array(
-            array('Id' => 1, 'Name' => 'group1'),
-            array('Id' => 2, 'Name' => 'group2'),
-        );
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
-        $resultSet->initialize($groups);
-        $formGroups = array(
-            'group1' => \Model\Client\Client::MEMBERSHIP_NEVER,
-            'group2' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
-        );
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
-        $form->expects($this->once())
-            ->method('render')
-            ->will($this->returnValue('<form></form>'));
-        $form->expects($this->once())
-            ->method('setData')
-            ->with(array('Groups' => $formGroups));
-        $form->expects($this->once())
-            ->method('setAttribute')
-            ->with('action', '/console/client/managegroups/?id=1');
-
-        /** @var MockObject|Client */
-        $client = $this->createMock(Client::class);
-        $client->id = 1;
-        $client->name = 'test';
-        $client->expects($this->once())
-            ->method('getGroupMemberships')
-            ->with(Client::MEMBERSHIP_ANY)
-            ->willReturn([1 => Client::MEMBERSHIP_NEVER]);
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->_groupManager->expects($this->once())
-            ->method('getGroups')
-            ->with(null, null, 'Name')
-            ->willReturn($resultSet);
-        $this->dispatch('/console/client/groups/?id=1');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//h2', "\nMitgliedschaften verwalten\n");
-        $this->assertXpathQueryCount('//h2', 1);
-        $this->assertNotXpathQuery('//table');
-        $this->assertXPathQuery('//form');
-    }
-
-    public function testGroupsActionMember()
-    {
-        $groups = array(
-            array('Id' => 1, 'Name' => 'group1'),
-            array('Id' => 2, 'Name' => 'group2'),
-        );
-        $resultSet = new \Laminas\Db\ResultSet\ResultSet();
-        $resultSet->initialize($groups);
-        $memberships = array(
-            1 => \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
-            2 => \Model\Client\Client::MEMBERSHIP_ALWAYS,
-        );
-        $formGroups = array(
-            'group1' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
-            'group2' => \Model\Client\Client::MEMBERSHIP_ALWAYS,
-        );
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
-        $form->expects($this->once())
-            ->method('render')
-            ->will($this->returnValue('<form></form>'));
-        $form->expects($this->once())
-            ->method('setData')
-            ->with(array('Groups' => $formGroups));
-        $form->expects($this->once())
-            ->method('setAttribute')
-            ->with('action', '/console/client/managegroups/?id=1');
-
-        /** @var MockObject|Client */
-        $client = $this->createMock(Client::class);
-        $client->id = 1;
-        $client->name = 'test';
-        $client->expects($this->once())
-            ->method('getGroupMemberships')
-            ->with(Client::MEMBERSHIP_ANY)
-            ->willReturn($memberships);
-        $this->_clientManager->method('getClient')->willReturn($client);
-        $this->_groupManager->expects($this->once())
-            ->method('getGroups')
-            ->with(null, null, 'Name')
-            ->willReturn($resultSet);
-        $this->dispatch('/console/client/groups/?id=1');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//h2', "\nGruppenmitgliedschaften\n");
-        $this->assertXpathQueryContentContains(
-            '//tr[2]/td[1]/a[@href="/console/group/general/?name=group1"]',
-            'group1'
-        );
-        $this->assertXpathQueryContentContains('//tr[2]/td[2]', "\nautomatisch\n");
-        $this->assertXpathQueryContentContains(
-            '//tr[3]/td[1]/a[@href="/console/group/general/?name=group2"]',
-            'group2'
-        );
-        $this->assertXpathQueryContentContains('//tr[3]/td[2]', "\nmanuell\n");
-        $this->assertXpathQueryContentContains('//h2', "\nMitgliedschaften verwalten\n");
-        $this->assertXPathQuery('//form');
-    }
-
     public function testConfigurationActionGet()
     {
         $config = array('name' => 'value');
@@ -2273,80 +2135,6 @@ class ClientControllerTest extends AbstractControllerTestCase
             ["Client 'name' konnte nicht gelöscht werden."],
             $flashMessenger->getCurrentErrorMessages()
         );
-    }
-
-    public function testManagegroupsActionGet()
-    {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
-        $form->expects($this->never())
-            ->method('setData');
-        $form->expects($this->never())
-            ->method('getData');
-        $form->expects($this->never())
-            ->method('isValid');
-        $map = array(
-            array('Id', 1),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
-        $client->expects($this->never())->method('setGroupMemberships');
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/managegroups/?id=1');
-        $this->assertRedirectTo('/console/client/groups/?id=1');
-    }
-
-    public function testManagegroupsActionPostInvalid()
-    {
-        $postData = array(
-            'Groups' => array('group1' => '1', 'group2' => '2')
-        );
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
-        $form->expects($this->once())
-            ->method('setData')
-            ->with($postData);
-        $form->expects($this->never())
-            ->method('getData');
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(false));
-        $map = array(
-            array('Id', 1),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
-        $client->expects($this->never())->method('setGroupMemberships');
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/managegroups/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/client/groups/?id=1');
-    }
-
-    public function testManagegroupsActionPostValid()
-    {
-        $postData = array(
-            'Groups' => array('group1' => '1', 'group2' => '2')
-        );
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\GroupMemberships');
-        $form->expects($this->once())
-            ->method('setData')
-            ->with($postData);
-        $form->expects($this->once())
-            ->method('getData')
-            ->will($this->returnValue($postData));
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
-        $map = array(
-            array('Id', 1),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
-        $client->expects($this->once())->method('setGroupMemberships')->with($postData['Groups']);
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/managegroups/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/client/groups/?id=1');
     }
 
     public function testSearchActionNoPreset()

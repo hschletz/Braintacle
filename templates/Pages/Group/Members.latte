@@ -1,0 +1,40 @@
+{* Group members *}
+{layout ../../MainMenu/GroupMenuLayout.latte}
+{import ../../SortableHeader.latte}
+
+{var $types = [0 => translate('automatic'), 1 => translate('manual')]}
+{var $extraParams = [name: $group->name]}
+
+{block content}
+
+{include Header.latte}
+
+<table class="textnormalsize">
+    <tr>
+        <td class="textright">{translate('Last update:')}</td>
+        <td>{$group->cacheCreationDate|localDate: date: full, time: medium}</td>
+    </tr>
+    <tr>
+        <td class="textright">{translate('Next update:')}</td>
+        <td>{$group->cacheExpirationDate|localDate: date: full, time: medium}</td>
+    </tr>
+</table>
+
+<p class="textcenter">{translate('Number of clients: %d', count($clients))}</p>
+
+<table class="alternating">
+    <tr>
+        <th>{include sortableHeader, 'Name', translate('Name'), $extraParams}</th>
+        <th>{include sortableHeader, 'UserName', translate('User'), $extraParams}</th>
+        <th>{include sortableHeader, 'InventoryDate', translate('Last inventory'), $extraParams}</th>
+        <th>{include sortableHeader, 'Membership', translate('Membership'), $extraParams}</th>
+    </tr>
+    <tr n:foreach="$clients as $client">
+        <td>
+            <a href="{pathForRoute(showClientGroups, [id: $client->id])}">{$client->name}</a>
+        </td>
+        <td>{$client->userName}</td>
+        <td>{$client->inventoryDate|localDate: date: short, time: short}</td>
+        <td>{$types[$client->membership]}</td>
+    </tr>
+</table>

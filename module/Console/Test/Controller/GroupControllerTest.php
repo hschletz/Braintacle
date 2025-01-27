@@ -28,9 +28,7 @@ use Console\Test\AbstractControllerTestCase;
 use Console\View\Helper\Form\AddToGroup;
 use Console\View\Helper\Form\ClientConfig as FormClientConfig;
 use Console\View\Helper\GroupHeader;
-use IntlDateFormatter;
 use Laminas\I18n\View\Helper\DateFormat;
-use Model\Client\ClientManager;
 use Model\Group\Group;
 use Model\Group\GroupManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -45,12 +43,6 @@ class GroupControllerTest extends AbstractControllerTestCase
      * @var MockObject|GroupManager
      */
     protected $_groupManager;
-
-    /**
-     * Client manager mock
-     * @var MockObject|ClientManager
-     */
-    protected $_clientManager;
 
     /**
      * Add to group form mock
@@ -72,13 +64,11 @@ class GroupControllerTest extends AbstractControllerTestCase
         parent::setUp();
 
         $this->_groupManager = $this->createMock('Model\Group\GroupManager');
-        $this->_clientManager = $this->createMock('Model\Client\ClientManager');
         $this->_addToGroupForm = $this->createMock('Console\Form\AddToGroup');
         $this->_clientConfigForm = $this->createMock('Console\Form\ClientConfig');
 
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setService('Model\Group\GroupManager', $this->_groupManager);
-        $serviceManager->setService('Model\Client\ClientManager', $this->_clientManager);
         $formManager = $serviceManager->get('FormElementManager');
         $formManager->setService('Console\Form\AddToGroup', $this->_addToGroupForm);
         $formManager->setService('Console\Form\ClientConfig', $this->_clientConfigForm);
@@ -139,109 +129,6 @@ class GroupControllerTest extends AbstractControllerTestCase
             '//td[text()="Erstellungsdatum"]/following::td[text()="date_create"]'
         );
         $this->assertXpathQuery("//td[text()='SQL-Abfrage']/following::td/code[text()='\ngroupSql\n']");
-    }
-
-    public function testMembersAction()
-    {
-        $url = '/console/group/members/?name=test';
-        $cacheCreationDate = new \DateTime('2014-04-08 20:12:21');
-        $cacheExpirationDate = new \DateTime('2014-04-09 18:53:21');
-        $inventoryDate = new \DateTime('2014-04-09 18:56:12');
-
-        /** @var MockObject|Group */
-        $group = $this->createMock(Group::class);
-        $group->method('offsetGet')->willReturnMap([
-            ['CacheCreationDate', $cacheCreationDate],
-            ['CacheExpirationDate', $cacheExpirationDate],
-        ]);
-        $group->method('__get')->with('name')->willReturn('test');
-
-        $clients = array(
-            array(
-                'Id' => '1',
-                'Name' => 'clientName',
-                'UserName' => 'userName',
-                'InventoryDate' => $inventoryDate,
-                'Membership' => \Model\Client\Client::MEMBERSHIP_ALWAYS,
-            ),
-        );
-        $this->_groupManager->expects($this->once())
-            ->method('getGroup')
-            ->with('test')
-            ->willReturn($group);
-        $this->_clientManager->expects($this->once())
-            ->method('getClients')
-            ->with(
-                array('Name', 'UserName', 'InventoryDate', 'Membership'),
-                'InventoryDate',
-                'desc',
-                'MemberOf',
-                $group
-            )
-            ->willReturn($clients);
-
-        $dateFormat = $this->createMock(DateFormat::class);
-        $dateFormat->method('__invoke')->willReturnMap([
-            [$cacheCreationDate, IntlDateFormatter::FULL, IntlDateFormatter::MEDIUM, null, null, 'date_create'],
-            [$cacheExpirationDate, IntlDateFormatter::FULL, IntlDateFormatter::MEDIUM, null, null, 'date_expire'],
-            [$inventoryDate, IntlDateFormatter::SHORT, IntlDateFormatter::SHORT, null, null, 'date_client'],
-        ]);
-        $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');
-        $viewHelperManager->setService('dateFormat', $dateFormat);
-
-        $this->dispatch($url);
-
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains(
-            "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='/route/showGroupMembers?name=test']",
-            'Mitglieder'
-        );
-        $this->assertXpathQuery(
-            '//td[text()="Letztes Update:"]/following::td[text()="date_create"]'
-        );
-        $this->assertXpathQuery(
-            '//td[text()="Nächstes Update:"]/following::td[text()="date_expire"]'
-        );
-        $this->assertXpathQuery("//p[@class='textcenter'][text()='\nAnzahl Clients: 1\n']");
-        $this->assertXpathQuery("//td[text()='\nmanuell\n']");
-        $this->assertXpathQuery("//td/a[@href='/console/client/groups/?id=1'][text()='clientName']");
-    }
-
-    public function testExcludedAction()
-    {
-        $url = '/console/group/excluded/?name=test';
-
-        $group = new Group();
-        $group->name = 'test';
-
-        $clients = array(
-            array(
-                'Id' => '1',
-                'Name' => 'clientName',
-                'UserName' => 'userName',
-                'InventoryDate' => new \DateTime('2014-04-09 18:56:12'),
-            ),
-        );
-        $this->_groupManager->expects($this->once())
-            ->method('getGroup')
-            ->with('test')
-            ->willReturn($group);
-        $this->_clientManager->expects($this->once())
-            ->method('getClients')
-            ->with(
-                array('Name', 'UserName', 'InventoryDate'),
-                'InventoryDate',
-                'desc'
-            )
-            ->willReturn($clients);
-        $this->dispatch($url);
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains(
-            "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='/route/showGroupExcluded?name=test']",
-            'Ausgeschlossen'
-        );
-        $this->assertXpathQuery("//p[@class='textcenter'][text()='\nAnzahl Clients: 1\n']");
-        $this->assertXpathQuery("//td/a[@href='/console/client/groups/?id=1'][text()='clientName']");
     }
 
     public function testAddActionGet()

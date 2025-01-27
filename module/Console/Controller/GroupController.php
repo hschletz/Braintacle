@@ -34,12 +34,6 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
     protected $_groupManager;
 
     /**
-     * Client manager
-     * @var \Model\Client\ClientManager
-     */
-    protected $_clientManager;
-
-    /**
      * Add to group form
      * @var \Console\Form\AddToGroup
      */
@@ -59,12 +53,10 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
 
     public function __construct(
         \Model\Group\GroupManager $groupManager,
-        \Model\Client\ClientManager $clientManager,
         \Console\Form\AddToGroup $addToGroupForm,
         \Console\Form\ClientConfig $clientConfigForm
     ) {
         $this->_groupManager = $groupManager;
-        $this->_clientManager = $clientManager;
         $this->_addToGroupForm = $addToGroupForm;
         $this->_clientConfigForm = $clientConfigForm;
     }
@@ -103,44 +95,6 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
     public function generalAction()
     {
         return array('group' => $this->_currentGroup);
-    }
-
-    /**
-     * Show group members
-     *
-     * @return array sorting, group, clients, order, direction
-     */
-    public function membersAction()
-    {
-        $vars['sorting'] = $this->getOrder('InventoryDate', 'desc');
-        $vars['group'] = $this->_currentGroup;
-        $vars['clients'] = $this->_clientManager->getClients(
-            array('Name', 'UserName', 'InventoryDate', 'Membership'),
-            $vars['sorting']['order'],
-            $vars['sorting']['direction'],
-            'MemberOf',
-            $this->_currentGroup
-        );
-        return $vars;
-    }
-
-    /**
-     * Show excluded clients
-     *
-     * @return array sorting, group, clients, order, direction
-     */
-    public function excludedAction()
-    {
-        $vars['sorting'] = $this->getOrder('InventoryDate', 'desc');
-        $vars['group'] = $this->_currentGroup;
-        $vars['clients'] = $this->_clientManager->getClients(
-            array('Name', 'UserName', 'InventoryDate'),
-            $vars['sorting']['order'],
-            $vars['sorting']['direction'],
-            'ExcludedFrom',
-            $this->_currentGroup
-        );
-        return $vars;
     }
 
     /**

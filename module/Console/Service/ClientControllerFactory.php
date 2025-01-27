@@ -38,11 +38,9 @@ class ClientControllerFactory implements \Laminas\ServiceManager\Factory\Factory
         return new \Console\Controller\ClientController(
             $container->get(RouteHelper::class),
             $container->get('Model\Client\ClientManager'),
-            $container->get('Model\Group\GroupManager'),
             $container->get('Model\Registry\RegistryManager'),
             $container->get('Model\SoftwareManager'),
             $container->get('FormElementManager'),
-            $container->get('Model\Config')
         );
     }
 }

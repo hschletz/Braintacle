@@ -1,0 +1,21 @@
+.form_groupmemberships div {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form_groupmemberships fieldset {
+    border: none;
+    padding: .3ex;
+    text-align: right;
+}
+
+.form_groupmemberships legend {
+    float: left;
+}
+
+.form_groupmemberships button {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
