@@ -49,32 +49,32 @@ use ReturnTypeWillChange;
  * Additional virtual properties from searched items are provided by filters on
  * an item in the form "Type.Property".
  *
- * @property \Model\Client\AndroidInstallation $Android Android installation info, NULL for non-Android systems
- * @property \Model\Client\WindowsInstallation $Windows Windows installation info, NULL for non-Windows systems
- * @property \Model\Client\CustomFields $CustomFields custom fields
- * @property bool $IsSerialBlacklisted TRUE if the serial is ignored for detection of duplicates
- * @property bool $IsAssetTagBlacklisted TRUE if the asset tag is ignored for detection of duplicates
- * @property \Model\Client\Item\AudioDevice[] $AudioDevice audio devices
- * @property \Model\Client\Item\Controller[] $Controller controllers
- * @property \Model\Client\Item\Cpu[] $Cpu CPUs (newer UNIX clients only)
- * @property \Model\Client\Item\Display[] $Display displays
- * @property \Model\Client\Item\DisplayController[] $DisplayController display controllers
- * @property \Model\Client\Item\ExtensionSlot[] $ExtensionSlot extension slots
- * @property \Model\Client\Item\Filesystem[] $Filesystem filesystems
- * @property \Model\Client\Item\InputDevice[] $InputDevice input devices
- * @property \Model\Client\Item\MemorySlot[] $MemorySlot memory slots
- * @property \Model\Client\Item\Modem[] $Modem modems
- * @property \Model\Client\Item\MsOfficeProduct[] $MsOfficeProduct MS Office products
- * @property \Model\Client\Item\NetworkInterface[] $NetworkInterface network interfaces
- * @property \Model\Client\Item\Port[] $Port ports
- * @property \Model\Client\Item\Printer[] $Printer printers
- * @property \Model\Client\Item\RegistryData[] $RegistryData registry data
- * @property \Model\Client\Item\Sim[] $Sim SIM (Android clients only)
- * @property \Model\Client\Item\Software[] $Software software
- * @property \Model\Client\Item\StorageDevice[] $StorageDevice storage devices
- * @property \Model\Client\Item\VirtualMachine[] $VirtualMachine virtual machines
+ * @property \Model\Client\AndroidInstallation $android Android installation info, NULL for non-Android systems
+ * @property \Model\Client\WindowsInstallation $windows Windows installation info, NULL for non-Windows systems
+ * @property \Model\Client\CustomFields $customFields custom fields
+ * @property bool $isSerialBlacklisted TRUE if the serial is ignored for detection of duplicates
+ * @property bool $isAssetTagBlacklisted TRUE if the asset tag is ignored for detection of duplicates
+ * @property \Model\Client\Item\AudioDevice[] $audioDevice audio devices
+ * @property \Model\Client\Item\Controller[] $controller controllers
+ * @property \Model\Client\Item\Cpu[] $cpu CPUs (newer UNIX clients only)
+ * @property \Model\Client\Item\Display[] $display displays
+ * @property \Model\Client\Item\DisplayController[] $displayController display controllers
+ * @property \Model\Client\Item\ExtensionSlot[] $extensionSlot extension slots
+ * @property \Model\Client\Item\Filesystem[] $filesystem filesystems
+ * @property \Model\Client\Item\InputDevice[] $inputDevice input devices
+ * @property \Model\Client\Item\MemorySlot[] $memorySlot memory slots
+ * @property \Model\Client\Item\Modem[] $modem modems
+ * @property \Model\Client\Item\MsOfficeProduct[] $msOfficeProduct MS Office products
+ * @property \Model\Client\Item\NetworkInterface[] $networkInterface network interfaces
+ * @property \Model\Client\Item\Port[] $port ports
+ * @property \Model\Client\Item\Printer[] $printer printers
+ * @property \Model\Client\Item\RegistryData[] $registryData registry data
+ * @property \Model\Client\Item\Sim[] $sim SIM (Android clients only)
+ * @property \Model\Client\Item\Software[] $software software
+ * @property \Model\Client\Item\StorageDevice[] $storageDevice storage devices
+ * @property \Model\Client\Item\VirtualMachine[] $virtualMachine virtual machines
  * @property string $Package.Status package status (supplied by filter)
- * @property integer $Membership group membership type (supplied by filter)
+ * @property integer $membership group membership type (supplied by filter)
  * @property string $Registry.* registry search result (supplied by filter)
  */
 class Client extends \Model\ClientOrGroup
