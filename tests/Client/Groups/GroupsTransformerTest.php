@@ -23,7 +23,7 @@ class GroupsTransformerTest extends TestCase
             'never' => Client::MEMBERSHIP_NEVER,
         ];
         $transformer = new GroupsTransformer();
-        $this->assertSame($output, $transformer->transform($input));
+        $this->assertSame($output, $transformer->transform($input, []));
     }
 
     public function testNotArray()
@@ -31,7 +31,7 @@ class GroupsTransformerTest extends TestCase
         $transformer = new GroupsTransformer();
         $this->expectException(AssertionFailedException::class);
         $this->expectExceptionMessage('Expected map, got string');
-        $transformer->transform('foo');
+        $transformer->transform('foo', []);
     }
 
     public function testNotMap()
@@ -39,13 +39,13 @@ class GroupsTransformerTest extends TestCase
         $transformer = new GroupsTransformer();
         $this->expectException(AssertionFailedException::class);
         $this->expectExceptionMessage('Expected string, got int');
-        $transformer->transform(['foo']);
+        $transformer->transform(['foo'], []);
     }
 
     public function testNotEnumValue()
     {
         $transformer = new GroupsTransformer();
         $this->expectException(ValueError::class);
-        $transformer->transform(['foo' => '3']);
+        $transformer->transform(['foo' => '3'], []);
     }
 }

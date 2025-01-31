@@ -19,6 +19,6 @@ class ClientTransformerTest extends TestCase
 
         $clientTransformer = new ClientTransformer($clientManager);
         $this->assertInstanceOf(Transformer::class, $clientTransformer);
-        $this->assertSame($client, $clientTransformer->transform('clientId'));
+        $this->assertSame($client, $clientTransformer->transform('clientId', []));
     }
 }

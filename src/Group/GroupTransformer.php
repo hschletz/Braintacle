@@ -14,7 +14,7 @@ class GroupTransformer implements Transformer
     {
     }
 
-    public function transform(mixed $value): mixed
+    public function transform(mixed $value, array $args): mixed
     {
         return $this->groupManager->getGroup($value);
     }

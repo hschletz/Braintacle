@@ -11,7 +11,7 @@ use Formotron\Transformer;
  */
 class GroupsTransformer implements Transformer
 {
-    public function transform(mixed $value): mixed
+    public function transform(mixed $value, array $args): mixed
     {
         if (!is_array($value)) {
             throw new AssertionFailedException('Expected map, got ' . gettype($value));

@@ -19,6 +19,6 @@ class GroupTransformerTest extends TestCase
 
         $groupTransformer = new GroupTransformer($groupManager);
         $this->assertInstanceOf(Transformer::class, $groupTransformer);
-        $this->assertSame($group, $groupTransformer->transform('groupName'));
+        $this->assertSame($group, $groupTransformer->transform('groupName', []));
     }
 }
