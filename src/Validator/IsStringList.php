@@ -9,7 +9,7 @@ use Formotron\Validator;
  */
 class IsStringList implements Validator
 {
-    public function getValidationErrors(mixed $value): array
+    public function getValidationErrors(mixed $value, array $args): array
     {
         $messages = [];
         if (!array_is_list($value)) {

@@ -12,7 +12,7 @@ class IsStringListTest extends TestCase
         $validator = new IsStringList();
         $this->assertEquals(
             ['Input array is not a list'],
-            $validator->getValidationErrors(['foo' => 'bar'])
+            $validator->getValidationErrors(['foo' => 'bar'], [])
         );
     }
 
@@ -21,7 +21,7 @@ class IsStringListTest extends TestCase
         $validator = new IsStringList();
         $this->assertEquals(
             ['Input array contains non-string elements'],
-            $validator->getValidationErrors(['foo', 42, 'bar'])
+            $validator->getValidationErrors(['foo', 42, 'bar'], [])
         );
     }
 
@@ -30,7 +30,7 @@ class IsStringListTest extends TestCase
         $validator = new IsStringList();
         $this->assertEquals(
             [],
-            $validator->getValidationErrors(['foo', 'bar'])
+            $validator->getValidationErrors(['foo', 'bar'], [])
         );
     }
 
@@ -39,7 +39,7 @@ class IsStringListTest extends TestCase
         $validator = new IsStringList();
         $this->assertEquals(
             [],
-            $validator->getValidationErrors([])
+            $validator->getValidationErrors([], [])
         );
     }
 }
