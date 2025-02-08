@@ -105,89 +105,6 @@ msgstr ""
 msgid "Change"
 msgstr ""
 
-#: module/Console/Form/AddToGroup.php
-msgid "Store search parameters. Group memberships will be updated automatically."
-msgstr ""
-
-#: module/Console/Form/AddToGroup.php
-msgid "Add current search results. Group memberships will be set only this time."
-msgstr ""
-
-#: module/Console/Form/AddToGroup.php
-msgid "Exclude search results from a group."
-msgstr ""
-
-#: module/Console/Form/AddToGroup.php
-msgid "Store in new group"
-msgstr ""
-
-#: module/Console/Form/AddToGroup.php
-msgid "Store in existing group"
-msgstr ""
-
-#: module/Console/Form/AddToGroup.php
-#: module/Console/Form/ManageRegistryValues.php
-#: module/Console/Form/Package/Build.php
-#: module/Console/Form/Search.php
-#: module/Console/Form/Subnet.php
-#: module/Console/views/console/client/display.php
-#: module/Console/views/console/client/index.php
-#: module/Console/views/console/client/misc.php
-#: module/Console/views/console/client/network.php
-#: module/Console/views/console/client/printers.php
-#: module/Console/views/console/client/system.php
-#: module/Console/views/console/client/virtualmachines.php
-#: module/Console/views/console/group/general.php
-#: module/Console/views/console/network/index.php
-#: module/Console/views/console/package/index.php
-#: templates/Pages/Client/Packages.latte
-#: templates/Pages/Client/Software.latte
-#: templates/Pages/Duplicates/ManageDuplicates.latte
-#: templates/Pages/Duplicates/Overview.latte
-#: templates/Pages/Group/Excluded.latte
-#: templates/Pages/Group/Members.latte
-#: templates/Pages/Group/Overview.latte
-#: templates/Pages/Software.latte
-msgid "Name"
-msgstr ""
-
-#: module/Console/Form/AddToGroup.php
-#: module/Console/Form/NetworkDevice.php
-#: module/Console/views/console/client/display.php
-#: module/Console/views/console/client/misc.php
-#: module/Console/views/console/client/network.php
-#: module/Console/views/console/client/printers.php
-#: module/Console/views/console/client/system.php
-#: module/Console/views/console/group/general.php
-#: module/Console/views/console/network/showidentified.php
-#: templates/Pages/Group/Overview.latte
-msgid "Description"
-msgstr ""
-
-#: module/Console/Form/AddToGroup.php
-#: templates/Pages/Client/Groups.latte
-msgid "Group"
-msgstr ""
-
-#: module/Console/Form/AddToGroup.php
-#: module/Console/Form/ClientConfig.php
-#: module/Console/Form/NetworkDevice.php
-#: module/Console/Form/ProductKey.php
-#: module/Console/Form/Subnet.php
-#: templates/Pages/Client/Groups.latte
-msgid "OK"
-msgstr ""
-
-#: module/Console/Form/AddToGroup.php
-msgid "The input is more than 255 characters long"
-msgstr ""
-
-#: module/Console/Form/AddToGroup.php
-#: module/Console/Form/DefineFields.php
-#: module/Console/Form/NetworkDeviceTypes.php
-msgid "The name already exists"
-msgstr ""
-
 #: module/Console/Form/ClientConfig.php
 #: templates/MainMenu/PreferencesMenuLayout.latte
 msgid "Agent"
@@ -255,6 +172,15 @@ msgstr ""
 msgid "Use SNMP"
 msgstr ""
 
+#: module/Console/Form/ClientConfig.php
+#: module/Console/Form/NetworkDevice.php
+#: module/Console/Form/ProductKey.php
+#: module/Console/Form/Subnet.php
+#: templates/Pages/Client/Groups.latte
+#: templates/Pages/Group/AddToGroup.latte
+msgid "OK"
+msgstr ""
+
 #: module/Console/Form/CustomFields.php
 #: module/Console/Form/Search.php
 #: module/Console/views/console/client/index.php
@@ -282,6 +208,12 @@ msgstr ""
 #: module/Console/views/console/network/edit.php
 #: module/Console/views/console/package/index.php
 msgid "Date"
+msgstr ""
+
+#: module/Console/Form/DefineFields.php
+#: module/Console/Form/NetworkDeviceTypes.php
+#: templates/Pages/Group/AddToGroup.latte
+msgid "The name already exists"
 msgstr ""
 
 #: module/Console/Form/DefineFields.php
@@ -328,6 +260,32 @@ msgid "Values"
 msgstr ""
 
 #: module/Console/Form/ManageRegistryValues.php
+#: module/Console/Form/Package/Build.php
+#: module/Console/Form/Search.php
+#: module/Console/Form/Subnet.php
+#: module/Console/views/console/client/display.php
+#: module/Console/views/console/client/index.php
+#: module/Console/views/console/client/misc.php
+#: module/Console/views/console/client/network.php
+#: module/Console/views/console/client/printers.php
+#: module/Console/views/console/client/system.php
+#: module/Console/views/console/client/virtualmachines.php
+#: module/Console/views/console/group/general.php
+#: module/Console/views/console/network/index.php
+#: module/Console/views/console/package/index.php
+#: templates/Pages/Client/Packages.latte
+#: templates/Pages/Client/Software.latte
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+#: templates/Pages/Duplicates/Overview.latte
+#: templates/Pages/Group/AddToGroup.latte
+#: templates/Pages/Group/Excluded.latte
+#: templates/Pages/Group/Members.latte
+#: templates/Pages/Group/Overview.latte
+#: templates/Pages/Software.latte
+msgid "Name"
+msgstr ""
+
+#: module/Console/Form/ManageRegistryValues.php
 msgid "Root key"
 msgstr ""
 
@@ -351,6 +309,19 @@ msgstr ""
 #: module/Console/views/console/network/showidentified.php
 #: templates/Pages/Client/General.latte
 msgid "Type"
+msgstr ""
+
+#: module/Console/Form/NetworkDevice.php
+#: module/Console/views/console/client/display.php
+#: module/Console/views/console/client/misc.php
+#: module/Console/views/console/client/network.php
+#: module/Console/views/console/client/printers.php
+#: module/Console/views/console/client/system.php
+#: module/Console/views/console/group/general.php
+#: module/Console/views/console/network/showidentified.php
+#: templates/Pages/Group/AddToGroup.latte
+#: templates/Pages/Group/Overview.latte
+msgid "Description"
 msgstr ""
 
 #: module/Console/Form/Package/Build.php
@@ -1196,7 +1167,7 @@ msgid "Edit filter"
 msgstr ""
 
 #: module/Console/views/console/client/index.php
-#: module/Console/views/console/group/add.php
+#: templates/Pages/Group/AddToGroup.latte
 msgid "Save to group"
 msgstr ""
 
@@ -1704,6 +1675,10 @@ msgid "Group memberships"
 msgstr ""
 
 #: templates/Pages/Client/Groups.latte
+msgid "Group"
+msgstr ""
+
+#: templates/Pages/Client/Groups.latte
 #: templates/Pages/Group/Members.latte
 msgid "Membership"
 msgstr ""
@@ -1843,6 +1818,26 @@ msgstr ""
 
 #: templates/Pages/Duplicates/Overview.latte
 msgid "No duplicates present."
+msgstr ""
+
+#: templates/Pages/Group/AddToGroup.latte
+msgid "Store search parameters. Group memberships will be updated automatically."
+msgstr ""
+
+#: templates/Pages/Group/AddToGroup.latte
+msgid "Add current search results. Group memberships will be set only this time."
+msgstr ""
+
+#: templates/Pages/Group/AddToGroup.latte
+msgid "Exclude search results from a group."
+msgstr ""
+
+#: templates/Pages/Group/AddToGroup.latte
+msgid "Store in new group"
+msgstr ""
+
+#: templates/Pages/Group/AddToGroup.latte
+msgid "Store in existing group"
 msgstr ""
 
 #: templates/Pages/Group/Header.latte

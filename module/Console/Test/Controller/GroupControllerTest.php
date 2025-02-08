@@ -22,10 +22,8 @@
 
 namespace Console\Test\Controller;
 
-use Console\Form\AddToGroup as FormAddToGroup;
 use Console\Form\ClientConfig;
 use Console\Test\AbstractControllerTestCase;
-use Console\View\Helper\Form\AddToGroup;
 use Console\View\Helper\Form\ClientConfig as FormClientConfig;
 use Console\View\Helper\GroupHeader;
 use Laminas\I18n\View\Helper\DateFormat;
@@ -45,12 +43,6 @@ class GroupControllerTest extends AbstractControllerTestCase
     protected $_groupManager;
 
     /**
-     * Add to group form mock
-     * @var MockObject|FormAddToGroup
-     */
-    protected $_addToGroupForm;
-
-    /**
      * Client configuration form mock
      * @var MockObject|ClientConfig
      */
@@ -64,13 +56,11 @@ class GroupControllerTest extends AbstractControllerTestCase
         parent::setUp();
 
         $this->_groupManager = $this->createMock('Model\Group\GroupManager');
-        $this->_addToGroupForm = $this->createMock('Console\Form\AddToGroup');
         $this->_clientConfigForm = $this->createMock('Console\Form\ClientConfig');
 
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setService('Model\Group\GroupManager', $this->_groupManager);
         $formManager = $serviceManager->get('FormElementManager');
-        $formManager->setService('Console\Form\AddToGroup', $this->_addToGroupForm);
         $formManager->setService('Console\Form\ClientConfig', $this->_clientConfigForm);
     }
 
@@ -129,79 +119,6 @@ class GroupControllerTest extends AbstractControllerTestCase
             '//td[text()="Erstellungsdatum"]/following::td[text()="date_create"]'
         );
         $this->assertXpathQuery("//td[text()='SQL-Abfrage']/following::td/code[text()='\ngroupSql\n']");
-    }
-
-    public function testAddActionGet()
-    {
-        $this->_addToGroupForm->expects($this->never())
-            ->method('setData');
-        $this->_addToGroupForm->expects($this->never())
-            ->method('isValid');
-        $this->_addToGroupForm->expects($this->never())
-            ->method('process');
-
-        $formHelper = $this->createMock(AddToGroup::class);
-        $formHelper->method('__invoke')->with($this->_addToGroupForm)->willReturn('<form></form>');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService(
-            'consoleFormAddToGroup',
-            $formHelper
-        );
-
-        $this->dispatch(
-            '/console/group/add?filter=filter&search=search&invert=invert&operator=operator'
-        );
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery('//form');
-    }
-
-    public function testAddActionPostInvalid()
-    {
-        $postData = ['key' => 'value'];
-        $this->_addToGroupForm->expects($this->once())
-            ->method('setData')
-            ->with($postData);
-        $this->_addToGroupForm->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(false));
-        $this->_addToGroupForm->expects($this->never())
-            ->method('process');
-
-        $formHelper = $this->createMock(AddToGroup::class);
-        $formHelper->method('__invoke')->with($this->_addToGroupForm)->willReturn('<form></form>');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService(
-            'consoleFormAddToGroup',
-            $formHelper
-        );
-
-        $this->dispatch(
-            '/console/group/add?filter=filter&search=search&invert=invert&operator=operator',
-            'POST',
-            $postData
-        );
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery('//form');
-    }
-
-    public function testAddActionPostValid()
-    {
-        $postData = array('key' => 'value');
-        $this->_addToGroupForm->expects($this->once())
-            ->method('setData')
-            ->with($postData);
-        $this->_addToGroupForm->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
-        $this->_addToGroupForm->expects($this->once())
-            ->method('process')
-            ->with('filter', 'search', 'operator', 'invert')
-            ->will($this->returnValue(array('Name' => 'test')));
-
-        $this->dispatch(
-            '/console/group/add?filter=filter&search=search&invert=invert&operator=operator',
-            'POST',
-            $postData
-        );
-        $this->assertRedirectTo('/console/group/members/?name=test');
     }
 
     public function testConfigurationActionGet()

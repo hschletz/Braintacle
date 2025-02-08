@@ -61,7 +61,6 @@ return array(
             'Console\Form\Service\PackageFactory',
         ),
         'factories' => array(
-            'Console\Form\AddToGroup' => 'Console\Form\Service\AddToGroupFactory',
             'Console\Form\CustomFields' => 'Console\Form\Service\CustomFieldsFactory',
             'Console\Form\DefineFields' => 'Console\Form\Service\DefineFieldsFactory',
             'Console\Form\DeleteClient' => 'Console\Form\Service\DeleteClientFactory',

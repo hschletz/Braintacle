@@ -56,7 +56,7 @@ class RegistryManager
     /**
      * Get all registry value definitions
      *
-     * @return \Laminas\Db\ResultSet\AbstractResultSet Result set producing \Model\Registry\Value, sorted by name
+     * @return iterable<Value>
      */
     public function getValueDefinitions()
     {

@@ -1,0 +1,24 @@
+.form_addtogroup {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form_addtogroup>* {
+    display: block;
+    margin-top: 2ex;
+}
+
+.form_addtogroup .what+.where {
+    margin-top: 4ex;
+}
+
+.form_addtogroup input,
+.form_addtogroup select {
+    margin-left: 0;
+}
+
+.form_addtogroup label span {
+    display: block;
+    margin-bottom: .5ex;
+}

@@ -36,7 +36,6 @@ class GroupControllerFactory implements \Laminas\ServiceManager\Factory\FactoryI
         $formManager = $container->get('FormElementManager');
         return new \Console\Controller\GroupController(
             $container->get('Model\Group\GroupManager'),
-            $formManager->get('Console\Form\AddToGroup'),
             $formManager->get('Console\Form\ClientConfig')
         );
     }

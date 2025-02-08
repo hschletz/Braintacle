@@ -34,12 +34,6 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
     protected $_groupManager;
 
     /**
-     * Add to group form
-     * @var \Console\Form\AddToGroup
-     */
-    protected $_addToGroupForm;
-
-    /**
      * Client configuration form
      * @var \Console\Form\ClientConfig
      */
@@ -53,11 +47,9 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
 
     public function __construct(
         \Model\Group\GroupManager $groupManager,
-        \Console\Form\AddToGroup $addToGroupForm,
         \Console\Form\ClientConfig $clientConfigForm
     ) {
         $this->_groupManager = $groupManager;
-        $this->_addToGroupForm = $addToGroupForm;
         $this->_clientConfigForm = $clientConfigForm;
     }
 
@@ -95,32 +87,6 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
     public function generalAction()
     {
         return array('group' => $this->_currentGroup);
-    }
-
-    /**
-     * Use Form to set query or include/exclude clients
-     *
-     * @return array|\Laminas\Http\Response array(form) or redirect response
-     */
-    public function addAction()
-    {
-        if ($this->getRequest()->isPost()) {
-            $this->_addToGroupForm->setData($this->params()->fromPost());
-            if ($this->_addToGroupForm->isValid()) {
-                $group = $this->_addToGroupForm->process(
-                    $this->params()->fromQuery('filter'),
-                    $this->params()->fromQuery('search'),
-                    $this->params()->fromQuery('operator'),
-                    $this->params()->fromQuery('invert')
-                );
-                return $this->redirectToRoute(
-                    'group',
-                    'members',
-                    array('name' => $group['Name'])
-                );
-            }
-        }
-        return array('form' => $this->_addToGroupForm);
     }
 
     /**

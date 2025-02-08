@@ -1,0 +1,64 @@
+{* Add clients to new or existing group. *}
+{layout ../../MainMenu/GroupMenuLayout.latte}
+
+{block content}
+
+<link rel="stylesheet" href="{assetUrl('css/form_addtogroup.css')}">
+<script type="module" src="{assetUrl('js/form_addtogroup.js')}"></script>
+
+<h1>{translate('Save to group')}</h1>
+
+<div class="form form_addtogroup">
+    <form method="POST" action="{pathForRoute(addGroup)}" id="form_addtogroup">
+        {* Most elements are kept outside of this form because not all of them
+        should become part of submitted data. More elements are added below. *}
+        <input type="hidden" name="csrfToken" value="{csrfToken()}">
+
+        <input type="hidden" name="filter" value="{$filter}">
+        <input type="hidden" name="search" value="{$search}">
+        <input type="hidden" name="operator" value="{$operator}">
+        <input type="hidden" name="invert" value="{$invert}">
+    </form>
+
+    {* Linked to form. Kept outside because of CSS rules. *}
+    <label class="what">
+        <input type="radio" name="membershipType" value="0" form="form_addtogroup" checked>
+        {translate('Store search parameters. Group memberships will be updated automatically.')}
+    </label>
+    <label class="what">
+        <input type="radio" name="membershipType" value="1" form="form_addtogroup">
+        {translate('Add current search results. Group memberships will be set only this time.')}
+    </label>
+    <label class="what">
+        <input type="radio" name="membershipType" value="2" form="form_addtogroup">
+        {translate('Exclude search results from a group.')}
+    </label>
+
+    {* These radio buttons are not part of the form. They are handled by JS only and not part of submitted form data. *}
+    <label class="where">
+        <input type="radio" name="where" value="new" checked>
+        {translate('Store in new group')}
+    </label>
+    <label class="where">
+        <input type="radio" name="where" value="existing">
+        {translate('Store in existing group')}
+    </label>
+
+    {* Remaining elements are linked to the form again. *}
+    <label>
+        <span>{translate('Name')}</span>
+        <input type="text" name="name" required maxlength="255" form="form_addtogroup" data-validationmessage="{translate('The name already exists')}">
+    </label>
+    <label>
+        <span>{translate('Description')}</span>
+        <input type="text" name="description" maxlength="255" form="form_addtogroup">
+    </label>
+
+    <label style="display: none;"> {* Inline style prevents element from briefly flashing up before script hides it *}
+        <span>Gruppe</span>
+        <select name="group" form="form_addtogroup">
+            <option n:foreach="$groups as $group">{$group->name}</option>
+        </select>
+    </label>
+    <button type="submit" form="form_addtogroup">{translate('OK')}</button>
+</div>

@@ -31,12 +31,12 @@ use ReturnTypeWillChange;
  * defines registry data to be collected by agents, and also represents the base
  * value of inventored registry data.
  *
- * @property integer $Id ID
- * @property string $Name Userdefined display name
- * @property integer $RootKey Root key, one of the HKEY_* constants
- * @property string $SubKeys Path to the key that contains the value
- * @property string $Value Registry value to inventory (NULL for all values)
- * @property-read string $FullPath Textual representation of configured value
+ * @property integer $id ID
+ * @property string $name Userdefined display name
+ * @property integer $rootKey Root key, one of the HKEY_* constants
+ * @property string $subKeys Path to the key that contains the value
+ * @property string $value Registry value to inventory (NULL for all values)
+ * @property-read string $fullPath Textual representation of configured value
  */
 class Value extends \Model\AbstractModel
 {
