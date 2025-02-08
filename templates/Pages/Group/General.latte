@@ -1,0 +1,28 @@
+{layout ../../MainMenu/GroupMenuLayout.latte}
+{block content}
+{include Header.latte}
+
+<table class="textnormalsize">
+    <tr>
+        <td class="label">{translate('Name')}</td>
+        <td>{$group->name}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('ID')}</td>
+        <td>{$group->id}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('Description')}</td>
+        <td>{$group->description}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('Creation date')}</td>
+        <td>{$group->creationDate|localDate: date: full, time: medium}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('SQL query')}</td>
+        <td>
+            <code>{$group->dynamicMembersSql}</code>
+        </td>
+    </tr>
+</table>

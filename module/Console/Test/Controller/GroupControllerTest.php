@@ -26,8 +26,6 @@ use Console\Form\ClientConfig;
 use Console\Test\AbstractControllerTestCase;
 use Console\View\Helper\Form\ClientConfig as FormClientConfig;
 use Console\View\Helper\GroupHeader;
-use Laminas\I18n\View\Helper\DateFormat;
-use Model\Group\Group;
 use Model\Group\GroupManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -76,49 +74,6 @@ class GroupControllerTest extends AbstractControllerTestCase
             'Die angeforderte Gruppe existiert nicht.',
             $this->getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
         );
-    }
-
-    public function testGeneralAction()
-    {
-        $url = '/console/group/general/?name=test';
-        $creationDate = new \DateTime();
-
-        /** @var MockObject|Group */
-        $group = $this->createMock(Group::class);
-        $group->method('offsetGet')->willReturnMap([
-            ['Name', 'groupName'],
-            ['Id', 'groupID'],
-            ['Description', 'groupDescription'],
-            ['CreationDate', $creationDate],
-            ['DynamicMembersSql', 'groupSql'],
-        ]);
-        $group->method('__get')->with('name')->willReturn('test');
-
-        $this->_groupManager->expects($this->once())
-            ->method('getGroup')
-            ->with('test')
-            ->willReturn($group);
-
-        $dateFormat = $this->createMock(DateFormat::class);
-        $dateFormat->expects($this->once())
-            ->method('__invoke')
-            ->with($creationDate, \IntlDateFormatter::FULL, \IntlDateFormatter::MEDIUM)
-            ->willReturn('date_create');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('dateFormat', $dateFormat);
-
-        $this->dispatch($url);
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains(
-            "//ul[@class='navigation navigation_details']/li[@class='active']/a[@href='/route/showGroupGeneral?name=test']",
-            'Allgemein'
-        );
-        $this->assertXpathQuery('//td[text()="Name"]/following::td[text()="groupName"]');
-        $this->assertXpathQuery('//td[text()="ID"]/following::td[text()="groupID"]');
-        $this->assertXpathQuery('//td[text()="Beschreibung"]/following::td[text()="groupDescription"]');
-        $this->assertXpathQuery(
-            '//td[text()="Erstellungsdatum"]/following::td[text()="date_create"]'
-        );
-        $this->assertXpathQuery("//td[text()='SQL-Abfrage']/following::td/code[text()='\ngroupSql\n']");
     }
 
     public function testConfigurationActionGet()

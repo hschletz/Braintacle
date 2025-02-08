@@ -49,6 +49,7 @@ class Router
             $group->post('/group', Group\Add\AddToGroupFormHandler::class)->setName('addGroup');
             $group->delete('/group', Group\DeleteHandler::class)->setName('deleteGroup');
             $group->get('/group/excluded', Group\Members\ExcludedPageHandler::class)->setName('showGroupExcluded');
+            $group->get('/group/general', Group\GeneralPageHandler::class)->setName('showGroupGeneral');
             $group->get('/group/members', Group\Members\MembersPageHandler::class)->setName('showGroupMembers');
             $group->get('/group/packages', Group\Packages\ShowPackagesHandler::class)->setName('showGroupPackages');
             $group->post('/group/packages', Group\Packages\AssignPackagesHandler::class)->setName('assignPackageToGroup');
@@ -79,7 +80,6 @@ class Router
             $group->get('/console/client/virtualmachines', ApplicationBridge::class)->setName('showClientVirtualMachines');
             $group->get('/console/client/windows', ApplicationBridge::class)->setName('showClientWindows');
             $group->get('/console/group/add/', Group\Add\AddToGroupPageHandler::class)->setName('addGroupPage');
-            $group->get('/console/group/general', ApplicationBridge::class)->setName('showGroupGeneral');
             $group->get('/console/group/configuration', ApplicationBridge::class)->setName('showGroupConfiguration');
             $group->get('/console/licenses/index', ApplicationBridge::class)->setName('licensesPage');
             $group->get('/console/network/index', ApplicationBridge::class)->setName('networkPage');

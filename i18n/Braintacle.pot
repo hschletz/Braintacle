@@ -270,7 +270,6 @@ msgstr ""
 #: module/Console/views/console/client/printers.php
 #: module/Console/views/console/client/system.php
 #: module/Console/views/console/client/virtualmachines.php
-#: module/Console/views/console/group/general.php
 #: module/Console/views/console/network/index.php
 #: module/Console/views/console/package/index.php
 #: templates/Pages/Client/Packages.latte
@@ -279,6 +278,7 @@ msgstr ""
 #: templates/Pages/Duplicates/Overview.latte
 #: templates/Pages/Group/AddToGroup.latte
 #: templates/Pages/Group/Excluded.latte
+#: templates/Pages/Group/General.latte
 #: templates/Pages/Group/Members.latte
 #: templates/Pages/Group/Overview.latte
 #: templates/Pages/Software.latte
@@ -317,9 +317,9 @@ msgstr ""
 #: module/Console/views/console/client/network.php
 #: module/Console/views/console/client/printers.php
 #: module/Console/views/console/client/system.php
-#: module/Console/views/console/group/general.php
 #: module/Console/views/console/network/showidentified.php
 #: templates/Pages/Group/AddToGroup.latte
+#: templates/Pages/Group/General.latte
 #: templates/Pages/Group/Overview.latte
 msgid "Description"
 msgstr ""
@@ -1084,9 +1084,9 @@ msgid "Import locally generated inventory data"
 msgstr ""
 
 #: module/Console/views/console/client/index.php
-#: module/Console/views/console/group/general.php
 #: templates/Pages/Client/General.latte
 #: templates/Pages/Duplicates/ManageDuplicates.latte
+#: templates/Pages/Group/General.latte
 msgid "ID"
 msgstr ""
 
@@ -1350,7 +1350,7 @@ msgid "Mountpoint"
 msgstr ""
 
 #: module/Console/views/console/client/storage.php
-#: module/Console/views/console/group/general.php
+#: templates/Pages/Group/General.latte
 #: templates/Pages/Group/Overview.latte
 msgid "Creation date"
 msgstr ""
@@ -1397,10 +1397,6 @@ msgstr ""
 
 #: module/Console/views/console/client/windows.php
 msgid "Product key (reported by agent)"
-msgstr ""
-
-#: module/Console/views/console/group/general.php
-msgid "SQL query"
 msgstr ""
 
 #: module/Console/views/console/licenses/index.php
@@ -1838,6 +1834,10 @@ msgstr ""
 
 #: templates/Pages/Group/AddToGroup.latte
 msgid "Store in existing group"
+msgstr ""
+
+#: templates/Pages/Group/General.latte
+msgid "SQL query"
 msgstr ""
 
 #: templates/Pages/Group/Header.latte

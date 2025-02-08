@@ -261,15 +261,14 @@ msgstr "Import"
 #: module/Console/views/console/client/printers.php
 #: module/Console/views/console/client/system.php
 #: module/Console/views/console/client/virtualmachines.php
-#: module/Console/views/console/group/general.php
 #: module/Console/views/console/network/index.php
 #: module/Console/views/console/package/index.php
 #: templates/Pages/Client/Packages.latte templates/Pages/Client/Software.latte
 #: templates/Pages/Duplicates/ManageDuplicates.latte
 #: templates/Pages/Duplicates/Overview.latte
 #: templates/Pages/Group/AddToGroup.latte templates/Pages/Group/Excluded.latte
-#: templates/Pages/Group/Members.latte templates/Pages/Group/Overview.latte
-#: templates/Pages/Software.latte
+#: templates/Pages/Group/General.latte templates/Pages/Group/Members.latte
+#: templates/Pages/Group/Overview.latte templates/Pages/Software.latte
 msgid "Name"
 msgstr "Name"
 
@@ -295,9 +294,9 @@ msgstr "Werte"
 #: module/Console/views/console/client/network.php
 #: module/Console/views/console/client/printers.php
 #: module/Console/views/console/client/system.php
-#: module/Console/views/console/group/general.php
 #: module/Console/views/console/network/showidentified.php
-#: templates/Pages/Group/AddToGroup.latte templates/Pages/Group/Overview.latte
+#: templates/Pages/Group/AddToGroup.latte templates/Pages/Group/General.latte
+#: templates/Pages/Group/Overview.latte
 msgid "Description"
 msgstr "Beschreibung"
 
@@ -1066,9 +1065,9 @@ msgid "Free space (MB)"
 msgstr "Freier Speicherplatz (MB)"
 
 #: module/Console/views/console/client/index.php
-#: module/Console/views/console/group/general.php
 #: templates/Pages/Client/General.latte
 #: templates/Pages/Duplicates/ManageDuplicates.latte
+#: templates/Pages/Group/General.latte
 msgid "ID"
 msgstr "ID"
 
@@ -1237,8 +1236,7 @@ msgid "Registry Keys"
 msgstr "Registry-Schlüssel"
 
 #: module/Console/views/console/client/storage.php
-#: module/Console/views/console/group/general.php
-#: templates/Pages/Group/Overview.latte
+#: templates/Pages/Group/General.latte templates/Pages/Group/Overview.latte
 msgid "Creation date"
 msgstr "Erstellungsdatum"
 
@@ -1344,10 +1342,6 @@ msgstr "Besitzer"
 #: module/Console/views/console/client/windows.php
 msgid "Product key (reported by agent)"
 msgstr "Lizenzschlüssel (vom Agenten ermittelt)"
-
-#: module/Console/views/console/group/general.php
-msgid "SQL query"
-msgstr "SQL-Abfrage"
 
 #: module/Console/views/console/licenses/index.php
 msgid "Manually entered Windows product keys"
@@ -1788,6 +1782,10 @@ msgid ""
 msgstr ""
 "Suchparameter speichern. Gruppenmitgliedschaften werden automatisch "
 "aktualisiert."
+
+#: templates/Pages/Group/General.latte
+msgid "SQL query"
+msgstr "SQL-Abfrage"
 
 #: templates/Pages/Group/Header.latte
 msgid "Details for group '%s'"

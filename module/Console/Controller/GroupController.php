@@ -80,16 +80,6 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Show general information about a group
-     *
-     * @return array group
-     */
-    public function generalAction()
-    {
-        return array('group' => $this->_currentGroup);
-    }
-
-    /**
      * Group configuration form
      *
      * @return array|\Laminas\Http\Response array(form, group) or redirect response
