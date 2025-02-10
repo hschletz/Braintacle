@@ -35,6 +35,7 @@ class Router
 
         // All other routes get LoginMiddleware.
         $app->group('', function (RouteCollectorProxyInterface $group) {
+            $group->get('/client{id}/bios', Client\SubPage\Bios::class)->setName('showClientBios');
             $group->get('/client/{id}/export', Client\ExportHandler::class)->setName('export');
             $group->get('/client/{id}/general', Client\SubPage\General::class)->setName('showClientGeneral');
             $group->get('/client/{id}/groups', Client\Groups\GroupsPageHandler::class)->setName('showClientGroups');
@@ -64,7 +65,6 @@ class Router
             // to provide an alternative MVC-style URL that is composed by
             // legacy methods.
             $group->get('/console/accounts/index', ApplicationBridge::class)->setName('preferencesUsersList');
-            $group->get('/console/client/bios', ApplicationBridge::class)->setName('showClientBios');
             $group->get('/console/client/configuration', ApplicationBridge::class)->setName('showClientConfiguration');
             $group->get('/console/client/customfields', ApplicationBridge::class)->setName('showClientCustomFields');
             $group->get('/console/client/delete', ApplicationBridge::class)->setName('deleteClient');

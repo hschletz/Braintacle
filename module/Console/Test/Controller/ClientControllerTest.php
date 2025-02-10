@@ -1284,26 +1284,6 @@ class ClientControllerTest extends AbstractControllerTestCase
         $this->assertXpathQueryCount('//th', 5);
     }
 
-    public function testBiosAction()
-    {
-        $client = new Client();
-        $client->id = 1;
-        $client->name = 'test';
-        $client->biosManufacturer = 'manufacturer';
-        $client->biosDate = 'date';
-        $client->biosVersion = 'line1;line2';
-        $client['Windows'] = null;
-
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/bios/?id=1');
-        $this->assertResponseStatusCode(200);
-        $query = "//table/tr/td[text()='\n%s\n']/following::td[1][text()='\n%s\n']";
-        $this->assertXPathQuery(sprintf($query, 'Hersteller', 'manufacturer'));
-        $this->assertXPathQuery(sprintf($query, 'Datum', 'date'));
-        $this->assertXpathQueryContentContains('//table/tr[3]/td[2][name(node()[2])="br"]', "\nline1\nline2\n");
-    }
-
     public function testSystemActionUnixNoSlots()
     {
         $controllers = array(

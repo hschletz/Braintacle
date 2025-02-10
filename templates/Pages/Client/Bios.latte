@@ -1,0 +1,19 @@
+{layout ClientMenuLayout.latte}
+{block content}
+
+{include Header.latte}
+
+<table class="topspacing textnormalsize">
+    <tr>
+        <td class="label">{translate('Manufacturer')}</td>
+        <td>{$client->biosManufacturer}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('Date')}</td>
+        <td>{$client->biosDate}</td>
+    </tr>
+    <tr>
+        <td class="label">{translate('Version')}</td>
+        <td>{$client->biosVersion}</td>
+    </tr>
+</table>
