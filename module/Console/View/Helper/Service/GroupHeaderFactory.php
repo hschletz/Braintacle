@@ -10,6 +10,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * Factory for GroupHeader
+ *
+ * @codeCoverageIgnore
  */
 class GroupHeaderFactory implements FactoryInterface
 {

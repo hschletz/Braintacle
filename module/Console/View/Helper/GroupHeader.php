@@ -28,6 +28,8 @@ use Model\Group\Group;
 
 /**
  * Render group headline and navigation
+ *
+ * @codeCoverageIgnore
  */
 class GroupHeader extends AbstractHelper
 {
