@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<ruleset name="Braintacle">
+    <arg name="extensions" value="php" />
+    <arg name="parallel" value="4" />
+    <arg value="s" />
+
+    <file>development/</file>
+    <file>module/</file>
+    <file>public/</file>
+    <file>src/</file>
+    <file>tests/</file>
+
+    <!--
+    New code is formatted as PER-CS 2.0 which supersedes, but is partially
+    backward incompatible with PSR-12. PHPCS does not incorporate the new
+    standard yet. Apply PSR-12 and add extra rules where necessary.
+    -->
+    <rule ref="PSR12">
+        <!--
+        Standards do not require uppercase constant names, and new code does not
+        declare constants uppercase.
+        -->
+        <exclude name="Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase" />
+
+        <!-- New standard does not use space before anonymous class constructor arguments. -->
+        <exclude name="PSR12.Classes.AnonClassDeclaration.SpaceAfterKeyword" />
+
+        <!--
+        "Closing brace must be on a line by itself" no longer applies to empty
+        method bodies, but cannot be applied selectively.
+        https://github.com/PHPCSStandards/PHP_CodeSniffer/issues/566
+        -->
+        <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine" />
+        <exclude name="Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore" />
+    </rule>
+
+    <!-- Relax some rules for legacy code. -->
+    <rule ref="PSR12.Properties.ConstantVisibility.NotFound">
+        <exclude-pattern>/module/</exclude-pattern>
+    </rule>
+    <rule ref="PSR2.Classes.PropertyDeclaration.Underscore">
+        <exclude-pattern>/module/</exclude-pattern>
+    </rule>
+</ruleset>
