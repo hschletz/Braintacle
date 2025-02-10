@@ -12,6 +12,7 @@ use Braintacle\Test\HttpHandlerTestTrait;
 use Formotron\DataProcessor;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery\Mock;
 use Model\Group\Group;
 use Model\Group\GroupManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -47,7 +48,10 @@ class AddToGroupFormHandlerTest extends TestCase
         );
 
         $routeHelper = $this->createMock(RouteHelper::class);
-        $routeHelper->method('getPathForRoute')->with('showGroupMembers', [], ['name' => '_name'])->willReturn('redirect');
+        $routeHelper
+            ->method('getPathForRoute')
+            ->with('showGroupMembers', [], ['name' => '_name'])
+            ->willReturn('redirect');
 
         $handler = new AddToGroupFormHandler($this->response, $dataProcessor, $groupManager, $routeHelper);
         $response = $handler->handle($this->request->withParsedBody($parsedBody));
@@ -66,6 +70,7 @@ class AddToGroupFormHandlerTest extends TestCase
 
         $group = $this->createMock(Group::class);
 
+        /** @var Mock|GroupManager */
         $groupManager = Mockery::mock(GroupManager::class);
         $groupManager->shouldReceive('createGroup')->once()->ordered()->with('_name', '_description');
         $groupManager->shouldReceive('getGroup')->ordered()->with('_name')->andReturn($group);

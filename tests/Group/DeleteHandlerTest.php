@@ -33,7 +33,7 @@ class DeleteHandlerTest extends TestCase
         $dataProcessor->method('process')->with($queryParams)->willReturn($requestParameters);
 
         $translator = $this->createStub(TranslatorInterface::class);
-        $translator->method('translate')->willReturnCallback(fn ($message) => '_' . $message);
+        $translator->method('translate')->willReturnCallback(fn($message) => '_' . $message);
 
         $handler = new DeleteHandler($this->response, $dataProcessor, $groupManager, $flashMessages, $translator);
 
@@ -47,7 +47,10 @@ class DeleteHandlerTest extends TestCase
         $groupManager->expects($this->once())->method('deleteGroup');
 
         $flashMessages = $this->createMock(FlashMessages::class);
-        $flashMessages->expects($this->once())->method('add')->with(FlashMessages::Success, "_Group 'groupName' was successfully deleted.");
+        $flashMessages
+            ->expects($this->once())
+            ->method('add')
+            ->with(FlashMessages::Success, "_Group 'groupName' was successfully deleted.");
 
         $response = $this->getResponse($groupManager, $flashMessages);
         $this->assertResponseStatusCode(200, $response);

@@ -47,7 +47,8 @@ class Container extends DIContainer
             Adapter::class => factory(AdapterFactory::class),
             AppConfig::class => create(AppConfig::class)->constructor(
                 new Filesystem(),
-                getenv('BRAINTACLE_CONFIG') ?: InstalledVersions::getRootPackage()['install_path'] . '/config/braintacle.ini',
+                getenv('BRAINTACLE_CONFIG') ?:
+                    InstalledVersions::getRootPackage()['install_path'] . '/config/braintacle.ini',
             ),
             AuthenticationServiceInterface::class => get(AuthenticationService::class),
             Client::class => factory(ClientOrGroupFactory::class),

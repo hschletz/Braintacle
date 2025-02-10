@@ -102,8 +102,6 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
 
     /**
      * Show "Display" page
-     *
-     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function displayAction()
     {
@@ -113,8 +111,6 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
 
     /**
      * Show "Inventory" page
-     *
-     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function inventoryAction()
     {
@@ -124,8 +120,6 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
 
     /**
      * Show "Agent" page
-     *
-     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function agentAction()
     {
@@ -135,8 +129,6 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
 
     /**
      * Show "Packages" page
-     *
-     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function packagesAction()
     {
@@ -146,8 +138,6 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
 
     /**
      * Show "Download" page
-     *
-     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function downloadAction()
     {
@@ -157,8 +147,6 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
 
     /**
      * Show "Network scanning" page
-     *
-     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function networkscanningAction()
     {
@@ -168,8 +156,6 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
 
     /**
      * Show "Groups" page
-     *
-     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function groupsAction()
     {
@@ -179,8 +165,6 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
 
     /**
      * Show "Raw data" page
-     *
-     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function rawdataAction()
     {
@@ -190,8 +174,6 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
 
     /**
      * Show "Filters" page
-     *
-     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function filtersAction()
     {
@@ -201,8 +183,6 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
 
     /**
      * Show "System" page
-     *
-     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     public function systemAction()
     {
@@ -344,7 +324,6 @@ class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionContro
      * Standard preferences handling via preferences form subclass
      *
      * @param string $name Name of the form service
-     * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response View model for "form.php" template or redirect response
      */
     protected function useForm($name)
     {

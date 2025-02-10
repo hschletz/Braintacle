@@ -18,13 +18,15 @@ class SetMembershipsHandler implements RequestHandlerInterface
         private ResponseInterface $response,
         private RouteHelper $routeHelper,
         private DataProcessor $dataProcessor,
-    ) {
-    }
+    ) {}
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $groups = $this->dataProcessor->process($request->getParsedBody(), MembershipsFormData::class)->groups;
-        $client = $this->dataProcessor->process($this->routeHelper->getRouteArguments(), ClientRequestParameters::class)->client;
+        $client = $this->dataProcessor->process(
+            $this->routeHelper->getRouteArguments(),
+            ClientRequestParameters::class
+        )->client;
         $client->setGroupMemberships($groups);
 
         return $this->response->withStatus(302)->withHeader(

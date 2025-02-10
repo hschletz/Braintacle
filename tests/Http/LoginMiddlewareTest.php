@@ -35,7 +35,10 @@ class LoginMiddlewareTest extends TestCase
     public function testProcessNotAuthenticated()
     {
         $session = $this->createMock(Session::class);
-        $session->expects($this->once())->method('offsetSet')->with('originalUri', $this->identicalTo($this->request->getUri()));
+        $session
+            ->expects($this->once())
+            ->method('offsetSet')
+            ->with('originalUri', $this->identicalTo($this->request->getUri()));
 
         $routeHelper = $this->createMock(RouteHelper::class);
         $routeHelper->method('getPathForRoute')->with('loginPage')->willReturn('/login');

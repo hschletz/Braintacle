@@ -71,7 +71,10 @@ class OverviewHandlerTest extends TestCase
         $xPath = $this->getXpath($duplicatesManager, []);
         $this->assertXpathCount(1, $xPath, '//tr');
         $this->assertXpathMatches($xPath, "//td[1][normalize-space(text())='$label']");
-        $this->assertXpathMatches($xPath, "//td[2]/a[@href='manageDuplicates/criterion={$criterion->value}?'][normalize-space(text())='$count']");
+        $this->assertXpathMatches(
+            $xPath,
+            "//td[2]/a[@href='manageDuplicates/criterion={$criterion->value}?'][normalize-space(text())='$count']"
+        );
         $this->assertNotXpathMatches($xPath, '//p');
     }
 

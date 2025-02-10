@@ -104,7 +104,10 @@ class SoftwareManager
 
         $select->order(match ($orderBy) {
             SoftwarePageColumn::Name => ['software_installations.name' => $direction->value],
-            SoftwarePageColumn::NumClients => ['num_clients' => $direction->value, 'software_installations.name' => 'asc']
+            SoftwarePageColumn::NumClients => [
+                'num_clients' => $direction->value,
+                'software_installations.name' => 'asc',
+            ],
         });
 
         // Wrap into a ResultSet to support buffering

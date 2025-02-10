@@ -45,9 +45,7 @@ use Psr\Container\ContainerInterface;
  */
 class ClientManager
 {
-    public function __construct(private ContainerInterface $container)
-    {
-    }
+    public function __construct(private ContainerInterface $container) {}
 
     /**
      * Return clients matching criteria
@@ -56,7 +54,7 @@ class ClientManager
      * @param string $order Property to sort by
      * @param ?string $direction One of [asc|desc]
      * @param string|array $filter Name or array of names of a pre-defined filter routine
-     * @param string|array|Group $search Search parameter(s) passed to the filter. May be case sensitive depending on DBMS.
+     * @param string|array|Group $search Search parameter(s) passed to filter. May be case sensitive depending on DBMS.
      * @param string|array $operators Comparison operator(s)
      * @param bool|array $invert Invert query results (return clients not matching criteria)
      * @param bool $addSearchColumns Add columns with search criteria (default), otherwise only columns from $properties
@@ -620,7 +618,8 @@ class ClientManager
             }
             // include NULL values
             $where = array(
-                "($conditions) IS NOT " . $this->container->get(AbstractDatabase::class)->booleanLiteral(true) => $operands
+                "($conditions) IS NOT " . $this->container->get(AbstractDatabase::class)->booleanLiteral(true)
+                => $operands
             );
         }
         $select->where($where);

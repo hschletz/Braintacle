@@ -36,7 +36,13 @@ class ShowLoginFormHandlerTest extends TestCase
 
         $templateEngine = $this->createTemplateEngine();
 
-        $handler = new ShowLoginFormHandler($this->response, $routeHelper, $authenticationService, $session, $templateEngine);
+        $handler = new ShowLoginFormHandler(
+            $this->response,
+            $routeHelper,
+            $authenticationService,
+            $session,
+            $templateEngine,
+        );
         $response = $handler->handle($this->request);
         $this->assertResponseStatusCode(302, $response);
         $this->assertResponseHeaders(['Location' => ['/clients']], $response);
@@ -55,7 +61,13 @@ class ShowLoginFormHandlerTest extends TestCase
 
         $templateEngine = $this->createTemplateEngine();
 
-        $handler = new ShowLoginFormHandler($this->response, $routeHelper, $authenticationService, $session, $templateEngine);
+        $handler = new ShowLoginFormHandler(
+            $this->response,
+            $routeHelper,
+            $authenticationService,
+            $session,
+            $templateEngine,
+        );
         $response = $handler->handle($this->request);
         $this->assertResponseStatusCode(200, $response);
 
@@ -80,7 +92,13 @@ class ShowLoginFormHandlerTest extends TestCase
 
         $templateEngine = $this->createTemplateEngine();
 
-        $handler = new ShowLoginFormHandler($this->response, $routeHelper, $authenticationService, $session, $templateEngine);
+        $handler = new ShowLoginFormHandler(
+            $this->response,
+            $routeHelper,
+            $authenticationService,
+            $session,
+            $templateEngine,
+        );
         $response = $handler->handle($this->request);
         $this->assertResponseStatusCode(200, $response);
 

@@ -31,6 +31,8 @@ use Symfony\Component\Console\SingleCommandApplication;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
+
 error_reporting(-1);
 
 require_once(__DIR__ . '/../vendor/autoload.php');

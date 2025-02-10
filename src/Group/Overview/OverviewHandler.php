@@ -21,12 +21,14 @@ class OverviewHandler implements RequestHandlerInterface
         private GroupManager $groupManager,
         private TemplateEngine $templateEngine,
         private FlashMessages $flashMessages,
-    ) {
-    }
+    ) {}
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $requestParameters = $this->dataProcessor->process($request->getQueryParams(), OverviewRequestParameters::class);
+        $requestParameters = $this->dataProcessor->process(
+            $request->getQueryParams(),
+            OverviewRequestParameters::class
+        );
         $groups = $this->groupManager->getGroups(
             null,
             null,

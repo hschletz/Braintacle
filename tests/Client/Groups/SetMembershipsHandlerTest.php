@@ -25,7 +25,10 @@ class SetMembershipsHandlerTest extends TestCase
 
         $routeHelper = $this->createMock(RouteHelper::class);
         $routeHelper->method('getRouteArguments')->willReturn($routeArguments);
-        $routeHelper->method('getPathForRoute')->with('showClientGroups', ['id' => $clientId], [])->willReturn($redirectTo);
+        $routeHelper
+            ->method('getPathForRoute')
+            ->with('showClientGroups', ['id' => $clientId], [])
+            ->willReturn($redirectTo);
 
         $client = $this->createMock(Client::class);
         $client->id = (int) $clientId;

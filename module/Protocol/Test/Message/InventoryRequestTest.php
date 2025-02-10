@@ -57,7 +57,9 @@ class InventoryRequestTest extends \PHPUnit\Framework\TestCase
         $request->shouldReceive('appendTextNode')->once()->with('DEVICEID', 'id_string');
         $request->shouldReceive('appendTextNode')->once()->with('QUERY', 'INVENTORY');
         // prototype should have been cloned
-        $request->shouldReceive('appendChild')->once()->withArgs(fn ($arg) => $arg instanceof Content && $arg !== $content);
+        $request->shouldReceive('appendChild')->once()->withArgs(
+            fn($arg) => $arg instanceof Content && $arg !== $content
+        );
 
         $document = $this->createPartialMock(InventoryRequest::class, ['createRoot']);
         $document->method('createRoot')->with('REQUEST')->willReturn($request);

@@ -47,6 +47,7 @@ class InventoryTest extends AbstractFormTestCase
         $view = $this->createView();
         $html = $this->_form->render($view);
         $xPath = $this->createXpath($html);
+        // phpcs:disable Generic.Files.LineLength.TooLong
         $this->assertXpathCount(
             1,
             $xPath,

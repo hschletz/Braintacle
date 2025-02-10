@@ -37,7 +37,10 @@ class OverviewHandlerTest extends TestCase
         $requestParameters = new OverviewRequestParameters();
 
         $dataProcessor = $this->createMock(DataProcessor::class);
-        $dataProcessor->method('process')->with($queryParams, OverviewRequestParameters::class)->willReturn($requestParameters);
+        $dataProcessor
+            ->method('process')
+            ->with($queryParams, OverviewRequestParameters::class)
+            ->willReturn($requestParameters);
 
         $groupManager = $this->createMock(GroupManager::class);
         $groupManager->method('getGroups')->with(null, null, 'Name', 'asc')->willReturn(new ArrayIterator($groups));
@@ -109,12 +112,18 @@ class OverviewHandlerTest extends TestCase
         $groupManager = $this->createStub(GroupManager::class);
 
         $templateEngine = $this->createMock(TemplateEngine::class);
-        $templateEngine->expects($this->once())->method('render')->with($this->anything(), $this->callback(function ($context) {
-            $this->assertEquals('Description', $context['order']);
-            $this->assertEquals(Direction::Descending, $context['direction']);
+        $templateEngine
+            ->expects($this->once())
+            ->method('render')
+            ->with(
+                $this->anything(),
+                $this->callback(function ($context) {
+                    $this->assertEquals('Description', $context['order']);
+                    $this->assertEquals(Direction::Descending, $context['direction']);
 
-            return true;
-        }));
+                    return true;
+                })
+            );
 
         $flashMessages = $this->createStub(FlashMessages::class);
 

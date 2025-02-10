@@ -107,7 +107,15 @@ class RawDataTest extends AbstractFormTestCase
         $html = $this->_form->renderFieldset($view, $preferences);
         $xPath = $this->createXpath($html);
         $this->assertXpathCount(2, $xPath, '//select[@name="saveFormat"]/option');
-        $this->assertXpathCount(1, $xPath, '//select[@name="saveFormat"]/option[@value="XML"][text()="XML, unkomprimiert"]');
-        $this->assertXpathCount(1, $xPath, '//select[@name="saveFormat"]/option[@value="OCS"][text()="XML, zlib-komprimiert"]');
+        $this->assertXpathCount(
+            1,
+            $xPath,
+            '//select[@name="saveFormat"]/option[@value="XML"][text()="XML, unkomprimiert"]'
+        );
+        $this->assertXpathCount(
+            1,
+            $xPath,
+            '//select[@name="saveFormat"]/option[@value="OCS"][text()="XML, zlib-komprimiert"]'
+        );
     }
 }

@@ -59,7 +59,10 @@ class AddToGroupPageHandlerTest extends TestCase
 
         $this->assertXpathMatches($xPath, '//form[@method="POST"][@action="addGroup/?"][@id="form_addtogroup"]');
 
-        $this->assertXpathMatches($xPath, '//form[@id="form_addtogroup"]/input[@name="csrfToken"][@value="csrf_token"]');
+        $this->assertXpathMatches(
+            $xPath,
+            '//form[@id="form_addtogroup"]/input[@name="csrfToken"][@value="csrf_token"]'
+        );
         $this->assertXpathMatches($xPath, '//form[@id="form_addtogroup"]/input[@name="filter"][@value="_filter"]');
         $this->assertXpathMatches($xPath, '//form[@id="form_addtogroup"]/input[@name="search"][@value="_search"]');
         $this->assertXpathMatches($xPath, '//form[@id="form_addtogroup"]/input[@name="operator"][@value="eq"]');

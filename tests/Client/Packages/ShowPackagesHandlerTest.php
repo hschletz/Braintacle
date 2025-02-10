@@ -19,6 +19,8 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 
+// phpcs:disable Generic.Files.LineLength.TooLong
+
 #[CoversClass(ShowPackagesHandler::class)]
 #[UsesClass(TemplateEngine::class)]
 #[UsesClass(TemplateLoader::class)]
@@ -50,7 +52,10 @@ class ShowPackagesHandlerTest extends TestCase
         $templateEngine = $this->createTemplateEngine();
 
         $dataProcessor = $this->createMock(DataProcessor::class);
-        $dataProcessor->method('process')->with($routeArguments, ClientRequestParameters::class)->willReturn($requestData);
+        $dataProcessor
+            ->method('process')
+            ->with($routeArguments, ClientRequestParameters::class)
+            ->willReturn($requestData);
 
         $handler = new ShowPackagesHandler($this->response, $routeHelper, $dataProcessor, $templateEngine);
 
@@ -61,7 +66,10 @@ class ShowPackagesHandlerTest extends TestCase
     {
         $response = $this->handleRequest([], []);
         $xPath = $this->getXPathFromMessage($response);
-        $this->assertEquals('_Packages', $xPath->evaluate('string(//*[contains(@class, "navigation_details")]/li[@class="active"]/a)'));
+        $this->assertEquals(
+            '_Packages',
+            $xPath->evaluate('string(//*[contains(@class, "navigation_details")]/li[@class="active"]/a)')
+        );
     }
 
     public function testHeading()
@@ -115,25 +123,46 @@ class ShowPackagesHandlerTest extends TestCase
         $this->assertXpathMatches($xPath, $tr . '[2]/td[2][text()="_Pending"][@class="package_pending"]');
         $this->assertXpathMatches($xPath, $tr . '[2]/td[3][text()="11.01.24, 16:56"]');
         $this->assertNotXpathMatches($xPath, $tr . '[2]/td[4]/*');
-        $this->assertXpathMatches($xPath, $tr . '[2]/td[5]/button[@data-package="<package1>"][@data-action="remove"][normalize-space(text())="_remove"]');
+        $this->assertXpathMatches(
+            $xPath,
+            $tr . '[2]/td[5]/button[@data-package="<package1>"][@data-action="remove"][normalize-space(text())="_remove"]'
+        );
 
         $this->assertXpathMatches($xPath, $tr . '[3]/td[1][text()="<package2>"]');
         $this->assertXpathMatches($xPath, $tr . '[3]/td[2][text()="_Running"][@class="package_running"]');
         $this->assertXpathMatches($xPath, $tr . '[3]/td[3][text()="12.01.24, 16:56"]');
-        $this->assertXpathMatches($xPath, $tr . '[3]/td[4]/button[@data-package="<package2>"][@data-action="reset"][normalize-space(text())="_reset"]');
-        $this->assertXpathMatches($xPath, $tr . '[3]/td[5]/button[@data-package="<package2>"][@data-action="remove"][normalize-space(text())="_remove"]');
+        $this->assertXpathMatches(
+            $xPath,
+            $tr . '[3]/td[4]/button[@data-package="<package2>"][@data-action="reset"][normalize-space(text())="_reset"]'
+        );
+        $this->assertXpathMatches(
+            $xPath,
+            $tr . '[3]/td[5]/button[@data-package="<package2>"][@data-action="remove"][normalize-space(text())="_remove"]'
+        );
 
         $this->assertXpathMatches($xPath, $tr . '[4]/td[1][text()="<package3>"]');
         $this->assertXpathMatches($xPath, $tr . '[4]/td[2][text()="_Success"][@class="package_success"]');
         $this->assertXpathMatches($xPath, $tr . '[4]/td[3][text()="13.01.24, 16:56"]');
-        $this->assertXpathMatches($xPath, $tr . '[4]/td[4]/button[@data-package="<package3>"][@data-action="reset"][normalize-space(text())="_reset"]');
-        $this->assertXpathMatches($xPath, $tr . '[4]/td[5]/button[@data-package="<package3>"][@data-action="remove"][normalize-space(text())="_remove"]');
+        $this->assertXpathMatches(
+            $xPath,
+            $tr . '[4]/td[4]/button[@data-package="<package3>"][@data-action="reset"][normalize-space(text())="_reset"]'
+        );
+        $this->assertXpathMatches(
+            $xPath,
+            $tr . '[4]/td[5]/button[@data-package="<package3>"][@data-action="remove"][normalize-space(text())="_remove"]'
+        );
 
         $this->assertXpathMatches($xPath, $tr . '[5]/td[1][text()="<package4>"]');
         $this->assertXpathMatches($xPath, $tr . '[5]/td[2][text()="<ERROR>"][@class="package_error"]');
         $this->assertXpathMatches($xPath, $tr . '[5]/td[3][text()="14.01.24, 16:56"]');
-        $this->assertXpathMatches($xPath, $tr . '[5]/td[4]/button[@data-package="<package4>"][@data-action="reset"][normalize-space(text())="_reset"]');
-        $this->assertXpathMatches($xPath, $tr . '[5]/td[5]/button[@data-package="<package4>"][@data-action="remove"][normalize-space(text())="_remove"]');
+        $this->assertXpathMatches(
+            $xPath,
+            $tr . '[5]/td[4]/button[@data-package="<package4>"][@data-action="reset"][normalize-space(text())="_reset"]'
+        );
+        $this->assertXpathMatches(
+            $xPath,
+            $tr . '[5]/td[5]/button[@data-package="<package4>"][@data-action="remove"][normalize-space(text())="_remove"]'
+        );
     }
 
     public function testAssignablePackages()
@@ -145,7 +174,13 @@ class ShowPackagesHandlerTest extends TestCase
         $this->assertCount(1, $headings);
         $this->assertEquals('_Assign packages', $headings->item(0)->nodeValue);
 
-        $this->assertXpathMatches($xPath, '//form//input[@name="packages[]"][@value="<package1>"]/following-sibling::span[text()="<package1>"]');
-        $this->assertXpathMatches($xPath, '//form//input[@name="packages[]"][@value="<package2>"]/following-sibling::span[text()="<package2>"]');
+        $this->assertXpathMatches(
+            $xPath,
+            '//form//input[@name="packages[]"][@value="<package1>"]/following-sibling::span[text()="<package1>"]'
+        );
+        $this->assertXpathMatches(
+            $xPath,
+            '//form//input[@name="packages[]"][@value="<package2>"]/following-sibling::span[text()="<package2>"]'
+        );
     }
 }

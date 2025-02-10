@@ -51,7 +51,13 @@ class GeneralPageHandlerTest extends TestCase
         $this->assertXpathMatches($xPath, "//td[text()='_Name']/following::td[text()='{$groupName}']");
         $this->assertXpathMatches($xPath, "//td[text()='_ID']/following::td[text()='{$group->id}']");
         $this->assertXpathMatches($xPath, "//td[text()='_Description']/following::td[text()='{$group->description}']");
-        $this->assertXpathMatches($xPath, "//td[text()='_Creation date']/following::td[text()='Sonntag, 19.\xC2\xA0Januar 2025 um 11:12:13']");
-        $this->assertXpathMatches($xPath, "//td[text()='_SQL query']/following::td/code[text()='{$group->dynamicMembersSql}']");
+        $this->assertXpathMatches(
+            $xPath,
+            "//td[text()='_Creation date']/following::td[text()='Sonntag, 19.\xC2\xA0Januar 2025 um 11:12:13']"
+        );
+        $this->assertXpathMatches(
+            $xPath,
+            "//td[text()='_SQL query']/following::td/code[text()='{$group->dynamicMembersSql}']"
+        );
     }
 }

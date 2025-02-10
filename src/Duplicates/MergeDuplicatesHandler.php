@@ -25,8 +25,7 @@ class MergeDuplicatesHandler implements RequestHandlerInterface
         private DuplicatesManager $duplicatesManager,
         private FlashMessages $flashMessages,
         private TranslatorInterface $translator,
-    ) {
-    }
+    ) {}
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -35,7 +34,10 @@ class MergeDuplicatesHandler implements RequestHandlerInterface
         if ($this->validator->isValid()) {
             $data = $this->validator->getData();
             $this->duplicatesManager->merge($data['clients'], $data['mergeOptions']);
-            $this->flashMessages->add(FlashMessages::Success, $this->translator->translate('The selected clients have been merged.'));
+            $this->flashMessages->add(
+                FlashMessages::Success,
+                $this->translator->translate('The selected clients have been merged.')
+            );
 
             return $this->response;
         } else {

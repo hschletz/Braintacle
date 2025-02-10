@@ -18,14 +18,16 @@ class ShowLoginFormHandler implements RequestHandlerInterface
         private AuthenticationServiceInterface $authenticationService,
         private Session $session,
         private TemplateEngine $templateEngine,
-    ) {
-    }
+    ) {}
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if ($this->authenticationService->hasIdentity()) {
             // Don't show the login form if the user is already logged in.
-            return $this->response->withStatus(302)->withHeader('Location', $this->routeHelper->getPathForRoute('clientList'));
+            return $this->response->withStatus(302)->withHeader(
+                'Location',
+                $this->routeHelper->getPathForRoute('clientList')
+            );
         }
 
         if (isset($this->session['invalidCredentials'])) {

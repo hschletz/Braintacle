@@ -25,7 +25,11 @@ class ExistingGroupFormDataTest extends TestCase
     public function testDataProcessing()
     {
         $searchFilterValidator = $this->createMock(SearchFilterValidator::class);
-        $searchFilterValidator->expects($this->once())->method('getValidationErrors')->with('_filter', [])->willReturn([]);
+        $searchFilterValidator
+            ->expects($this->once())
+            ->method('getValidationErrors')
+            ->with('_filter', [])
+            ->willReturn([]);
 
         $group = new Group();
         $groupTransformer = $this->createMock(GroupTransformer::class);

@@ -28,6 +28,8 @@ use Model\Operator\OperatorManager;
 use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
+// phpcs:disable Generic.Files.LineLength.TooLong
+
 /**
  * Tests for Model\Operator\OperatorManager
  */

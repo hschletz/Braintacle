@@ -22,7 +22,11 @@ class SearchParamsTest extends TestCase
     public function testDataProcessing()
     {
         $searchFilterValidator = $this->createMock(SearchFilterValidator::class);
-        $searchFilterValidator->expects($this->once())->method('getValidationErrors')->with('_filter', [])->willReturn([]);
+        $searchFilterValidator
+            ->expects($this->once())
+            ->method('getValidationErrors')
+            ->with('_filter', [])
+            ->willReturn([]);
 
         $dataProcessor = $this->createDataProcessor([SearchFilterValidator::class => $searchFilterValidator]);
         $searchParams = $dataProcessor->process([

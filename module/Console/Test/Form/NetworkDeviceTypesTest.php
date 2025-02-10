@@ -30,6 +30,8 @@ use Laminas\Form\View\Helper\FormElementErrors;
 use Model\Network\DeviceManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
+// phpcs:disable Generic.Files.LineLength.TooLong
+
 /**
  * Tests for NetworkDeviceTypes form
  */

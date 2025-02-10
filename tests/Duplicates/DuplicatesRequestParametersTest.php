@@ -16,7 +16,10 @@ class DuplicatesRequestParametersTest extends TestCase
     public function testDefaultValues()
     {
         $dataProcessor = $this->createDataProcessor();
-        $duplicatesRequestParameters = $dataProcessor->process(['criterion' => 'name'], DuplicatesRequestParameters::class);
+        $duplicatesRequestParameters = $dataProcessor->process(
+            ['criterion' => 'name'],
+            DuplicatesRequestParameters::class
+        );
 
         $this->assertEquals(Criterion::Name, $duplicatesRequestParameters->criterion);
         $this->assertEquals(DuplicatesColumn::Id, $duplicatesRequestParameters->order);

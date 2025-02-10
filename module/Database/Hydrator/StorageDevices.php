@@ -74,7 +74,10 @@ class StorageDevices implements \Laminas\Hydrator\HydratorInterface
     public function extract(object $object): array
     {
         if ($object instanceof AbstractModel && $object->offsetExists('Type') || property_exists($object, 'type')) {
-            if ($object instanceof AbstractModel && $object->offsetExists('Device') || property_exists($object, 'device')) {
+            if (
+                $object instanceof AbstractModel &&
+                $object->offsetExists('Device') || property_exists($object, 'device')
+            ) {
                 // Windows
                 $data = [
                     'manufacturer' => null,

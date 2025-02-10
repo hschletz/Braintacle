@@ -22,7 +22,8 @@
 
 namespace Library;
 
-use Library\Test\View\Helper\AbstractTestCase;
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
+// phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
 
 error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
@@ -36,7 +37,6 @@ date_default_timezone_set('Europe/Berlin');
  * error from a normal EOF). Every other method will cause the calling stream
  * function to fail, allowing testing the error handling in the application.
  */
-// @codingStandardsIgnoreStart
 class StreamWrapperFail
 {
     public function stream_open($path, $mode, $options, &$openedPath)
@@ -49,5 +49,4 @@ class StreamWrapperFail
         return false;
     }
 }
-// @codingStandardsIgnoreEnd
 stream_wrapper_register('fail', 'Library\StreamWrapperFail');

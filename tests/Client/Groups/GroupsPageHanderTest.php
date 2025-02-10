@@ -42,10 +42,17 @@ class GroupsPageHanderTest extends TestCase
         $requestParameters->client = $client;
 
         $dataProcessor = $this->createMock(DataProcessor::class);
-        $dataProcessor->method('process')->with($routeArguments, ClientRequestParameters::class)->willReturn($requestParameters);
+        $dataProcessor
+            ->method('process')
+            ->with($routeArguments, ClientRequestParameters::class)
+            ->willReturn($requestParameters);
 
         $groupManager = $this->createMock(GroupManager::class);
-        $groupManager->expects($this->once())->method('getGroups')->with(null, null, 'Name')->willReturn(new ArrayIterator($groups));
+        $groupManager
+            ->expects($this->once())
+            ->method('getGroups')
+            ->with(null, null, 'Name')
+            ->willReturn(new ArrayIterator($groups));
 
         $routeHelper = $this->createStub(RouteHelper::class);
         $routeHelper->method('getRouteArguments')->willReturn($routeArguments);
@@ -148,6 +155,7 @@ class GroupsPageHanderTest extends TestCase
 
         $xPath = $this->getXpath([$group1, $group2, $group3, $group4], $client);
 
+        // phpcs:disable Generic.Files.LineLength.TooLong
         $this->assertXpathMatches($xPath, '//form[@action="manageGroupMemberships/id=42?"]');
 
         $this->assertXpathMatches($xPath, '//fieldset/legend/a[@href="showGroupGeneral/?name=group1"][text()="group1"]');

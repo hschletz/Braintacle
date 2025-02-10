@@ -31,7 +31,13 @@ class ProcessLoginFormHandlerTest extends TestCase
         $authenticationService->method('hasIdentity')->willReturn(true);
         $authenticationService->expects($this->never())->method('login');
 
-        $handler = new ProcessLoginFormHandler($this->response, $routeHelper, $session, $csrfValidator, $authenticationService);
+        $handler = new ProcessLoginFormHandler(
+            $this->response,
+            $routeHelper,
+            $session,
+            $csrfValidator,
+            $authenticationService,
+        );
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('A user is already logged in.');
@@ -57,7 +63,13 @@ class ProcessLoginFormHandlerTest extends TestCase
         $authenticationService->method('hasIdentity')->willReturn(false);
         $authenticationService->expects($this->never())->method('login');
 
-        $handler = new ProcessLoginFormHandler($this->response, $routeHelper, $session, $csrfValidator, $authenticationService);
+        $handler = new ProcessLoginFormHandler(
+            $this->response,
+            $routeHelper,
+            $session,
+            $csrfValidator,
+            $authenticationService,
+        );
         $response = $handler->handle($request);
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals(['/login'], $response->getHeader('Location'));
@@ -86,7 +98,13 @@ class ProcessLoginFormHandlerTest extends TestCase
         $authenticationService->method('hasIdentity')->willReturn(false);
         $authenticationService->expects($this->once())->method('login')->with('User', 'Password')->willReturn(false);
 
-        $handler = new ProcessLoginFormHandler($this->response, $routeHelper, $session, $csrfValidator, $authenticationService);
+        $handler = new ProcessLoginFormHandler(
+            $this->response,
+            $routeHelper,
+            $session,
+            $csrfValidator,
+            $authenticationService,
+        );
         $response = $handler->handle($request);
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals(['/login'], $response->getHeader('Location'));
@@ -117,7 +135,13 @@ class ProcessLoginFormHandlerTest extends TestCase
         $authenticationService->method('hasIdentity')->willReturn(false);
         $authenticationService->expects($this->once())->method('login')->with('User', 'Password')->willReturn(true);
 
-        $handler = new ProcessLoginFormHandler($this->response, $routeHelper, $session, $csrfValidator, $authenticationService);
+        $handler = new ProcessLoginFormHandler(
+            $this->response,
+            $routeHelper,
+            $session,
+            $csrfValidator,
+            $authenticationService,
+        );
         $response = $handler->handle($request);
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals(['/clients'], $response->getHeader('Location'));
@@ -148,7 +172,13 @@ class ProcessLoginFormHandlerTest extends TestCase
         $authenticationService->method('hasIdentity')->willReturn(false);
         $authenticationService->expects($this->once())->method('login')->with('User', 'Password')->willReturn(true);
 
-        $handler = new ProcessLoginFormHandler($this->response, $routeHelper, $session, $csrfValidator, $authenticationService);
+        $handler = new ProcessLoginFormHandler(
+            $this->response,
+            $routeHelper,
+            $session,
+            $csrfValidator,
+            $authenticationService,
+        );
         $response = $handler->handle($request);
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals(['/original'], $response->getHeader('Location'));

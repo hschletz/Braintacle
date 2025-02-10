@@ -52,7 +52,10 @@ class Controllers implements \Laminas\Hydrator\HydratorInterface
     public function extract(object $object): array
     {
         $data = [];
-        if ($object instanceof AbstractModel && $object->offsetExists('Manufacturer') || property_exists($object, 'manufacturer')) {
+        if (
+            $object instanceof AbstractModel &&
+            $object->offsetExists('Manufacturer') || property_exists($object, 'manufacturer')
+        ) {
             // Windows
             $data['type'] = $object->type;
             $data['name'] = $object->name;

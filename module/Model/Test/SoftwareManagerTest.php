@@ -45,7 +45,12 @@ class SoftwareManagerTest extends AbstractTestCase
         $new1 = array('name' => 'new1', 'num_clients' => '1');
         $new2 = array('name' => 'new2', 'num_clients' => '2');
         return [
-            [SoftwareFilter::All, SoftwarePageColumn::NumClients, Direction::Descending, [$accepted, $ignored, $new2, $new1]],
+            [
+                SoftwareFilter::All,
+                SoftwarePageColumn::NumClients,
+                Direction::Descending,
+                [$accepted, $ignored, $new2, $new1],
+            ],
             [SoftwareFilter::All, SoftwarePageColumn::Name, Direction::Ascending, [$accepted, $ignored, $new1, $new2]],
             [SoftwareFilter::Accepted, SoftwarePageColumn::Name, Direction::Ascending, [$accepted]],
             [SoftwareFilter::Ignored, SoftwarePageColumn::Name, Direction::Ascending, [$ignored]],

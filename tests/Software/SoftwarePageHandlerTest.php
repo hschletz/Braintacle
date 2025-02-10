@@ -116,10 +116,14 @@ class SoftwarePageHandlerTest extends TestCase
 
         $this->assertCount(1, $xPath->query('//tr[2]/td[1]/input[@value="name"]'));
         $this->assertCount(1, $xPath->query('//tr[2]/td[2][text()="name"]'));
-        $this->assertCount(1, $xPath->query('//tr[2]/td[3]/a[normalize-space(text())="1"][contains(@href, "search=name")]'));
+        $this->assertCount(1, $xPath->query(
+            '//tr[2]/td[3]/a[normalize-space(text())="1"][contains(@href, "search=name")]'
+        ));
 
         $this->assertCount(1, $xPath->query('//tr[3]/td[1]/input[@value="<name>"]'));
         $this->assertCount(1, $xPath->query('//tr[3]/td[2][text()="<name>"]'));
-        $this->assertCount(1, $xPath->query('//tr[3]/td[3]/a[normalize-space(text())="2"][contains(@href, "search=%3Cname%3E")]'));
+        $this->assertCount(1, $xPath->query(
+            '//tr[3]/td[3]/a[normalize-space(text())="2"][contains(@href, "search=%3Cname%3E")]'
+        ));
     }
 }

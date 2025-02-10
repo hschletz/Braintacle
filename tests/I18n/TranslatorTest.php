@@ -27,7 +27,10 @@ class TranslatorTest extends TestCase
         $translations = $translator->getTranslations();
 
         $this->assertEquals('Beschreibung', $translations['Description']); // extracted
-        $this->assertEquals("'%value%' ist in der Liste ungültiger Werte", $translations["'%value%' is in the list of invalid values"]); // manual
+        $this->assertEquals(
+            "'%value%' ist in der Liste ungültiger Werte",
+            $translations["'%value%' is in the list of invalid values"]
+        ); // manual
         $this->assertEquals('Ungültige Eingabe.', $translations['Invalid type given']); // Laminas Resources
     }
 
@@ -79,7 +82,11 @@ class TranslatorTest extends TestCase
     public function testTranslateTranslationMissingExceptionThrown()
     {
         $appConfig = $this->createMock(AppConfig::class);
-        $appConfig->expects($this->once())->method('__get')->with('debug')->willReturn(['report missing translations' => true]);
+        $appConfig
+            ->expects($this->once())
+            ->method('__get')
+            ->with('debug')
+            ->willReturn(['report missing translations' => true]);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Missing translation: _missing_');

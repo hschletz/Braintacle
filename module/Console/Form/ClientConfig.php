@@ -24,6 +24,7 @@ namespace Console\Form;
 
 use Laminas\Form\Element;
 use Laminas\Validator\Callback as CallbackValidator;
+use Laminas\Validator\GreaterThan;
 
 /**
  * Client/group configuration
@@ -166,7 +167,7 @@ class ClientConfig extends Form
         // translatable messages with a parameter, do translation and
         // substitution here and disable further translation.
         $dummyMinValueValidator = new \Laminas\Validator\GreaterThan();
-        $message = $dummyMinValueValidator->getMessageTemplates()[\Laminas\Validator\GreaterThan::NOT_GREATER_INCLUSIVE];
+        $message = $dummyMinValueValidator->getMessageTemplates()[GreaterThan::NOT_GREATER_INCLUSIVE];
         $minValueValidator = new CallbackValidator();
         $minValueValidator->setCallback($this->validateMinValue(...))
             ->setCallbackOptions([$min])

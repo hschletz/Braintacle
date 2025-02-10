@@ -25,6 +25,9 @@ class ElementTest extends TestCase
         $document->appendChild($element);
         $child = $element->appendTextNode('child', 'text');
         $child->setAttribute('attr', 'value');
-        $this->assertXmlStringEqualsXmlString('<parent><child attr="value">text</child></parent>', $document->saveXML());
+        $this->assertXmlStringEqualsXmlString(
+            '<parent><child attr="value">text</child></parent>',
+            $document->saveXML()
+        );
     }
 }

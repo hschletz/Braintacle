@@ -30,7 +30,10 @@ class ExportHandlerTest extends \PHPUnit\Framework\TestCase
         $requestParameters->client = $client;
 
         $dataProcessor = $this->createMock(DataProcessor::class);
-        $dataProcessor->method('process')->with($routeArguments, ClientRequestParameters::class)->willReturn($requestParameters);
+        $dataProcessor
+            ->method('process')
+            ->with($routeArguments, ClientRequestParameters::class)
+            ->willReturn($requestParameters);
 
         $handler = new ExportHandler($this->response, $routeHelper, $config, $dataProcessor);
         $response = $handler->handle($this->request);

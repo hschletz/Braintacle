@@ -27,6 +27,8 @@ class ClientHeaderTemplateTest extends TestCase
 
     public function testMenuEntriesForWindowsClients()
     {
+        // phpcs:disable Generic.Files.LineLength.TooLong
+
         $client = new Client();
         $client->id = 42;
         $client->name = 'name';

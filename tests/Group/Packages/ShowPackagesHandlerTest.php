@@ -53,7 +53,10 @@ class ShowPackagesHandlerTest extends TestCase
     {
         $response = $this->handleRequest([], []);
         $xPath = $this->getXPathFromMessage($response);
-        $this->assertEquals('_Packages', $xPath->evaluate('string(//*[contains(@class, "navigation_details")]/li[@class="active"]/a)'));
+        $this->assertEquals(
+            '_Packages',
+            $xPath->evaluate('string(//*[contains(@class, "navigation_details")]/li[@class="active"]/a)')
+        );
     }
 
     public function testHeading()
@@ -83,9 +86,15 @@ class ShowPackagesHandlerTest extends TestCase
         $tr = '//table[contains(@class, "assignedPackages")]/tr';
         $this->assertCount(2, $xPath->query($tr));
         $this->assertCount(1, $xPath->query($tr . '[1]/td[1][text()="package1"]'));
-        $this->assertCount(1, $xPath->query($tr . '[1]/td[2]/button[@data-package="package1"][normalize-space(text())="_remove"]'));
+        $this->assertCount(
+            1,
+            $xPath->query($tr . '[1]/td[2]/button[@data-package="package1"][normalize-space(text())="_remove"]')
+        );
         $this->assertCount(1, $xPath->query($tr . '[2]/td[1][text()="package2"]'));
-        $this->assertCount(1, $xPath->query($tr . '[2]/td[2]/button[@data-package="package2"][normalize-space(text())="_remove"]'));
+        $this->assertCount(
+            1,
+            $xPath->query($tr . '[2]/td[2]/button[@data-package="package2"][normalize-space(text())="_remove"]')
+        );
     }
 
     public function testAssignablePackages()
@@ -97,7 +106,11 @@ class ShowPackagesHandlerTest extends TestCase
         $this->assertCount(1, $headings);
         $this->assertEquals('_Assign packages', $headings->item(0)->nodeValue);
 
-        $this->assertCount(1, $xPath->query('//form//input[@name="packages[]"][@value="package1"]/following-sibling::span[text()="package1"]'));
-        $this->assertCount(1, $xPath->query('//form//input[@name="packages[]"][@value="package2"]/following-sibling::span[text()="package2"]'));
+        $this->assertCount(1, $xPath->query(
+            '//form//input[@name="packages[]"][@value="package1"]/following-sibling::span[text()="package1"]'
+        ));
+        $this->assertCount(1, $xPath->query(
+            '//form//input[@name="packages[]"][@value="package2"]/following-sibling::span[text()="package2"]'
+        ));
     }
 }

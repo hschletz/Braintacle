@@ -30,6 +30,8 @@ use Laminas\Form\View\Helper\FormElementErrors;
 use Model\Client\CustomFieldManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
+// phpcs:disable Generic.Files.LineLength.TooLong
+
 /**
  * Tests for DefineFields form
  */

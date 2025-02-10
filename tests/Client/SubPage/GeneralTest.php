@@ -27,7 +27,7 @@ class GeneralTest extends TestCase
     use HttpHandlerTestTrait;
     use TemplateTestTrait;
 
-    private function getResponseXpath(client $client): DOMXPath
+    private function getResponseXpath(Client $client): DOMXPath
     {
         $routeArguments = ['id' => '42'];
 
@@ -38,7 +38,10 @@ class GeneralTest extends TestCase
         $clientRequestParameters->client = $client;
 
         $dataProcessor = $this->createMock(DataProcessor::class);
-        $dataProcessor->method('process')->with($routeArguments, ClientRequestParameters::class)->willReturn($clientRequestParameters);
+        $dataProcessor
+            ->method('process')
+            ->with($routeArguments, ClientRequestParameters::class)
+            ->willReturn($clientRequestParameters);
 
         $templateEngine = $this->createTemplateEngine();
 
@@ -87,14 +90,23 @@ class GeneralTest extends TestCase
         $query = '//table/tr/td[text()="%s"]/following::td[1][normalize-space(text())="%s"]';
         $this->assertXPathMatches($xPath, sprintf($query, '_ID', '42'));
         $this->assertXPathMatches($xPath, sprintf($query, '_ID string', 'id_string'));
-        $this->assertXPathMatches($xPath, sprintf($query, '_Inventory date', "Donnerstag, 13.\xC2\xA0März 2025 um 11:16:15 MEZ"));
-        $this->assertXPathMatches($xPath, sprintf($query, '_Last contact', "Donnerstag, 13.\xC2\xA0März 2025 um 11:17:34 MEZ"));
+        $this->assertXPathMatches(
+            $xPath,
+            sprintf($query, '_Inventory date', "Donnerstag, 13.\xC2\xA0März 2025 um 11:16:15 MEZ")
+        );
+        $this->assertXPathMatches(
+            $xPath,
+            sprintf($query, '_Last contact', "Donnerstag, 13.\xC2\xA0März 2025 um 11:17:34 MEZ")
+        );
         $this->assertXPathMatches($xPath, sprintf($query, '_User Agent', 'user_agent'));
         $this->assertXPathMatches($xPath, sprintf($query, '_Model', 'manufacturer product_name'));
         $this->assertXPathMatches($xPath, sprintf($query, '_Serial number', 'serial'));
         $this->assertXPathMatches($xPath, sprintf($query, '_Asset tag', 'asset_tag'));
         $this->assertXPathMatches($xPath, sprintf($query, '_Type', 'type'));
-        $this->assertXPathMatches($xPath, sprintf($query, '_Operating System', 'os_name os_version_string (os_version_number)'));
+        $this->assertXPathMatches(
+            $xPath,
+            sprintf($query, '_Operating System', 'os_name os_version_string (os_version_number)')
+        );
         $this->assertXPathMatches($xPath, sprintf($query, '_Comment', 'os_comment'));
         $this->assertXPathMatches($xPath, sprintf($query, '_CPU type', 'cpu_type'));
         $this->assertXPathMatches($xPath, sprintf($query, '_CPU clock', "1234\xC2\xA0MHz"));
@@ -285,7 +297,10 @@ class GeneralTest extends TestCase
 
         $xPath = $this->getResponseXpath($client);
 
-        $this->assertXPathMatches($xPath, '//td[normalize-space(text())="os_name os_version_string (os_version_number)"]');
+        $this->assertXPathMatches(
+            $xPath,
+            '//td[normalize-space(text())="os_name os_version_string (os_version_number)"]'
+        );
     }
 
     public function testWindowsWithArch()
@@ -314,7 +329,7 @@ class GeneralTest extends TestCase
         $client->userName = 'user_name';
         $client->uuid = 'uuid';
         $client->method('offsetGet')->willReturnMap([
-            ['Windows', ['CpuArchitecture' => 'cpu_architecture', 'UserDomain' => 'domain']],
+            ['Windows', ['CpuArchitecture' => 'cpu_arch', 'UserDomain' => 'domain']],
             ['MemorySlot', []],
         ]);
         $client->method('offsetExists')->with('Windows')->willReturn(true);
@@ -323,7 +338,7 @@ class GeneralTest extends TestCase
 
         $this->assertXPathMatches(
             $xPath,
-            "//td[normalize-space(text())='os_name os_version_string (os_version_number) \xE2\x80\x93 cpu_architecture']"
+            "//td[normalize-space(text())='os_name os_version_string (os_version_number) \xE2\x80\x93 cpu_arch']"
         );
     }
 }

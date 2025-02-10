@@ -14,14 +14,21 @@ class ToBoolTest extends TestCase
     public function testAttribute()
     {
         $transformer = $this->createMock(ToBoolTransformer::class);
-        $transformer->method('transform')->with($this->anything(), ['trueValue' => 'yes', 'falseValue' => 'no'])->willReturn(true);
+        $transformer
+            ->method('transform')
+            ->with($this->anything(), ['trueValue' => 'yes', 'falseValue' => 'no'])
+            ->willReturn(true);
 
         $dataObject = new class
         {
             #[ToBool(trueValue: 'yes', falseValue: 'no')]
             public bool $value;
         };
-        $result = $this->processData(['value' => 'yes'], get_class($dataObject), [ToBoolTransformer::class => $transformer]);
+        $result = $this->processData(
+            ['value' => 'yes'],
+            get_class($dataObject),
+            [ToBoolTransformer::class => $transformer]
+        );
         $this->assertTrue($result->value);
     }
 }

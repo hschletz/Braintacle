@@ -26,6 +26,8 @@ class Router
      */
     public static function setup(App $app): void
     {
+        // phpcs:disable Generic.Files.LineLength.TooLong
+
         // Login routes must not have LoginMiddleware attached.
         $app->get('/login', Authentication\ShowLoginFormHandler::class)->setName('loginPage');
         $app->post('/login', Authentication\ProcessLoginFormHandler::class)->setName('loginHandler');

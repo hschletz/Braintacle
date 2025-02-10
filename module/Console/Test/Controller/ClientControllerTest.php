@@ -130,7 +130,9 @@ class ClientControllerTest extends AbstractControllerTestCase
         $serviceManager->setService('Model\SoftwareManager', $this->_softwareManager);
 
         $routeHelper = $this->createStub(RouteHelper::class);
-        $routeHelper->method('getPathForRoute')->willReturnCallback(fn ($name, $routeArguments) => "{$name}/{$routeArguments['id']}");
+        $routeHelper->method('getPathForRoute')->willReturnCallback(
+            fn($name, $routeArguments) => "{$name}/{$routeArguments['id']}"
+        );
         $serviceManager->setService(RouteHelper::class, $routeHelper);
 
         $formManager = $serviceManager->get('FormElementManager');

@@ -271,8 +271,10 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
         (new ReflectionProperty($mvcApplication, 'request'))->setValue($mvcApplication, $this->request);
 
         // Set up a stub controller which will be mapped to the route.
-        $controller = new class ($serviceManager->get(InjectTemplateListener::class), $action) extends AbstractActionController
-        {
+        $controller = new class(
+            $serviceManager->get(InjectTemplateListener::class),
+            $action
+        ) extends AbstractActionController {
             public function __construct(
                 private InjectTemplateListener $injectTemplateListener,
                 private Closure $action,
@@ -293,7 +295,7 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
         $controllerManager = $serviceManager->get(ControllerManager::class);
         // Use setFactory() instead of setService() to enable the necessary
         // initializers which inject the properly configured event manager.
-        $controllerManager->setFactory('test', fn () => $controller);
+        $controllerManager->setFactory('test', fn() => $controller);
 
         // Set up stub templates. The TemplatePathStack which is used by this
         // application for regular templates only works with a real filesystem,
@@ -313,7 +315,7 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
     public function testFrameworkIntegrationSuccessWithTemplate()
     {
         $this->createApplication(
-            fn () => ['message' => 'test'],
+            fn() => ['message' => 'test'],
             ['test/test' => 'message: <?= $this->message ?>'],
         );
 
@@ -347,7 +349,8 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
             function () {
                 throw new Exception('Exception thrown by test action');
             },
-            ['error/index' => 'error: <?= $this->exception->getMessage() ?>'], // overrides default template with the same name
+            // overrides default template with the same name
+            ['error/index' => 'error: <?= $this->exception->getMessage() ?>'],
         );
 
         $this->expectExceptionMessage('Exception thrown by test action');
@@ -357,7 +360,7 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
     public function testFrameworkIntegrationRenderError()
     {
         $this->createApplication(
-            fn () => null,
+            fn() => null,
             [
                 'test/test' => '<?php throw new \Exception("Exception thrown by template");',
                 // overrides default template with the same name
@@ -382,7 +385,7 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
     public function testFrameworkIntegrationInvalidRoute(string $route, string $message)
     {
         $this->createApplication(
-            fn () => null,
+            fn() => null,
             ['error/index' => 'error: not found'],
         );
 

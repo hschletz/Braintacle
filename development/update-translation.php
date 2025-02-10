@@ -38,6 +38,8 @@ use Library\FileObject;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
+
 // Run this script to extract new strings from all PHP source files to .pot
 // files and update corresponding .po files. Some .pot files are maintained
 // manually. For these modules only the .po files are updated.

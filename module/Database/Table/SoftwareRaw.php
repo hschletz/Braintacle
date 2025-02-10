@@ -66,7 +66,10 @@ class SoftwareRaw extends \Database\AbstractTable
                 // constraint will later be added automatically, after the
                 // column has been populated.
                 $this->logger->info("Creating column {$this->table}.definition_id...");
-                $columnData = $schema['columns'][array_search('definition_id', array_column($schema['columns'], 'name'))];
+                $columnData = $schema['columns'][array_search(
+                    'definition_id',
+                    array_column($schema['columns'], 'name')
+                )];
                 $columnData['notnull'] = false;
                 $table->addColumnObject($database->createColumnFromArray($columnData));
                 $this->logger->info('done.');

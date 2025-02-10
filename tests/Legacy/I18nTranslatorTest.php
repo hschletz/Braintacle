@@ -19,8 +19,16 @@ class I18nTranslatorTest extends TestCase
     public function testTranslatePlural()
     {
         $translator = $this->createMock(TranslatorInterface::class);
-        $translator->method('translatePlural')->with('singular', 'plural', 42, 'testDomain', 'locale')->willReturn('translated');
+        $translator
+            ->method('translatePlural')
+            ->with('singular', 'plural', 42, 'testDomain', 'locale')
+            ->willReturn('translated');
+
         $i18nTranslator = new I18nTranslator($translator);
-        $this->assertEquals('translated', $i18nTranslator->translatePlural('singular', 'plural', 42, 'testDomain', 'locale'));
+
+        $this->assertEquals(
+            'translated',
+            $i18nTranslator->translatePlural('singular', 'plural', 42, 'testDomain', 'locale')
+        );
     }
 }

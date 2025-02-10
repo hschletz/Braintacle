@@ -75,6 +75,7 @@ class ExcludedPageHandlerTest extends TestCase
     {
         $xPath = $this->getXpath();
 
+        // phpcs:disable Generic.Files.LineLength.TooLong
         $this->assertXpathMatches(
             $xPath,
             '//ul[@class="navigation navigation_details"]/li[@class="active"]/a[@href="showGroupExcluded/??name=groupName"]'

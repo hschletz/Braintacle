@@ -38,7 +38,13 @@ class AllowDuplicatesHandlerTest extends TestCase
         $translator = $this->createMock(TranslatorInterface::class);
         $translator->method('translate')->with("'%s' is no longer considered duplicate.")->willReturn('_%s_');
 
-        $handler = new AllowDuplicatesHandler($this->response, $dataProcessor, $duplicatesManager, $flashMessages, $translator);
+        $handler = new AllowDuplicatesHandler(
+            $this->response,
+            $dataProcessor,
+            $duplicatesManager,
+            $flashMessages,
+            $translator,
+        );
         $response = $handler->handle($this->request->withParsedBody($parsedBody));
 
         $this->assertResponseStatusCode(200, $response);
@@ -61,7 +67,13 @@ class AllowDuplicatesHandlerTest extends TestCase
 
         $translator = $this->createStub(TranslatorInterface::class);
 
-        $handler = new AllowDuplicatesHandler($this->response, $dataProcessor, $duplicatesManager, $flashMessages, $translator);
+        $handler = new AllowDuplicatesHandler(
+            $this->response,
+            $dataProcessor,
+            $duplicatesManager,
+            $flashMessages,
+            $translator,
+        );
 
         $this->expectExceptionMessage('test');
         $handler->handle($this->request->withParsedBody([]));

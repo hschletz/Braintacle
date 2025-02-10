@@ -124,8 +124,7 @@ class TableTest extends AbstractTestCase
 
     public function testInvokeWithExplicitParams()
     {
-        $rowClassCallback = function () {
-        };
+        $rowClassCallback = function () {};
 
         /**
          * @var MockInterface|Table|callable
@@ -260,7 +259,10 @@ class TableTest extends AbstractTestCase
             return strtoupper($rowData['column1']);
         };
 
-        $this->assertEquals('<row1><row2>', $table->dataRows($this->_data, ['column1', 'column2'], [], [], $rowClassCallback));
+        $this->assertEquals(
+            '<row1><row2>',
+            $table->dataRows($this->_data, ['column1', 'column2'], [], [], $rowClassCallback)
+        );
     }
 
     public function testDataRowsWithDateTime()
