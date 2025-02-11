@@ -237,7 +237,7 @@ class Client extends \Model\ClientOrGroup
     /**
      * User logged in at time of inventory
      */
-    public string $userName;
+    public ?string $userName;
 
     /**
      * UUID (typically provided by BIOS)
