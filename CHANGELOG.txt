@@ -6,6 +6,19 @@ without any warranty.
 ====================================================================
 
 
+CHANGES IN VERSION 1.14
+=======================
+
+Upgrading from previous versions:
+
+- Required: Run "composer install" from the Braintacle root directory to
+  update dependencies.
+
+Fixed bugs:
+
+- Fixed exception when a client has reported a NULL user name.
+
+
 CHANGES IN VERSION 1.13
 =======================
 
@@ -18,8 +31,6 @@ Upgrading from previous versions:
   update dependencies.
 
 Fixed bugs:
-
-- Fixed exception when a client has reported a NULL user name.
 
 - Fixed exception with Android client export.
 
