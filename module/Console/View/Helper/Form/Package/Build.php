@@ -33,9 +33,8 @@ use Laminas\View\Helper\AbstractHelper;
  */
 class Build extends AbstractHelper implements FormHelperInterface
 {
-    public function __construct(private ConsoleScript $consoleScript)
-    {
-    }
+    /** @psalm-suppress PossiblyUnusedMethod */
+    public function __construct(private ConsoleScript $consoleScript) {}
 
     public function __invoke(FormInterface $form = null)
     {

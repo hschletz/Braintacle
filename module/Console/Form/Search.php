@@ -253,6 +253,8 @@ class Search extends Form
      * @internal
      * @param string $value
      * @return mixed normalized input depending on filter type
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function filterSearch($value)
     {
@@ -270,6 +272,8 @@ class Search extends Form
      * @param array $context
      * @return bool TRUE if $value is a valid string/integer/float/date
      * @throws \LogicException if context does not contain filter
+     *
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function validateSearch($value, $context)
     {
@@ -287,6 +291,8 @@ class Search extends Form
      * @param array $context
      * @return bool TRUE if $value is valid for the selected filter type
      * @throws \LogicException if context does not contain filter
+     *
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function validateOperator($value, $context)
     {

@@ -24,6 +24,8 @@ namespace Console\Form\Preferences;
 
 /**
  * Form for display/setting of 'network scanning' preferences
+ *
+ * @psalm-suppress UnusedClass
  */
 class NetworkScanning extends AbstractForm
 {

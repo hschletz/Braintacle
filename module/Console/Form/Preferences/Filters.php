@@ -24,6 +24,8 @@ namespace Console\Form\Preferences;
 
 /**
  * Form for display/setting of 'filters' preferences
+ *
+ * @psalm-suppress UnusedClass
  */
 class Filters extends AbstractForm
 {

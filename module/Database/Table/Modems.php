@@ -27,6 +27,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * "modems" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class Modems extends \Database\AbstractTable
 {

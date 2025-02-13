@@ -24,6 +24,8 @@ namespace Model\Client\Plugin;
 
 /**
  * RegistryData item plugin
+ *
+ * @psalm-suppress UnusedClass
  */
 class RegistryData extends DefaultPlugin
 {

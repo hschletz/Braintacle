@@ -58,6 +58,8 @@ class PackageBuilder
      * @param array $data Package data
      * @param bool $deleteSource Delete source file as soon as possible
      * @throws RuntimeException if a package with the requested name already exists or an error occurs
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function buildPackage(array $data, bool $deleteSource): void
     {

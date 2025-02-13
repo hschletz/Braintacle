@@ -24,6 +24,8 @@ namespace Model\Client\Plugin;
 
 /**
  * StorageDevice item plugin
+ *
+ * @psalm-suppress UnusedClass
  */
 class StorageDevice extends AddOsColumns
 {

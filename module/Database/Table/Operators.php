@@ -44,7 +44,7 @@ class Operators extends \Database\AbstractTable
     const HASH_DEFAULT = 1;
 
     /**
-     * {@inheritdoc}
+     * @psalm-suppress PossiblyUnusedMethod
      * @codeCoverageIgnore
      */
     public function __construct(ContainerInterface $container)

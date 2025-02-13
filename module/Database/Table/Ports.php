@@ -27,6 +27,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * "ports" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class Ports extends \Database\AbstractTable
 {

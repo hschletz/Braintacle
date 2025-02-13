@@ -26,6 +26,8 @@ use Laminas\Validator\Callback as CallbackValidator;
 
 /**
  * Form for display/setting of 'agent' preferences
+ *
+ * @psalm-suppress UnusedClass
  */
 class Agent extends AbstractForm
 {

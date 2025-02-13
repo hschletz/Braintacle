@@ -24,6 +24,8 @@ namespace Console\Form\Service;
 
 /**
  * Factory for NetworkDevice
+ *
+ * @psalm-suppress UnusedClass
  * @codeCoverageIgnore
  */
 class NetworkDeviceFactory implements \Laminas\ServiceManager\Factory\FactoryInterface

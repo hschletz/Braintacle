@@ -24,6 +24,8 @@ namespace Console\Service;
 
 /**
  * Factory for PackageController
+ *
+ * @psalm-suppress UnusedClass
  */
 class PackageControllerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {

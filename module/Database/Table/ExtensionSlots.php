@@ -27,6 +27,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * "slots" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class ExtensionSlots extends \Database\AbstractTable
 {

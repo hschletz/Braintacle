@@ -24,6 +24,8 @@ namespace Console\Form\Service;
 
 /**
  * Abstract factory for Package forms
+ *
+ * @psalm-suppress UnusedClass
  * @codeCoverageIgnore
  */
 class PackageFactory implements \Laminas\ServiceManager\Factory\AbstractFactoryInterface

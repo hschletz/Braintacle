@@ -24,6 +24,8 @@ namespace Console\Form\Service;
 
 /**
  * Factory for Search form
+ *
+ * @psalm-suppress UnusedClass
  * @codeCoverageIgnore
  */
 class SearchFactory implements \Laminas\ServiceManager\Factory\FactoryInterface

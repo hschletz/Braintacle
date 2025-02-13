@@ -24,6 +24,8 @@ namespace Console\Form\Preferences;
 
 /**
  * Form for display/setting of 'download' preferences
+ *
+ * @psalm-suppress UnusedClass
  */
 class Download extends AbstractForm
 {

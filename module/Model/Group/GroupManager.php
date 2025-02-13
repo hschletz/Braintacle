@@ -38,9 +38,7 @@ use Psr\Container\ContainerInterface;
  */
 class GroupManager
 {
-    public function __construct(private ContainerInterface $container)
-    {
-    }
+    public function __construct(private ContainerInterface $container) {}
 
     /**
      * Return a all groups matching criteria
@@ -97,7 +95,6 @@ class GroupManager
                 throw new \InvalidArgumentException(
                     'Invalid group filter: ' . $filter
                 );
-                break;
         }
 
         if ($order) {

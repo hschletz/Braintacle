@@ -115,7 +115,7 @@ class GroupManagerTest extends AbstractGroupTestCase
         $serviceManager->method('get')->with(GroupInfo::class)->willReturn($this->_groupInfo);
 
         $model = new GroupManager($serviceManager);
-        $resultSet = $model->getGroups('invalid');
+        $model->getGroups('invalid');
     }
 
     public function testGetGroup()
@@ -138,7 +138,7 @@ class GroupManagerTest extends AbstractGroupTestCase
         $serviceManager->method('get')->with(GroupInfo::class)->willReturn($this->_groupInfo);
 
         $model = new GroupManager($serviceManager);
-        $group = $model->getGroup('invalid');
+        $model->getGroup('invalid');
     }
 
     public function testGetGroupNoName()
@@ -146,7 +146,7 @@ class GroupManagerTest extends AbstractGroupTestCase
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('No group name given');
         $model = $this->getModel();
-        $group = $model->getGroup('');
+        $model->getGroup('');
     }
 
     public static function createGroupProvider()

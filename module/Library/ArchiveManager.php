@@ -60,7 +60,6 @@ class ArchiveManager
                 break;
             default:
                 throw new \InvalidArgumentException('Unsupported archive type: ' . $type);
-                break;
         }
         return $isSupported;
     }
@@ -92,7 +91,6 @@ class ArchiveManager
                 break;
             default:
                 throw new \InvalidArgumentException('Unsupported archive type: ' . $type);
-                break;
         }
         return $isArchive;
     }
@@ -129,7 +127,6 @@ class ArchiveManager
                 break;
             default:
                 throw new \InvalidArgumentException('Unsupported archive type: ' . $type);
-                break;
         }
         return $archive;
     }

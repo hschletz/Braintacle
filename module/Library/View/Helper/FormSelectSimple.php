@@ -27,6 +27,8 @@ namespace Library\View\Helper;
  *
  * The option values are not translated, just like the "value" attributes of
  * Select elements.
+ *
+ * @psalm-suppress UnusedClass
  */
 class FormSelectSimple extends \Laminas\Form\View\Helper\FormSelect
 {

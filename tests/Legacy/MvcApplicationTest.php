@@ -112,7 +112,6 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
         );
         $application->method('getMvcEvent')->willReturn(new MvcEvent());
 
-        /** @var MockObject&MvcApplication */
         $mvcApplication = $this
             ->getMockBuilder(MvcApplication::class)
             ->setConstructorArgs([$application, new Container()])
@@ -143,7 +142,6 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
             return $mvcEvent;
         });
 
-        /** @var MockObject&MvcApplication */
         $mvcApplication = $this
             ->getMockBuilder(MvcApplication::class)
             ->setConstructorArgs([$application, new Container()])
@@ -170,7 +168,6 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
         );
         $application->method('getMvcEvent')->willReturn(new MvcEvent());
 
-        /** @var MockObject&MvcApplication */
         $mvcApplication = $this
             ->getMockBuilder(MvcApplication::class)
             ->setConstructorArgs([$application, new Container()])
@@ -202,7 +199,6 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
         );
         $application->method('getMvcEvent')->willReturn(new MvcEvent());
 
-        /** @var MockObject&MvcApplication */
         $mvcApplication = $this
             ->getMockBuilder(MvcApplication::class)
             ->setConstructorArgs([$application, new Container()])
@@ -232,7 +228,6 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
         );
         $application->expects($this->never())->method('getMvcEvent');
 
-        /** @var MockObject&MvcApplication */
         $mvcApplication = $this
             ->getMockBuilder(MvcApplication::class)
             ->setConstructorArgs([$application, new Container()])

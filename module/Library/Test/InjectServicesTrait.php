@@ -16,6 +16,7 @@ use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Latte\Engine;
 use Mockery;
+use Mockery\Mock;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -41,20 +42,26 @@ trait InjectServicesTrait
 
         // Inject empty dummy config. Tests that evaluate config set up their
         // own.
+        /** @var Mock|Filesystem */
         $filesystem = Mockery::mock(Filesystem::class);
         $filesystem->shouldReceive('readFile')->andReturn('');
         $appConfig = new AppConfig($filesystem, '');
         $serviceManager->setService(AppConfig::class, $appConfig);
 
+        /** @var Mock|AssetUrlFunction */
         $assetUrlFunction = Mockery::mock(AssetUrlFunction::class);
         $assetUrlFunction->shouldReceive('__invoke')->andReturnUsing(
-            fn (string $path) => "/assets/$path"
+            fn(string $path) => "/assets/$path"
         );
         $serviceManager->setService(AssetUrlFunction::class, $assetUrlFunction);
 
+        /** @var Mock|CsrfTokenFunction */
+        $csrfTokenFunction = Mockery::mock(CsrfTokenFunction::class);
+
+        /** @var Mock|PathForRouteFunction */
         $pathForRouteFunction = Mockery::mock(PathForRouteFunction::class);
         $pathForRouteFunction->shouldReceive('__invoke')->andReturnUsing(
-            fn (string $name, array $routeArguments = []) => "/route/$name"
+            fn(string $name) => "/route/$name"
         );
         $serviceManager->setService(PathForRouteFunction::class, $pathForRouteFunction);
 
@@ -69,11 +76,11 @@ trait InjectServicesTrait
         $serviceManager->setService(TranslatorInterface::class, $translator);
 
         $templateEngine = new TemplateEngine(
-            'de-DE',
             new Engine(),
+            'de-DE',
             new TemplateLoader($rootPath . '/templates'),
             $assetUrlFunction,
-            Mockery::mock(CsrfTokenFunction::class),
+            $csrfTokenFunction,
             $pathForRouteFunction,
             new TranslateFunction($translator),
         );

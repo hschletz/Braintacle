@@ -24,6 +24,8 @@ namespace Database\Table;
 
 /**
  * "batteries" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class Batteries extends \Database\AbstractTable
 {

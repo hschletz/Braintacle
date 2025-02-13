@@ -77,9 +77,4 @@ trait HttpHandlerTestTrait
     {
         $this->assertEquals($content, $this->getMessageContent($response));
     }
-
-    private function assertResponseContentMatches(string $regex, ResponseInterface $response)
-    {
-        $this->assertMatchesRegularExpression($regex, $this->getMessageContent($response));
-    }
 }

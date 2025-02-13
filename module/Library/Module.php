@@ -91,7 +91,7 @@ class Module implements Feature\ConfigProviderInterface
         );
     }
 
-    /** {@inheritdoc} */
+    /** @psalm-suppress PossiblyUnusedMethod */
     public function onBootstrap(\Laminas\EventManager\EventInterface $e)
     {
         $serviceManager = $e->getApplication()->getServiceManager();

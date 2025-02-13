@@ -34,6 +34,9 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class Application extends \Symfony\Component\Console\Application
 {
+    /**
+     * @psalm-suppress PossiblyUnusedMethod
+     */
     public function __construct(
         ConfigListener $configListener,
         ControllerInjectionListener $controllerInjectionListener,

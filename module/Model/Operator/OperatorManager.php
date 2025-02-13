@@ -76,6 +76,7 @@ class OperatorManager
      * Get all login IDs
      *
      * @return string[]
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function getAllIds()
     {

@@ -24,6 +24,8 @@ namespace Console\View\Helper\Service;
 
 /**
  * Factory for ConsoleUrl
+ *
+ * @psalm-suppress UnusedClass
  */
 class ConsoleUrlFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {

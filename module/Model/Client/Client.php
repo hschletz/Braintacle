@@ -76,6 +76,8 @@ use ReturnTypeWillChange;
  * @property string $Package.Status package status (supplied by filter)
  * @property integer $membership group membership type (supplied by filter)
  * @property string $Registry.* registry search result (supplied by filter)
+ *
+ * @psalm-suppress PossiblyUnusedProperty -- Referenced in template
  */
 class Client extends \Model\ClientOrGroup
 {
@@ -331,7 +333,6 @@ class Client extends \Model\ClientOrGroup
     /** {@inheritdoc} */
     public function getDefaultConfig($option)
     {
-        $id = $this['Id'];
         if (array_key_exists($option, $this->_configDefault)) {
             return $this->_configDefault[$option];
         }
@@ -448,7 +449,6 @@ class Client extends \Model\ClientOrGroup
      */
     public function getEffectiveConfig($option)
     {
-        $id = $this['Id'];
         if (array_key_exists($option, $this->_configEffective)) {
             return $this->_configEffective[$option];
         }

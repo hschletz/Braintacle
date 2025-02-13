@@ -183,6 +183,8 @@ class ManageRegistryValues extends Form
      * @param string $value
      * @param array $context
      * @return bool TRUE if 'name' is empty or 'name' and 'subkeys' are not empty
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function validateEmptySubkeys($value, $context)
     {

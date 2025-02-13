@@ -258,6 +258,8 @@ class Build extends \Console\Form\Form
      * @param array $context
      * @return bool
      * @internal
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function validateNotificationMessage($value, $context)
     {

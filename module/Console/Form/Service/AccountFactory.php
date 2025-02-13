@@ -24,6 +24,8 @@ namespace Console\Form\Service;
 
 /**
  * Abstract factory for Account forms
+ *
+ * @psalm-suppress UnusedClass
  * @codeCoverageIgnore
  */
 class AccountFactory implements \Laminas\ServiceManager\Factory\AbstractFactoryInterface

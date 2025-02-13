@@ -31,10 +31,10 @@ $headers = array(
 );
 
 $renderCallbacks = array(
-    'Vendor' => function ($view, $device, $property) {
+    'Vendor' => function ($view, $device) {
         return $view->escapeHtml($device['MacAddress']->getVendor());
     },
-    'edit' => function ($view, $device, $property) {
+    'edit' => function ($view, $device) {
         return $view->htmlElement(
             'a',
             $view->translate('Edit'),
@@ -48,7 +48,7 @@ $renderCallbacks = array(
             true
         );
     },
-    'delete' => function ($view, $device, $property) {
+    'delete' => function ($view, $device) {
         return $view->htmlElement(
             'a',
             $view->translate('Delete'),

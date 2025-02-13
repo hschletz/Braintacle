@@ -24,6 +24,8 @@ namespace Console\Form\Service;
 
 /**
  * Factory for CustomFields form
+ *
+ * @psalm-suppress UnusedClass
  * @codeCoverageIgnore
  */
 class CustomFieldsFactory implements \Laminas\ServiceManager\Factory\FactoryInterface

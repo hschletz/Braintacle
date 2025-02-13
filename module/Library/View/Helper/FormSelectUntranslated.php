@@ -31,6 +31,8 @@ namespace Library\View\Helper;
  *
  * To render an element via the FormElement helper, set the element's "type"
  * attribute to "select_untranslated" to make it use this helper.
+ *
+ * @psalm-suppress UnusedClass
  */
 class FormSelectUntranslated extends \Laminas\Form\View\Helper\FormSelect
 {

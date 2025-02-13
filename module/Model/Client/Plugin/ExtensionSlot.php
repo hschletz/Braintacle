@@ -24,6 +24,8 @@ namespace Model\Client\Plugin;
 
 /**
  * ExtensionSlot item plugin
+ *
+ * @psalm-suppress UnusedClass
  */
 class ExtensionSlot extends AddOsColumns
 {

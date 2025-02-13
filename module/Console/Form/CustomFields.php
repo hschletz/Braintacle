@@ -119,6 +119,8 @@ class CustomFields extends Form
      *
      * @internal
      * @return mixed trimmed and normalized input depending on field type
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function filterField(?string $value, string $type)
     {
@@ -141,6 +143,8 @@ class CustomFields extends Form
      * @param array $context
      * @param string $type Field datatype
      * @return bool TRUE if $value is valid for given type
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function validateField($value, $context, $type)
     {

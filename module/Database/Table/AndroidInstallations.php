@@ -31,7 +31,7 @@ use Psr\Container\ContainerInterface;
 class AndroidInstallations extends \Database\AbstractTable
 {
     /**
-     * {@inheritdoc}
+     * @psalm-suppress PossiblyUnusedMethod
      * @codeCoverageIgnore
      */
     public function __construct(ContainerInterface $container)

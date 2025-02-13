@@ -64,7 +64,6 @@ class AbstractTableTest extends \PHPUnit\Framework\TestCase
     {
         $hydrator = $this->createStub(HydratorInterface::class);
         $property = new \ReflectionProperty('Database\AbstractTable', '_hydrator');
-        $property->setAccessible(true);
         $property->setValue($this->_table, $hydrator);
         $this->assertSame($hydrator, $this->_table->getHydrator());
     }

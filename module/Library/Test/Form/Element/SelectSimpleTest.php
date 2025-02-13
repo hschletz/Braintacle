@@ -50,7 +50,6 @@ class SelectSimpleTest extends \PHPUnit\Framework\TestCase
         $this->expectExceptionMessage(SelectSimple::class . '::getOptionValue() should never be called');
 
         $method = new \ReflectionMethod('Library\Form\Element\SelectSimple', 'getOptionValue');
-        $method->setAccessible(true);
         $method->invoke(new \Library\Form\Element\SelectSimple(), '', array());
     }
 }

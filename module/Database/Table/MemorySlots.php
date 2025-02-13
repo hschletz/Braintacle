@@ -27,6 +27,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * "memories" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class MemorySlots extends \Database\AbstractTable
 {

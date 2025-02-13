@@ -24,6 +24,8 @@ namespace Console\Form\Preferences;
 
 /**
  * Form for display/setting of 'raw data' preferences
+ *
+ * @psalm-suppress UnusedClass
  */
 class RawData extends AbstractForm
 {

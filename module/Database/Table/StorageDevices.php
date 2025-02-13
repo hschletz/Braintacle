@@ -27,6 +27,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * "storages" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class StorageDevices extends \Database\AbstractTable
 {

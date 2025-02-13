@@ -50,7 +50,7 @@ class CustomFieldConfig extends \Database\AbstractTable
     protected bool $useTransaction;
 
     /**
-     * {@inheritdoc}
+     * @psalm-suppress PossiblyUnusedMethod
      * @codeCoverageIgnore
      */
     public function __construct(ContainerInterface $container)

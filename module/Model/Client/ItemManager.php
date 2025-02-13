@@ -75,6 +75,9 @@ class ItemManager
         'storagedevice' => 'StorageDevice',
     );
 
+    /**
+     * @psalm-suppress PossiblyUnusedMethod (used indirectly via container)
+     */
     public function __construct(private ContainerInterface $container)
     {
     }
@@ -83,6 +86,8 @@ class ItemManager
      * List all valid item types
      *
      * @return string[]
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function getItemTypes()
     {
@@ -123,6 +128,8 @@ class ItemManager
      * @param array $filters Filters, handled by plugin. Default: no filters
      * @param string $order Property to sort by, handled by plugin.
      * @param string $direction One of asc|desc. Default: asc
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function getItems(
         string $type,
@@ -151,6 +158,8 @@ class ItemManager
      * Delete items for given client
      *
      * @param integer $clientId Client ID
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function deleteItems($clientId)
     {

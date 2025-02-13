@@ -68,7 +68,7 @@ class NotInArrayTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Invalid value for caseSensitivity option: 1');
-        $validator = new NotInArray(array('caseSensitivity' => true));
+        new NotInArray(['caseSensitivity' => true]);
     }
 
     public static function validationProvider()

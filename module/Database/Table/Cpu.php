@@ -27,6 +27,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * "cpus" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class Cpu extends \Database\AbstractTable
 {

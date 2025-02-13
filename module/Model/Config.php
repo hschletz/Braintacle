@@ -167,11 +167,7 @@ class Config
      */
     protected $_config;
 
-    /**
-     * Constructor
-     *
-     * @param \Database\Table\Config $config
-     */
+    /** @psalm-suppress PossiblyUnusedMethod */
     public function __construct(\Database\Table\Config $config)
     {
         $this->_config = $config;
@@ -182,6 +178,8 @@ class Config
      *
      * @param string $option Option name
      * @return mixed Option value (if set), default value (if defined) or NULL
+     *
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function __get($option)
     {
@@ -204,6 +202,8 @@ class Config
      *
      * @param string $option Option name
      * @param mixed $value Option value
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function __set($option, $value)
     {
@@ -238,6 +238,8 @@ class Config
      *
      * @param string $option Option name
      * @return string internal database identifier
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function getDbIdentifier($option)
     {

@@ -24,6 +24,8 @@ namespace Model\Client\Plugin;
 
 /**
  * Filesystem item plugin
+ *
+ * @psalm-suppress UnusedClass
  */
 class Filesystem extends DefaultPlugin
 {

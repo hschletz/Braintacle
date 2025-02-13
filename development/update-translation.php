@@ -177,6 +177,7 @@ function parsePhpFile(string $file): Translations
             $numPlaceholders = substr_count($template, '%');
             $args = array_fill(0, $numPlaceholders, 1);
             try {
+                /** @psalm-suppress UnusedFunctionCall -- We are only interested in error behavior, not the return value */
                 vsprintf($template, $args);
             } catch (ValueError) {
                 $flags->delete('php-format');

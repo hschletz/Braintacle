@@ -26,6 +26,7 @@ use DateTimeInterface;
 
 /**
  * Package assignment on a client
+ * @psalm-suppress PossiblyUnusedProperty (referenced in template)
  */
 class Assignment
 {

@@ -34,9 +34,8 @@ use Model\ClientOrGroup;
  */
 class ClientConfig extends Form
 {
-    public function __construct(private ConsoleScript $consoleScript)
-    {
-    }
+    /** @psalm-suppress PossiblyUnusedMethod */
+    public function __construct(private ConsoleScript $consoleScript) {}
 
     public function render(\Laminas\Form\FormInterface $form): string
     {

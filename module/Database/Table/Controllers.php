@@ -27,6 +27,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * "controllers" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class Controllers extends \Database\AbstractTable
 {

@@ -27,6 +27,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * "printers" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class Printers extends \Database\AbstractTable
 {

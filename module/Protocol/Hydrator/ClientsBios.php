@@ -70,7 +70,7 @@ class ClientsBios implements \Laminas\Hydrator\HydratorInterface
         foreach ($data as $name => $value) {
             $name = $this->hydrateName($name);
             if ($name) {
-                $object->$name = $this->hydrateValue($name, $value);
+                $object->$name = $value;
             }
         }
         return $object;
@@ -86,7 +86,7 @@ class ClientsBios implements \Laminas\Hydrator\HydratorInterface
             }
             $name = $this->extractName($name);
             if ($name) {
-                $data[$name] = $this->extractValue($name, $value);
+                $data[$name] = $value;
             }
         }
         return $data;
@@ -112,29 +112,5 @@ class ClientsBios implements \Laminas\Hydrator\HydratorInterface
     public function extractName($name)
     {
         return @$this->_extractorMap[$name];
-    }
-
-    /**
-     * Hydrate value
-     *
-     * @param string $name
-     * @param string $value
-     * @return mixed
-     */
-    public function hydrateValue($name, $value)
-    {
-        return $value;
-    }
-
-    /**
-     * Extract value
-     *
-     * @param string $name
-     * @param string $value
-     * @return mixed
-     */
-    public function extractValue($name, $value)
-    {
-        return $value;
     }
 }

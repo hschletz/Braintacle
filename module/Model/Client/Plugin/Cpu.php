@@ -24,6 +24,8 @@ namespace Model\Client\Plugin;
 
 /**
  * Cpu item plugin
+ *
+ * @psalm-suppress UnusedClass
  */
 class Cpu extends DefaultPlugin
 {

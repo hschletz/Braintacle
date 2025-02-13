@@ -35,9 +35,7 @@ use Psr\Container\ContainerInterface;
  */
 class PackageManager
 {
-    public function __construct(private ContainerInterface $container)
-    {
-    }
+    public function __construct(private ContainerInterface $container) {}
 
     /**
      * Check for existing package
@@ -149,6 +147,8 @@ class PackageManager
      * Get all package names
      *
      * @return string[]
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function getAllNames()
     {

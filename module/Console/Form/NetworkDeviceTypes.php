@@ -46,7 +46,7 @@ class NetworkDeviceTypes extends Form
         $inputFilterTypes = new \Laminas\InputFilter\InputFilter();
 
         $this->_definedTypes = $this->getOption('DeviceManager')->getTypeCounts();
-        foreach ($this->_definedTypes as $name => $count) {
+        foreach (array_keys($this->_definedTypes) as $name) {
             $element = new \Laminas\Form\Element\Text($name);
             $element->setValue($name);
             $types->add($element);
@@ -120,6 +120,8 @@ class NetworkDeviceTypes extends Form
      * @param string $originalValue Current name to be changed (NULL for adding name)
      * @return bool
      * @internal
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function validateName($value, $context, $originalValue = null)
     {

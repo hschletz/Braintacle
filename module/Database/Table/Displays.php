@@ -27,6 +27,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * "monitors" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class Displays extends \Database\AbstractTable
 {

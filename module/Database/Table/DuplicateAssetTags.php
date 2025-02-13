@@ -30,7 +30,7 @@ use Psr\Container\ContainerInterface;
 class DuplicateAssetTags extends \Database\AbstractTable
 {
     /**
-     * {@inheritdoc}
+     * @psalm-suppress PossiblyUnusedMethod
      * @codeCoverageIgnore
      */
     public function __construct(ContainerInterface $container)

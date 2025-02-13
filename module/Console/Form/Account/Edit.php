@@ -59,6 +59,8 @@ class Edit extends AbstractForm
     /**
      * ID validation callback
      * @internal
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function validateId($value, $context)
     {

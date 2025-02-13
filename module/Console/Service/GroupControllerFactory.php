@@ -24,6 +24,8 @@ namespace Console\Service;
 
 /**
  * Factory for GroupController
+ *
+ * @psalm-suppress UnusedClass
  */
 class GroupControllerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {

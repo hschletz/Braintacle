@@ -2,6 +2,7 @@
 <psalm
     errorLevel="6"
     resolveFromConfigFile="true"
+    findUnusedCode="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
@@ -12,6 +13,8 @@
         <directory name="public" />
         <directory name="src" />
         <directory name="tests" />
+        <file name="braintacle-tool.php" />
+        <file name="public/index.php" />
         <ignoreFiles>
             <directory name="vendor" />
         </ignoreFiles>
@@ -24,5 +27,21 @@
                 <directory name="module/Console/views" />
             </errorLevel>
         </InvalidScope>
+        <PossiblyUnusedMethod>
+            <errorLevel type="suppress">
+                <!-- Controller actions are never referenced directly. -->
+                <directory name="module/Console/Controller" />
+                <!-- Test methods are never referenced directly. -->
+                <directory name="module/*/Test" />
+                <directory name="tests" />
+            </errorLevel>
+        </PossiblyUnusedMethod>
+        <UnusedClass>
+            <errorLevel type="suppress">
+                <!-- Test classes are never referenced directly. -->
+                <directory name="module/*/Test" />
+                <directory name="tests" />
+            </errorLevel>
+        </UnusedClass>
     </issueHandlers>
 </psalm>

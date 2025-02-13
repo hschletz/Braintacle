@@ -26,6 +26,8 @@ namespace Model\Client\Plugin;
  * MsOfficeProduct item plugin
  *
  * Provides a "Type" filter on the "Type" property.
+ *
+ * @psalm-suppress UnusedClass
  */
 class MsOfficeProduct extends DefaultPlugin
 {

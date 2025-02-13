@@ -231,7 +231,6 @@ class ClientOrGroupTest extends AbstractTestCase
         $current->add(new \DateInterval('PT10S'));
 
         $expire = new \ReflectionProperty($model, '_lockTimeout');
-        $expire->setAccessible(true);
         $expire->setValue($model, $current);
 
         $model->unlock();
@@ -256,7 +255,6 @@ class ClientOrGroupTest extends AbstractTestCase
         $current->sub(new \DateInterval('PT1S'));
 
         $expire = new \ReflectionProperty($model, '_lockTimeout');
-        $expire->setAccessible(true);
         $expire->setValue($model, $current);
 
         $message = null;
@@ -289,7 +287,6 @@ class ClientOrGroupTest extends AbstractTestCase
         $model = Mockery::mock(ClientOrGroup::class)->makePartial();
 
         $expire = new \ReflectionProperty($model, '_lockNestCount');
-        $expire->setAccessible(true);
         $expire->setValue($model, 2);
 
         $this->assertTrue($model->isLocked());
@@ -458,7 +455,6 @@ class ClientOrGroupTest extends AbstractTestCase
         $model['Id'] = 42;
 
         $cache = new \ReflectionProperty($model, '_configCache');
-        $cache->setAccessible(true);
         $cache->setValue($model, array('option' => 'value'));
 
         $this->assertEquals('value', $model->getConfig('option'));

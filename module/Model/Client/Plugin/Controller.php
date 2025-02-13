@@ -24,6 +24,8 @@ namespace Model\Client\Plugin;
 
 /**
  * Controller item plugin
+ *
+ * @psalm-suppress UnusedClass
  */
 class Controller extends AddOsColumns
 {

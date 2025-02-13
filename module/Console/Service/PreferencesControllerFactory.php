@@ -24,6 +24,8 @@ namespace Console\Service;
 
 /**
  * Factory for PreferencesController
+ *
+ * @psalm-suppress UnusedClass
  */
 class PreferencesControllerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {

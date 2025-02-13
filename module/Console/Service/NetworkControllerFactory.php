@@ -24,6 +24,8 @@ namespace Console\Service;
 
 /**
  * Factory for NetworkController
+ *
+ * @psalm-suppress UnusedClass
  */
 class NetworkControllerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {

@@ -152,7 +152,7 @@ class DeviceManagerTest extends AbstractTestCase
         $this->expectException('Model\Network\RuntimeException');
         $this->expectExceptionMessage('Unknown MAC address: 00:00:5E:00:53:00');
         $model = $this->getModel();
-        $device = $model->getDevice('00:00:5E:00:53:00');
+        $model->getDevice('00:00:5E:00:53:00');
     }
 
     public static function saveDeviceProvider()

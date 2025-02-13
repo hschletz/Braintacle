@@ -40,7 +40,7 @@ class Attachments extends \Database\AbstractTable
     const OBJECT_TYPE_SNMP = 'snmp_accountinfo';
 
     /**
-     * {@inheritdoc}
+     * @psalm-suppress PossiblyUnusedMethod
      * @codeCoverageIgnore
      */
     public function __construct(ContainerInterface $container)

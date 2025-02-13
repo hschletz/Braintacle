@@ -65,6 +65,8 @@ class Module implements
      *
      * This is invoked by the "route" event to avoid invocation of factories
      * within the bootstrap event which would cause problems for testing.
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function setTranslators(MvcEvent $e)
     {
@@ -92,6 +94,8 @@ class Module implements
      * This is invoked by the "render" event.
      *
      * @param \Laminas\Mvc\MvcEvent $e MVC event
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function forceStrictVars(\Laminas\EventManager\EventInterface $e)
     {

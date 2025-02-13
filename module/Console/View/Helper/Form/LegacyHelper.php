@@ -35,6 +35,8 @@ use Laminas\Form\FormInterface;
  * longer be called. The view helper should be invoked directly instead.
  *
  * @deprecated
+ *
+ * @psalm-suppress UnusedClass
  */
 class LegacyHelper extends Form
 {

@@ -26,6 +26,8 @@ use Braintacle\Http\RouteHelper;
 
 /**
  * Factory for ClientController
+ *
+ * @psalm-suppress UnusedClass
  */
 class ClientControllerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {

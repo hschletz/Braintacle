@@ -39,7 +39,7 @@ date_default_timezone_set('Europe/Berlin');
  */
 class StreamWrapperFail
 {
-    public function stream_open($path, $mode, $options, &$openedPath)
+    public function stream_open()
     {
         return true;
     }

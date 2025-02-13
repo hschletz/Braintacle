@@ -176,15 +176,12 @@ class CustomFieldConfigTest extends AbstractTestCase
         $table->method('getSql')->willThrowException(new \RuntimeException('test message'));
 
         $adapterProperty = new \ReflectionProperty(get_class($table), 'adapter');
-        $adapterProperty->setAccessible(true);
         $adapterProperty->setValue($table, $adapter);
 
         $useTransactionProperty = new \ReflectionProperty(get_class($table), 'useTransaction');
-        $useTransactionProperty->setAccessible(true);
         $useTransactionProperty->setValue($table, true);
 
         $serviceLocatorProperty = new \ReflectionProperty(get_class($table), 'container');
-        $serviceLocatorProperty->setAccessible(true);
         $serviceLocatorProperty->setValue($table, $serviceManager);
 
         $this->expectException('RuntimeException');
@@ -242,11 +239,9 @@ class CustomFieldConfigTest extends AbstractTestCase
         $table->method('getSql')->willThrowException(new \RuntimeException('test message'));
 
         $adapterProperty = new \ReflectionProperty(get_class($table), 'adapter');
-        $adapterProperty->setAccessible(true);
         $adapterProperty->setValue($table, $adapter);
 
         $useTransactionProperty = new \ReflectionProperty(get_class($table), 'useTransaction');
-        $useTransactionProperty->setAccessible(true);
         $useTransactionProperty->setValue($table, true);
 
         $this->expectException('RuntimeException');

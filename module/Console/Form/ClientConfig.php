@@ -196,6 +196,8 @@ class ClientConfig extends Form
     /**
      * Integer filter callback
      * @internal
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function filterInteger($value)
     {
@@ -205,6 +207,8 @@ class ClientConfig extends Form
     /**
      * Integer validator callback
      * @internal
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function validateInteger($value, $context)
     {

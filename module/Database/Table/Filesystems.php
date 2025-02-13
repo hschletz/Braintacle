@@ -27,6 +27,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * "drives" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class Filesystems extends \Database\AbstractTable
 {

@@ -134,6 +134,8 @@ class Clients implements \Laminas\Hydrator\HydratorInterface
      * Get map of extracted names to hydrated names (only fields from Clients table)
      *
      * @return string[]
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function getExtractorMap()
     {

@@ -27,6 +27,8 @@ namespace Model\Client\Plugin;
  *
  * Adds boolean "is_blacklisted" column to indicate MAC address ignored for
  * duplicates search.
+ *
+ * @psalm-suppress UnusedClass
  */
 class NetworkInterface extends DefaultPlugin
 {

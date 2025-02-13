@@ -51,6 +51,8 @@ use Random\Randomizer;
  * @property string $dynamicMembersSql SQL query for dynamic members, may be empty
  * @property DateTimeInterface $cacheCreationDate Timestamp of last cache update
  * @property DateTimeInterface $cacheExpirationDate Timestamp when cache will expire and get rebuilt
+ *
+ * @psalm-suppress PossiblyUnusedProperty -- referenced in template
  */
 class Group extends \Model\ClientOrGroup
 {

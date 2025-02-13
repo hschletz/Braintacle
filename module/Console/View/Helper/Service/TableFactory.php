@@ -24,6 +24,8 @@ namespace Console\View\Helper\Service;
 
 /**
  * Factory for Table
+ *
+ * @psalm-suppress UnusedClass
  */
 class TableFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {

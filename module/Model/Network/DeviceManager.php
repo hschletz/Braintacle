@@ -47,13 +47,7 @@ class DeviceManager
      */
     protected $_networkDevicesIdentified;
 
-    /**
-     * Constructor
-     *
-     * @param \Database\Table\NetworkDeviceTypes $networkDeviceTypes
-     * @param \Database\Table\NetworkDevicesScanned $networkDevicesScanned
-     * @param \Database\Table\NetworkDevicesIdentified $networkDevicesIdentified
-     */
+    /** @psalm-suppress PossiblyUnusedMethod */
     public function __construct(
         \Database\Table\NetworkDeviceTypes $networkDeviceTypes,
         \Database\Table\NetworkDevicesScanned $networkDevicesScanned,
@@ -203,6 +197,8 @@ class DeviceManager
      * Get all defined types
      *
      * @return string[] Types ordered by name
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function getTypes()
     {
@@ -247,6 +243,8 @@ class DeviceManager
      *
      * @param string $description Description of new type
      * @throws \RuntimeException if a definition with the same description already exists.
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      **/
     public function addType($description)
     {
@@ -262,6 +260,8 @@ class DeviceManager
      * @param string $old Old description of type
      * @param string $new New description of type
      * @throws \RuntimeException if $old does not exist or $new already exists
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      **/
     public function renameType($old, $new)
     {

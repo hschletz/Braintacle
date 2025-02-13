@@ -310,8 +310,7 @@ class ClientTest extends AbstractTestCase
         $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->expects($this->exactly(2))->method('get')->with('Model\Config')->willReturn($config);
 
-        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroups', '__destruct']);
-        $model->expects($this->exactly(3))->method('offsetGet')->willReturn(42);
+        $model = $this->createPartialMock(Client::class, ['getGroups', '__destruct']);
         $model->expects($this->exactly(2))->method('getGroups')->willReturn(array());
         $model->setContainer($serviceManager);
 
@@ -875,7 +874,6 @@ class ClientTest extends AbstractTestCase
         $model->setContainer($serviceManager);
 
         $cache = new \ReflectionProperty($model, '_groups');
-        $cache->setAccessible(true);
         $cache->setValue($model, 'cache');
 
         $model->setGroupMemberships($newMemberships);
@@ -943,7 +941,6 @@ class ClientTest extends AbstractTestCase
         $model->setContainer($serviceManager);
 
         $cache = new \ReflectionProperty($model, '_groups');
-        $cache->setAccessible(true);
         $cache->setValue($model, 'cache');
 
         $model->setGroupMemberships(array('group1' => $newMembership));
@@ -1011,7 +1008,6 @@ class ClientTest extends AbstractTestCase
         $model->setContainer($serviceManager);
 
         $cache = new \ReflectionProperty($model, '_groups');
-        $cache->setAccessible(true);
         $cache->setValue($model, 'cache');
 
         $model->setGroupMemberships(array('group1' => $newMembership));
@@ -1071,7 +1067,6 @@ class ClientTest extends AbstractTestCase
         $model->setContainer($serviceManager);
 
         $cache = new \ReflectionProperty($model, '_groups');
-        $cache->setAccessible(true);
         $cache->setValue($model, 'cache');
 
         $model->setGroupMemberships(array('group1' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC));

@@ -31,7 +31,7 @@ $headers = array(
 );
 
 $renderCallbacks = array(
-    'edit' => function ($view, $device, $property) {
+    'edit' => function ($view, $device) {
         return $view->htmlElement(
             'a',
             $view->translate('Edit'),
@@ -45,7 +45,7 @@ $renderCallbacks = array(
             true
         );
     },
-    'delete' => function ($view, $device, $property) {
+    'delete' => function ($view, $device) {
         return $view->htmlElement(
             'a',
             $view->translate('Delete'),

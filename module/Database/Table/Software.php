@@ -36,7 +36,7 @@ use Psr\Log\LoggerInterface;
 class Software extends \Database\AbstractTable
 {
     /**
-     * {@inheritdoc}
+     * @psalm-suppress PossiblyUnusedMethod
      * @codeCoverageIgnore
      */
     public function __construct(ContainerInterface $container)

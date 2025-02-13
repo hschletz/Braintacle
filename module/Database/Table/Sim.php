@@ -27,6 +27,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * "sim" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class Sim extends \Database\AbstractTable
 {

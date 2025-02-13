@@ -24,6 +24,8 @@ namespace Console\Service;
 
 /**
  * Factory for LicensesController
+ *
+ * @psalm-suppress UnusedClass
  */
 class LicensesControllerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {

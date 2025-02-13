@@ -26,6 +26,8 @@ use DateTimeInterface;
 
 /**
  * Installed software
+ *
+ * @psalm-suppress PossiblyUnusedProperty -- Referenced in template
  */
 class Software
 {

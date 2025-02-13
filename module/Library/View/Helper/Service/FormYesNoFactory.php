@@ -24,6 +24,8 @@ namespace Library\View\Helper\Service;
 
 /**
  * Factory for FormYesNo
+ *
+ * @psalm-suppress UnusedClass
  */
 class FormYesNoFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {

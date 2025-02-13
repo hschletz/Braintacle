@@ -57,12 +57,7 @@ class SoftwareManager
     protected $_windowsProductKeys;
 
     /**
-     * Constructor
-     *
-     * @param \Database\Table\Software $software
-     * @param \Database\Table\SoftwareDefinitions $softwareDefinitions
-     * @param \Database\Table\WindowsInstallations $windowsInstallations
-     * @param \Database\Table\WindowsProductKeys $windowsProductKeys
+     * @psalm-suppress PossiblyUnusedMethod (used indirectly via container)
      */
     public function __construct(
         \Database\Table\Software $software,

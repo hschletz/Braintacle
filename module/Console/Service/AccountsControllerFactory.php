@@ -24,6 +24,8 @@ namespace Console\Service;
 
 /**
  * Factory for AccountsController
+ *
+ * @psalm-suppress UnusedClass
  */
 class AccountsControllerFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {

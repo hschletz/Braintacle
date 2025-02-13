@@ -27,7 +27,6 @@ use Console\Form\DeleteClient;
 use Console\Test\AbstractFormTestCase;
 use Laminas\Form\Element\Checkbox;
 use Model\Config;
-use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for DeleteClient
@@ -38,7 +37,6 @@ class DeleteClientTest extends AbstractFormTestCase
 
     private function createConfig(int $defaultDeleteInterfaces): Config
     {
-        /** @var MockObject&Config */
         $config = $this->createMock(Config::class);
         $config->expects($this->once())
             ->method('__get')

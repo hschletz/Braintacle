@@ -26,8 +26,8 @@ trait TemplateTestTrait
     private function createTemplateEngine(array $templateFunctions = []): TemplateEngine
     {
         return new TemplateEngine(
-            'de-DE',
             new Engine(),
+            'de-DE',
             new TemplateLoader(InstalledVersions::getRootPackage()['install_path'] . 'templates'),
             $templateFunctions[AssetUrlFunction::class] ?? $this->createStub(AssetUrlFunction::class),
             $templateFunctions[CsrfTokenFunction::class] ?? $this->createCsrfTokenFunctionStub(),
@@ -59,7 +59,7 @@ trait TemplateTestTrait
     private function createTranslateFunctionStub(): TranslateFunction
     {
         $function = $this->createStub(TranslateFunction::class);
-        $function->method('__invoke')->willReturnCallback(fn ($message, ...$args) => '_' . vsprintf($message, $args));
+        $function->method('__invoke')->willReturnCallback(fn($message, ...$args) => '_' . vsprintf($message, $args));
 
         return $function;
     }

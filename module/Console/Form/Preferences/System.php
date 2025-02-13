@@ -24,6 +24,8 @@ namespace Console\Form\Preferences;
 
 /**
  * Form for display/setting of 'system' preferences
+ *
+ * @psalm-suppress UnusedClass
  */
 class System extends AbstractForm
 {

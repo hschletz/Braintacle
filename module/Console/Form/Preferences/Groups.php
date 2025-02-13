@@ -24,6 +24,8 @@ namespace Console\Form\Preferences;
 
 /**
  * Form for display/setting of 'groups' preferences
+ *
+ * @psalm-suppress UnusedClass
  */
 class Groups extends AbstractForm
 {

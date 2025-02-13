@@ -27,6 +27,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * "sounds" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class AudioDevices extends \Database\AbstractTable
 {

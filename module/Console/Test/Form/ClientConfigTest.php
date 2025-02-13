@@ -190,7 +190,6 @@ class ClientConfigTest extends AbstractFormTestCase
         $form = new ClientConfig();
 
         $object = new \ReflectionProperty($this->_form, '_object');
-        $object->setAccessible(true);
         $object->setValue($form, $this->_client);
 
         $this->assertEquals($this->_client, $form->getClientObject());

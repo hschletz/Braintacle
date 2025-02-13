@@ -76,6 +76,8 @@ class DefaultPlugin
      * Retrieve items from database
      *
      * @return \Laminas\Db\ResultSet\AbstractResultSet
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function select()
     {
@@ -97,10 +99,10 @@ class DefaultPlugin
      * Join tables
      *
      * Default implementation: none
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
-    public function join()
-    {
-    }
+    public function join() {}
 
     /**
      * Filter results

@@ -137,6 +137,8 @@ class DefineFields extends Form
      * @param string $originalValue Current field name to be changed (NULL for adding field)
      * @return bool
      * @internal
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function validateName($value, $context, $originalValue = null)
     {

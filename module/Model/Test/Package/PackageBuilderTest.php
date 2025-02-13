@@ -589,7 +589,7 @@ class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         // override the error handler for this test.
         $message = null;
         set_error_handler(
-            function ($errno, $errstr, $errfile = null, $errline = null, $errcontext = null) use (&$message): ?bool {
+            function ($errno, $errstr) use (&$message): ?bool {
                 $message = $errstr;
                 return true;
             },

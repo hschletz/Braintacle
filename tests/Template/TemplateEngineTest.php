@@ -13,6 +13,7 @@ use ErrorException;
 use Latte\Engine;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery\Mock;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\TestCase;
@@ -44,6 +45,7 @@ class TemplateEngineTest extends TestCase
         $pathForRouteFunction = $this->createStub(PathForRouteFunction::class);
         $translateFunction = $this->createStub(TranslateFunction::class);
 
+        /** @var Mock|Engine */
         $engine = Mockery::mock(Engine::class);
         $engine->shouldReceive('setLocale')->once()->with('locale');
         $engine->shouldReceive('setLoader')->once()->with($templateLoader);
@@ -55,8 +57,8 @@ class TemplateEngineTest extends TestCase
         $engine->shouldReceive('renderToString')->with('template', ['key' => 'value'])->andReturn('content');
 
         new TemplateEngine(
-            'locale',
             $engine,
+            'locale',
             $templateLoader,
             $assetUrlFunction,
             $csrfTokenFunction,
@@ -67,8 +69,8 @@ class TemplateEngineTest extends TestCase
     private function createInstance(Engine $engine)
     {
         return new TemplateEngine(
-            'de-DE',
             $engine,
+            'de-DE',
             $this->createStub(TemplateLoader::class),
             $this->createStub(AssetUrlFunction::class),
             $this->createStub(CsrfTokenFunction::class),

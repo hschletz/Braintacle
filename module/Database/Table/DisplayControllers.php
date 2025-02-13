@@ -27,6 +27,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * "videos" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class DisplayControllers extends \Database\AbstractTable
 {

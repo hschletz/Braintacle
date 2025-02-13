@@ -31,6 +31,7 @@ namespace Model\Operator;
  */
 class AuthenticationService extends \Laminas\Authentication\AuthenticationService
 {
+    /** @psalm-suppress PossiblyUnusedMethod */
     public function __construct(AuthenticationAdapter $adapter)
     {
         parent::__construct(null, $adapter);

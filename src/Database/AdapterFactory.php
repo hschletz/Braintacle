@@ -10,9 +10,8 @@ use Laminas\Db\Adapter\Adapter;
  */
 class AdapterFactory
 {
-    public function __construct(private AppConfig $appConfig)
-    {
-    }
+    /** @psalm-suppress PossiblyUnusedMethod */
+    public function __construct(private AppConfig $appConfig) {}
 
     // Return type is Adapter, not AdapterInterface, which is unsuitable because
     // it lacks commonly used methods like query(), which are only defined in

@@ -256,6 +256,9 @@ class Form extends BaseForm
      * @param mixed $context Context for compatibility with callback validator, ignored by this implementation
      * @param string $type Expected type (integer, float, date). Any other value will always yield TRUE.
      * @return bool
+     *
+     * @psalm-suppress PossiblyUnusedMethod
+     * @psalm-suppress PossiblyUnusedParam
      */
     public function validateType($value, $context, $type)
     {

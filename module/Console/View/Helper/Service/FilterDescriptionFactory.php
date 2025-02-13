@@ -24,6 +24,8 @@ namespace Console\View\Helper\Service;
 
 /**
  * Factory for FilterDescription
+ *
+ * @psalm-suppress UnusedClass
  */
 class FilterDescriptionFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
 {

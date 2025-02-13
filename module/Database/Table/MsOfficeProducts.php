@@ -27,6 +27,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * "officepack" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class MsOfficeProducts extends \Database\AbstractTable
 {

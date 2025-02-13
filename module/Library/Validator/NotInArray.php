@@ -98,6 +98,8 @@ class NotInArray extends \Laminas\Validator\AbstractValidator
      *
      * @param integer $caseSensitivity
      * @return $this
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function setCaseSensitivity($caseSensitivity)
     {

@@ -24,6 +24,8 @@ namespace Console\Mvc\Controller\Plugin;
 
 /**
  * Extract and validate "order" and "direction" URL parameters
+ *
+ * @psalm-suppress UnusedClass
  */
 class GetOrder extends \Laminas\Mvc\Controller\Plugin\AbstractPlugin
 {

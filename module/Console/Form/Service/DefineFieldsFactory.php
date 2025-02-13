@@ -24,6 +24,8 @@ namespace Console\Form\Service;
 
 /**
  * Factory for DefineFields form
+ *
+ * @psalm-suppress UnusedClass
  * @codeCoverageIgnore
  */
 class DefineFieldsFactory implements \Laminas\ServiceManager\Factory\FactoryInterface

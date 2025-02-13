@@ -27,6 +27,8 @@ use Psr\Container\ContainerInterface;
 
 /**
  * "inputs" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class InputDevices extends \Database\AbstractTable
 {

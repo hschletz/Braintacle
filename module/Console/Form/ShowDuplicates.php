@@ -91,6 +91,8 @@ class ShowDuplicates extends Form
      * @param mixed $clients
      * @return array Unique input values
      * @throws \InvalidArgumentException if $clients is not array|null
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function clientsFilter($clients)
     {

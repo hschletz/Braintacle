@@ -15,21 +15,21 @@ use Latte\Engine;
 class TemplateEngine
 {
     public function __construct(
-        private string $locale,
         private Engine $engine,
-        private TemplateLoader $templateLoader,
-        private AssetUrlFunction $assetUrlFunction,
-        private CsrfTokenFunction $csrfTokenFunction,
-        private PathForRouteFunction $pathForRouteFunction,
-        private TranslateFunction $translateFunction,
+        string $locale,
+        TemplateLoader $templateLoader,
+        AssetUrlFunction $assetUrlFunction,
+        CsrfTokenFunction $csrfTokenFunction,
+        PathForRouteFunction $pathForRouteFunction,
+        TranslateFunction $translateFunction,
     ) {
         $this->engine->setLocale($locale);
         $this->engine->setLoader($templateLoader);
 
-        $engine->addFunction('assetUrl', $this->assetUrlFunction);
-        $engine->addFunction('csrfToken', $this->csrfTokenFunction);
-        $engine->addFunction('pathForRoute', $this->pathForRouteFunction);
-        $engine->addFunction('translate', $this->translateFunction);
+        $engine->addFunction('assetUrl', $assetUrlFunction);
+        $engine->addFunction('csrfToken', $csrfTokenFunction);
+        $engine->addFunction('pathForRoute', $pathForRouteFunction);
+        $engine->addFunction('translate', $translateFunction);
     }
 
     public function render(string $templatePath, array $params = []): string

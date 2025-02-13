@@ -18,9 +18,8 @@ use Slim\Routing\RouteContext;
  */
 class RouteHelperMiddleware implements MiddlewareInterface
 {
-    public function __construct(private RouteHelper $routeHelper)
-    {
-    }
+    /** @psalm-suppress PossiblyUnusedMethod */
+    public function __construct(private RouteHelper $routeHelper) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

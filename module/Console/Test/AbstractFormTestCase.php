@@ -133,10 +133,11 @@ abstract class AbstractFormTestCase extends TestCase
      * object.
      *
      * @param \Laminas\Form\ElementInterface $element
-     * @param array $attributes
      * @return string
+     *
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
-    public function formElementErrorsMock($element, $attributes)
+    public function formElementErrorsMock($element)
     {
         $messages = $element->getMessages();
         if ($messages) {

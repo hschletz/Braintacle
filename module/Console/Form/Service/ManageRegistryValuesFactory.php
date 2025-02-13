@@ -24,6 +24,8 @@ namespace Console\Form\Service;
 
 /**
  * Factory for ManageRegistryValues
+ *
+ * @psalm-suppress UnusedClass
  * @codeCoverageIgnore
  */
 class ManageRegistryValuesFactory implements \Laminas\ServiceManager\Factory\FactoryInterface

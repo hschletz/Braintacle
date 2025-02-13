@@ -34,9 +34,8 @@ use Laminas\Form\View\Helper\FormRow;
  */
 class Update extends Form implements FormHelperInterface
 {
-    public function __construct(private ConsoleScript $consoleScript)
-    {
-    }
+    /** @psalm-suppress PossiblyUnusedMethod */
+    public function __construct(private ConsoleScript $consoleScript) {}
 
     public function render(FormInterface $form): string
     {

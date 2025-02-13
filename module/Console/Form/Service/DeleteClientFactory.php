@@ -24,6 +24,8 @@ namespace Console\Form\Service;
 
 /**
  * Factory for DeleteClient form
+ *
+ * @psalm-suppress UnusedClass
  * @codeCoverageIgnore
  */
 class DeleteClientFactory implements \Laminas\ServiceManager\Factory\FactoryInterface

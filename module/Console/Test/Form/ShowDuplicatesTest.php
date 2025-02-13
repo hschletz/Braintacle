@@ -32,7 +32,7 @@ class ShowDuplicatesTest extends TestCase
     protected function createForm()
     {
         $translator = $this->createStub(TranslatorInterface::class);
-        $translator->method('translate')->willReturnCallback(fn ($message) => sprintf('TRANSLATE(%s)', $message));
+        $translator->method('translate')->willReturnCallback(fn($message) => sprintf('TRANSLATE(%s)', $message));
 
         return new ShowDuplicates($translator);
     }
@@ -44,19 +44,7 @@ class ShowDuplicatesTest extends TestCase
         $this->assertInstanceOf('\Laminas\Form\Element\MultiCheckbox', $mergeOptions);
     }
 
-    public static function initMergeOptionsProvider()
-    {
-        return [
-            ['mergeConfig'],
-            ['mergeCustomFields'],
-            ['mergeGroups'],
-            ['mergePackages'],
-            ['mergeProductKey'],
-        ];
-    }
-
-    /** @dataProvider initMergeOptionsProvider */
-    public function testInitMergeOptions($option)
+    public function testInitMergeOptions()
     {
         $expectedOptions = [
             DuplicatesManager::MERGE_CUSTOM_FIELDS,

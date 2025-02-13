@@ -63,7 +63,7 @@ class FileObjectTest extends \PHPUnit\Framework\TestCase
         $url = $this->_root->url() . '/test.txt';
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage("Error opening file '$url', mode 'r'");
-        $fileObject = new FileObject($url); // default mode 'r'
+        new FileObject($url); // default mode 'r'
     }
 
     public function testFlags()

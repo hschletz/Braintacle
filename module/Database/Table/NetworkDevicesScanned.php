@@ -32,7 +32,7 @@ use Psr\Container\ContainerInterface;
 class NetworkDevicesScanned extends \Database\AbstractTable
 {
     /**
-     * {@inheritdoc}
+     * @psalm-suppress PossiblyUnusedMethod
      * @codeCoverageIgnore
      */
     public function __construct(ContainerInterface $container)

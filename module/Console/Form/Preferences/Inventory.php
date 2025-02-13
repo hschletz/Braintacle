@@ -24,6 +24,8 @@ namespace Console\Form\Preferences;
 
 /**
  * Form for display/setting of 'inventory' preferences
+ *
+ * @psalm-suppress UnusedClass
  */
 class Inventory extends AbstractForm
 {

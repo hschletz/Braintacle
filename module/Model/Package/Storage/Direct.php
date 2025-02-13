@@ -132,6 +132,8 @@ class Direct implements StorageInterface
      *
      * @param integer $id Package ID
      * @return array Package data, see \Model\Package\Metadata::getPackageData()
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function readMetadata($id)
     {

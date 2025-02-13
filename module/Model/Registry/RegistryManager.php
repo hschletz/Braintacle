@@ -72,6 +72,8 @@ class RegistryManager
      * @param string $name Name of an existing value definition
      * @return \Model\Registry\Value
      * @throws \RuntimeException if given name is invalid
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      **/
     public function getValueDefinition($name)
     {
@@ -95,6 +97,8 @@ class RegistryManager
      * @throws \InvalidArgumentException if $subKeys is empty
      * @throws \DomainException if $rootkey is not one of the HKEY_* constants
      * @throws \Model\Registry\RuntimeException if a value with the same name already exists.
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      **/
     public function addValueDefinition($name, $rootKey, $subKeys, $value = null)
     {

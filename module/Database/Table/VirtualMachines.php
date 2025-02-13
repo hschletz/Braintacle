@@ -27,11 +27,12 @@ use Psr\Container\ContainerInterface;
 
 /**
  * "virtualmachines" table
+ *
+ * @psalm-suppress UnusedClass
  */
 class VirtualMachines extends \Database\AbstractTable
 {
     /**
-     * {@inheritdoc}
      * @codeCoverageIgnore
      */
     public function __construct(ContainerInterface $container)
