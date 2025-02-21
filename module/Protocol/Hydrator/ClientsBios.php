@@ -43,7 +43,7 @@ class ClientsBios implements \Laminas\Hydrator\HydratorInterface
         'BMANUFACTURER' => 'biosManufacturer',
         'BVERSION' => 'biosVersion',
         'SMANUFACTURER' => 'manufacturer',
-        'SMODEL' => 'model',
+        'SMODEL' => 'productName',
         'SSN' => 'serial',
         'TYPE' => 'type',
     );
@@ -59,7 +59,7 @@ class ClientsBios implements \Laminas\Hydrator\HydratorInterface
         'biosManufacturer' => 'BMANUFACTURER',
         'biosVersion' => 'BVERSION',
         'manufacturer' => 'SMANUFACTURER',
-        'model' => 'SMODEL',
+        'productName' => 'SMODEL',
         'serial' => 'SSN',
         'type' => 'TYPE',
     ];
@@ -80,10 +80,7 @@ class ClientsBios implements \Laminas\Hydrator\HydratorInterface
     public function extract(object $object): array
     {
         $data = array();
-        foreach ($object as $name => $value) {
-            if ($object instanceof AbstractModel) {
-                $name = lcfirst($name);
-            }
+        foreach (get_object_vars($object) as $name => $value) {
             $name = $this->extractName($name);
             if ($name) {
                 $data[$name] = $value;

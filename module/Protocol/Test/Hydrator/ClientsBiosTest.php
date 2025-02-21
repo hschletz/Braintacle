@@ -22,10 +22,12 @@
 
 namespace Protocol\Test\Hydrator;
 
-use Library\Test\Hydrator\AbstractHydratorTestCase;
 use Model\AbstractModel;
+use Model\Client\Client;
+use PHPUnit\Framework\TestCase;
+use Protocol\Hydrator\ClientsBios;
 
-class ClientsBiosTest extends AbstractHydratorTestCase
+class ClientsBiosTest extends TestCase
 {
     private static $extracted = [
         'ASSETTAG' => 'asset tag',
@@ -44,7 +46,7 @@ class ClientsBiosTest extends AbstractHydratorTestCase
         'biosManufacturer' => 'bios manufacturer',
         'biosVersion' => 'bios version',
         'manufacturer' => 'manufacturer',
-        'model' => 'model',
+        'productName' => 'model',
         'serial' => 'serial',
         'type' => 'type',
         'idString' => 'ignored',
@@ -65,7 +67,7 @@ class ClientsBiosTest extends AbstractHydratorTestCase
      */
     public function testHydrateWithStdClass(array $data, array $objectData)
     {
-        $hydrator = $this->getHydrator();
+        $hydrator = new ClientsBios();
         $object = (object) $objectData;
         $object->idString = 'ignored';
         $this->assertSame($object, $hydrator->hydrate($data, $object));
@@ -77,7 +79,7 @@ class ClientsBiosTest extends AbstractHydratorTestCase
      */
     public function testHydrateWithAbstractModel(array $data, array $objectData)
     {
-        $hydrator = $this->getHydrator();
+        $hydrator = new ClientsBios();
         $object = $this->getMockForAbstractClass(AbstractModel::class);
         $object->idString = 'ignored';
         $this->assertSame($object, $hydrator->hydrate($data, $object));
@@ -88,10 +90,13 @@ class ClientsBiosTest extends AbstractHydratorTestCase
         $this->assertEquals($expected, $object->getArrayCopy());
     }
 
-    public static function extractProvider()
+    public function testExtract()
     {
-        return [
-            [self::$hydrated, self::$extracted],
-        ];
+        $hydrator = new ClientsBios();
+        $client = new Client();
+        foreach (self::$hydrated as $key => $value) {
+            $client->$key = $value;
+        }
+        $this->assertEquals(self::$extracted, $hydrator->extract($client));
     }
 }

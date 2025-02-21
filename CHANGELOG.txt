@@ -18,6 +18,8 @@ Fixed bugs:
 
 - Fixed exception when a client has reported a NULL user name.
 
+- Fixed empty BIOS section in export.
+
 Misc:
 
 - Fixes for compatibility with PHP 8.4.
