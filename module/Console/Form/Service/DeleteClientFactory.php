@@ -34,7 +34,7 @@ class DeleteClientFactory implements \Laminas\ServiceManager\Factory\FactoryInte
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,
-        array $options = null
+        ?array $options = null
     ) {
         return new \Console\Form\DeleteClient(
             null,

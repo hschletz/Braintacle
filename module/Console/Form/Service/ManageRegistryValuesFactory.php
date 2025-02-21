@@ -34,7 +34,7 @@ class ManageRegistryValuesFactory implements \Laminas\ServiceManager\Factory\Fac
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,
-        array $options = null
+        ?array $options = null
     ) {
         return new \Console\Form\ManageRegistryValues(
             null,

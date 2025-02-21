@@ -33,7 +33,7 @@ class TableFactory implements \Laminas\ServiceManager\Factory\FactoryInterface
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,
-        array $options = null
+        ?array $options = null
     ) {
         $viewHelperManager = $container->get('ViewHelperManager');
         return new \Console\View\Helper\Table(

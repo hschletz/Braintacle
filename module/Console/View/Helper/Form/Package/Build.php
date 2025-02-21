@@ -36,7 +36,7 @@ class Build extends AbstractHelper implements FormHelperInterface
     /** @psalm-suppress PossiblyUnusedMethod */
     public function __construct(private ConsoleScript $consoleScript) {}
 
-    public function __invoke(FormInterface $form = null)
+    public function __invoke(?FormInterface $form = null)
     {
         $view = $this->getView();
 

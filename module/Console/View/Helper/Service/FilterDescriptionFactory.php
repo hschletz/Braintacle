@@ -33,7 +33,7 @@ class FilterDescriptionFactory implements \Laminas\ServiceManager\Factory\Factor
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,
-        array $options = null
+        ?array $options = null
     ) {
         return new \Console\View\Helper\FilterDescription(
             $container->get('Model\Network\Subnet')

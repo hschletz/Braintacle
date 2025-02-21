@@ -18,6 +18,10 @@ Fixed bugs:
 
 - Fixed exception when a client has reported a NULL user name.
 
+Misc:
+
+- Fixes for compatibility with PHP 8.4.
+
 
 CHANGES IN VERSION 1.13
 =======================

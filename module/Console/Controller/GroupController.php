@@ -22,6 +22,9 @@
 
 namespace Console\Controller;
 
+use Laminas\Stdlib\RequestInterface;
+use Laminas\Stdlib\ResponseInterface;
+
 /**
  * Controller for managing groups
  */
@@ -54,10 +57,8 @@ class GroupController extends \Laminas\Mvc\Controller\AbstractActionController
     }
 
     /** {@inheritdoc} */
-    public function dispatch(
-        \Laminas\Stdlib\RequestInterface $request,
-        \Laminas\Stdlib\ResponseInterface $response = null
-    ) {
+    public function dispatch(RequestInterface $request, ?ResponseInterface $response = null)
+    {
         $event = $this->getEvent();
 
         // Fetch group with given name for actions referring to a particular group

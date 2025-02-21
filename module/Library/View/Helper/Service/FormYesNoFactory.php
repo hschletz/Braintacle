@@ -33,7 +33,7 @@ class FormYesNoFactory implements \Laminas\ServiceManager\Factory\FactoryInterfa
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,
-        array $options = null
+        ?array $options = null
     ) {
         $plugins = $container->get('ViewHelperManager');
         return new \Library\View\Helper\FormYesNo(

@@ -33,7 +33,7 @@ class PackageControllerFactory implements \Laminas\ServiceManager\Factory\Factor
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,
-        array $options = null
+        ?array $options = null
     ) {
         $formManager = $container->get('FormElementManager');
         return new \Console\Controller\PackageController(

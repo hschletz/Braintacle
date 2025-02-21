@@ -40,7 +40,7 @@ class PackageFactory implements \Laminas\ServiceManager\Factory\AbstractFactoryI
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,
-        array $options = null
+        ?array $options = null
     ) {
         $form = new $requestedName();
         if ($form instanceof \Console\Form\Package\Build) {

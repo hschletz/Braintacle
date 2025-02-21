@@ -210,7 +210,7 @@ class AuthenticationAdapterTest extends AbstractTestCase
             AuthenticationAdapter::class,
             ['getHash', 'getCredential', 'getIdentity', 'updateHash']
         );
-        $adapter->method('getHash')->willReturn('$2y$10$aA/.DiN0Vhb0emJ8jkRScuLb4ncdBbLvnUdM7GggoPJSm4r8EPQ6S');
+        $adapter->method('getHash')->willReturn('$2y$12$f/eYgzYfJfJLV57QJKIc5OAK6cuyPgwNxv8cImpdElIOQ9ySxnk/y');
         $adapter->method('getCredential')->willReturn('password2');
         $adapter->method('getIdentity')->willReturn('identity');
         $adapter->expects($this->never())->method('updateHash');

@@ -29,5 +29,5 @@ use Laminas\Form\FormInterface;
  */
 interface FormHelperInterface
 {
-    public function __invoke(FormInterface $form = null);
+    public function __invoke(?FormInterface $form = null);
 }

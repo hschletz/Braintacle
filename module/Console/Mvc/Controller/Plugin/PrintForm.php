@@ -38,7 +38,7 @@ class PrintForm extends \Laminas\Mvc\Controller\Plugin\AbstractPlugin
     /**
      * Return view model set up to output given form
      */
-    public function __invoke(Form $form, string $helperName = null): ViewModel
+    public function __invoke(Form $form, ?string $helperName = null): ViewModel
     {
         $view = new ViewModel();
         $view->setTemplate('plugin/PrintForm.php');

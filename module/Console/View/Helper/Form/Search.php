@@ -31,11 +31,9 @@ use Laminas\View\Helper\AbstractHelper;
  */
 class Search extends AbstractHelper implements FormHelperInterface
 {
-    public function __construct(private ConsoleScript $consoleScript)
-    {
-    }
+    public function __construct(private ConsoleScript $consoleScript) {}
 
-    public function __invoke(FormInterface $form = null)
+    public function __invoke(?FormInterface $form = null)
     {
         $view = $this->getView();
 

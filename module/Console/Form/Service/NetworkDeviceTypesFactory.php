@@ -34,7 +34,7 @@ class NetworkDeviceTypesFactory implements \Laminas\ServiceManager\Factory\Facto
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,
-        array $options = null
+        ?array $options = null
     ) {
         return new \Console\Form\NetworkDeviceTypes(
             null,

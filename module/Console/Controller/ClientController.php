@@ -24,6 +24,8 @@ namespace Console\Controller;
 
 use Braintacle\Http\RouteHelper;
 use Console\View\Helper\Form\Search;
+use Laminas\Stdlib\RequestInterface;
+use Laminas\Stdlib\ResponseInterface;
 
 /**
  * Controller for all client-related actions.
@@ -74,10 +76,8 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
     }
 
     /** {@inheritdoc} */
-    public function dispatch(
-        \Laminas\Stdlib\RequestInterface $request,
-        \Laminas\Stdlib\ResponseInterface $response = null
-    ) {
+    public function dispatch(RequestInterface $request, ?ResponseInterface $response = null)
+    {
         $event = $this->getEvent();
 
         // Fetch client with given ID for actions referring to a particular client

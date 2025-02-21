@@ -78,9 +78,7 @@ class ItemManager
     /**
      * @psalm-suppress PossiblyUnusedMethod (used indirectly via container)
      */
-    public function __construct(private ContainerInterface $container)
-    {
-    }
+    public function __construct(private ContainerInterface $container) {}
 
     /**
      * List all valid item types
@@ -133,8 +131,8 @@ class ItemManager
      */
     public function getItems(
         string $type,
-        array $filters = null,
-        string $order = null,
+        ?array $filters = null,
+        ?string $order = null,
         ?string $direction = 'asc'
     ): AbstractResultSet {
         $type = strtolower($type);

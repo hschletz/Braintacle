@@ -22,6 +22,9 @@
 
 namespace Console\Form;
 
+use Laminas\Form\Fieldset;
+use Laminas\View\Renderer\PhpRenderer;
+
 /**
  * Define/delete network device types
  *
@@ -148,7 +151,7 @@ class NetworkDeviceTypes extends Form
     }
 
     /** {@inheritdoc} */
-    public function renderFieldset(\Laminas\View\Renderer\PhpRenderer $view, \Laminas\Form\Fieldset $fieldset = null)
+    public function renderFieldset(PhpRenderer $view, ?Fieldset $fieldset = null)
     {
         $output = "<div class='table'>\n";
         $types = $this->get('Types');

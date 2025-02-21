@@ -33,7 +33,7 @@ class PreferencesControllerFactory implements \Laminas\ServiceManager\Factory\Fa
     public function __invoke(
         \Interop\Container\ContainerInterface $container,
         $requestedName,
-        array $options = null
+        ?array $options = null
     ) {
         return new \Console\Controller\PreferencesController(
             $container->get('FormElementManager'),

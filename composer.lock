@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "04a3b82d6cb69e5bc17ba414e4d54195",
+    "content-hash": "10f9eaa964a120f2df533ec2e477088b",
     "packages": [
         {
             "name": "brick/varexporter",
@@ -209,16 +209,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hschletz/formotron.git",
-                "reference": "6d17bd145b4e0d08dfa683371b9ac26c6e16d540"
+                "reference": "62103c26cb941c2fcf116d277e7b3d00b6c9f379"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hschletz/formotron/zipball/6d17bd145b4e0d08dfa683371b9ac26c6e16d540",
-                "reference": "6d17bd145b4e0d08dfa683371b9ac26c6e16d540",
+                "url": "https://api.github.com/repos/hschletz/formotron/zipball/62103c26cb941c2fcf116d277e7b3d00b6c9f379",
+                "reference": "62103c26cb941c2fcf116d277e7b3d00b6c9f379",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1 || ^8.2 || ^8.3",
+                "php": "^8.1 || ^8.2 || ^8.3 || 8.4",
                 "psr/container": "^1.0 || ^2.0"
             },
             "require-dev": {
@@ -248,24 +248,27 @@
                 "issues": "https://github.com/hschletz/formotron/issues",
                 "source": "https://github.com/hschletz/formotron/tree/main"
             },
-            "time": "2025-02-01T16:35:59+00:00"
+            "time": "2025-02-16T18:09:08+00:00"
         },
         {
             "name": "hschletz/nada",
-            "version": "v1.2.4",
+            "version": "v1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hschletz/NADA.git",
-                "reference": "cd5a6602a5cb87d839fd93bddfc8b82163a6b4f8"
+                "reference": "b148c876317d801a838aad9d6b198fc61281f3fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hschletz/NADA/zipball/cd5a6602a5cb87d839fd93bddfc8b82163a6b4f8",
-                "reference": "cd5a6602a5cb87d839fd93bddfc8b82163a6b4f8",
+                "url": "https://api.github.com/repos/hschletz/NADA/zipball/b148c876317d801a838aad9d6b198fc61281f3fa",
+                "reference": "b148c876317d801a838aad9d6b198fc61281f3fa",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4 || ^8.0 || ^8.1 || ^8.2 || ^8.3"
+                "php": "^8.1 || ^8.2 || ^8.3 || ^8.4"
+            },
+            "require-dev": {
+                "bamarni/composer-bin-plugin": "^1.8"
             },
             "type": "library",
             "autoload": {
@@ -287,9 +290,9 @@
             "homepage": "https://github.com/hschletz/NADA",
             "support": {
                 "issues": "https://github.com/hschletz/NADA/issues",
-                "source": "https://github.com/hschletz/NADA/tree/v1.2.4"
+                "source": "https://github.com/hschletz/NADA/tree/v1.3"
             },
-            "time": "2024-06-02T15:05:16+00:00"
+            "time": "2025-02-21T17:42:48+00:00"
         },
         {
             "name": "laminas/laminas-authentication",
@@ -6972,7 +6975,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php-64bit": "^8.2 || ^8.3",
+        "php-64bit": "^8.2 || ^8.3 | ^8.4",
         "ext-dom": "*",
         "ext-intl": "*",
         "ext-mbstring": "*",
