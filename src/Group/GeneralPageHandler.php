@@ -4,6 +4,7 @@ namespace Braintacle\Group;
 
 use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -17,9 +18,9 @@ class GeneralPageHandler implements RequestHandlerInterface
         private ResponseInterface $response,
         private DataProcessor $dataProcessor,
         private TemplateEngine $templateEngine,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $group = $this->dataProcessor->process($request->getQueryParams(), GroupRequestParameters::class)->group;

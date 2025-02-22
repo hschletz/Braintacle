@@ -6,6 +6,7 @@ use Formotron\AssertionFailedException;
 use Formotron\Validator;
 use Model\Client\CustomFieldManager;
 use Model\Registry\RegistryManager;
+use Override;
 
 /**
  * Validate search filter type.
@@ -70,9 +71,9 @@ class SearchFilterValidator implements Validator
     public function __construct(
         private CustomFieldManager $customFieldManager,
         private RegistryManager $registryManager,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function getValidationErrors(mixed $value, array $args): array
     {
         if (str_starts_with($value, 'CustomFields')) {

@@ -3,12 +3,14 @@
 namespace Braintacle\Transformer;
 
 use Formotron\Transformer;
+use Override;
 
 /**
  * Generate boolean by given rules.
  */
 class ToBoolTransformer implements Transformer
 {
+    #[Override]
     public function transform(mixed $value, array $args): mixed
     {
         assert(array_key_exists('trueValue', $args));

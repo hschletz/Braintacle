@@ -6,6 +6,7 @@ use Braintacle\Http\RouteHelper;
 use Braintacle\Template\TemplateEngine;
 use Laminas\Authentication\AuthenticationServiceInterface;
 use Laminas\Session\Container as Session;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -20,6 +21,7 @@ class ShowLoginFormHandler implements RequestHandlerInterface
         private TemplateEngine $templateEngine,
     ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if ($this->authenticationService->hasIdentity()) {

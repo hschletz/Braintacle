@@ -4,6 +4,7 @@ namespace Braintacle\Software;
 
 use Formotron\DataProcessor;
 use Model\SoftwareManager;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -17,9 +18,9 @@ class SoftwareManagementHandler implements RequestHandlerInterface
         private ResponseInterface $response,
         private DataProcessor $dataProcessor,
         private SoftwareManager $softwareManager,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $postData = $request->getParsedBody();

@@ -5,6 +5,7 @@ namespace Braintacle\Group\Members;
 use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
 use Model\Client\ClientManager;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -19,9 +20,9 @@ class MembersPageHandler implements RequestHandlerInterface
         private DataProcessor $dataProcessor,
         private ClientManager $clientManager,
         private TemplateEngine $templateEngine,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestParams = $this->dataProcessor->process($request->getQueryParams(), MembersRequestParameters::class);

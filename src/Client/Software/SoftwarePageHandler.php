@@ -7,10 +7,14 @@ use Braintacle\Http\RouteHelper;
 use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
 use Model\Config;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+/**
+ * Information about a client's software
+ */
 class SoftwarePageHandler implements RequestHandlerInterface
 {
     public function __construct(
@@ -19,12 +23,9 @@ class SoftwarePageHandler implements RequestHandlerInterface
         private DataProcessor $dataProcessor,
         private Config $config,
         private TemplateEngine $templateEngine,
-    ) {
-    }
+    ) {}
 
-    /**
-     * Information about a client's software
-     */
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $routeArguments = $this->routeHelper->getRouteArguments();

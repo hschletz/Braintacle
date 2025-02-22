@@ -6,6 +6,7 @@ use Braintacle\Duplicates\Criterion;
 use Braintacle\FlashMessages;
 use Braintacle\Template\TemplateEngine;
 use Model\Client\DuplicatesManager;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -20,9 +21,9 @@ class OverviewHandler implements RequestHandlerInterface
         private DuplicatesManager $duplicatesManager,
         private TemplateEngine $templateEngine,
         private FlashMessages $flashMessages,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $duplicates = [];

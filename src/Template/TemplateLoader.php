@@ -5,6 +5,7 @@ namespace Braintacle\Template;
 use Latte\Loaders\FileLoader;
 use Latte\RuntimeException;
 use Library\FileObject;
+use Override;
 use Symfony\Component\Filesystem\Path;
 
 /**
@@ -22,6 +23,7 @@ class TemplateLoader extends FileLoader
     /**
      * @psalm-suppress ParamNameMismatch The mismatch is actually between FileLoader and Loader.
      */
+    #[Override]
     public function getContent($fileName): string
     {
         $file = Path::join($this->baseDir, $fileName);

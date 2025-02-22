@@ -4,6 +4,7 @@ namespace Braintacle\Http;
 
 use Braintacle\AppConfig;
 use Braintacle\Template\TemplateEngine;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UploadedFileInterface;
@@ -29,9 +30,9 @@ class ErrorHandlingMiddleware implements MiddlewareInterface
         private AppConfig $appConfig,
         private LoggerInterface $logger,
         private TemplateEngine $templateEngine,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         try {
@@ -74,7 +75,7 @@ class ErrorHandlingMiddleware implements MiddlewareInterface
             'post' => $this->dump($request->getParsedBody() ?? []),
             'files' => $this->dump(
                 array_map(
-                    fn (UploadedFileInterface $uploadedFile) => [
+                    fn(UploadedFileInterface $uploadedFile) => [
                         'clientFilename' => $uploadedFile->getClientFilename(),
                         'clientMediaType' => $uploadedFile->getClientMediaType(),
                         'size' => $uploadedFile->getSize(),

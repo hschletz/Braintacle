@@ -30,6 +30,7 @@ abstract class AbstractHydratorTestCase extends TestCase
 {
     protected function getHydrator()
     {
+        /** @var string */
         $class = preg_replace('/Test\\\\?/', '', get_class($this));
         return new $class();
     }

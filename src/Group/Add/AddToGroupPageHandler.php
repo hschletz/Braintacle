@@ -6,6 +6,7 @@ use Braintacle\Search\SearchParams;
 use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
 use Model\Group\GroupManager;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -20,9 +21,9 @@ class AddToGroupPageHandler implements RequestHandlerInterface
         private DataProcessor $dataProcessor,
         private GroupManager $groupManager,
         private TemplateEngine $templateEngine,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $searchParams = $this->dataProcessor->process($request->getQueryParams(), SearchParams::class);

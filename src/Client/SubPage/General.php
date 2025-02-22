@@ -6,6 +6,7 @@ use Braintacle\Client\ClientRequestParameters;
 use Braintacle\Http\RouteHelper;
 use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -20,9 +21,9 @@ class General implements RequestHandlerInterface
         private RouteHelper $routeHelper,
         private DataProcessor $dataProcessor,
         private TemplateEngine $templateEngine,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $routeArguments = $this->routeHelper->getRouteArguments();

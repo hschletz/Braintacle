@@ -6,6 +6,7 @@ use Braintacle\Http\RouteHelper;
 use Laminas\Session\Container as Session;
 use Laminas\Session\Validator\Csrf;
 use Model\Operator\AuthenticationService;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -19,9 +20,9 @@ class ProcessLoginFormHandler implements RequestHandlerInterface
         private Session $session,
         private Csrf $csrfValidator,
         private AuthenticationService $authenticationService,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if ($this->authenticationService->hasIdentity()) {

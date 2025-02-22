@@ -3,6 +3,7 @@
 namespace Braintacle\Group\Packages;
 
 use Formotron\DataProcessor;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -15,9 +16,9 @@ class RemovePackagesHandler implements RequestHandlerInterface
     public function __construct(
         private ResponseInterface $response,
         private DataProcessor $dataProcessor,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $queryParams = $request->getQueryParams();

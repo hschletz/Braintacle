@@ -5,6 +5,7 @@ namespace Braintacle\Validator;
 use Formotron\AssertionFailedException;
 use Formotron\Validator;
 use InvalidArgumentException;
+use Override;
 
 /**
  * Validate string length.
@@ -14,6 +15,7 @@ use InvalidArgumentException;
  */
 class StringLengthValidator implements Validator
 {
+    #[Override]
     public function getValidationErrors(mixed $value, array $args): array
     {
         assert(array_key_exists('min', $args));

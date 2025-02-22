@@ -4,6 +4,7 @@ namespace Braintacle\Http;
 
 use Laminas\Authentication\AuthenticationServiceInterface;
 use Laminas\Session\Container as Session;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -22,9 +23,9 @@ class LoginMiddleware implements MiddlewareInterface
         private Session $session,
         private AuthenticationServiceInterface $authenticationService,
         private RouteHelper $routeHelper,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($this->authenticationService->hasIdentity()) {

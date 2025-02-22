@@ -7,6 +7,7 @@ use Braintacle\FlashMessages;
 use Console\Form\ShowDuplicates as Validator;
 use Laminas\Translator\TranslatorInterface;
 use Model\Client\DuplicatesManager;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -27,6 +28,7 @@ class MergeDuplicatesHandler implements RequestHandlerInterface
         private TranslatorInterface $translator,
     ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $formData = $this->csrfProcessor->process($request->getParsedBody());

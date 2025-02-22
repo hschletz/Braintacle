@@ -5,6 +5,7 @@ namespace Braintacle\Legacy;
 use Braintacle\Template\TemplateEngine;
 use Laminas\Http\Header\HeaderInterface;
 use Laminas\Http\Response;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -18,9 +19,9 @@ class ApplicationBridge implements RequestHandlerInterface
         private ResponseInterface $response,
         private MvcApplication $mvcApplication,
         private TemplateEngine $templateEngine,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $mvcEvent = $this->mvcApplication->run($request);

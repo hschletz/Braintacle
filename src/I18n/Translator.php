@@ -9,6 +9,7 @@ use Laminas\I18n\Translator\Resources;
 use Laminas\Translator\TranslatorInterface;
 use Locale;
 use LogicException;
+use Override;
 use RuntimeException;
 
 class Translator implements TranslatorInterface
@@ -55,6 +56,7 @@ class Translator implements TranslatorInterface
         return $this->translations;
     }
 
+    #[Override]
     public function translate($message, $textDomain = 'default', $locale = null)
     {
         $translations = $this->getTranslations();
@@ -69,6 +71,7 @@ class Translator implements TranslatorInterface
         }
     }
 
+    #[Override]
     public function translatePlural($singular, $plural, $number, $textDomain = 'default', $locale = null)
     {
         // This method should never be encountered because we don't use plurals.

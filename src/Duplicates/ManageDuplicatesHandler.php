@@ -7,6 +7,7 @@ use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
 use Model\Client\DuplicatesManager;
 use Model\Config;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -23,9 +24,9 @@ class ManageDuplicatesHandler implements RequestHandlerInterface
         private DuplicatesManager $duplicatesManager,
         private Config $config,
         private TemplateEngine $templateEngine,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestParameters = $this->dataProcessor->process(

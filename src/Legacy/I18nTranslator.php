@@ -4,6 +4,7 @@ namespace Braintacle\Legacy;
 
 use Laminas\I18n\Translator\TranslatorInterface as I18nTranslatorInterface;
 use Laminas\Translator\TranslatorInterface;
+use Override;
 
 /**
  * Translator wrapper for deprecated I18n interface.
@@ -15,15 +16,15 @@ use Laminas\Translator\TranslatorInterface;
  */
 class I18nTranslator implements I18nTranslatorInterface
 {
-    public function __construct(private TranslatorInterface $translator)
-    {
-    }
+    public function __construct(private TranslatorInterface $translator) {}
 
+    #[Override]
     public function translate($message, $textDomain = 'default', $locale = null)
     {
         return $this->translator->translate($message, $textDomain, $locale);
     }
 
+    #[Override]
     public function translatePlural($singular, $plural, $number, $textDomain = 'default', $locale = null)
     {
         return $this->translator->translatePlural($singular, $plural, $number, $textDomain, $locale);

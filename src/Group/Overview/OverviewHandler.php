@@ -6,6 +6,7 @@ use Braintacle\FlashMessages;
 use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
 use Model\Group\GroupManager;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -23,6 +24,7 @@ class OverviewHandler implements RequestHandlerInterface
         private FlashMessages $flashMessages,
     ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestParameters = $this->dataProcessor->process(

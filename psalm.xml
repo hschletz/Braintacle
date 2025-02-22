@@ -27,6 +27,11 @@
                 <directory name="module/Console/views" />
             </errorLevel>
         </InvalidScope>
+        <MissingOverrideAttribute>
+            <errorLevel type="suppress">
+                <directory name="module" />
+            </errorLevel>
+        </MissingOverrideAttribute>
         <PossiblyUnusedMethod>
             <errorLevel type="suppress">
                 <!-- Controller actions are never referenced directly. -->

@@ -7,6 +7,7 @@ use Formotron\DataProcessor;
 use Laminas\Translator\TranslatorInterface;
 use Model\Group\GroupManager;
 use Model\Group\RuntimeException as GroupRuntimeException;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -19,9 +20,9 @@ class DeleteHandler implements RequestHandlerInterface
         private GroupManager $groupManager,
         private FlashMessages $flashMessages,
         private TranslatorInterface $translator,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $group = $this->dataProcessor->process($request->getQueryParams(), GroupRequestParameters::class)->group;

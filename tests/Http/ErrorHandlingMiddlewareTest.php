@@ -124,22 +124,26 @@ class ErrorHandlingMiddlewareTest extends TestCase
         $this->assertCount(1, $xPath->query('//pre[contains(text(), "exception message")]'));
         $this->assertEquals('POST', $xPath->evaluate('string(//h4[text()="Method"]/following-sibling::p[1])'));
 
+        /** @psalm-suppress InvalidArgument */
         $this->assertStringContainsString(
             '"foo" => "bar"',
             $xPath->evaluate('string(//h4[text()="URL parameters"]/following-sibling::pre[1])')
         );
 
+        /** @psalm-suppress InvalidArgument */
         $this->assertStringContainsString(
             '"bar" => "baz"',
             $xPath->evaluate('string(//h4[text()="POST parameters"]/following-sibling::pre[1])')
         );
 
+        /** @var string */
         $uploadedFiles = $xPath->evaluate('string(//h4[text()="Files"]/following-sibling::pre[1])');
         $this->assertStringContainsString('"clientFilename" => "filename"', $uploadedFiles);
         $this->assertStringContainsString('"clientMediaType" => "mediatype"', $uploadedFiles);
         $this->assertStringContainsString('"size" => 42', $uploadedFiles);
         $this->assertStringContainsString('"error" => 0', $uploadedFiles);
 
+        /** @psalm-suppress InvalidArgument */
         $this->assertStringContainsString(
             '"param" => "value"',
             $xPath->evaluate('string(//h4[text()="Server variables"]/following-sibling::pre[1])')
@@ -162,6 +166,7 @@ class ErrorHandlingMiddlewareTest extends TestCase
         $response = $middleware->process($this->request, $handler);
         $xPath = $this->getXPathFromMessage($response);
 
+        /** @psalm-suppress InvalidArgument */
         $this->assertEquals(
             '[]',
             trim($xPath->evaluate('string(//h4[text()="POST parameters"]/following-sibling::pre[1])'))

@@ -4,6 +4,7 @@ namespace Braintacle\Client\Packages;
 
 use Braintacle\Http\RouteHelper;
 use Formotron\DataProcessor;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -17,9 +18,9 @@ class ResetPackageHandler implements RequestHandlerInterface
         private ResponseInterface $response,
         private RouteHelper $routeHelper,
         private DataProcessor $dataProcessor,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $routeArguments = $this->routeHelper->getRouteArguments();

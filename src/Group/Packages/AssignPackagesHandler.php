@@ -6,6 +6,7 @@ use Braintacle\Group\GroupRequestParameters;
 use Braintacle\Http\RouteHelper;
 use Console\Form\Package\AssignPackagesForm;
 use Formotron\DataProcessor;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -20,9 +21,9 @@ class AssignPackagesHandler implements RequestHandlerInterface
         private DataProcessor $dataProcessor,
         private AssignPackagesForm $assignPackagesForm,
         private RouteHelper $routeHelper,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $queryParams = $request->getQueryParams();

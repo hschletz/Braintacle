@@ -5,6 +5,7 @@ namespace Braintacle\Client;
 use Braintacle\Http\RouteHelper;
 use Formotron\DataProcessor;
 use Model\Config;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -19,9 +20,9 @@ class ExportHandler implements RequestHandlerInterface
         private RouteHelper $routeHelper,
         private Config $config,
         private DataProcessor $dataProcessor,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $routeArguments = $this->routeHelper->getRouteArguments();

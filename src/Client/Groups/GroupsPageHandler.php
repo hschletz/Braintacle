@@ -8,6 +8,7 @@ use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
 use Model\Client\Client;
 use Model\Group\GroupManager;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -23,9 +24,9 @@ class GroupsPageHandler implements RequestHandlerInterface
         private DataProcessor $dataProcessor,
         private GroupManager $groupManager,
         private TemplateEngine $templateEngine,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $routeArguments = $this->routeHelper->getRouteArguments();

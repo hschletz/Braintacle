@@ -6,6 +6,7 @@ use Braintacle\FlashMessages;
 use Formotron\DataProcessor;
 use Laminas\Translator\TranslatorInterface;
 use Model\Client\DuplicatesManager;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -21,9 +22,9 @@ class AllowDuplicatesHandler implements RequestHandlerInterface
         private DuplicatesManager $duplicatesManager,
         private FlashMessages $flashMessages,
         private TranslatorInterface $translator,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $formData = $this->dataProcessor->process($request->getParsedBody(), AllowDuplicatesRequestParameters::class);

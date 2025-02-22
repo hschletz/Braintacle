@@ -5,6 +5,7 @@ namespace Braintacle\Group\Add;
 use Braintacle\Http\RouteHelper;
 use Formotron\DataProcessor;
 use Model\Group\GroupManager;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -19,9 +20,9 @@ class AddToGroupFormHandler implements RequestHandlerInterface
         private DataProcessor $dataProcessor,
         private GroupManager $groupManager,
         private RouteHelper $routeHelper,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $parsedBody = $request->getParsedBody();

@@ -5,6 +5,7 @@ namespace Braintacle\Software;
 use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
 use Model\SoftwareManager;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -20,9 +21,9 @@ class SoftwarePageHandler implements RequestHandlerInterface
         private DataProcessor $dataProcessor,
         private TemplateEngine $templateEngine,
         private SoftwareManager $softwareManager,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $queryParams = $this->dataProcessor->process($request->getQueryParams(), SoftwarePageFormData::class);

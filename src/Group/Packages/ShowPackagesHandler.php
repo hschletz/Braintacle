@@ -5,6 +5,7 @@ namespace Braintacle\Group\Packages;
 use Braintacle\Group\GroupRequestParameters;
 use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -18,9 +19,9 @@ class ShowPackagesHandler implements RequestHandlerInterface
         private ResponseInterface $response,
         private DataProcessor $dataProcessor,
         private TemplateEngine $templateEngine,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $params = $this->dataProcessor->process($request->getQueryParams(), GroupRequestParameters::class);

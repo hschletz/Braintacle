@@ -5,6 +5,7 @@ namespace Braintacle\Client\Groups;
 use Braintacle\Client\ClientRequestParameters;
 use Braintacle\Http\RouteHelper;
 use Formotron\DataProcessor;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -20,6 +21,7 @@ class SetMembershipsHandler implements RequestHandlerInterface
         private DataProcessor $dataProcessor,
     ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $groups = $this->dataProcessor->process($request->getParsedBody(), MembershipsFormData::class)->groups;

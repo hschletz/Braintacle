@@ -3,6 +3,7 @@
 namespace Braintacle;
 
 use DateTimeImmutable;
+use Override;
 use Psr\Clock\ClockInterface;
 
 /**
@@ -10,6 +11,7 @@ use Psr\Clock\ClockInterface;
  */
 class Clock implements ClockInterface
 {
+    #[Override]
     public function now(): DateTimeImmutable
     {
         return new DateTimeImmutable();

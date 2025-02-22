@@ -4,6 +4,7 @@ namespace Braintacle\Authentication;
 
 use Braintacle\Http\RouteHelper;
 use Laminas\Authentication\AuthenticationServiceInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -14,9 +15,9 @@ class LogoutHandler implements RequestHandlerInterface
         private ResponseInterface $response,
         private RouteHelper $routeHelper,
         private AuthenticationServiceInterface $authenticationService,
-    ) {
-    }
+    ) {}
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->authenticationService->clearIdentity();

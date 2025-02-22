@@ -2,6 +2,7 @@
 
 namespace Braintacle\Http;
 
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -21,6 +22,7 @@ class RouteHelperMiddleware implements MiddlewareInterface
     /** @psalm-suppress PossiblyUnusedMethod */
     public function __construct(private RouteHelper $routeHelper) {}
 
+    #[Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         // The route context will not contain the base path because Slim will
