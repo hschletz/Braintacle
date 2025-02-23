@@ -1,7 +1,7 @@
 {if $packages}
     <h2>{translate('Assign packages')}</h2>
     <form method="post" class="form form_package_assign">
-        <input type="hidden" name="csrf" value="{csrfToken()}">
+        <input type="hidden" name="csrfToken" value="{csrfToken()}">
         <div class="table">
             <label n:foreach="$packages as $package">
                 <input type="checkbox" name="packages[]" value="{$package}">

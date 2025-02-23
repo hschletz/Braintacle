@@ -5,8 +5,9 @@ namespace Braintacle\Test\Group\Packages;
 use Braintacle\Group\GroupRequestParameters;
 use Braintacle\Group\Packages\AssignPackagesHandler;
 use Braintacle\Http\RouteHelper;
+use Braintacle\Package\Assignments;
+use Braintacle\Package\AssignPackagesFormData;
 use Braintacle\Test\HttpHandlerTestTrait;
-use Console\Form\Package\AssignPackagesForm;
 use Formotron\DataProcessor;
 use Model\Group\Group;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +19,8 @@ class AssignPackagesHandlerTest extends TestCase
     public function testHandle()
     {
         $queryParams = ['name' => 'groupName'];
-        $formData = ['packages' => ['packageName']];
+        $packages = ['package1', 'package2'];
+        $parsedBody = ['packages' => $packages];
 
         $group = new Group();
         $group->name = 'groupName';
@@ -26,14 +28,17 @@ class AssignPackagesHandlerTest extends TestCase
         $groupRequestParameters = new GroupRequestParameters();
         $groupRequestParameters->group = $group;
 
-        $dataProcessor = $this->createMock(DataProcessor::class);
-        $dataProcessor
-            ->method('process')
-            ->with($queryParams, GroupRequestParameters::class)
-            ->willReturn($groupRequestParameters);
+        $formData = new AssignPackagesFormData();
+        $formData->packageNames = $packages;
 
-        $assignPackagesForm = $this->createMock(AssignPackagesForm::class);
-        $assignPackagesForm->expects($this->once())->method('process')->with($formData, $group);
+        $dataProcessor = $this->createMock(DataProcessor::class);
+        $dataProcessor->method('process')->willReturnMap([
+            [$queryParams, GroupRequestParameters::class, $groupRequestParameters],
+            [$parsedBody, AssignPackagesFormData::class, $formData],
+        ]);
+
+        $assignments = $this->createMock(Assignments::class);
+        $assignments->expects($this->once())->method('assignPackages')->with($packages, $group);
 
         $routeHelper = $this->createMock(RouteHelper::class);
         $routeHelper
@@ -41,8 +46,8 @@ class AssignPackagesHandlerTest extends TestCase
             ->with('showGroupPackages', [], ['name' => 'groupName'])
             ->willReturn('/showGroupPackages');
 
-        $handler = new AssignPackagesHandler($this->response, $dataProcessor, $assignPackagesForm, $routeHelper);
-        $response = $handler->handle($this->request->withQueryParams($queryParams)->withParsedBody($formData));
+        $handler = new AssignPackagesHandler($this->response, $dataProcessor, $assignments, $routeHelper);
+        $response = $handler->handle($this->request->withQueryParams($queryParams)->withParsedBody($parsedBody));
 
         $this->assertResponseStatusCode(302, $response);
         $this->assertResponseHeaders(['Location' => ['/showGroupPackages']], $response);

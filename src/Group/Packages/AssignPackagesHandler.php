@@ -4,7 +4,8 @@ namespace Braintacle\Group\Packages;
 
 use Braintacle\Group\GroupRequestParameters;
 use Braintacle\Http\RouteHelper;
-use Console\Form\Package\AssignPackagesForm;
+use Braintacle\Package\Assignments;
+use Braintacle\Package\AssignPackagesFormData;
 use Formotron\DataProcessor;
 use Override;
 use Psr\Http\Message\ServerRequestInterface;
@@ -19,7 +20,7 @@ class AssignPackagesHandler implements RequestHandlerInterface
     public function __construct(
         private ResponseInterface $response,
         private DataProcessor $dataProcessor,
-        private AssignPackagesForm $assignPackagesForm,
+        private Assignments $assignments,
         private RouteHelper $routeHelper,
     ) {}
 
@@ -30,7 +31,8 @@ class AssignPackagesHandler implements RequestHandlerInterface
         $formData = $request->getParsedBody();
 
         $group = $this->dataProcessor->process($queryParams, GroupRequestParameters::class)->group;
-        $this->assignPackagesForm->process($formData, $group);
+        $packageNames = $this->dataProcessor->process($formData, AssignPackagesFormData::class)->packageNames;
+        $this->assignments->assignPackages($packageNames, $group);
 
         return $this->response
             ->withStatus(302)

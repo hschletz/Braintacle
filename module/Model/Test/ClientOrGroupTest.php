@@ -24,17 +24,14 @@ namespace Model\Test;
 
 use Database\Table\ClientConfig;
 use Database\Table\Locks;
-use DateTimeImmutable;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Mockery;
 use Mockery\Mock;
 use Model\ClientOrGroup;
 use Model\Config;
-use Model\Package\PackageManager;
 use Nada\Database\AbstractDatabase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
 
 class ClientOrGroupTest extends AbstractTestCase
@@ -323,55 +320,6 @@ class ClientOrGroupTest extends AbstractTestCase
         $model->setContainer(static::$serviceManager);
         $model['Id'] = 1;
         $this->assertEquals(array('package1', 'package3'), $model->getAssignablePackages());
-    }
-
-    public static function assignPackageProvider()
-    {
-        return array(
-            array('package1', 1, 'AssignPackage'),
-            array('package2', 2, null),
-        );
-    }
-
-    /**
-     * @dataProvider assignPackageProvider
-     */
-    public function testAssignPackage($name, $id, $dataSet)
-    {
-        $packageManager = $this->createMock('Model\Package\PackageManager');
-        $packageManager->method('getPackage')
-            ->with($name)
-            ->willReturn(array('Id' => $id));
-
-        $clock = $this->createStub(ClockInterface::class);
-        $clock->method('now')->willReturn(new DateTimeImmutable('2024-06-05T19:58:21'));
-
-        $serviceManager = $this->createMock(ContainerInterface::class);
-        $serviceManager->method('get')->willReturnMap([
-            [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
-            [ClockInterface::class, $clock],
-            [PackageManager::class, $packageManager],
-        ]);
-
-        $model = $this->composeMock(['__destruct', 'getAssignablePackages']);
-        $model->method('getAssignablePackages')->willReturn(array('package1', 'package3'));
-        $model->setContainer($serviceManager);
-        $model['Id'] = 1;
-        $model->assignPackage($name);
-
-        if ($dataSet) {
-            $where = 'WHERE hardware_id < 10 ';
-        } else {
-            $where = '';
-        }
-        $this->assertTablesEqual(
-            $this->loadDataSet($dataSet)->getTable('devices'),
-            $this->getConnection()->createQueryTable(
-                'devices',
-                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ' . $where .
-                    'ORDER BY hardware_id, name, ivalue'
-            )
-        );
     }
 
     public function testRemovePackage()

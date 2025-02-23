@@ -30,7 +30,6 @@ use Laminas\Db\Sql\Predicate\Operator;
 use Model\Package\PackageManager;
 use Nada\Column\AbstractColumn as Column;
 use Nada\Database\AbstractDatabase;
-use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -331,31 +330,6 @@ abstract class ClientOrGroup extends AbstractModel
             $result[] = $package['Name'];
         }
         return $result;
-    }
-
-    /**
-     * Assign a package to this object
-     *
-     * Non-assignable packages are ignored.
-     *
-     * @param string $name Package name
-     */
-    public function assignPackage($name)
-    {
-        if (in_array($name, $this->getAssignablePackages())) {
-            $package = $this->container->get(PackageManager::class)->getPackage($name);
-            $this->container->get(ClientConfig::class)->insert(
-                array(
-                    'hardware_id' => $this['Id'],
-                    'name' => 'DOWNLOAD',
-                    'ivalue' => $package['Id'],
-                    'tvalue' => \Model\Package\Assignment::PENDING,
-                    'comments' => $this->container->get(ClockInterface::class)->now()->format(
-                        \Model\Package\Assignment::DATEFORMAT
-                    ),
-                )
-            );
-        }
     }
 
     /**
