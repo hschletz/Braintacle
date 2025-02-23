@@ -30,8 +30,9 @@ Requirements
   administration console. PHP is also required for most of the command line
   tools. The following PHP extensions are required:
 
-  - A database-specific PHP extension, see
-    https://docs.laminas.dev/laminas-db/adapter/#creating-an-adapter-using-configuration
+  - The PDO extension
+
+  - A database-specific PDO driver extension
 
   - The "intl" extension
 

@@ -12,28 +12,12 @@
 
 [database]
 
-; Laminas\Db driver. See
-; https://docs.laminas.dev/laminas-db/adapter/#creating-an-adapter-using-configuration
-; for a list of available drivers. Only PDO drivers have been tested.
-driver = Pdo_Pgsql
-; For MySQL:
-; driver = Pdo_Mysql
+; Connection parameters.
+; <driver>://[user[:password]@][host]/<database>
 
-; Database server. Can be a hostname, an IP address or a local socket.
-; Can be left unconfigured to use the database's default.
-; hostname = /var/run/postgresql
-; hostname = localhost
-
-; Port of database server.
-; Can be left unconfigured to use the database's default.
-; port = 5432
-
-; Name of database
-database = braintacle
-
-; Username and password for database connection.
-username = ocs
-password = ocs
+; dsn = pdo-pgsql://user:password@localhost/braintacle
+; dsn = pdo-mysql://user:password@localhost/braintacle
+; dsn = pdo-sqlite:////var/lib/braintacle/braintacle.sqlite
 
 
 ; Debugging options

@@ -1,8 +1,8 @@
 <?php
 
-namespace Braintacle\Test\Database;
+namespace Braintacle\Test\Legacy\Database;
 
-use Braintacle\Database\DatabaseFactory;
+use Braintacle\Legacy\Database\DatabaseFactory;
 use Laminas\Db\Adapter\Adapter;
 use Nada\Column\AbstractColumn as Column;
 use Nada\Database\AbstractDatabase;

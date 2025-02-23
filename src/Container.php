@@ -2,14 +2,15 @@
 
 namespace Braintacle;
 
-use Braintacle\Database\AdapterFactory;
-use Braintacle\Database\DatabaseFactory;
 use Braintacle\I18n\Translator;
 use Braintacle\Legacy\ClientOrGroupFactory;
+use Braintacle\Legacy\Database\AdapterFactory;
+use Braintacle\Legacy\Database\DatabaseFactory;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Template\TemplateLoader;
 use Composer\InstalledVersions;
 use DI\Container as DIContainer;
+use Doctrine\DBAL\Connection;
 use Laminas\Authentication\AuthenticationServiceInterface;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Mvc\Application as MvcApplication;
@@ -53,6 +54,7 @@ class Container extends DIContainer
             AuthenticationServiceInterface::class => get(AuthenticationService::class),
             Client::class => factory(ClientOrGroupFactory::class),
             ClockInterface::class => get(Clock::class),
+            Connection::class => factory(DatabaseConnectionFactory::class),
             Csrf::class => create(Csrf::class)->constructor(['timeout' => null]),
             Group::class => factory(ClientOrGroupFactory::class),
             LoggerInterface::class => create(Logger::class)->constructor('Braintacle'),

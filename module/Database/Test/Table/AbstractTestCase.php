@@ -22,7 +22,9 @@
 
 namespace Database\Test\Table;
 
-use Braintacle\Database\DatabaseFactory;
+use Braintacle\DatabaseConnectionFactory;
+use Braintacle\Legacy\Database\AdapterFactory;
+use Braintacle\Legacy\Database\DatabaseFactory;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Di\Container\ServiceManager\AutowireFactory;
 use Laminas\ServiceManager\ServiceManager;
@@ -85,12 +87,13 @@ abstract class AbstractTestCase extends \PHPUnit\DbUnit\TestCase
     protected static function createServiceManager(): ServiceManager
     {
         if (!isset(self::$serviceManagerConfig)) {
-            $adapter = new Adapter(
+            $connection = DatabaseConnectionFactory::createConnection(
                 json_decode(
                     getenv('BRAINTACLE_TEST_DATABASE'),
                     true
                 )
             );
+            $adapter = (new AdapterFactory($connection))();
 
             // Extend module-generated service manager config with required entries.
             $config = Application::init('Database')->getServiceManager()->get('config')['service_manager'];

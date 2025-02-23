@@ -1,6 +1,6 @@
 <?php
 
-namespace Braintacle\Database;
+namespace Braintacle\Legacy\Database;
 
 use Laminas\Db\Adapter\Adapter;
 use Nada\Column\AbstractColumn as Column;
@@ -9,9 +9,7 @@ use Nada\Factory;
 
 class DatabaseFactory
 {
-    public function __construct(private Factory $factory, private Adapter $adapter)
-    {
-    }
+    public function __construct(private Factory $factory, private Adapter $adapter) {}
 
     public function __invoke(): AbstractDatabase
     {

@@ -6,6 +6,20 @@ without any warranty.
 ====================================================================
 
 
+CHANGES IN VERSION 1.16
+=======================
+
+Upgrading from previous versions:
+
+- Required: Run "composer install" from the Braintacle root directory to
+  update dependencies.
+
+- Required: Database configuration has changed. Set the new "dsn" option in your
+  config file, see config/braintacle.ini.template for examples. All other
+  database options are ignored. Only PDO drivers are supported, make sure that
+  the PDO extension and the PDO driver extension are installed and activated.
+
+
 CHANGES IN VERSION 1.15
 =======================
 

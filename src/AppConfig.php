@@ -14,12 +14,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *      'report missing translations': bool,
  * }
  * @psalm-type DatabaseOptions = array {
- *      'driver': string,
- *      'database': ?string,
- *      'username': ?string,
- *      'password': ?string,
- *      'hostname': ?string,
- *      'port': ?int,
+ *      'dsn': string,
  * }
  * @property-read DebugOptions $debug
  * @property-read DatabaseOptions $database
@@ -28,9 +23,7 @@ class AppConfig
 {
     private array $config;
 
-    public function __construct(private Filesystem $filesystem, private string $fileName)
-    {
-    }
+    public function __construct(private Filesystem $filesystem, private string $fileName) {}
 
     public function setFile(string $fileName): void
     {
