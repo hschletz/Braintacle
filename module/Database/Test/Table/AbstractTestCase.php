@@ -22,7 +22,7 @@
 
 namespace Database\Test\Table;
 
-use Braintacle\DatabaseConnectionFactory;
+use Braintacle\Database\ConnectionFactory;
 use Braintacle\Legacy\Database\AdapterFactory;
 use Braintacle\Legacy\Database\DatabaseFactory;
 use Laminas\Db\Adapter\Adapter;
@@ -87,7 +87,7 @@ abstract class AbstractTestCase extends \PHPUnit\DbUnit\TestCase
     protected static function createServiceManager(): ServiceManager
     {
         if (!isset(self::$serviceManagerConfig)) {
-            $connection = DatabaseConnectionFactory::createConnection(
+            $connection = ConnectionFactory::createConnection(
                 json_decode(
                     getenv('BRAINTACLE_TEST_DATABASE'),
                     true

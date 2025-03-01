@@ -22,7 +22,7 @@
 
 namespace Model\Test;
 
-use Braintacle\DatabaseConnectionFactory;
+use Braintacle\Database\ConnectionFactory;
 use Braintacle\Legacy\Database\AdapterFactory;
 use Braintacle\Legacy\Database\DatabaseFactory;
 use Laminas\Db\Adapter\Adapter;
@@ -66,7 +66,7 @@ abstract class AbstractTestCase extends TestCase
     {
         parent::setUpBeforeClass();
 
-        $connection = DatabaseConnectionFactory::createConnection(
+        $connection = ConnectionFactory::createConnection(
             json_decode(
                 getenv('BRAINTACLE_TEST_DATABASE'),
                 true

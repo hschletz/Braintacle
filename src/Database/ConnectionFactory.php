@@ -1,6 +1,6 @@
 <?php
 
-namespace Braintacle;
+namespace Braintacle\Database;
 
 use Braintacle\AppConfig;
 use Doctrine\DBAL\Connection;
@@ -8,7 +8,7 @@ use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\DsnParser;
 
 /** @codeCoverageIgnore */
-class DatabaseConnectionFactory
+class ConnectionFactory
 {
     /** @psalm-suppress PossiblyUnusedMethod */
     public function __construct(private AppConfig $appConfig) {}

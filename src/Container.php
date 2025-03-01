@@ -2,6 +2,7 @@
 
 namespace Braintacle;
 
+use Braintacle\Database\ConnectionFactory;
 use Braintacle\I18n\Translator;
 use Braintacle\Legacy\ClientOrGroupFactory;
 use Braintacle\Legacy\Database\AdapterFactory;
@@ -54,7 +55,7 @@ class Container extends DIContainer
             AuthenticationServiceInterface::class => get(AuthenticationService::class),
             Client::class => factory(ClientOrGroupFactory::class),
             ClockInterface::class => get(Clock::class),
-            Connection::class => factory(DatabaseConnectionFactory::class),
+            Connection::class => factory(ConnectionFactory::class),
             Csrf::class => create(Csrf::class)->constructor(['timeout' => null]),
             Group::class => factory(ClientOrGroupFactory::class),
             LoggerInterface::class => create(Logger::class)->constructor('Braintacle'),
