@@ -14,6 +14,7 @@
         <directory name="src" />
         <directory name="tests" />
         <file name="braintacle-tool.php" />
+        <file name="migrations-db.php" />
         <file name="public/index.php" />
         <ignoreFiles>
             <directory name="vendor" />

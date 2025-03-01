@@ -36,6 +36,12 @@ class Database extends Command
 {
     protected function configure()
     {
+        $this->addArgument(
+            'version',
+            InputOption::VALUE_REQUIRED,
+            'Set Database to given migration version (version or latest|prev|next|first)',
+            'latest',
+        );
         $this->addOption(
             'loglevel',
             'l',
@@ -47,7 +53,7 @@ class Database extends Command
             'prune',
             'p',
             InputOption::VALUE_NONE,
-            'Drop obsolete tables and columns (default: just warn)'
+            'Drop obsolete columns (default: just warn)'
         );
     }
 }

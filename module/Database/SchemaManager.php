@@ -107,7 +107,6 @@ class SchemaManager
     public function updateTables($prune)
     {
         $database = $this->container->get(AbstractDatabase::class);
-        $handledTables = array();
 
         $glob = new \GlobIterator(Module::getPath('data/Tables') . '/*.json');
         foreach ($glob as $fileinfo) {
@@ -169,19 +168,6 @@ class SchemaManager
                 $prune
             );
             $handledTables[] = $schema['name'];
-        }
-
-        // Detect obsolete tables that are present in the database but not in
-        // any of the schema files.
-        $obsoleteTables = array_diff($database->getTableNames(), $handledTables);
-        foreach ($obsoleteTables as $table) {
-            if ($prune) {
-                $this->logger->notice("Dropping table $table...");
-                $database->dropTable($table);
-                $this->logger->notice("Done.");
-            } else {
-                $this->logger->warning("Obsolete table $table detected.");
-            }
         }
     }
 

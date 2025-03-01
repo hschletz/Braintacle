@@ -22,6 +22,7 @@
 
 namespace Tools\Controller;
 
+use Braintacle\Database\Migrations;
 use Database\SchemaManager;
 use Library\Validator\LogLevel as LogLevelValidator;
 use Monolog\Formatter\LineFormatter;
@@ -38,14 +39,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Database implements ControllerInterface
 {
     public function __construct(
+        private Migrations $migrations,
         private SchemaManager $schemaManager,
         private LoggerInterface $logger,
-        private LogLevelValidator $loglevelValidator
-    ) {
-    }
+        private LogLevelValidator $loglevelValidator,
+    ) {}
 
     public function __invoke(InputInterface $input, OutputInterface $output)
     {
+        $version = $input->getArgument('version');
+        $this->migrations->migrate($output, $version);
+
         $loglevel = $input->getOption('loglevel');
         $prune = $input->getOption('prune');
 

@@ -27,6 +27,7 @@
         "ext-pdo": "*",
         "ext-zip": "*",
         "doctrine/dbal": "^4.2",
+        "doctrine/migrations": "^3.8",
         "gettext/gettext": "^5.7",
         "hschletz/formotron": "dev-main",
         "hschletz/nada": "^1.3",
@@ -90,6 +91,7 @@
         "sort-packages": true
     },
     "scripts": {
+        "migrations": "doctrine-migrations",
         "phpcs": "phpcs",
         "phpstan": "phpstan",
         "psalm": "psalm"

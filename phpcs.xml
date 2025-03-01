@@ -9,6 +9,7 @@
     <file>public/</file>
     <file>src/</file>
     <file>tests/</file>
+    <file>migrations-db.php</file>
 
     <!--
     New code is formatted as PER-CS 2.0 which supersedes, but is partially

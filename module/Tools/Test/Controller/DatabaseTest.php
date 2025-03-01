@@ -22,6 +22,7 @@
 
 namespace Tools\Test\Controller;
 
+use Braintacle\Database\Migrations;
 use Database\SchemaManager;
 use Library\Validator\LogLevel as LogLevelValidator;
 use Monolog\Handler\StreamHandler;
@@ -38,11 +39,12 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
 {
     public function testInvokeSuccess()
     {
-        $input = $this->createStub(InputInterface::class);
+        $input = $this->createMock(InputInterface::class);
         $input->method('getOption')->willReturnMap([
             ['loglevel', 'emergency'],
             ['prune', 'do_prune'],
         ]);
+        $input->method('getArgument')->with('version')->willReturn('latest');
 
         $output = $this->createStub(OutputInterface::class);
 
@@ -62,7 +64,10 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         $schemaManager = $this->createMock(SchemaManager::class);
         $schemaManager->expects($this->once())->method('updateAll')->with('do_prune');
 
-        $controller = new DatabaseController($schemaManager, $logger, $validator);
+        $migrations = $this->createMock(Migrations::class);
+        $migrations->expects($this->once())->method('migrate')->with($this->identicalTo($output), 'latest');
+
+        $controller = new DatabaseController($migrations, $schemaManager, $logger, $validator);
         $this->assertSame(Command::SUCCESS, $controller($input, $output));
     }
 
@@ -73,6 +78,7 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
             ['loglevel', 'log_level_input'],
             ['prune', 'do_prune'],
         ]);
+        $input->method('getArgument')->willReturn('');
 
         $output = $this->createMock(OutputInterface::class);
         $output->expects($this->once())->method('writeln')->with('error message');
@@ -88,7 +94,9 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         $schemaManager = $this->createMock(SchemaManager::class);
         $schemaManager->expects($this->never())->method('updateAll');
 
-        $controller = new DatabaseController($schemaManager, $logger, $validator);
+        $migrations = $this->createStub(Migrations::class);
+
+        $controller = new DatabaseController($migrations, $schemaManager, $logger, $validator);
         $this->assertSame(Command::FAILURE, $controller($input, $output));
     }
 }
