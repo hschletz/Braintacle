@@ -38,7 +38,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
   </testsuites>
   <logging/>
   <php>
-    <env name="BRAINTACLE_TEST_DATABASE" value="{&quot;dsn&quot; : &quot;pdo-sqlite:///:memory:&quot;}"/>
+    <env name="BRAINTACLE_TEST_DATABASE" value="pdo-sqlite:///:memory:" />
   </php>
   <source>
     <include>

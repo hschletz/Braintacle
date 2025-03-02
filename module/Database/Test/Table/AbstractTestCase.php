@@ -87,12 +87,7 @@ abstract class AbstractTestCase extends \PHPUnit\DbUnit\TestCase
     protected static function createServiceManager(): ServiceManager
     {
         if (!isset(self::$serviceManagerConfig)) {
-            $connection = ConnectionFactory::createConnection(
-                json_decode(
-                    getenv('BRAINTACLE_TEST_DATABASE'),
-                    true
-                )
-            );
+            $connection = ConnectionFactory::createConnection(getenv('BRAINTACLE_TEST_DATABASE'));
             $adapter = (new AdapterFactory($connection))();
 
             // Extend module-generated service manager config with required entries.

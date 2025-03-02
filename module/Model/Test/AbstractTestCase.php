@@ -66,12 +66,7 @@ abstract class AbstractTestCase extends TestCase
     {
         parent::setUpBeforeClass();
 
-        $connection = ConnectionFactory::createConnection(
-            json_decode(
-                getenv('BRAINTACLE_TEST_DATABASE'),
-                true
-            )
-        );
+        $connection = ConnectionFactory::createConnection(getenv('BRAINTACLE_TEST_DATABASE'));
         self::$adapter = (new AdapterFactory($connection))();
 
         // Extend module-generated service manager config with required entries.

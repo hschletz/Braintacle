@@ -15,18 +15,18 @@ class ConnectionFactory
 
     public function __invoke(): Connection
     {
-        return static::createConnection($this->appConfig->database);
+        return static::createConnection($this->appConfig->database['dsn']);
     }
 
-    public static function createConnection(array $config): Connection
+    public static function createConnection(string $dsn): Connection
     {
         $parser = new DsnParser();
-        $dsn = $parser->parse($config['dsn']);
-        if (str_contains($dsn['driver'], 'mysql')) {
-            $dsn['charset'] = 'utf8mb4';
+        $params = $parser->parse($dsn);
+        if (str_contains($params['driver'], 'mysql')) {
+            $params['charset'] = 'utf8mb4';
         } else {
-            $dsn['charset'] = 'utf8';
+            $params['charset'] = 'utf8';
         }
-        return DriverManager::getConnection($dsn);
+        return DriverManager::getConnection($params);
     }
 }

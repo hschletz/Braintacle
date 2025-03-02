@@ -241,7 +241,7 @@ class Run
             $env['XDEBUG_MODE'] = implode(',', $xdebugMode);
         }
         if ($database) {
-            $env['BRAINTACLE_TEST_DATABASE'] = json_encode($database);
+            $env['BRAINTACLE_TEST_DATABASE'] = $database['dsn'];
         }
 
         $process = new Process($cmd);
