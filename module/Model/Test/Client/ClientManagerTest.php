@@ -63,7 +63,6 @@ class ClientManagerTest extends AbstractTestCase
         'ClientsAndGroups',
         'ClientSystemInfo',
         'Clients',
-        'ClientConfig',
         'CustomFields',
         'Filesystems',
         'GroupMemberships',

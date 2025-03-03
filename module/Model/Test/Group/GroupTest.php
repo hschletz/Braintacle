@@ -46,7 +46,6 @@ class GroupTest extends AbstractGroupTestCase
 
     /** {@inheritdoc} */
     protected static $_tables = array(
-        'ClientConfig',
         'ClientsAndGroups',
         'ClientSystemInfo',
         'Clients',

@@ -39,7 +39,7 @@ class ClientOrGroupTest extends AbstractTestCase
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /** {@inheritdoc} */
-    protected static $_tables = array('ClientConfig', 'Locks', 'PackageHistory', 'Packages');
+    protected static $_tables = ['Locks', 'PackageHistory', 'Packages'];
 
     protected $_currentTimestamp;
 
@@ -320,39 +320,6 @@ class ClientOrGroupTest extends AbstractTestCase
         $model->setContainer(static::$serviceManager);
         $model['Id'] = 1;
         $this->assertEquals(array('package1', 'package3'), $model->getAssignablePackages());
-    }
-
-    public function testRemovePackage()
-    {
-        $packageManager = $this->createMock('Model\Package\PackageManager');
-        $packageManager->method('getPackage')
-            ->with('package5')
-            ->willReturn(array('Id' => 5));
-
-        $serviceManager = $this->createMock(ContainerInterface::class);
-        $serviceManager->method('get')->willReturnMap(
-            array(
-                array(
-                    'Database\Table\ClientConfig',
-                    static::$serviceManager->get('Database\Table\ClientConfig')
-                ),
-                array('Model\Package\PackageManager', $packageManager),
-            )
-        );
-
-        $model = $this->composeMock();
-        $model->setContainer($serviceManager);
-        $model['Id'] = 1;
-        $model->removePackage('package5');
-
-        $this->assertTablesEqual(
-            $this->loadDataSet('RemovePackage')->getTable('devices'),
-            $this->getConnection()->createQueryTable(
-                'devices',
-                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ' .
-                    'WHERE hardware_id < 10 ORDER BY hardware_id, name, ivalue'
-            )
-        );
     }
 
     public static function getConfigProvider()

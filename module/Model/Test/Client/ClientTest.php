@@ -54,7 +54,6 @@ class ClientTest extends AbstractTestCase
         'WindowsInstallations',
         'DuplicateSerials',
         'DuplicateAssetTags',
-        'ClientConfig',
         'Packages',
         'PackageHistory',
         'GroupMemberships',

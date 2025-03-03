@@ -2,6 +2,7 @@
 
 namespace Braintacle\Group\Packages;
 
+use Braintacle\Package\Assignments;
 use Formotron\DataProcessor;
 use Override;
 use Psr\Http\Message\ServerRequestInterface;
@@ -16,6 +17,7 @@ class RemovePackagesHandler implements RequestHandlerInterface
     public function __construct(
         private ResponseInterface $response,
         private DataProcessor $dataProcessor,
+        private Assignments $assignments,
     ) {}
 
     #[Override]
@@ -24,7 +26,7 @@ class RemovePackagesHandler implements RequestHandlerInterface
         $queryParams = $request->getQueryParams();
         $params = $this->dataProcessor->process($queryParams, RemovePackagesParameters::class);
 
-        $params->group->removePackage($params->packageName);
+        $this->assignments->unassignPackage($params->packageName, $params->group);
 
         return $this->response;
     }

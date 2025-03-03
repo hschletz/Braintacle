@@ -333,23 +333,6 @@ abstract class ClientOrGroup extends AbstractModel
     }
 
     /**
-     * Remove an assigned package from this object
-     *
-     * @param string $name
-     */
-    public function removePackage($name)
-    {
-        $package = $this->container->get(PackageManager::class)->getPackage($name);
-        $this->container->get(ClientConfig::class)->delete(
-            array(
-                'hardware_id' => $this['Id'],
-                'ivalue' => $package['Id'],
-                new \Laminas\Db\Sql\Predicate\Like('name', 'DOWNLOAD%')
-            )
-        );
-    }
-
-    /**
      * Get configuration value
      *
      * Returns configuration values stored for this object. If no explicit

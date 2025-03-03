@@ -47,6 +47,8 @@
                 <!-- Test classes are never referenced directly. -->
                 <directory name="module/*/Test" />
                 <directory name="tests" />
+                <!-- Migration classes are never referenced directly. -->
+                <directory name="src/Database/Migrations" />
             </errorLevel>
         </UnusedClass>
     </issueHandlers>

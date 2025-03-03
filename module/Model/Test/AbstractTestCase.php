@@ -23,6 +23,7 @@
 namespace Model\Test;
 
 use Braintacle\Database\ConnectionFactory;
+use Braintacle\Database\Migrations;
 use Braintacle\Legacy\Database\AdapterFactory;
 use Braintacle\Legacy\Database\DatabaseFactory;
 use Laminas\Db\Adapter\Adapter;
@@ -37,6 +38,8 @@ use PHPUnit\Framework\Attributes\Before;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Symfony\Component\Console\Application as ConsoleApplication;
+use Symfony\Component\Console\Output\NullOutput;
 
 /**
  * Base class for model tests
@@ -79,6 +82,8 @@ abstract class AbstractTestCase extends TestCase
         self::$serviceManagerConfig = $config;
 
         // Create necessary tables.
+        $migrations = new Migrations($connection, new ConsoleApplication());
+        $migrations->migrate(new NullOutput(), 'latest');
         $serviceManager = static::createServiceManager();
         foreach (static::$_tables as $table) {
             $serviceManager->get("Database\Table\\$table")->updateSchema(true);

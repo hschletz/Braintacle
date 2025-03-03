@@ -9,6 +9,7 @@
     "migrations_paths": {
         "Braintacle\\Database\\Migrations": "./src/Database/Migrations"
     },
+    "custom_template": "./migration_template.tpl",
     "all_or_nothing": true,
     "transactional": true,
     "check_database_platform": true,

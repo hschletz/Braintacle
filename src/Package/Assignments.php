@@ -20,6 +20,7 @@ final class Assignments
     private const Timestamp = 'comments';
 
     private const ActionValue = 'DOWNLOAD';
+    private const DeletePattern = "'DOWNLOAD%'";
 
     public function __construct(
         private Connection $connection,
@@ -47,5 +48,18 @@ final class Assignments
         foreach ($packages as $package) {
             $this->assignPackage($package, $target);
         }
+    }
+
+    public function unassignPackage(string $packageName, Client|Group $target): void
+    {
+        $package = $this->packageManager->getPackage($packageName);
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $expr = $queryBuilder->expr();
+        $queryBuilder
+            ->delete(self::Table)
+            ->where($expr->eq(self::Target, $queryBuilder->createPositionalParameter($target->id)))
+            ->andWhere($expr->eq(self::Package, $queryBuilder->createPositionalParameter($package->id)))
+            ->andWhere($expr->like(self::Action, self::DeletePattern));
+        $queryBuilder->executeStatement();
     }
 }
