@@ -8,6 +8,7 @@ use Braintacle\Duplicates;
 use Braintacle\Group;
 use Braintacle\Legacy\ApplicationBridge;
 use Braintacle\Software;
+use Nyholm\Psr7\Response;
 use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface;
@@ -32,6 +33,12 @@ class Router
         $app->get('/login', Authentication\ShowLoginFormHandler::class)->setName('loginPage');
         $app->post('/login', Authentication\ProcessLoginFormHandler::class)->setName('loginHandler');
         $app->get('/logout', Authentication\LogoutHandler::class)->setName('logout');
+
+        // Prevent browser-initiated requests for favicon from being redirected
+        // to the login page. This route is only encountered if the site admin
+        // did not place a favicon in the /public directory or map a path in the
+        // webserver config.
+        $app->get('/favicon.ico', fn() => new Response(404));
 
         // All other routes get LoginMiddleware.
         $app->group('', function (RouteCollectorProxyInterface $group) {
