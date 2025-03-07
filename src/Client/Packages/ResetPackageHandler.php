@@ -3,6 +3,7 @@
 namespace Braintacle\Client\Packages;
 
 use Braintacle\Http\RouteHelper;
+use Braintacle\Package\Assignments;
 use Formotron\DataProcessor;
 use Override;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,6 +19,7 @@ class ResetPackageHandler implements RequestHandlerInterface
         private ResponseInterface $response,
         private RouteHelper $routeHelper,
         private DataProcessor $dataProcessor,
+        private Assignments $assignments,
     ) {}
 
     #[Override]
@@ -27,7 +29,7 @@ class ResetPackageHandler implements RequestHandlerInterface
         $queryParams = $request->getQueryParams();
         $params = $this->dataProcessor->process($routeArguments + $queryParams, PackageActionParameters::class);
 
-        $params->client->resetPackage($params->packageName);
+        $this->assignments->resetPackage($params->packageName, $params->client);
 
         return $this->response;
     }

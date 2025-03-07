@@ -6,8 +6,10 @@ use Braintacle\Database\ConnectionFactory;
 use Braintacle\Database\Migrations;
 use Doctrine\DBAL\Connection;
 use LogicException;
+use RuntimeException;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Output\NullOutput;
+use Throwable;
 
 /**
  * Test wrapper for database connection.
@@ -32,9 +34,14 @@ final class DatabaseConnection
     /**
      * Run callback with connection.
      *
-     * The callback will be run in a transaction that will be rolled back
-     * afterwards, thus making tests side-effect free and simplifying test
-     * isolation.
+     * The callback is run in a transaction that will be rolled back afterwards,
+     * thus trying to make tests side-effect free and simplifying test
+     * isolation. This should work with correct code, but cannot be guaranteed.
+     * If tested code is faulty and commits more transactions than it starts,
+     * changes will be permanent.
+     *
+     * Unbalanced transactions (i.e. a mismatch between beginTransaction() and
+     * commit()/rollBack() calls) are detected and reported.
      *
      * Calls cannot be nested.
      *
@@ -48,12 +55,34 @@ final class DatabaseConnection
 
         $connection = self::getConnection();
         $connection->beginTransaction();
+        $initialNestingLevel = $connection->getTransactionNestingLevel();
+
         self::$wrapperStarted = true;
+        $throwable = null;
         try {
             $callback($connection);
-        } finally {
-            self::$wrapperStarted = false;
+        } catch (Throwable $t) {
+            $throwable = $t;
+        }
+
+        self::$wrapperStarted = false;
+        $finalNestingLevel = $connection->getTransactionNestingLevel();
+
+        // Roll back all transactions that have been started since invocation of
+        // this method, even when the callback forgot to end a transaction.
+        while ($connection->getTransactionNestingLevel() >= $initialNestingLevel) {
             $connection->rollBack();
+        }
+
+        if ($finalNestingLevel != $initialNestingLevel) {
+            throw new RuntimeException(
+                message: 'Incorrect transaction nesting level - forgotten or superfluous commit()/rollBack()?',
+                previous: $throwable,
+            );
+        }
+
+        if ($throwable) {
+            throw $throwable;
         }
     }
 
@@ -71,6 +100,7 @@ final class DatabaseConnection
         }
 
         $connection = self::getConnection();
+        $connection->executeStatement($connection->getDatabasePlatform()->getTruncateTableSQL($table));
         foreach ($rows as $row) {
             $connection->insert($table, array_combine($columns, $row));
         }

@@ -22,11 +22,8 @@
 
 namespace Model\Test\Client;
 
-use Database\Table\ClientConfig;
 use Database\Table\GroupMemberships;
 use DateTime;
-use DateTimeImmutable;
-use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Laminas\Db\ResultSet\AbstractResultSet;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -35,12 +32,10 @@ use Model\Client\CustomFieldManager;
 use Model\Client\CustomFields;
 use Model\Group\GroupManager;
 use Model\Package\Assignment;
-use Model\Package\PackageManager;
 use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Protocol\Message\InventoryRequest;
 use Protocol\Message\InventoryRequest\Content;
-use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
 
 class ClientTest extends AbstractTestCase
@@ -617,153 +612,6 @@ class ClientTest extends AbstractTestCase
         $model->setContainer(static::$serviceManager);
         $model->id = 1;
         $this->assertEquals(array(1, 2), $model->getDownloadedPackageIds());
-    }
-
-    public static function resetPackageProvider()
-    {
-        return array(
-            array(1, 'resetPackageNotResetYet'),
-            array(2, 'resetPackageAlreadyReset'),
-        );
-    }
-
-    /**
-     * @dataProvider resetPackageProvider
-     */
-    public function testResetPackage($packageId, $dataset)
-    {
-        $package = array('Id' => $packageId);
-
-        $packageManager = $this->createMock('Model\Package\PackageManager');
-        $packageManager->method('getPackage')->with('packageName')->willReturn($package);
-
-        $clock = $this->createStub(ClockInterface::class);
-        $clock->method('now')->willReturn(new DateTimeImmutable('2017-05-27T19:39:25'));
-
-        static::$serviceManager->setService(ClockInterface::class, $clock);
-        static::$serviceManager->setService(PackageManager::class, $packageManager);
-
-        $model = new Client();
-        $model->setContainer(static::$serviceManager);
-        $model->id = 1;
-
-        $model->resetPackage('packageName');
-
-        $this->assertTablesEqual(
-            $this->loadDataSet($dataset)->getTable('devices'),
-            $this->getConnection()->createQueryTable(
-                'devices',
-                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
-            )
-        );
-    }
-
-    public function testResetPackageNotAssigned()
-    {
-        $package = array('Id' => 3);
-
-        $packageManager = $this->createMock('Model\Package\PackageManager');
-        $packageManager->method('getPackage')->with('packageName')->willReturn($package);
-
-        static::$serviceManager->setService(PackageManager::class, $packageManager);
-
-        $model = new Client();
-        $model->setContainer(static::$serviceManager);
-        $model->id = 1;
-
-        try {
-            $model->resetPackage('packageName');
-            $this->fail('Expected exception was not thrown');
-        } catch (\RuntimeException $e) {
-            $this->assertEquals('Package "packageName" is not assigned to client 1', $e->getMessage());
-        }
-
-        $this->assertTablesEqual(
-            $this->loadDataSet()->getTable('devices'),
-            $this->getConnection()->createQueryTable(
-                'devices',
-                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
-            )
-        );
-    }
-
-    public function testResetPackageCommit()
-    {
-        $package = array('Id' => 1);
-
-        $packageManager = $this->createMock('Model\Package\PackageManager');
-        $packageManager->method('getPackage')->with('packageName')->willReturn($package);
-
-        $connection = $this->createMock(ConnectionInterface::class);
-        $connection->expects($this->once())->method('beginTransaction');
-        $connection->expects($this->once())->method('commit');
-
-        $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');
-        $driver->method('getConnection')->willReturn($connection);
-
-        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
-        $adapter->method('getDriver')->willReturn($driver);
-
-        $resultSet = $this->createMock('Laminas\Db\ResultSet\AbstractResultSet');
-        $resultSet->method('current')->willReturn(array('num' => 1));
-
-        $select = $this->createMock('Laminas\Db\Sql\Select');
-
-        $sql = $this->createMock('Laminas\Db\Sql\Sql');
-        $sql->method('select')->willReturn($select);
-
-        $clientConfig = $this->createMock(ClientConfig::class);
-        $clientConfig->method('getSql')->willReturn($sql);
-        $clientConfig->method('selectWith')->willReturn($resultSet);
-        $clientConfig->method('getAdapter')->willReturn($adapter);
-
-        $clock = $this->createStub(ClockInterface::class);
-        $clock->method('now')->willReturn(new DateTimeImmutable('2024-06-05T20:08:21'));
-
-        static::$serviceManager->setService(ClientConfig::class, $clientConfig);
-        static::$serviceManager->setService(ClockInterface::class, $clock);
-        static::$serviceManager->setService(PackageManager::class, $packageManager);
-
-        $model = new Client();
-        $model->setContainer(static::$serviceManager);
-        $model->id = 1;
-
-        $model->resetPackage('packageName');
-    }
-
-    public function testResetPackageRollbackOnException()
-    {
-        $package = array('Id' => 1);
-
-        $packageManager = $this->createMock('Model\Package\PackageManager');
-        $packageManager->method('getPackage')->with('packageName')->willReturn($package);
-
-        $connection = $this->createMock(ConnectionInterface::class);
-        $connection->expects($this->once())->method('beginTransaction');
-        $connection->expects($this->once())->method('rollback');
-        $connection->expects($this->never())->method('commit');
-
-        $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');
-        $driver->method('getConnection')->willReturn($connection);
-
-        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
-        $adapter->method('getDriver')->willReturn($driver);
-
-        $clientConfig = $this->createMock(ClientConfig::class);
-        $clientConfig->method('getAdapter')->willReturn($adapter);
-        $clientConfig->method('getSql')->willThrowException(new \RuntimeException('test message'));
-
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('test message');
-
-        static::$serviceManager->setService(ClientConfig::class, $clientConfig);
-        static::$serviceManager->setService(PackageManager::class, $packageManager);
-
-        $model = new Client();
-        $model->setContainer(static::$serviceManager);
-        $model->id = 1;
-
-        $model->resetPackage('packageName');
     }
 
     public function testGetItemsDefaultArgs()

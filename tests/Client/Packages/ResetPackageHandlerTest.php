@@ -5,6 +5,7 @@ namespace Braintacle\Test\Client\Packages;
 use Braintacle\Client\Packages\PackageActionParameters;
 use Braintacle\Client\Packages\ResetPackageHandler;
 use Braintacle\Http\RouteHelper;
+use Braintacle\Package\Assignments;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Formotron\DataProcessor;
 use Model\Client\Client;
@@ -22,8 +23,7 @@ class ResetPackageHandlerTest extends TestCase
         $routeHelper = $this->createStub(RouteHelper::class);
         $routeHelper->method('getRouteArguments')->willReturn($routeArguments);
 
-        $client = $this->createMock(Client::class);
-        $client->expects($this->once())->method('resetPackage')->with('packageName');
+        $client = new Client();
 
         $packageActionParameters = new PackageActionParameters();
         $packageActionParameters->client = $client;
@@ -35,7 +35,10 @@ class ResetPackageHandlerTest extends TestCase
             ->with(['id' => '42', 'package' => 'packageName'], PackageActionParameters::class)
             ->willReturn($packageActionParameters);
 
-        $handler = new ResetPackageHandler($this->response, $routeHelper, $dataProcessor);
+        $assignments = $this->createMock(Assignments::class);
+        $assignments->expects($this->once())->method('resetPackage')->with('packageName', $client);
+
+        $handler = new ResetPackageHandler($this->response, $routeHelper, $dataProcessor, $assignments);
         $response = $handler->handle($this->request->withQueryParams($queryParams));
 
         $this->assertResponseStatusCode(200, $response);

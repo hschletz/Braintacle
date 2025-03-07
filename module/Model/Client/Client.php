@@ -38,9 +38,7 @@ use Laminas\Hydrator\Strategy\DateTimeFormatterStrategy;
 use Model\Config;
 use Model\Group\GroupManager;
 use Model\Package\Assignment;
-use Model\Package\PackageManager;
 use Protocol\Message\InventoryRequest;
-use Psr\Clock\ClockInterface;
 use ReturnTypeWillChange;
 
 /**
@@ -559,70 +557,6 @@ class Client extends \Model\ClientOrGroup
             ->where(array('hardware_id' => $this['Id']))
             ->order('pkg_id');
         return array_column($packageHistory->selectWith($select)->toArray(), 'pkg_id');
-    }
-
-    /**
-     * Reset status of a package to "pending"
-     *
-     * @param string $name Package name
-     */
-    public function resetPackage($name)
-    {
-        $package = $this->container->get(PackageManager::class)->getPackage($name);
-        $clientConfig = $this->container->get(ClientConfig::class);
-
-        // Common filter for all operations
-        $where = [
-            'hardware_id' => $this['Id'],
-            'ivalue' => $package['Id'],
-        ];
-
-        $connection = $clientConfig->getAdapter()->getDriver()->getConnection();
-        $connection->beginTransaction();
-        try {
-            $select = $clientConfig->getSql()->select();
-            $select->columns(['num' => new \Laminas\Db\Sql\Literal('COUNT(*)')]);
-            $select->where($where);
-            $select->where(['name' => 'DOWNLOAD']);
-            if ($clientConfig->selectWith($select)->current()['num'] != 1) {
-                throw new \RuntimeException(
-                    sprintf('Package "%s" is not assigned to client %d', $name, $this['Id'])
-                );
-            }
-
-            // Create DOWNLOAD_FORCE row if it does not already exist. This row
-            // is required for overriding the client's package history.
-            $select = $clientConfig->getSql()->select();
-            $select->columns(array('num' => new \Laminas\Db\Sql\Literal('COUNT(*)')));
-            $select->where($where);
-            $select->where(array('name' => 'DOWNLOAD_FORCE'));
-            if ($clientConfig->selectWith($select)->current()['num'] != 1) {
-                $clientConfig->insert(
-                    array(
-                        'hardware_id' => $this['Id'],
-                        'name' => 'DOWNLOAD_FORCE',
-                        'ivalue' => $package['Id'],
-                        'tvalue' => '1',
-                    )
-                );
-            }
-
-            // Reset assignment row
-            $clientConfig->update(
-                array(
-                    'tvalue' => \Model\Package\Assignment::PENDING,
-                    'comments' => $this->container->get(ClockInterface::class)->now()->format(
-                        \Model\Package\Assignment::DATEFORMAT
-                    ),
-                ),
-                $where + array('name' => 'DOWNLOAD')
-            );
-
-            $connection->commit();
-        } catch (\Exception $e) {
-            $connection->rollback();
-            throw $e;
-        }
     }
 
     /**
