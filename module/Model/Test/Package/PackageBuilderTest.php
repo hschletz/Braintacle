@@ -38,8 +38,6 @@ use ZipArchive;
 
 class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 {
-    protected static $_tables = ['Packages'];
-
     public function getDataSet()
     {
         return new \PHPUnit\DbUnit\DataSet\DefaultDataSet();

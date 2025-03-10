@@ -3,20 +3,23 @@
 
 {include Header.latte}
 
-{if count($assignedPackages)}
-    <script type="module" src="{assetUrl('js/assigned_packages.js')}"></script>
+{foreach $assignedPackages as $assignment}
+    {first}
+        <script type="module" src="{assetUrl('js/assigned_packages.js')}"></script>
 
-    <h2>{translate('Assigned packages')}</h2>
-    <table class="alternating assignedPackages">
-        <tr>
-            <th>{translate('Name')}</th>
-            <th>{translate('Status')}</th>
-            <th>{translate('Timestamp')}</th>
-            <th></th>
-            <th></th>
-        </tr>
-        <tr n:foreach="$assignedPackages as $assignment">
-            <td>{$assignment->packageName}</td>
+        <h2>{translate('Assigned packages')}</h2>
+        <table class="alternating assignedPackages">
+            <tr>
+                <th>{translate('Name')}</th>
+                <th>{translate('Status')}</th>
+                <th>{translate('Timestamp')}</th>
+                <th></th>
+                <th></th>
+            </tr>
+    {/first}
+
+    <tr>
+        <td>{$assignment->packageName}</td>
             {switch $assignment->status}
                 {case $assignment::PENDING}
                     <td class="package_pending">{translate('Pending')}</td>
@@ -27,26 +30,29 @@
                 {default} {* ERR_* *}
                     <td class="package_error">{$assignment->status}</td>
             {/switch}
-            <td>{$assignment->timestamp|localDate: date: short, time: short}</td>
-            <td>
-                <button
-                    n:if="$assignment->status != $assignment::PENDING"
-                    type="button"
-                    class="linkstyle"
-                    data-package="{$assignment->packageName}"
-                    data-action="reset"
-                >
-                    {translate('reset')}
-                </button>
-            </td>
-            <td>
-                <button type="button" class="linkstyle" data-package="{$assignment->packageName}" data-action="remove">
-                    {translate('remove')}
-                </button>
-            </td>
-        </tr>
-    </table>
-{/if}
+        <td>{$assignment->timestamp|localDate: date: short, time: short}</td>
+        <td>
+            <button
+                n:if="$assignment->status != $assignment::PENDING"
+                type="button"
+                class="linkstyle"
+                data-package="{$assignment->packageName}"
+                data-action="reset"
+            >
+                {translate('reset')}
+            </button>
+        </td>
+        <td>
+            <button type="button" class="linkstyle" data-package="{$assignment->packageName}" data-action="remove">
+                {translate('remove')}
+            </button>
+        </td>
+    </tr>
+
+    {last}
+        </table>
+    {/last}
+{/foreach}
 
 {include ../../Forms/AssignPackage.latte, packages: $assignablePackages}
 

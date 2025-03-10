@@ -6,8 +6,13 @@ use Braintacle\Database\Migration;
 use Braintacle\Database\Migrations;
 use Braintacle\Package\Assignments;
 use Braintacle\Test\DatabaseConnection;
+use Braintacle\Test\DataProcessorTestTrait;
+use Braintacle\Transformer\DateTime as TransformerDateTime;
+use Braintacle\Transformer\DateTimeTransformer;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
+use Formotron\DataProcessor;
 use LogicException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -26,20 +31,82 @@ use RuntimeException;
 #[CoversClass(Assignments::class)]
 #[UsesClass(Migration::class)]
 #[UsesClass(Migrations::class)]
+#[UsesClass(TransformerDateTime::class)]
 class AssignmentsTest extends TestCase
 {
+    use DataProcessorTestTrait;
     use MockeryPHPUnitIntegration;
 
     private function createAssignments(
         ?Connection $connection = null,
         ?ClockInterface $clock = null,
         ?PackageManager $packageManager = null,
+        ?DataProcessor $dataProcessor = null,
     ) {
         return new Assignments(
             $connection ?? $this->createStub(Connection::class),
             $clock ?? $this->createStub(ClockInterface::class),
             $packageManager ?? $this->createStub(PackageManager::class),
+            $dataProcessor ?? $this->createStub(DataProcessor::class),
         );
+    }
+
+    public function testGet()
+    {
+        DatabaseConnection::with(function (Connection $connection): void {
+            $targetId = 1;
+            DatabaseConnection::initializeTable(
+                'download_available',
+                ['fileid', 'name', 'priority', 'fragments', 'size', 'osname'],
+                [
+                    [2, 'package2', 5, 0, 0, 'LINUX'],
+                    [$targetId, 'package1', 5, 0, 0, 'LINUX'],
+                ],
+            );
+            DatabaseConnection::initializeTable(
+                'devices',
+                ['hardware_id', 'name', 'ivalue', 'tvalue', 'comments'],
+                [
+                    [$targetId, 'DOWNLOAD', 2, 'NOTIFIED', 'Tue Dec 30 19:01:23 2014'],
+                    [$targetId, 'DOWNLOAD_FORCE', 2, '1', null],
+                    [$targetId, 'DOWNLOAD', 1, 'SUCCESS', 'Tue Dec 30 19:02:23 2014'],
+                    [2, 'DOWNLOAD', 1, 'SUCCESS', 'Tue Dec 30 19:01:23 2014'],
+                ],
+            );
+
+            $target = new Client();
+            $target->id = $targetId;
+
+            $dateTimeTransformer = $this->createStub(DateTimeTransformer::class);
+            $dateTimeTransformer
+                ->method('transform')
+                ->willReturnCallback(fn($value, $args) => DateTimeImmutable::createFromFormat($args[0], $value));
+
+            $dataProcessor = $this->createDataProcessor([DateTimeTransformer::class => $dateTimeTransformer]);
+
+            $assignments = $this->createAssignments(connection: $connection, dataProcessor: $dataProcessor);
+
+            $result = iterator_to_array($assignments->get($target));
+
+            $this->assertCount(2, $result);
+            $this->assertContainsOnlyInstancesOf(Assignment::class, $result);
+            $this->assertEquals(
+                [
+                    'packageName' => 'package1',
+                    'status' => Assignment::SUCCESS,
+                    'timestamp' => new DateTime('2014-12-30 19:02:23'),
+                ],
+                get_object_vars($result[0])
+            );
+            $this->assertEquals(
+                [
+                    'packageName' => 'package2',
+                    'status' => Assignment::RUNNING,
+                    'timestamp' => new DateTime('2014-12-30 19:01:23'),
+                ],
+                get_object_vars($result[1])
+            );
+        });
     }
 
     public function testAssignPackage()

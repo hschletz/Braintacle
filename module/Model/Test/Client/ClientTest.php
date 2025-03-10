@@ -23,7 +23,6 @@
 namespace Model\Test\Client;
 
 use Database\Table\GroupMemberships;
-use DateTime;
 use Laminas\Db\ResultSet\AbstractResultSet;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -31,7 +30,6 @@ use Model\Client\Client;
 use Model\Client\CustomFieldManager;
 use Model\Client\CustomFields;
 use Model\Group\GroupManager;
-use Model\Package\Assignment;
 use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Protocol\Message\InventoryRequest;
@@ -49,7 +47,6 @@ class ClientTest extends AbstractTestCase
         'WindowsInstallations',
         'DuplicateSerials',
         'DuplicateAssetTags',
-        'Packages',
         'PackageHistory',
         'GroupMemberships',
     ];
@@ -535,75 +532,6 @@ class ClientTest extends AbstractTestCase
         $this->assertEquals('value1', $model->getEffectiveConfig('option1'));
         $this->assertEquals('value1', $model->getEffectiveConfig('option1')); // from cache
         $this->assertEquals('value2', $model->getEffectiveConfig('option2')); // non-cached value
-    }
-
-    public static function getPackageAssignmentsProvider()
-    {
-        $package1 = [
-            'packageName' => 'package1',
-            'status' => Assignment::SUCCESS,
-            'timestamp' => new DateTime('2014-12-30 19:02:23'),
-        ];
-        $package2 = [
-            'packageName' => 'package2',
-            'status' => Assignment::RUNNING,
-            'timestamp' => new DateTime('2014-12-30 19:01:23'),
-        ];
-        // Non-default order. Default order tested separately.
-        return [
-            ['packageName', 'desc', $package2, $package1],
-            ['status', 'asc', $package2, $package1],
-            ['status', 'desc', $package1, $package2],
-        ];
-    }
-
-    /**
-     * @dataProvider getPackageAssignmentsProvider
-     */
-    public function testGetPackageAssignments($order, $direction, $package0, $package1)
-    {
-        $model = new Client();
-        $model->setContainer(static::$serviceManager);
-        $model->id = 1;
-
-        $assignments = $model->getPackageAssignments($order, $direction);
-        $this->assertInstanceOf(AbstractResultSet::class, $assignments);
-        /** @var Assignment[] */
-        $assignments = iterator_to_array($assignments);
-        $this->assertCount(2, $assignments);
-        $this->assertContainsOnlyInstancesOf(Assignment::class, $assignments);
-        $this->assertEquals($package0, get_object_vars($assignments[0]));
-        $this->assertEquals($package1, get_object_vars($assignments[1]));
-    }
-
-    public function testGetPackageAssignmentsDefaultOrder()
-    {
-        $model = new Client();
-        $model->setContainer(static::$serviceManager);
-        $model->id = 1;
-
-        $assignments = $model->getPackageAssignments();
-        $this->assertInstanceOf(AbstractResultSet::class, $assignments);
-        /** @var Assignment[] */
-        $assignments = iterator_to_array($assignments);
-        $this->assertCount(2, $assignments);
-        $this->assertContainsOnlyInstancesOf(Assignment::class, $assignments);
-        $this->assertEquals(
-            [
-                'packageName' => 'package1',
-                'status' => Assignment::SUCCESS,
-                'timestamp' => new DateTime('2014-12-30 19:02:23'),
-            ],
-            get_object_vars($assignments[0])
-        );
-        $this->assertEquals(
-            [
-                'packageName' => 'package2',
-                'status' => Assignment::RUNNING,
-                'timestamp' => new DateTime('2014-12-30 19:01:23'),
-            ],
-            get_object_vars($assignments[1])
-        );
     }
 
     public function testGetDownloadedPackageIds()

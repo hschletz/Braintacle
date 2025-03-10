@@ -22,7 +22,9 @@
 
 namespace Model\Package;
 
+use Braintacle\Transformer\DateTime;
 use DateTimeInterface;
+use Formotron\Attribute\Key;
 
 /**
  * Package assignment on a client
@@ -66,15 +68,19 @@ class Assignment
     /**
      * Package name
      */
+    #[Key('name')]
     public string $packageName;
 
     /**
      * Status (PENDING/RUNNUNG/SUCCESS/ERR_*)
      */
+    #[Key('tvalue')]
     public ?string $status;
 
     /**
      * Timestamp of last status change
      */
+    #[Key('comments')]
+    #[DateTime(self::DATEFORMAT)]
     public DateTimeInterface $timestamp;
 }

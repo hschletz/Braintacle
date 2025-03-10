@@ -50,7 +50,6 @@ class GroupTest extends AbstractGroupTestCase
         'ClientSystemInfo',
         'Clients',
         'GroupMemberships',
-        'Packages',
     );
 
     public static function getDefaultConfigProvider()

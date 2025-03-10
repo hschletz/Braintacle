@@ -4,6 +4,7 @@ namespace Braintacle\Client\Packages;
 
 use Braintacle\Client\ClientRequestParameters;
 use Braintacle\Http\RouteHelper;
+use Braintacle\Package\Assignments;
 use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
 use Override;
@@ -20,6 +21,7 @@ class ShowPackagesHandler implements RequestHandlerInterface
         private ResponseInterface $response,
         private RouteHelper $routeHelper,
         private DataProcessor $dataProcessor,
+        private Assignments $assignments,
         private TemplateEngine $templateEngine,
     ) {}
 
@@ -36,7 +38,7 @@ class ShowPackagesHandler implements RequestHandlerInterface
                 [
                     'currentAction' => 'packages',
                     'client' => $client,
-                    'assignedPackages' => $client->getPackageAssignments(),
+                    'assignedPackages' => $this->assignments->get($client),
                     'assignablePackages' => $client->getAssignablePackages(),
                 ]
             )

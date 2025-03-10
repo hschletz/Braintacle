@@ -39,7 +39,7 @@ class ClientOrGroupTest extends AbstractTestCase
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /** {@inheritdoc} */
-    protected static $_tables = ['Locks', 'PackageHistory', 'Packages'];
+    protected static $_tables = ['Locks', 'PackageHistory'];
 
     protected $_currentTimestamp;
 

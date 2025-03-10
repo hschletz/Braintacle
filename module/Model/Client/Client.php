@@ -22,22 +22,15 @@
 
 namespace Model\Client;
 
-use Database\Hydrator\NamingStrategy\MapNamingStrategy;
 use Database\Table\AndroidInstallations;
-use Database\Table\ClientConfig;
 use Database\Table\DuplicateAssetTags;
 use Database\Table\DuplicateSerials;
 use Database\Table\GroupMemberships;
 use Database\Table\PackageHistory;
 use Database\Table\WindowsInstallations;
 use DateTimeInterface;
-use Laminas\Db\ResultSet\HydratingResultSet;
-use Laminas\Db\Sql\Select;
-use Laminas\Hydrator\ObjectPropertyHydrator;
-use Laminas\Hydrator\Strategy\DateTimeFormatterStrategy;
 use Model\Config;
 use Model\Group\GroupManager;
-use Model\Package\Assignment;
 use Protocol\Message\InventoryRequest;
 use ReturnTypeWillChange;
 
@@ -502,46 +495,6 @@ class Client extends \Model\ClientOrGroup
 
         $this->_configEffective[$option] = $value;
         return $value;
-    }
-
-    /**
-     * Get package assignments
-     *
-     * @param string $order Package assignment property to sort by, default: packageName
-     * @param string $direction asc|desc, default: asc
-     * @return iterable<Assignment>
-     */
-    public function getPackageAssignments(string $order = 'packageName', string $direction = 'asc'): iterable
-    {
-        $hydrator = new ObjectPropertyHydrator();
-        $hydrator->setNamingStrategy(
-            new MapNamingStrategy([
-                'name' => 'packageName',
-                'tvalue' => 'status',
-                'comments' => 'timestamp',
-            ])
-        );
-        $hydrator->addStrategy(
-            'timestamp',
-            new DateTimeFormatterStrategy(Assignment::DATEFORMAT)
-        );
-
-        $sql = $this->container->get(ClientConfig::class)->getSql();
-        $select = $sql->select();
-        $select->columns(['tvalue', 'comments'])
-            ->join(
-                'download_available',
-                'download_available.fileid = devices.ivalue',
-                ['name'],
-                Select::JOIN_INNER
-            )
-            ->where(['hardware_id' => $this['Id'], 'devices.name' => 'DOWNLOAD'])
-            ->order([$hydrator->extractName($order) => $direction]);
-
-        $resultSet = new HydratingResultSet($hydrator, new Assignment());
-        $resultSet->initialize($sql->prepareStatementForSqlObject($select)->execute());
-
-        return $resultSet;
     }
 
     /**

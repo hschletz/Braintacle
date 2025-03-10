@@ -69,7 +69,6 @@ class ClientManagerTest extends AbstractTestCase
         'NetworkDevicesIdentified',
         'NetworkDevicesScanned',
         'NetworkInterfaces',
-        'Packages',
         'RegistryData',
         'Software',
         'SoftwareDefinitions',

@@ -25,6 +25,7 @@ namespace Database\Test\Table;
 use Braintacle\Database\ConnectionFactory;
 use Braintacle\Legacy\Database\AdapterFactory;
 use Braintacle\Legacy\Database\DatabaseFactory;
+use Composer\InstalledVersions;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Di\Container\ServiceManager\AutowireFactory;
 use Laminas\ServiceManager\ServiceManager;
@@ -64,8 +65,18 @@ abstract class AbstractTestCase extends \PHPUnit\DbUnit\TestCase
      */
     public static function setUpBeforeClass(): void
     {
-        static::$_table = static::createServiceManager()->get(static::getClass());
-        static::$_table->updateSchema(true);
+        $class = static::getClass();
+        $schemaFile = sprintf(
+            '%s/module/Database/data/Tables/%s.json',
+            InstalledVersions::getRootPackage()['install_path'],
+            substr($class, strrpos($class, '\\') + 1),
+        );
+
+        static::$_table = static::createServiceManager()->get($class);
+        if (file_exists($schemaFile)) { // skip if the table is already managed by migrations.
+            static::$_table->updateSchema(true);
+        }
+
         parent::setUpBeforeClass();
     }
 

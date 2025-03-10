@@ -2,9 +2,11 @@
 
 namespace Braintacle\Test\Client\Packages;
 
+use ArrayIterator;
 use Braintacle\Client\ClientRequestParameters;
 use Braintacle\Client\Packages\ShowPackagesHandler;
 use Braintacle\Http\RouteHelper;
+use Braintacle\Package\Assignments;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\DomMatcherTrait;
@@ -43,7 +45,6 @@ class ShowPackagesHandlerTest extends TestCase
         $client = $this->createMock(Client::class);
         $client->id = $clientId;
         $client->name = '<clientName>';
-        $client->method('getPackageAssignments')->with('packageName', 'asc')->willReturn($assignedPackages);
         $client->method('getAssignablePackages')->willReturn($assignablePackages);
 
         $requestData = new ClientRequestParameters();
@@ -57,7 +58,16 @@ class ShowPackagesHandlerTest extends TestCase
             ->with($routeArguments, ClientRequestParameters::class)
             ->willReturn($requestData);
 
-        $handler = new ShowPackagesHandler($this->response, $routeHelper, $dataProcessor, $templateEngine);
+        $assignments = $this->createMock(Assignments::class);
+        $assignments->method('get')->with($client)->willReturn(new ArrayIterator($assignedPackages));
+
+        $handler = new ShowPackagesHandler(
+            $this->response,
+            $routeHelper,
+            $dataProcessor,
+            $assignments,
+            $templateEngine
+        );
 
         return $handler->handle($this->request);
     }

@@ -41,7 +41,7 @@ use Psr\Container\ContainerInterface;
 class PackageManagerTest extends AbstractTestCase
 {
     /** {@inheritdoc} */
-    protected static $_tables = ['Config', 'Packages', 'PackageDownloadInfo', 'GroupInfo'];
+    protected static $_tables = ['Config', 'PackageDownloadInfo', 'GroupInfo'];
 
     public function testPackageExists()
     {
