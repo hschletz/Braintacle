@@ -18,6 +18,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\Mock;
 use Model\Client\Client;
+use Model\Group\Group;
 use Model\Package\Assignment;
 use Model\Package\Package;
 use Model\Package\PackageManager;
@@ -49,6 +50,14 @@ class AssignmentsTest extends TestCase
             $packageManager ?? $this->createStub(PackageManager::class),
             $dataProcessor ?? $this->createStub(DataProcessor::class),
         );
+    }
+
+    public static function targetProvider()
+    {
+        return [
+            [new Client()],
+            [new Group()],
+        ];
     }
 
     public function testGet()
@@ -109,9 +118,11 @@ class AssignmentsTest extends TestCase
         });
     }
 
-    public function testGetAssignablePackages()
+    #[DataProvider('targetProvider')]
+
+    public function testGetAssignablePackages(Client|Group $target)
     {
-        DatabaseConnection::with(function (Connection $connection): void {
+        DatabaseConnection::with(function (Connection $connection) use ($target): void {
             DatabaseConnection::initializeTable(
                 'devices',
                 ['hardware_id', 'name', 'ivalue'],
@@ -145,7 +156,6 @@ class AssignmentsTest extends TestCase
                 ],
             );
 
-            $target = new Client();
             $target->id = 1;
 
             $assignments = $this->createAssignments(connection: $connection);
@@ -155,7 +165,8 @@ class AssignmentsTest extends TestCase
         });
     }
 
-    public function testAssignPackage()
+    #[DataProvider('targetProvider')]
+    public function testAssignPackage(Client|Group $target)
     {
         $packageName = 'packageName';
         $packageId = 42;
@@ -179,17 +190,15 @@ class AssignmentsTest extends TestCase
         $packageManager = $this->createMock(PackageManager::class);
         $packageManager->method('getPackage')->with($packageName)->willReturn($package);
 
-        $target = new Client();
         $target->id = $targetId;
 
         $assignments = $this->createAssignments($connection, $clock, $packageManager);
         $assignments->assignPackage($packageName, $target);
     }
 
-    public function testAssignPackages()
+    #[DataProvider('targetProvider')]
+    public function testAssignPackages(Client|Group $target)
     {
-        $target = new Client();
-
         /** @var Mock|Assignments */
         $packageManager = Mockery::mock(Assignments::class)->makePartial();
         $packageManager->shouldReceive('assignPackage')->once()->with('package1', $target);
@@ -199,9 +208,10 @@ class AssignmentsTest extends TestCase
         $packageManager->assignPackages(['package1', 'package2'], $target);
     }
 
-    public function testUnassignPackage()
+    #[DataProvider('targetProvider')]
+    public function testUnassignPackage(Client|Group $target)
     {
-        DatabaseConnection::with(function (Connection $connection): void {
+        DatabaseConnection::with(function (Connection $connection) use ($target): void {
             $packageName = 'package_name';
             $packageId = 10;
             $targetId = 1;
@@ -220,7 +230,6 @@ class AssignmentsTest extends TestCase
             $packageManager = $this->createMock(PackageManager::class);
             $packageManager->method('getPackage')->with($packageName)->willReturn($package);
 
-            $target = new Client();
             $target->id = 1;
 
             $assignments = $this->createAssignments(connection: $connection, packageManager: $packageManager);
