@@ -24,10 +24,7 @@ namespace Model;
 
 use Database\Table\ClientConfig;
 use Database\Table\Locks;
-use Database\Table\Packages;
 use Laminas\Db\Adapter\Adapter;
-use Laminas\Db\Sql\Predicate\Operator;
-use Model\Package\PackageManager;
 use Nada\Column\AbstractColumn as Column;
 use Nada\Database\AbstractDatabase;
 use Psr\Container\ContainerInterface;
@@ -275,61 +272,6 @@ abstract class ClientOrGroup extends AbstractModel
     public function isLocked()
     {
         return (bool) $this->_lockNestCount;
-    }
-
-    /**
-     * Get a list of installable packages for this object
-     *
-     * A package is installable if it is not already assigned and not listed
-     * in a client's history. The latter is always the case for groups.
-     *
-     * @return string[]
-     */
-    public function getAssignablePackages()
-    {
-        $packages = $this->container->get(Packages::class);
-        $select = $packages->getSql()->select();
-        $select->columns(array('name'))
-            ->join(
-                // assigned packages
-                'devices',
-                new \Laminas\Db\Sql\Predicate\PredicateSet(
-                    array(
-                        new Operator('ivalue', '=', 'fileid', Operator::TYPE_IDENTIFIER, Operator::TYPE_IDENTIFIER),
-                        new \Laminas\Db\Sql\Predicate\Operator('devices.hardware_id', '=', $this['Id']),
-                        // "DOWNLOAD" is always present, eventual "DOWNLOAD_*" rows exist in addition to that.
-                        // The equality check is suficient here.
-                        new \Laminas\Db\Sql\Predicate\Operator('devices.name', '=', 'DOWNLOAD'),
-                    )
-                ),
-                array(),
-                \Laminas\Db\Sql\Select::JOIN_LEFT
-            )
-            ->join(
-                // packages from history
-                'download_history',
-                new \Laminas\Db\Sql\Predicate\PredicateSet(
-                    array(
-                        new Operator('pkg_id', '=', 'fileid', Operator::TYPE_IDENTIFIER, Operator::TYPE_IDENTIFIER),
-                        new \Laminas\Db\Sql\Predicate\Operator('download_history.hardware_id', '=', $this['Id']),
-                    )
-                ),
-                array(),
-                \Laminas\Db\Sql\Select::JOIN_LEFT
-            )
-            ->where(
-                // exclude rows containing data from joined tables
-                array(
-                    new \Laminas\Db\Sql\Predicate\IsNull('devices.ivalue'),
-                    new \Laminas\Db\Sql\Predicate\IsNull('download_history.pkg_id'),
-                )
-            )->order('download_available.name');
-
-        $result = array();
-        foreach ($packages->selectWith($select) as $package) {
-            $result[] = $package['Name'];
-        }
-        return $result;
     }
 
     /**

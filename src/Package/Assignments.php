@@ -16,13 +16,16 @@ final class Assignments
 {
     private const TableAssignments = 'devices';
     private const TablePackages = 'download_available';
+    private const TableHistory = 'download_history';
 
     private const Target = 'hardware_id';
     private const Action = 'name';
     private const PackageId = 'ivalue';
     private const Status = 'tvalue';
     private const Timestamp = 'comments';
+    private const PackageKey = 'fileid';
     private const PackageName = 'name';
+    private const HistoryId = 'pkg_id';
 
     private const ActionDownload = 'DOWNLOAD';
     private const ActionReset = 'DOWNLOAD_FORCE';
@@ -45,12 +48,54 @@ final class Assignments
         $select = $queryBuilder
             ->select('p.' . self::PackageName, self::Status, self::Timestamp)
             ->from(self::TableAssignments, 'a')
-            ->innerJoin('a', self::TablePackages, 'p', $expr->eq('p.fileid', 'a.' . self::PackageId))
+            ->innerJoin('a', self::TablePackages, 'p', $expr->eq('p.' . self::PackageKey, 'a.' . self::PackageId))
             ->where($expr->eq(self::Target, $queryBuilder->createPositionalParameter($client->id)))
             ->andWhere($expr->eq('a.' . self::Action, $queryBuilder->createPositionalParameter(self::ActionDownload)))
             ->orderBy('p.' . self::PackageName);
 
         return $this->dataProcessor->iterate($select->executeQuery()->iterateAssociative(), Assignment::class);
+    }
+
+    /**
+     * Get a list of packages assignable to a client or group.
+     *
+     * A package is assignable if it is not already assigned and not listed in a
+     * client's history. The latter is always the case for groups.
+     *
+     * @return iterable<string>
+     */
+    public function getAssignablePackages(Client|Group $target): iterable
+    {
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $expr = $queryBuilder->expr();
+        $select = $queryBuilder
+            ->select('p.' . self::PackageName)
+            ->from(self::TablePackages, 'p')
+            ->leftJoin( // assigned packages
+                'p',
+                self::TableAssignments,
+                'a',
+                $expr->and(
+                    $expr->eq(self::PackageId, self::PackageKey),
+                    $expr->eq('a.' . self::Target, $queryBuilder->createPositionalParameter($target->id)),
+                    $expr->eq('a.' . self::Action, $queryBuilder->createPositionalParameter(self::ActionDownload))
+                ),
+            )
+            ->leftJoin( // packages from history
+                'p',
+                self::TableHistory,
+                'h',
+                $expr->and(
+                    $expr->eq(self::HistoryId, self::PackageKey),
+                    $expr->eq('h.' . self::Target, $queryBuilder->createPositionalParameter($target->id)),
+                ),
+            )
+            // Select only rows not containing data from joined tables.
+            ->where($expr->isNull(self::PackageId))
+            ->andWhere($expr->isNull(self::HistoryId))
+            ->orderBy('p.' . self::PackageName);
+
+        return $select->executeQuery()->iterateColumn();
     }
 
     public function assignPackage(string $packageName, Client|Group $target): void

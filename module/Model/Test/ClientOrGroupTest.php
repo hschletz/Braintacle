@@ -39,7 +39,7 @@ class ClientOrGroupTest extends AbstractTestCase
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /** {@inheritdoc} */
-    protected static $_tables = ['Locks', 'PackageHistory'];
+    protected static $_tables = ['Locks'];
 
     protected $_currentTimestamp;
 
@@ -312,14 +312,6 @@ class ClientOrGroupTest extends AbstractTestCase
         $this->assertTrue($model->isLocked());
         $model->unlock();
         $this->assertFalse($model->isLocked());
-    }
-
-    public function testGetAssignablePackages()
-    {
-        $model = $this->composeMock();
-        $model->setContainer(static::$serviceManager);
-        $model['Id'] = 1;
-        $this->assertEquals(array('package1', 'package3'), $model->getAssignablePackages());
     }
 
     public static function getConfigProvider()

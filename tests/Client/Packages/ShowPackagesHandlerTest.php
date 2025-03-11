@@ -45,7 +45,6 @@ class ShowPackagesHandlerTest extends TestCase
         $client = $this->createMock(Client::class);
         $client->id = $clientId;
         $client->name = '<clientName>';
-        $client->method('getAssignablePackages')->willReturn($assignablePackages);
 
         $requestData = new ClientRequestParameters();
         $requestData->client = $client;
@@ -60,6 +59,7 @@ class ShowPackagesHandlerTest extends TestCase
 
         $assignments = $this->createMock(Assignments::class);
         $assignments->method('get')->with($client)->willReturn(new ArrayIterator($assignedPackages));
+        $assignments->method('getAssignablePackages')->with($client)->willReturn($assignablePackages);
 
         $handler = new ShowPackagesHandler(
             $this->response,

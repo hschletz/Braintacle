@@ -109,6 +109,52 @@ class AssignmentsTest extends TestCase
         });
     }
 
+    public function testGetAssignablePackages()
+    {
+        DatabaseConnection::with(function (Connection $connection): void {
+            DatabaseConnection::initializeTable(
+                'devices',
+                ['hardware_id', 'name', 'ivalue'],
+                [
+                    [1, 'DOWNLOAD', 2],
+                    [1, 'DOWNLOAD', 5],
+                    [1, 'DOWNLOAD_suffix', 5],
+                    [1, 'OTHER', 1],
+                    [1, 'OTHER', 2],
+                    [1, 'OTHER', 4],
+                    [2, 'DOWNLOAD', 1],
+                ],
+            );
+            DatabaseConnection::initializeTable(
+                'download_available',
+                ['fileid', 'name', 'priority', 'fragments', 'size', 'osname'],
+                [
+                    [3, 'package3', 1, 1, 1, ''],
+                    [1, 'package1', 1, 1, 1, ''],
+                    [2, 'package2', 1, 1, 1, ''],
+                    [4, 'package4', 1, 1, 1, ''],
+                    [5, 'package5', 1, 1, 1, ''],
+                ],
+            );
+            DatabaseConnection::initializeTable(
+                'download_history',
+                ['hardware_id', 'pkg_id'],
+                [
+                    [1, 4],
+                    [2, 1],
+                ],
+            );
+
+            $target = new Client();
+            $target->id = 1;
+
+            $assignments = $this->createAssignments(connection: $connection);
+            $result = iterator_to_array($assignments->getAssignablePackages($target));
+
+            $this->assertEquals(['package1', 'package3'], $result);
+        });
+    }
+
     public function testAssignPackage()
     {
         $packageName = 'packageName';

@@ -4,6 +4,7 @@ namespace Braintacle\Test\Group\Packages;
 
 use Braintacle\Group\GroupRequestParameters;
 use Braintacle\Group\Packages\ShowPackagesHandler;
+use Braintacle\Package\Assignments;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\HttpHandlerTestTrait;
@@ -33,7 +34,6 @@ class ShowPackagesHandlerTest extends TestCase
         $group = $this->createMock(Group::class);
         $group->method('__get')->with('name')->willReturn($groupName);
         $group->method('getPackages')->with('asc')->willReturn($assignedPackages);
-        $group->method('getAssignablePackages')->willReturn($assignablePackages);
 
         $formData = new GroupRequestParameters();
         $formData->group = $group;
@@ -43,7 +43,10 @@ class ShowPackagesHandlerTest extends TestCase
         $dataProcessor = $this->createMock(DataProcessor::class);
         $dataProcessor->method('process')->with($queryParams, GroupRequestParameters::class)->willReturn($formData);
 
-        $handler = new ShowPackagesHandler($this->response, $dataProcessor, $templateEngine);
+        $assignments = $this->createMock(Assignments::class);
+        $assignments->method('getAssignablePackages')->with($group)->willReturn($assignablePackages);
+
+        $handler = new ShowPackagesHandler($this->response, $dataProcessor, $assignments, $templateEngine);
         $request = $this->request->withQueryParams($queryParams);
 
         return $handler->handle($request);

@@ -3,6 +3,7 @@
 namespace Braintacle\Group\Packages;
 
 use Braintacle\Group\GroupRequestParameters;
+use Braintacle\Package\Assignments;
 use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
 use Override;
@@ -18,6 +19,7 @@ class ShowPackagesHandler implements RequestHandlerInterface
     public function __construct(
         private ResponseInterface $response,
         private DataProcessor $dataProcessor,
+        private Assignments $assignments,
         private TemplateEngine $templateEngine,
     ) {}
 
@@ -34,7 +36,7 @@ class ShowPackagesHandler implements RequestHandlerInterface
                     'currentAction' => 'packages',
                     'group' => $group,
                     'assignedPackages' => $group->getPackages('asc'),
-                    'assignablePackages' => $group->getAssignablePackages(),
+                    'assignablePackages' => $this->assignments->getAssignablePackages($group),
                 ]
             )
         );
