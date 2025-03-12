@@ -41,7 +41,7 @@ final class Assignments
     /**
      * @return iterable<Assignment>
      */
-    public function get(Client $client): iterable
+    public function getAssignedPackages(Client|Group $target): iterable
     {
         $queryBuilder = $this->connection->createQueryBuilder();
         $expr = $queryBuilder->expr();
@@ -49,7 +49,7 @@ final class Assignments
             ->select('p.' . self::PackageName, self::Status, self::Timestamp)
             ->from(self::TableAssignments, 'a')
             ->innerJoin('a', self::TablePackages, 'p', $expr->eq('p.' . self::PackageKey, 'a.' . self::PackageId))
-            ->where($expr->eq(self::Target, $queryBuilder->createPositionalParameter($client->id)))
+            ->where($expr->eq(self::Target, $queryBuilder->createPositionalParameter($target->id)))
             ->andWhere($expr->eq('a.' . self::Action, $queryBuilder->createPositionalParameter(self::ActionDownload)))
             ->orderBy('p.' . self::PackageName);
 

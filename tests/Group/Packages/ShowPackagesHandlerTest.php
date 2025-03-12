@@ -11,6 +11,7 @@ use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
 use Formotron\DataProcessor;
 use Model\Group\Group;
+use Model\Package\Assignment;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
@@ -33,7 +34,6 @@ class ShowPackagesHandlerTest extends TestCase
 
         $group = $this->createMock(Group::class);
         $group->method('__get')->with('name')->willReturn($groupName);
-        $group->method('getPackages')->with('asc')->willReturn($assignedPackages);
 
         $formData = new GroupRequestParameters();
         $formData->group = $group;
@@ -44,6 +44,7 @@ class ShowPackagesHandlerTest extends TestCase
         $dataProcessor->method('process')->with($queryParams, GroupRequestParameters::class)->willReturn($formData);
 
         $assignments = $this->createMock(Assignments::class);
+        $assignments->method('getAssignedPackages')->with($group)->willReturn($assignedPackages);
         $assignments->method('getAssignablePackages')->with($group)->willReturn($assignablePackages);
 
         $handler = new ShowPackagesHandler($this->response, $dataProcessor, $assignments, $templateEngine);
@@ -79,7 +80,13 @@ class ShowPackagesHandlerTest extends TestCase
 
     public function testAssignedPackages()
     {
-        $response = $this->handleRequest(['package1', 'package2'], []);
+        $assignment1 = new Assignment();
+        $assignment1->packageName = 'package1';
+
+        $assignment2 = new Assignment();
+        $assignment2->packageName = 'package2';
+
+        $response = $this->handleRequest([$assignment1, $assignment2], []);
         $xPath = $this->getXPathFromMessage($response);
 
         $headings = $xPath->query('//h2');

@@ -60,9 +60,10 @@ class AssignmentsTest extends TestCase
         ];
     }
 
-    public function testGet()
+    #[DataProvider('targetProvider')]
+    public function testGetAssignedPackages($target)
     {
-        DatabaseConnection::with(function (Connection $connection): void {
+        DatabaseConnection::with(function (Connection $connection) use ($target): void {
             $targetId = 1;
             DatabaseConnection::initializeTable(
                 'download_available',
@@ -83,7 +84,6 @@ class AssignmentsTest extends TestCase
                 ],
             );
 
-            $target = new Client();
             $target->id = $targetId;
 
             $dateTimeTransformer = $this->createStub(DateTimeTransformer::class);
@@ -95,7 +95,7 @@ class AssignmentsTest extends TestCase
 
             $assignments = $this->createAssignments(connection: $connection, dataProcessor: $dataProcessor);
 
-            $result = iterator_to_array($assignments->get($target));
+            $result = iterator_to_array($assignments->getAssignedPackages($target));
 
             $this->assertCount(2, $result);
             $this->assertContainsOnlyInstancesOf(Assignment::class, $result);

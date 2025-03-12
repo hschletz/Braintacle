@@ -3,21 +3,27 @@
 
 {block content}
     {include Header.latte}
-    {if count($assignedPackages)}
-        <script type="module" src="{assetUrl('js/assigned_packages.js')}"></script>
+    {foreach $assignedPackages as $assignment}
+        {first}
+            <script type="module" src="{assetUrl('js/assigned_packages.js')}"></script>
 
-        <h2>{translate('Assigned packages')}</h2>
-        <table class="alternating assignedPackages textnormalsize">
-            <tr n:foreach="$assignedPackages as $package">
-                <td>{$package}</td>
+            <h2>{translate('Assigned packages')}</h2>
+            <table class="alternating assignedPackages textnormalsize">
+        {/first}
+
+            <tr>
+                <td>{$assignment->packageName}</td>
                 <td>
-                    <button type="button" class="linkstyle" data-package="{$package}">
+                    <button type="button" class="linkstyle" data-package="{$assignment->packageName}">
                         {translate('remove')}
                     </button>
                 </td>
             </tr>
-        </table>
-    {/if}
+
+        {last}
+            </table>
+        {/last}
+    {/foreach}
 
     {include ../../Forms/AssignPackage.latte, packages: $assignablePackages}
 

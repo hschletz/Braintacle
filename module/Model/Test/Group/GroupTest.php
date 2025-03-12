@@ -379,20 +379,4 @@ class GroupTest extends AbstractGroupTestCase
             )
         );
     }
-
-    public function testGetPackagesDefaultOrder()
-    {
-        $model = new Group();
-        $model->setContainer(static::$serviceManager);
-        $model->id = 10;
-        $this->assertEquals(array('package1', 'package2'), $model->getPackages());
-    }
-
-    public function testGetPackagesReverseOrder()
-    {
-        $model = new Group();
-        $model->setContainer(static::$serviceManager);
-        $model->id = 10;
-        $this->assertEquals(array('package2', 'package1'), $model->getPackages('desc'));
-    }
 }

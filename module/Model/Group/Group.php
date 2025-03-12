@@ -25,7 +25,6 @@ namespace Model\Group;
 use Database\Table\Clients;
 use Database\Table\GroupInfo;
 use Database\Table\GroupMemberships;
-use Database\Table\Packages;
 use DateTimeInterface;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\Literal;
@@ -282,27 +281,5 @@ class Group extends \Model\ClientOrGroup
                 sprintf('+%d seconds', $config->groupCacheExpirationInterval)
             )
         );
-    }
-
-    /**
-     * Return names of all assigned packages
-     *
-     * @param string $direction one of [asc|desc]. Default: asc
-     * @return string[]
-     */
-    public function getPackages($direction = 'asc')
-    {
-        $packages = $this->container->get(Packages::class);
-        $select = $packages->getSql()->select();
-        $select->columns(array('name'))
-            ->join('devices', 'ivalue = fileid', array())
-            ->where(
-                array(
-                    'hardware_id' => $this['Id'],
-                    'devices.name' => 'DOWNLOAD',
-                )
-            )->order(array('download_available.name' => $direction));
-
-        return array_column($packages->selectWith($select)->toArray(), 'name');
     }
 }

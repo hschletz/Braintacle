@@ -66,28 +66,6 @@ groups_cache:
     group_id: 11
     static: 0
 
-devices:
-  -
-    hardware_id: 10
-    name: "DOWNLOAD"
-    ivalue: 1
-  -
-    hardware_id: 10
-    name: "DOWNLOAD"
-    ivalue: 2
-  -
-    hardware_id: 10
-    name: "other"
-    ivalue: 3
-  -
-    hardware_id: 11
-    name: "DOWNLOAD"
-    ivalue: 2
-  -
-    hardware_id: 11
-    name: "DOWNLOAD"
-    ivalue: 3
-
 download_available:
   -
     fileid: 1

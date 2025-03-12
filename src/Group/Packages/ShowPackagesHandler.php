@@ -35,7 +35,7 @@ class ShowPackagesHandler implements RequestHandlerInterface
                 [
                     'currentAction' => 'packages',
                     'group' => $group,
-                    'assignedPackages' => $group->getPackages('asc'),
+                    'assignedPackages' => $this->assignments->getAssignedPackages($group),
                     'assignablePackages' => $this->assignments->getAssignablePackages($group),
                 ]
             )
