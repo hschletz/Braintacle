@@ -9,6 +9,7 @@ use Braintacle\Transformer\TrimAndNullify;
 use Braintacle\Validator\AssertStringLength;
 use Formotron\Attribute\PreProcess;
 use Formotron\Attribute\Transform;
+use Formotron\Attribute\UseBackingValue;
 
 /**
  * Form data for creating a group with given clients.
@@ -16,6 +17,7 @@ use Formotron\Attribute\Transform;
 #[PreProcess(CsrfProcessor::class)]
 class NewGroupFormData extends SearchParams
 {
+    #[UseBackingValue]
     public Membership $membershipType;
 
     #[Transform(TrimAndNullify::class)]

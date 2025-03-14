@@ -554,12 +554,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hschletz/formotron.git",
-                "reference": "15466d5127216698a8c9de1edf6c26a88d619cef"
+                "reference": "b54f08fe6ca41ebd53ef162943670936774f6443"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hschletz/formotron/zipball/15466d5127216698a8c9de1edf6c26a88d619cef",
-                "reference": "15466d5127216698a8c9de1edf6c26a88d619cef",
+                "url": "https://api.github.com/repos/hschletz/formotron/zipball/b54f08fe6ca41ebd53ef162943670936774f6443",
+                "reference": "b54f08fe6ca41ebd53ef162943670936774f6443",
                 "shasum": ""
             },
             "require": {
@@ -593,7 +593,7 @@
                 "issues": "https://github.com/hschletz/formotron/issues",
                 "source": "https://github.com/hschletz/formotron/tree/main"
             },
-            "time": "2025-03-09T19:30:40+00:00"
+            "time": "2025-03-14T17:48:29+00:00"
         },
         {
             "name": "hschletz/nada",

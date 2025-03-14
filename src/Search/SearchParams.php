@@ -4,6 +4,7 @@ namespace Braintacle\Search;
 
 use Braintacle\Transformer\ToBool;
 use Formotron\Attribute\Assert;
+use Formotron\Attribute\UseBackingValue;
 
 /**
  * Search form parameters.
@@ -24,6 +25,7 @@ class SearchParams
     /**
      * Search operator.
      */
+    #[UseBackingValue]
     public SearchOperator $operator;
 
     /**
