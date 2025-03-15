@@ -39,23 +39,4 @@ class NetworkDeviceTypes extends \Database\AbstractTable
         $this->table = 'devicetype';
         parent::__construct($container);
     }
-
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    protected function postSetSchema($schema, $database, $prune)
-    {
-        // Create entries for orphaned types in NetworkDevicesIdentified table
-        if (isset($database->getTables()['network_devices'])) {
-            $definedTypes = $this->fetchCol('name');
-            foreach ($this->adapter->query('SELECT DISTINCT type FROM network_devices')->execute() as $type) {
-                $type = $type['type'];
-                if (!in_array($type, $definedTypes)) {
-                    $this->logger->notice(sprintf('Creating undefined network device type "%s"', $type));
-                    $this->container->get(DeviceManager::class)->addType($type);
-                }
-            }
-        }
-    }
 }

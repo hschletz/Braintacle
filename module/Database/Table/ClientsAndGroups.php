@@ -41,16 +41,4 @@ class ClientsAndGroups extends \Database\AbstractTable
         $this->table = 'hardware';
         parent::__construct($container);
     }
-
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    protected function postSetSchema($schema, $database, $prune)
-    {
-        // obsolete feature which was never supported.
-        if ($this->delete(array('deviceid' => '_DOWNLOADGROUP_'))) {
-            $this->logger->warning('Obsolete download groups found and deleted.');
-        }
-    }
 }

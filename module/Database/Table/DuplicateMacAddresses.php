@@ -38,14 +38,4 @@ class DuplicateMacAddresses extends \Database\AbstractTable
         $this->table = 'blacklist_macaddresses';
         parent::__construct($container);
     }
-
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    protected function preSetSchema($schema, $database, $prune)
-    {
-        // Drop obsolete autoincrement column to avoid MySQL error when setting new PK
-        $this->dropColumnIfExists($database, 'id');
-    }
 }

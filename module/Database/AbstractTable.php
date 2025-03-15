@@ -207,27 +207,6 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
     }
 
     /**
-     * Drop a column if it exists
-     *
-     * @param AbstractDatabase $database Database object
-     * @param string $column column name
-     * @codeCoverageIgnore
-     */
-    protected function dropColumnIfExists($database, $column)
-    {
-        $tables = $database->getTables();
-        if (isset($tables[$this->table])) {
-            $table = $tables[$this->table];
-            $columns = $table->getColumns();
-            if (isset($columns[$column])) {
-                $this->logger->notice("Dropping column $this->table.$column...");
-                $table->dropColumn($column);
-                $this->logger->notice('done.');
-            }
-        }
-    }
-
-    /**
      * Fetch a single column as a flat array
      *
      * @param string $name Column name

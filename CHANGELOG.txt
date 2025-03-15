@@ -6,10 +6,14 @@ without any warranty.
 ====================================================================
 
 
-CHANGES IN VERSION 1.16
+CHANGES IN VERSION 2.0
 =======================
 
 Upgrading from previous versions:
+
+- Required: If upgrading from a version earlier than 1.15, upgrade to 1.15 first
+  and run "braintacle-tool.php database" to update the database. Then upgrade to
+  2.0.
 
 - Required: Run "composer install" from the Braintacle root directory to
   update dependencies.
@@ -18,6 +22,8 @@ Upgrading from previous versions:
   config file, see config/braintacle.ini.template for examples. All other
   database options are ignored. Only PDO drivers are supported, make sure that
   the PDO extension and the PDO driver extension are installed and activated.
+
+- Required: Run "braintacle-tool.php database" to update the database.
 
 
 CHANGES IN VERSION 1.15

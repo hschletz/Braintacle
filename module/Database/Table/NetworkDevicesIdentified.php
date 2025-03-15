@@ -38,29 +38,4 @@ class NetworkDevicesIdentified extends \Database\AbstractTable
         $this->table = 'network_devices';
         parent::__construct($container);
     }
-
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
-    protected function preSetSchema($schema, $database, $prune)
-    {
-        // Drop obsolete autoincrement column to avoid MySQL error when setting new PK
-        $this->dropColumnIfExists($database, 'id');
-
-        // There used to be a column named "user". On PostgreSQL, dropping that
-        // column would fail without quoting. Since the default pruning code
-        // does not quote, delete the column manually with quoting temporarily
-        // enabled.
-        if ($prune and $database->isPgsql()) {
-            $keywords = $database->quoteKeywords;
-            $database->quoteKeywords[] = 'user';
-            try {
-                $this->dropColumnIfExists($database, 'user');
-            } finally {
-                // Always reset quoteKeywords.
-                $database->quoteKeywords = $keywords;
-            }
-        }
-    }
 }
