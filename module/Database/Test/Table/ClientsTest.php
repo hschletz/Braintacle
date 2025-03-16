@@ -24,14 +24,6 @@ namespace Database\Test\Table;
 
 class ClientsTest extends AbstractTestCase
 {
-    public static function setUpBeforeClass(): void
-    {
-        // These tables must exist before the view can be created
-        static::$serviceManager->get('Database\Table\ClientsAndGroups')->updateSchema(true);
-        static::$serviceManager->get('Database\Table\ClientSystemInfo')->updateSchema(true);
-        parent::setUpBeforeClass();
-    }
-
     public function getDataSet()
     {
         return new \PHPUnit\DbUnit\DataSet\DefaultDataSet();

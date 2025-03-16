@@ -60,12 +60,8 @@ use RuntimeException;
 class ClientManagerTest extends AbstractTestCase
 {
     protected static $_tables = array(
-        'ClientsAndGroups',
-        'ClientSystemInfo',
-        'Clients',
         'CustomFields',
         'Filesystems',
-        'GroupMemberships',
         'NetworkDevicesIdentified',
         'NetworkDevicesScanned',
         'NetworkInterfaces',
@@ -811,7 +807,6 @@ class ClientManagerTest extends AbstractTestCase
         return array(
             array('MemberOf', 'Id', 'asc', 1, false, array(array('id' => 1))),
             array('MemberOf', 'Id', 'asc', 2, false, array(array('id' => 2))),
-            array('ExcludedFrom', 'Id', 'asc', 1, false, array(array('id' => 2))),
             array(
                 'MemberOf',
                 'Membership',
@@ -982,13 +977,6 @@ class ClientManagerTest extends AbstractTestCase
                 '=',
                 'LogicException',
                 'invertResult cannot be used on MemberOf filter'
-            ),
-            array(
-                'Id',
-                'ExcludedFrom',
-                '=',
-                'LogicException',
-                'invertResult cannot be used on ExcludedFrom filter'
             ),
             array(
                 'Software',

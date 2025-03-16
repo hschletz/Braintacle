@@ -15,6 +15,7 @@ use Override;
 abstract class Migration extends AbstractMigration
 {
     protected const TemplateTable = "Create table '%s'";
+    protected const TemplateView = "Create view '%s'";
 
     protected const EngineInnoDb = 'InnoDB';
 
@@ -32,6 +33,21 @@ abstract class Migration extends AbstractMigration
         }
 
         return $exists;
+    }
+
+    /**
+     * Check for view presence and log message if it exists.
+     */
+    protected function viewExists(string $name): bool
+    {
+        foreach ($this->sm->listViews() as $view) {
+            if ($view->getName() == $name) {
+                $this->write('View exists: ' . $name);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

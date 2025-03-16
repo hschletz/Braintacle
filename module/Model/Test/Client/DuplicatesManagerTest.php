@@ -63,9 +63,6 @@ class DuplicatesManagerTest extends AbstractTestCase
 
     /** {@inheritdoc} */
     protected static $_tables = array(
-        'ClientsAndGroups',
-        'ClientSystemInfo',
-        'Clients',
         'DuplicateAssetTags',
         'DuplicateMacAddresses',
         'DuplicateSerials',

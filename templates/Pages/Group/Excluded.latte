@@ -8,19 +8,27 @@
 
 {include Header.latte}
 
-<p class="textcenter">{translate('Number of clients: %d', count($clients))}</p>
-
-<table class="alternating">
-    <tr>
-        <th>{include sortableHeader, 'Name', translate('Name'), $extraParams}</th>
-        <th>{include sortableHeader, 'UserName', translate('User'), $extraParams}</th>
-        <th>{include sortableHeader, 'InventoryDate', translate('Last inventory'), $extraParams}</th>
-    </tr>
-    <tr n:foreach="$clients as $client">
-        <td>
-            <a href="{pathForRoute(showClientGroups, [id: $client->id])}">{$client->name}</a>
-        </td>
-        <td>{$client->userName}</td>
-        <td>{$client->inventoryDate|localDate: date: short, time: short}</td>
-    </tr>
-</table>
+<div class="tableWithCounter">
+    {foreach $clients as $client}
+        {first}
+            <table class="alternating">
+                <tr>
+                    <th>{include sortableHeader, 'Name', translate('Name'), $extraParams}</th>
+                    <th>{include sortableHeader, 'UserName', translate('User'), $extraParams}</th>
+                    <th>{include sortableHeader, 'InventoryDate', translate('Last inventory'), $extraParams}</th>
+                </tr>
+        {/first}
+                <tr>
+                    <td>
+                        <a href="{pathForRoute(showClientGroups, [id: $client->id])}">{$client->name}</a>
+                    </td>
+                    <td>{$client->userName}</td>
+                    <td>{$client->inventoryDate|localDate: date: short, time: short}</td>
+                </tr>
+        {last}
+            </table>
+            {var $counter = $iterator->counter}
+        {/last}
+    {/foreach}
+    <p class="textcenter">{translate('Number of clients: %d', $counter ?? 0)}</p>
+</div>

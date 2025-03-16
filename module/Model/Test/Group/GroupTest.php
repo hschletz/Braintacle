@@ -44,14 +44,6 @@ class GroupTest extends AbstractGroupTestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** {@inheritdoc} */
-    protected static $_tables = array(
-        'ClientsAndGroups',
-        'ClientSystemInfo',
-        'Clients',
-        'GroupMemberships',
-    );
-
     public static function getDefaultConfigProvider()
     {
         return array(

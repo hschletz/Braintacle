@@ -31,7 +31,6 @@ class WindowsInstallationsTest extends AbstractTestCase
     {
         // These tables must exist before the view can be created
         $serviceManager = static::createServiceManager();
-        $serviceManager->get(ClientsAndGroups::class)->updateSchema(true);
         $serviceManager->get(WindowsProductKeys::class)->updateSchema(true);
         parent::setUpBeforeClass();
     }

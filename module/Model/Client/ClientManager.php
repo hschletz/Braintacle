@@ -240,20 +240,6 @@ class ClientManager
                             )
                         );
                     break;
-                case 'ExcludedFrom':
-                    if ($invertResult) {
-                        throw new \LogicException("invertResult cannot be used on ExcludedFrom filter");
-                    }
-                    // $arg is expected to be a \Model\Group\Group object.
-                    $arg->update();
-                    $select->join('groups_cache', 'groups_cache.hardware_id = clients.id', array())
-                        ->where(
-                            array(
-                                'groups_cache.group_id' => $arg['Id'],
-                                'groups_cache.static' => \Model\Client\Client::MEMBERSHIP_NEVER
-                            )
-                        );
-                    break;
                 case 'Filesystem.Size':
                 case 'Filesystem.FreeSpace':
                     // Generic integer filter

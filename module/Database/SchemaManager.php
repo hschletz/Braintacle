@@ -22,7 +22,6 @@
 
 namespace Database;
 
-use Database\Table\Clients;
 use Database\Table\CustomFieldConfig;
 use Database\Table\PackageDownloadInfo;
 use Database\Table\Software;
@@ -116,7 +115,6 @@ class SchemaManager
             $handledTables[] = $table->table;
         }
         // Views need manual invocation.
-        $this->container->get(Clients::class)->updateSchema();
         $this->container->get(PackageDownloadInfo::class)->updateSchema();
         $this->container->get(WindowsInstallations::class)->updateSchema();
         $this->container->get(Software::class)->updateSchema();

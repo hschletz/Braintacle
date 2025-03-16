@@ -13,7 +13,7 @@ final class DateTimeTest extends TestCase
 {
     use DataProcessorTestTrait;
 
-    public function testAttribute()
+    public function testExplicitFormat()
     {
         $dateTime = new DateTimeImmutable();
 
@@ -26,6 +26,29 @@ final class DateTimeTest extends TestCase
         $dataObject = new class
         {
             #[DateTime('custom format')]
+            public DateTimeInterface $value;
+        };
+        $result = $this->processData(
+            ['value' => 'datetime value'],
+            get_class($dataObject),
+            [DateTimeTransformer::class => $transformer]
+        );
+        $this->assertSame($dateTime, $result->value);
+    }
+
+    public function testDefaultFormat()
+    {
+        $dateTime = new DateTimeImmutable();
+
+        $transformer = $this->createMock(DateTimeTransformer::class);
+        $transformer
+            ->method('transform')
+            ->with('datetime value', [null])
+            ->willReturn($dateTime);
+
+        $dataObject = new class
+        {
+            #[DateTime]
             public DateTimeInterface $value;
         };
         $result = $this->processData(

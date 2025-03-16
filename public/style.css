@@ -74,6 +74,11 @@ button.linkstyle {
     margin-top: unset;
 }
 
+.tableWithCounter {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
 /* Main page content */
 #content {
     position: absolute;

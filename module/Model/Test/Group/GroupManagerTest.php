@@ -42,9 +42,6 @@ class GroupManagerTest extends AbstractGroupTestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    /** {@inheritdoc} */
-    protected static $_tables = ['ClientsAndGroups', 'GroupMemberships'];
-
     public static function getGroupsProvider()
     {
         $group1 = array(

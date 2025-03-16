@@ -42,12 +42,10 @@ class ClientTest extends AbstractTestCase
 
     protected static $_tables = [
         'AndroidInstallations',
-        'ClientsAndGroups',
         'WindowsProductKeys',
         'WindowsInstallations',
         'DuplicateSerials',
         'DuplicateAssetTags',
-        'GroupMemberships',
     ];
 
     public function testObjectProperties()

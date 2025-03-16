@@ -30,7 +30,6 @@ class SoftwareManagerTest extends AbstractTestCase
 {
     /** {@inheritdoc} */
     protected static $_tables = [
-        'ClientsAndGroups',
         'Software',
         'SoftwareDefinitions',
         'SoftwareRaw',

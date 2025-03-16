@@ -3,6 +3,9 @@
 namespace Braintacle\Test\Group\Members;
 
 use ArrayIterator;
+use Braintacle\Direction;
+use Braintacle\Group\Groups;
+use Braintacle\Group\Members\ExcludedColumn;
 use Braintacle\Group\Members\ExcludedPageHandler;
 use Braintacle\Group\Members\ExcludedRequestParameters;
 use Braintacle\Template\TemplateEngine;
@@ -14,7 +17,6 @@ use DateTime;
 use DOMXPath;
 use Formotron\DataProcessor;
 use Model\Client\Client;
-use Model\Client\ClientManager;
 use Model\Group\Group;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -29,7 +31,7 @@ class ExcludedPageHandlerTest extends TestCase
     use HttpHandlerTestTrait;
     use TemplateTestTrait;
 
-    private function getXpath(): DOMXPath
+    private function getXpath(array $clients): DOMXPath
     {
         $groupName = 'groupName';
         $queryParams = ['name' => $groupName];
@@ -45,6 +47,22 @@ class ExcludedPageHandlerTest extends TestCase
         $dataProcessor = $this->createMock(DataProcessor::class);
         $dataProcessor->method('process')->with($queryParams)->willReturn($requestParams);
 
+        $groups = $this->createMock(Groups::class);
+        $groups
+            ->method('getExcludedClients')
+            ->with($group, ExcludedColumn::InventoryDate, Direction::Descending)
+            ->willReturn(new ArrayIterator($clients));
+
+        $templateEngine = $this->createTemplateEngine();
+
+        $handler = new ExcludedPageHandler($this->response, $dataProcessor, $groups, $templateEngine);
+        $response = $handler->handle($this->request->withQueryParams($queryParams));
+
+        return $this->getXPathFromMessage($response);
+    }
+
+    public function testClients()
+    {
         $client = new Client();
         $client->id = 42;
         $client->name = 'client_name';
@@ -52,28 +70,7 @@ class ExcludedPageHandlerTest extends TestCase
         $client->inventoryDate = new DateTime('2014-04-09 18:56:12');
         $client->membership = Client::MEMBERSHIP_ALWAYS;
 
-        $clients = new ArrayIterator([$client]);
-
-        $clientManager = $this->createMock(ClientManager::class);
-        $clientManager->method('getClients')->with(
-            ['Name', 'UserName', 'InventoryDate'],
-            'InventoryDate',
-            'desc',
-            'ExcludedFrom',
-            $group,
-        )->willReturn($clients);
-
-        $templateEngine = $this->createTemplateEngine();
-
-        $handler = new ExcludedPageHandler($this->response, $dataProcessor, $clientManager, $templateEngine);
-        $response = $handler->handle($this->request->withQueryParams($queryParams));
-
-        return $this->getXPathFromMessage($response);
-    }
-
-    public function testHandler()
-    {
-        $xPath = $this->getXpath();
+        $xPath = $this->getXpath([$client]);
 
         // phpcs:disable Generic.Files.LineLength.TooLong
         $this->assertXpathMatches(
@@ -84,5 +81,18 @@ class ExcludedPageHandlerTest extends TestCase
         $this->assertXpathMatches($xPath, '//tr[2]/td[1]/a[@href="showClientGroups/id=42?"][text()="client_name"]');
         $this->assertXpathMatches($xPath, '//tr[2]/td[2][text()="user_name"]');
         $this->assertXpathMatches($xPath, '//tr[2]/td[3][text()="09.04.14, 18:56"]');
+    }
+
+    public function testNoClients()
+    {
+        $xPath = $this->getXpath([]);
+
+        // phpcs:disable Generic.Files.LineLength.TooLong
+        $this->assertXpathMatches(
+            $xPath,
+            '//ul[@class="navigation navigation_details"]/li[@class="active"]/a[@href="showGroupExcluded/??name=groupName"]'
+        );
+        $this->assertXpathMatches($xPath, '//p[@class="textcenter"][text()="_Number of clients: 0"]');
+        $this->assertNotXpathMatches($xPath, '//table');
     }
 }
