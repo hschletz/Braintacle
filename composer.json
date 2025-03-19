@@ -22,6 +22,7 @@
     "repositories": [
         {
             "type": "vcs",
+            "no-api": true,
             "url": "https://github.com/axleus/laminas-db"
         }
     ],

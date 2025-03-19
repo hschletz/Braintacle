@@ -4,14 +4,14 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "212f97fd2bfbe42fc91f75b4bc30abe9",
+    "content-hash": "c8f08caba9ae16548cd4acadab129353",
     "packages": [
         {
             "name": "axleus/laminas-db",
             "version": "3.0.x-dev",
             "source": {
                 "type": "git",
-                "url": "https://github.com/axleus/laminas-db.git",
+                "url": "https://github.com/axleus/laminas-db",
                 "reference": "96da3f2c9adb4cb11464c6528c8341d98c814bf7"
             },
             "dist": {
