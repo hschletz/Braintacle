@@ -71,9 +71,14 @@ class SchemaManager
      */
     public function updateAll($prune)
     {
+        /** @var AbstractDatabase */
         $nada = $this->container->get(AbstractDatabase::class);
+        $useTransaction = $nada->canUseDdlTransaction();
+
         $connection = $this->container->get(Adapter::class)->getDriver()->getConnection();
-        $connection->beginTransaction();
+        if ($useTransaction) {
+            $connection->beginTransaction();
+        }
         try {
             $convertedTimestamps = $nada->convertTimestampColumns();
             if ($convertedTimestamps) {
@@ -87,9 +92,14 @@ class SchemaManager
             }
             $this->updateTables($prune);
             $this->container->get(Config::class)->schemaVersion = self::SCHEMA_VERSION;
-            $connection->commit();
+
+            if ($useTransaction) {
+                $connection->commit();
+            }
         } catch (\Exception $e) {
-            $connection->rollback();
+            if ($useTransaction) {
+                $connection->rollback();
+            }
             throw $e;
         }
     }
