@@ -41,7 +41,8 @@ abstract class Migration extends AbstractMigration
     protected function viewExists(string $name): bool
     {
         foreach ($this->sm->listViews() as $view) {
-            if ($view->getName() == $name) {
+            // Strip schema prefix ("public") on PostgreSQL for comparison
+            if ($view->getShortestName($view->getNamespaceName()) == $name) {
                 $this->write('View exists: ' . $name);
                 return true;
             }
