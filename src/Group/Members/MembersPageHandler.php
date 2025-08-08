@@ -2,9 +2,9 @@
 
 namespace Braintacle\Group\Members;
 
+use Braintacle\Group\Groups;
 use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
-use Model\Client\ClientManager;
 use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,7 +18,7 @@ class MembersPageHandler implements RequestHandlerInterface
     public function __construct(
         private ResponseInterface $response,
         private DataProcessor $dataProcessor,
-        private ClientManager $clientManager,
+        private Groups $groups,
         private TemplateEngine $templateEngine,
     ) {}
 
@@ -26,13 +26,7 @@ class MembersPageHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $requestParams = $this->dataProcessor->process($request->getQueryParams(), MembersRequestParameters::class);
-        $clients = $this->clientManager->getClients(
-            ['Name', 'UserName', 'InventoryDate', 'Membership'],
-            $requestParams->order->name,
-            $requestParams->direction->value,
-            'MemberOf',
-            $requestParams->group,
-        );
+        $clients = $this->groups->getMembers($requestParams->group, $requestParams->order, $requestParams->direction);
 
         $this->response->getBody()->write($this->templateEngine->render('Pages/Group/Members.latte', [
             'group' => $requestParams->group,

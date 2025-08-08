@@ -802,75 +802,6 @@ class ClientManagerTest extends AbstractTestCase
         $this->assertEquals($expected, $result);
     }
 
-    public static function getClientsGroupFilterProvider()
-    {
-        return array(
-            array('MemberOf', 'Id', 'asc', 1, false, array(array('id' => 1))),
-            array('MemberOf', 'Id', 'asc', 2, false, array(array('id' => 2))),
-            array(
-                'MemberOf',
-                'Membership',
-                'asc',
-                3,
-                true,
-                array(
-                    array('id' => 2, 'static' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC),
-                    array('id' => 1, 'static' => \Model\Client\Client::MEMBERSHIP_ALWAYS),
-                ),
-            ),
-            array(
-                'MemberOf',
-                'Membership',
-                'desc',
-                3,
-                true,
-                array(
-                    array('id' => 1, 'static' => \Model\Client\Client::MEMBERSHIP_ALWAYS),
-                    array('id' => 2, 'static' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC),
-                ),
-            ),
-        );
-    }
-
-    /**
-     * @dataProvider getClientsGroupFilterProvider
-     */
-    public function testGetClientsGroupFilter($filter, $order, $direction, $groupId, $addColumn, $expected)
-    {
-        /** @var MockObject|Group */
-        $group = $this->createMock('Model\Group\Group');
-        $group->method('offsetGet')->with('Id')->willReturn($groupId);
-        $group->expects($this->once())->method('update');
-
-        $result = null;
-        $resultSetPrototype = $this->createMock('Laminas\Db\ResultSet\HydratingResultSet');
-        $resultSetPrototype->expects($this->once())
-            ->method('initialize')
-            ->with(
-                $this->callback(function ($dataSource) use (&$result) {
-                    $result = iterator_to_array($dataSource);
-                    return true;
-                })
-            )->willReturnSelf();
-
-        $hydrator = $this->createMock('Database\Hydrator\Clients');
-        $hydrator->method('getExtractorMap')->willReturn($this->_map);
-
-        $clients = $this->createMock('Database\Table\Clients');
-        $clients->method('getResultSetPrototype')->willReturn($resultSetPrototype);
-        $clients->method('getHydrator')->willReturn($hydrator);
-
-        $serviceLocator = $this->createMock(ContainerInterface::class);
-        $serviceLocator->method('get')->willReturnMap([
-            [Adapter::class, static::$serviceManager->get(Adapter::class)],
-            [Clients::class, $clients],
-        ]);
-
-        $model = new ClientManager($serviceLocator);
-        $model->getClients(array('Id'), $order, $direction, $filter, $group, null, null, $addColumn);
-        $this->assertEquals($expected, $result);
-    }
-
     public static function getClientsDistinctProvider()
     {
         return array(
@@ -970,13 +901,6 @@ class ClientManagerTest extends AbstractTestCase
                 '=',
                 'LogicException',
                 'invertResult cannot be used on Software filter'
-            ),
-            array(
-                'Id',
-                'MemberOf',
-                '=',
-                'LogicException',
-                'invertResult cannot be used on MemberOf filter'
             ),
             array(
                 'Software',

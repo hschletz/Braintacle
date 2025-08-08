@@ -3,8 +3,12 @@
 namespace Braintacle\Test\Group\Members;
 
 use ArrayIterator;
+use Braintacle\Direction;
+use Braintacle\Group\Groups;
+use Braintacle\Group\Members\MembersColumn;
 use Braintacle\Group\Members\MembersPageHandler;
 use Braintacle\Group\Members\MembersRequestParameters;
+use Braintacle\Group\Membership;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\DomMatcherTrait;
@@ -14,7 +18,6 @@ use DateTime;
 use DOMXPath;
 use Formotron\DataProcessor;
 use Model\Client\Client;
-use Model\Client\ClientManager;
 use Model\Group\Group;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -50,29 +53,26 @@ class MembersPageHandlerTest extends TestCase
         $client1->name = 'client_name';
         $client1->userName = 'user_name';
         $client1->inventoryDate = new DateTime('2014-04-09 18:56:12');
-        $client1->membership = Client::MEMBERSHIP_ALWAYS;
+        $client1->membership = Membership::Manual;
 
         $client2 = new Client();
         $client2->id = 42;
         $client2->name = 'client_name';
         $client2->userName = 'user_name';
         $client2->inventoryDate = new DateTime('2014-04-09 18:56:12');
-        $client2->membership = Client::MEMBERSHIP_AUTOMATIC;
+        $client2->membership = Membership::Automatic;
 
         $clients = new ArrayIterator([$client1, $client2]);
 
-        $clientManager = $this->createMock(ClientManager::class);
-        $clientManager->method('getClients')->with(
-            ['Name', 'UserName', 'InventoryDate', 'Membership'],
-            'InventoryDate',
-            'desc',
-            'MemberOf',
-            $group,
-        )->willReturn($clients);
+        $groups = $this->createMock(Groups::class);
+        $groups
+            ->method('getMembers')
+            ->with($group, MembersColumn::InventoryDate, Direction::Descending)
+            ->willReturn($clients);
 
         $templateEngine = $this->createTemplateEngine();
 
-        $handler = new MembersPageHandler($this->response, $dataProcessor, $clientManager, $templateEngine);
+        $handler = new MembersPageHandler($this->response, $dataProcessor, $groups, $templateEngine);
         $response = $handler->handle($this->request->withQueryParams($queryParams));
 
         return $this->getXPathFromMessage($response);
@@ -90,10 +90,10 @@ class MembersPageHandlerTest extends TestCase
         $this->assertXpathMatches($xPath, "//td[text()='_Last update:']/following::td[text()='Sonntag, 26.\xC2\xA0Januar 2025 um 17:12:21']");
         $this->assertXpathMatches($xPath, "//td[text()='_Next update:']/following::td[text()='Sonntag, 26.\xC2\xA0Januar 2025 um 18:53:21']");
         $this->assertXpathMatches($xPath, '//p[@class="textcenter"][text()="_Number of clients: 2"]');
-        $this->assertXpathMatches($xPath, '//table[2]/tr[2]/td[1]/a[@href="showClientGroups/id=42?"][text()="client_name"]');
-        $this->assertXpathMatches($xPath, '//table[2]/tr[2]/td[2][text()="user_name"]');
-        $this->assertXpathMatches($xPath, '//table[2]/tr[2]/td[3][text()="09.04.14, 18:56"]');
-        $this->assertXpathMatches($xPath, '//table[2]/tr[2]/td[4][text()="_manual"]');
-        $this->assertXpathMatches($xPath, '//table[2]/tr[3]/td[4][text()="_automatic"]');
+        $this->assertXpathMatches($xPath, '(//table)[2]/tr[2]/td[1]/a[@href="showClientGroups/id=42?"][text()="client_name"]');
+        $this->assertXpathMatches($xPath, '(//table)[2]/tr[2]/td[2][text()="user_name"]');
+        $this->assertXpathMatches($xPath, '(//table)[2]/tr[2]/td[3][text()="09.04.14, 18:56"]');
+        $this->assertXpathMatches($xPath, '(//table)[2]/tr[2]/td[4][text()="_manual"]');
+        $this->assertXpathMatches($xPath, '(//table)[2]/tr[3]/td[4][text()="_automatic"]');
     }
 }

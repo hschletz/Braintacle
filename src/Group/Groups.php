@@ -5,6 +5,8 @@ namespace Braintacle\Group;
 use Braintacle\Direction;
 use Braintacle\Group\Members\ExcludedClient;
 use Braintacle\Group\Members\ExcludedColumn;
+use Braintacle\Group\Members\Member;
+use Braintacle\Group\Members\MembersColumn;
 use Doctrine\DBAL\Connection;
 use Formotron\DataProcessor;
 use Model\Group\Group;
@@ -26,6 +28,36 @@ final class Groups
         private Connection $connection,
         private DataProcessor $dataProcessor,
     ) {}
+
+    /**
+     * @return iterable<Member>
+     */
+    public function getMembers(Group $group, MembersColumn $order, Direction $direction)
+    {
+        $group->update();
+
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $expr = $queryBuilder->expr();
+
+        $select = $queryBuilder->select(
+            ...array_map(
+                fn(MembersColumn $case) => $case->value,
+                MembersColumn::cases()
+            )
+        );
+        $select->from(self::TableClients, 'c');
+        $select->innerJoin('c', self::TableMemberships, 'm', $expr->eq(self::ColumnClientFK, self::ColumnClientId));
+        $select->where($expr->eq(self::ColumnGroupId, $queryBuilder->createPositionalParameter($group->id)));
+        $select->andWhere(
+            $expr->in(
+                self::ColumnMembershipType,
+                [(string) Membership::Automatic->value, (string) Membership::Manual->value],
+            ),
+        );
+        $select->orderBy($order->value, $direction->value);
+
+        return $this->dataProcessor->iterate($select->executeQuery()->iterateAssociative(), Member::class);
+    }
 
     /**
      * @return iterable<ExcludedClient>

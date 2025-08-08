@@ -215,31 +215,6 @@ class ClientManager
                             $addSearchColumns ? array('software_version' => 'version') : array()
                         )->where(['software_installations.name' => $arg]);
                     break;
-                case 'MemberOf':
-                    if ($invertResult) {
-                        throw new \LogicException("invertResult cannot be used on MemberOf filter");
-                    }
-                    // $arg is expected to be a \Model\Group\Group object.
-                    $arg->update();
-                    $select
-                        ->join(
-                            'groups_cache',
-                            'groups_cache.hardware_id = clients.id',
-                            $addSearchColumns ? array('static') : array()
-                        )
-                        ->where(
-                            array(
-                                'groups_cache.group_id' => $arg['Id'],
-                                new Predicate\In(
-                                    'groups_cache.static',
-                                    array(
-                                        Client::MEMBERSHIP_AUTOMATIC,
-                                        Client::MEMBERSHIP_ALWAYS
-                                    )
-                                )
-                            )
-                        );
-                    break;
                 case 'Filesystem.Size':
                 case 'Filesystem.FreeSpace':
                     // Generic integer filter
@@ -330,8 +305,6 @@ class ClientManager
         if ($order) {
             if (isset($map[$order])) {
                 $order = "clients.$map[$order]";
-            } elseif ($order == 'Membership') {
-                $order = 'groups_cache.static';
             } elseif (preg_match('/^CustomFields\\.(.+)/', $order, $matches)) {
                 $order = 'customfields_' . $this->container->get(CustomFieldManager::class)
                     ->getColumnMap()[$matches[1]];

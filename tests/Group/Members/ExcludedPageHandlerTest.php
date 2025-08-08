@@ -8,6 +8,7 @@ use Braintacle\Group\Groups;
 use Braintacle\Group\Members\ExcludedColumn;
 use Braintacle\Group\Members\ExcludedPageHandler;
 use Braintacle\Group\Members\ExcludedRequestParameters;
+use Braintacle\Group\Membership;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\DomMatcherTrait;
@@ -68,7 +69,7 @@ class ExcludedPageHandlerTest extends TestCase
         $client->name = 'client_name';
         $client->userName = 'user_name';
         $client->inventoryDate = new DateTime('2014-04-09 18:56:12');
-        $client->membership = Client::MEMBERSHIP_ALWAYS;
+        $client->membership = Membership::Manual;
 
         $xPath = $this->getXpath([$client]);
 

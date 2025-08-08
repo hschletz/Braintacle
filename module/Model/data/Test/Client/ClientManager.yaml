@@ -219,32 +219,6 @@ drives:
     total: null
     free: null
 
-groups_cache:
-  -
-    hardware_id: 1
-    group_id: 1
-    static: 0
-  -
-    hardware_id: 1
-    group_id: 2
-    static: 2
-  -
-    hardware_id: 2
-    group_id: 1
-    static: 2
-  -
-    hardware_id: 2
-    group_id: 2
-    static: 1
-  -
-    hardware_id: 1
-    group_id: 3
-    static: 1
-  -
-    hardware_id: 2
-    group_id: 3
-    static: 0
-
 netmap:
   -
     mac: "00:00:5E:00:53:03"

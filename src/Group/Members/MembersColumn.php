@@ -5,10 +5,11 @@ namespace Braintacle\Group\Members;
 /**
  * Columns on members page.
  */
-enum MembersColumn
+enum MembersColumn: string
 {
-    case Name;
-    case UserName;
-    case InventoryDate;
-    case Membership;
+    case Id = 'id';
+    case Name = 'name';
+    case UserName = 'userid';
+    case InventoryDate = 'lastdate';
+    case Membership = 'static';
 }

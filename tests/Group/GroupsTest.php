@@ -8,6 +8,9 @@ use Braintacle\Direction;
 use Braintacle\Group\Groups;
 use Braintacle\Group\Members\ExcludedClient;
 use Braintacle\Group\Members\ExcludedColumn;
+use Braintacle\Group\Members\Member;
+use Braintacle\Group\Members\MembersColumn;
+use Braintacle\Group\Membership;
 use Braintacle\Test\DatabaseConnection;
 use Braintacle\Test\DataProcessorTestTrait;
 use Braintacle\Transformer\DateTime;
@@ -16,6 +19,7 @@ use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Model\Group\Group;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Traversable;
@@ -27,6 +31,74 @@ use Traversable;
 final class GroupsTest extends TestCase
 {
     use DataProcessorTestTrait;
+
+    public static function getMembersProvider()
+    {
+        return [
+            'group4' => [MembersColumn::Id, Direction::Ascending, 4, [[1, Membership::Automatic]]],
+            'group5' => [MembersColumn::Id, Direction::Ascending, 5, [[2, Membership::Manual]]],
+            'group6_asc' => [
+                MembersColumn::Membership,
+                Direction::Ascending,
+                6,
+                [
+                    [2, Membership::Automatic],
+                    [1, Membership::Manual],
+                ],
+            ],
+            'group6_desc' => [
+                MembersColumn::Membership,
+                Direction::Descending,
+                6,
+                [
+                    [1, Membership::Manual],
+                    [2, Membership::Automatic],
+                ],
+            ],
+        ];
+    }
+
+    #[DataProvider('getMembersProvider')]
+    public function testGetMembers(MembersColumn $order, Direction $direction, int $groupId, array $expected)
+    {
+        DatabaseConnection::with(function (Connection $connection) use ($order, $direction, $groupId, $expected): void {
+            DatabaseConnection::initializeTable('hardware', ['id', 'deviceid', 'name', 'userid', 'lastdate'], [
+                [1, 'id1', 'name1', 'user1', '2025-03-15T17:11:14'],
+                [2, 'id2', 'name2', 'user2', '2015-08-11T14:18:50'],
+                [3, 'id3', 'name3', 'user3', '2025-03-15T17:11:14'],
+                [4, '_SYSTEMGROUP_', 'group1', null, '2025-03-15T17:11:14'],
+                [5, '_SYSTEMGROUP_', 'group2', null, '2025-03-15T17:11:14'],
+                [6, '_SYSTEMGROUP_', 'group3', null, '2025-03-15T17:11:14'],
+            ]);
+            DatabaseConnection::initializeTable('groups_cache', ['hardware_id', 'group_id', 'static'], [
+                [1, 4, 0],
+                [1, 5, 2],
+                [2, 4, 2],
+                [2, 5, 1],
+                [1, 6, 1],
+                [2, 6, 0],
+            ]);
+
+            $dateTimeTransformer = $this->createStub(DateTimeTransformer::class);
+            $dateTimeTransformer->method('transform')->willReturn(new DateTimeImmutable());
+
+            $dataProcessor = $this->createDataProcessor([DateTimeTransformer::class => $dateTimeTransformer]);
+
+            $group = $this->createMock(Group::class);
+            $group->expects($this->once())->method('update');
+            $group->method('__get')->with('id')->willReturn($groupId);
+
+            $groups = new Groups($connection, $dataProcessor);
+            $members = $groups->getMembers($group, $order, $direction);
+            $this->assertEquals(
+                $expected,
+                array_map(
+                    fn($member) => [$member->id, $member->membership],
+                    [...$members],
+                ),
+            );
+        });
+    }
 
     public function testGetExcludedClients()
     {

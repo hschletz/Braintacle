@@ -22,6 +22,7 @@
 
 namespace Model\Client;
 
+use Braintacle\Group\Membership;
 use Database\Table\AndroidInstallations;
 use Database\Table\DuplicateAssetTags;
 use Database\Table\DuplicateSerials;
@@ -65,7 +66,7 @@ use ReturnTypeWillChange;
  * @property \Model\Client\Item\StorageDevice[] $storageDevice storage devices
  * @property \Model\Client\Item\VirtualMachine[] $virtualMachine virtual machines
  * @property string $Package.Status package status (supplied by filter)
- * @property integer $membership group membership type (supplied by filter)
+ * @property Membership $membership group membership type (supplied by filter)
  * @property string $Registry.* registry search result (supplied by filter)
  *
  * @psalm-suppress PossiblyUnusedProperty -- Referenced in template

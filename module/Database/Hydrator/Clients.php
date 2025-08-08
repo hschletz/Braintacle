@@ -34,7 +34,6 @@ use Psr\Container\ContainerInterface;
  * In addition to the column names from the Clients table, the following lowercase names are recognized on hydration:
  *
  * - **package_status**: status of assigned package, added by a package filter. Converted to "Package.Status" property.
- * - **static**: type of a group membership, added by a group filter. Converted to "Membership" property.
  * - **customfields_*column***: custom field, converted to "CustomFields.*Name*" property.
  * - **windows_*column***: Windows property, converted to "Windows.*Property*" property.
  * - **registry_content**: result from a registry filter, converted to "Registry.Content" property.
@@ -178,10 +177,6 @@ class Clients implements \Laminas\Hydrator\HydratorInterface
 
         if ($name == 'package_status') {
             return 'Package.Status';
-        }
-
-        if ($name == 'static') {
-            return 'Membership';
         }
 
         if (!preg_match('/^([a-z]+)_([a-z0-9_]+)$/', $name, $matches)) {
