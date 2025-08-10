@@ -5,6 +5,7 @@ namespace Braintacle\Test;
 use Braintacle\Database\ConnectionFactory;
 use Braintacle\Database\Migrations;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use LogicException;
 use RuntimeException;
 use Symfony\Component\Console\Application;
@@ -100,7 +101,17 @@ final class DatabaseConnection
         }
 
         $connection = self::getConnection();
-        $connection->executeStatement($connection->getDatabasePlatform()->getTruncateTableSQL($table));
+        $platform = $connection->getDatabasePlatform();
+        if ($platform instanceof AbstractMySQLPlatform) {
+            // Platform generates a TRUNCATE TABLE statement which would cause
+            // an implicit commit, breaking transaction handling.
+            $statement = 'DELETE FROM ' . $table;
+        } else {
+            // For other platforms, rely on the platform (TRUNCATE TABLE may be faster).
+            $statement = $platform->getTruncateTableSQL($table);
+        }
+        $connection->executeStatement($statement);
+
         foreach ($rows as $row) {
             $connection->insert($table, array_combine($columns, $row));
         }

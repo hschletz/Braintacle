@@ -107,6 +107,7 @@ final class GroupsTest extends TestCase
             $order = ExcludedColumn::Id;
             $direction = Direction::Ascending;
             $inventoryDate = '2025-03-15T12:11:14';
+            $expectedInventoryDate = new DateTimeImmutable($inventoryDate);
 
             DatabaseConnection::initializeTable('hardware', ['id', 'deviceid', 'name', 'userid', 'lastdate'], [
                 [1, 'id1', 'name1', 'user1', '2025-03-15T17:11:14'],
@@ -128,8 +129,15 @@ final class GroupsTest extends TestCase
             $dateTimeTransformer = $this->createMock(DateTimeTransformer::class);
             $dateTimeTransformer
                 ->method('transform')
-                ->with($inventoryDate)
-                ->willReturn(new DateTimeImmutable($inventoryDate));
+                ->with(
+                    $this->callback(
+                        // Compare objects instead of strings to acommodate for
+                        // different timestamp formats (Some databases use 'T'
+                        // as separator, others use ' ')
+                        fn(string $timestamp) => new DateTimeImmutable($timestamp) == $expectedInventoryDate
+                    )
+                )
+                ->willReturn($expectedInventoryDate);
 
             $dataProcessor = $this->createDataProcessor([DateTimeTransformer::class => $dateTimeTransformer]);
 
@@ -149,7 +157,7 @@ final class GroupsTest extends TestCase
             $this->assertEquals(2, $client->id);
             $this->assertEquals('name2', $client->name);
             $this->assertEquals('user2', $client->userName);
-            $this->assertEquals(new DateTimeImmutable($inventoryDate), $client->inventoryDate);
+            $this->assertEquals($expectedInventoryDate, $client->inventoryDate);
         });
     }
 }
