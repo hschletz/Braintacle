@@ -123,7 +123,7 @@ final class Version20250315111256 extends Migration
         );
         $table->addColumn('checksum', Types::BIGINT)->setNotnull(false)->setDefault(262143);
 
-        $table->setPrimaryKey(['id']);
+        $this->setPrimaryKey($table, ['id']);
 
         $table->addIndex(['deviceid'], 'hardware_deviceid_idx');
         $table->addIndex(['name'], 'hardware_name_idx');

@@ -24,6 +24,7 @@
 namespace TestRunner;
 
 use Braintacle\AppConfig;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -81,7 +82,7 @@ $application->run();
 
 class Run
 {
-    public function __invoke(InputInterface $input, OutputInterface $output)
+    public function __invoke(InputInterface $input, OutputInterface $output): int
     {
         $modules = $this->getModules($input->getOption('modules'));
         $databases = $this->getDatabases($input->getOption('databases'));
@@ -94,6 +95,8 @@ class Run
             $input->getOption('coverage'),
             $input->getOption('xdebug')
         );
+
+        return Command::SUCCESS;
     }
 
     protected function getModules(?string $modulesOption): array

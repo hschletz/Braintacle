@@ -61,7 +61,7 @@ $renderCallbacks = array(
         );
     },
     'delete' => function ($view, $account) {
-        if ($account['Id'] == $this->identity()) {
+        if ($account['Id'] == $this->identity) {
             return '';
         } else {
             return $view->htmlElement(

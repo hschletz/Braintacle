@@ -64,9 +64,6 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         $request->setUri('/controllername/actionname/');
         $this->assertEquals($matchControllerAction, $router->match($request)->getParams());
 
-        $request->setUri('/controllername/actionname/invalid');
-        $this->assertNull($router->match($request));
-
         $request->setUri('/console');
         $this->assertEquals($matchDefaultDefault, $router->match($request)->getParams());
 
@@ -84,6 +81,9 @@ class RouterTest extends \PHPUnit\Framework\TestCase
 
         $request->setUri('/console/controllername/actionname/');
         $this->assertEquals($matchControllerAction, $router->match($request)->getParams());
+
+        $request->setUri('/controllername/actionname/invalid');
+        $this->assertNull($router->match($request));
 
         $request->setUri('/console/controllername/actionname/invalid');
         $this->assertNull($router->match($request));

@@ -22,6 +22,8 @@
 
 namespace Console\Service;
 
+use Model\Operator\AuthenticationService;
+
 /**
  * Factory for AccountsController
  *
@@ -37,6 +39,7 @@ class AccountsControllerFactory implements \Laminas\ServiceManager\Factory\Facto
     ) {
         $formManager = $container->get('FormElementManager');
         return new \Console\Controller\AccountsController(
+            $container->get(AuthenticationService::class),
             $container->get('Model\Operator\OperatorManager'),
             $formManager->get('Console\Form\Account\Add'),
             $formManager->get('Console\Form\Account\Edit')

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Braintacle\Database;
 
+use Doctrine\DBAL\Schema\Name\UnqualifiedName;
+use Doctrine\DBAL\Schema\PrimaryKeyConstraint;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\Migrations\AbstractMigration;
@@ -41,8 +43,7 @@ abstract class Migration extends AbstractMigration
     protected function viewExists(string $name): bool
     {
         foreach ($this->sm->listViews() as $view) {
-            // Strip schema prefix ("public") on PostgreSQL for comparison
-            if ($view->getShortestName($view->getNamespaceName()) == $name) {
+            if ($view->getName() == $name) {
                 $this->write('View exists: ' . $name);
                 return true;
             }
@@ -61,5 +62,15 @@ abstract class Migration extends AbstractMigration
         string $engine = self::EngineInnoDb,
     ): Table {
         return $schema->createTable($name)->addOption('engine', $engine)->setComment($comment);
+    }
+
+    /**
+     * @param string[] $columnNames
+     */
+    protected function setPrimaryKey(Table $table, array $columnNames): void
+    {
+        $table->addPrimaryKeyConstraint(
+            PrimaryKeyConstraint::editor()->setUnquotedColumnNames(...$columnNames)->create()
+        );
     }
 }

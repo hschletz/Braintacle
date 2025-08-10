@@ -30,6 +30,6 @@ final class Version20250310183100 extends Migration
         $table->addColumn('hardware_id', Types::INTEGER)->setNotnull(true);
         $table->addColumn('pkg_id', Types::INTEGER)->setNotnull(true);
 
-        $table->setPrimaryKey(['hardware_id', 'pkg_id']);
+        $this->setPrimaryKey($table, ['hardware_id', 'pkg_id']);
     }
 }

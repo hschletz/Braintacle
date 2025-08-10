@@ -5,8 +5,13 @@ namespace Braintacle\Test\Database;
 use Braintacle\Database\Migration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Name\UnqualifiedName;
+use Doctrine\DBAL\Schema\PrimaryKeyConstraint;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\View;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Override;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\TestCase;
@@ -14,6 +19,8 @@ use Psr\Log\LoggerInterface;
 
 final class MigrationTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     #[DoesNotPerformAssertions]
     public function testDown()
     {
@@ -186,6 +193,32 @@ final class MigrationTest extends TestCase
                 TestCase::assertEquals('tableName', $table->getName());
                 TestCase::assertEquals('a comment', $table->getComment());
                 TestCase::assertEquals('otherEngine', $table->getOption('engine'));
+            }
+        };
+
+        $schema = new Schema();
+        $migration->up($schema);
+    }
+
+    #[DoesNotPerformAssertions]
+    public function testSetPrimaryKey()
+    {
+        $connection = $this->createStub(Connection::class);
+        $logger = $this->createStub(LoggerInterface::class);
+
+        $migration = new class($connection, $logger) extends Migration
+        {
+            #[Override]
+            public function up(Schema $schema): void
+            {
+                $table = Mockery::mock(Table::class);
+                $table->shouldReceive('addPrimaryKeyConstraint')->withArgs(function (PrimaryKeyConstraint $pk) {
+                    $columns = array_map(fn(UnqualifiedName $name) => $name->toString(), $pk->getColumnNames());
+
+                    return $columns == ['col1', 'col2'];
+                });
+
+                $this->setPrimaryKey($table, ['col1', 'col2']);
             }
         };
 

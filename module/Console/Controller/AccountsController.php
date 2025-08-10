@@ -22,6 +22,7 @@
 
 namespace Console\Controller;
 
+use Laminas\Authentication\AuthenticationServiceInterface;
 use Laminas\Mvc\MvcEvent;
 
 /**
@@ -55,6 +56,7 @@ class AccountsController extends \Laminas\Mvc\Controller\AbstractActionControlle
      * @param \Console\Form\Account\Edit $formAccountEdit Account edit form
      */
     public function __construct(
+        private AuthenticationServiceInterface $authenticationService,
         \Model\Operator\OperatorManager $operatorManager,
         \Console\Form\Account\Add $formAccountAdd,
         \Console\Form\Account\Edit $formAccountEdit
@@ -84,6 +86,8 @@ class AccountsController extends \Laminas\Mvc\Controller\AbstractActionControlle
             $response['order'],
             $response['direction']
         );
+        $response['identity'] = $this->authenticationService->getIdentity();
+
         return $response;
     }
 

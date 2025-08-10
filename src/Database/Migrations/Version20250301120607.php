@@ -35,7 +35,7 @@ final class Version20250301120607 extends Migration
             "Timestamp of last package status change in perl's localtime() format"
         );
 
-        $table->setPrimaryKey(['hardware_id', 'name', 'ivalue']);
+        $this->setPrimaryKey($table, ['hardware_id', 'name', 'ivalue']);
 
         $table->addIndex(['hardware_id'], 'devices_hardware_id_idx');
         $table->addIndex(['name'], 'devices_name_idx');

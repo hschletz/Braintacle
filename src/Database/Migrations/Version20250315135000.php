@@ -62,7 +62,7 @@ final class Version20250315135000 extends Migration
             'Mainboard serial number'
         );
 
-        $table->setPrimaryKey(['hardware_id']);
+        $this->setPrimaryKey($table, ['hardware_id']);
 
         $table->addIndex(['ssn'], 'bios_ssn_idx');
         $table->addIndex(['assettag'], 'bios_assettag_idx');

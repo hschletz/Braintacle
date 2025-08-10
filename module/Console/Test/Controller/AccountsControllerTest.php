@@ -25,6 +25,8 @@ namespace Console\Test\Controller;
 use Console\Form\Account\Add;
 use Console\Form\Account\Edit;
 use Console\Test\AbstractControllerTestCase;
+use Laminas\Authentication\AuthenticationServiceInterface;
+use Model\Operator\AuthenticationService;
 use Model\Operator\Operator;
 use Model\Operator\OperatorManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -76,9 +78,12 @@ class AccountsControllerTest extends AbstractControllerTestCase
         );
         $this->_operatorManager->expects($this->once())->method('getOperators')->willReturn(array($account));
 
-        $identity = $this->createMock('Laminas\View\Helper\Identity');
-        $identity->expects($this->atLeastOnce())->method('__invoke')->willReturn('testId');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('identity', $identity);
+        $authenticationService = $this->createStub(AuthenticationServiceInterface::class);
+        $authenticationService->method('getIdentity')->willReturn('testId');
+
+        $serviceLocator = $this->getApplicationServiceLocator();
+        $serviceLocator->setAllowOverride(true);
+        $serviceLocator->setService(AuthenticationService::class, $authenticationService);
 
         $this->dispatch('/console/accounts/index/');
         $this->assertResponseStatusCode(200);
@@ -98,9 +103,12 @@ class AccountsControllerTest extends AbstractControllerTestCase
         );
         $this->_operatorManager->expects($this->once())->method('getOperators')->willReturn(array($account));
 
-        $identity = $this->createMock('Laminas\View\Helper\Identity');
-        $identity->expects($this->atLeastOnce())->method('__invoke')->willReturn('otherId');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('identity', $identity);
+        $authenticationService = $this->createStub(AuthenticationServiceInterface::class);
+        $authenticationService->method('getIdentity')->willReturn('otherId');
+
+        $serviceLocator = $this->getApplicationServiceLocator();
+        $serviceLocator->setAllowOverride(true);
+        $serviceLocator->setService(AuthenticationService::class, $authenticationService);
 
         $this->dispatch('/console/accounts/index/');
         $this->assertResponseStatusCode(200);

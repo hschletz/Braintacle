@@ -33,6 +33,6 @@ final class Version20250315134219 extends Migration
             'Membership type: 0=automatic (cached), 1=manual, 2=excluded'
         );
 
-        $table->setPrimaryKey(['hardware_id', 'group_id']);
+        $this->setPrimaryKey($table, ['hardware_id', 'group_id']);
     }
 }

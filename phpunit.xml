@@ -4,8 +4,8 @@
     xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
     cacheDirectory=".phpunit.cache"
     beStrictAboutCoverageMetadata="true"
-    failOnPhpunitDeprecation="true"
-    displayDetailsOnPhpunitDeprecations="true"
+    failOnAllIssues="true"
+    displayDetailsOnAllIssues="true"
 >
   <coverage>
     <report>

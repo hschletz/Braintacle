@@ -37,7 +37,7 @@ final class Version20250308180102 extends Migration
         $table->addColumn('osname', Types::STRING)->setLength(7)->setNotnull(true)->setComment('WINDOWS|LINUX|MacOSX');
         $table->addColumn('comment', Types::TEXT)->setNotnull(false);
 
-        $table->setPrimaryKey(['fileid']);
+        $this->setPrimaryKey($table, ['fileid']);
 
         $table->addIndex(['name'], 'download_available_name_unique_idx');
     }
