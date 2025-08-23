@@ -4,7 +4,6 @@ namespace Braintacle\Package;
 
 use Braintacle\CsrfProcessor;
 use Braintacle\Validator\IsStringList;
-use Formotron\Attribute\Assert;
 use Formotron\Attribute\Key;
 use Formotron\Attribute\PreProcess;
 
@@ -16,6 +15,6 @@ final class AssignPackagesFormData
 {
     /** @var string[] */
     #[Key('packages')]
-    #[Assert(IsStringList::class)]
+    #[IsStringList]
     public array $packageNames = [];
 }

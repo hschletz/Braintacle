@@ -3,16 +3,26 @@
 namespace Braintacle\Transformer;
 
 use Attribute;
-use Formotron\Attribute\Transform;
+use Formotron\Attribute\TransformerAttribute;
+use Override;
 
 /**
  * Generate boolean by given rules.
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class ToBool extends Transform
+final class ToBool implements TransformerAttribute
 {
-    public function __construct(mixed $trueValue, mixed $falseValue)
+    public function __construct(private mixed $trueValue, private mixed $falseValue)
     {
-        parent::__construct(ToBoolTransformer::class, trueValue: $trueValue, falseValue: $falseValue);
+        assert($trueValue !== $falseValue);
+    }
+
+    #[Override]
+    public function transform(mixed $value): mixed
+    {
+        return match ($value) {
+            $this->trueValue => true,
+            $this->falseValue => false,
+        };
     }
 }

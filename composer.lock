@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "90b5cc12455134f264be5887c98c00e1",
+    "content-hash": "ba6c9c44375554ef5146c43874b8d8c2",
     "packages": [
         {
             "name": "brick/varexporter",
@@ -554,16 +554,16 @@
         },
         {
             "name": "hschletz/formotron",
-            "version": "dev-main",
+            "version": "0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hschletz/formotron.git",
-                "reference": "b54f08fe6ca41ebd53ef162943670936774f6443"
+                "reference": "25579e438a02b0b518fda0c21cbdaa16df97c8c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hschletz/formotron/zipball/b54f08fe6ca41ebd53ef162943670936774f6443",
-                "reference": "b54f08fe6ca41ebd53ef162943670936774f6443",
+                "url": "https://api.github.com/repos/hschletz/formotron/zipball/25579e438a02b0b518fda0c21cbdaa16df97c8c4",
+                "reference": "25579e438a02b0b518fda0c21cbdaa16df97c8c4",
                 "shasum": ""
             },
             "require": {
@@ -572,9 +572,9 @@
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8",
+                "dg/bypass-finals": "^1.9",
                 "phpunit/phpunit": "^10"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -595,9 +595,9 @@
             "description": "Form processing and validation",
             "support": {
                 "issues": "https://github.com/hschletz/formotron/issues",
-                "source": "https://github.com/hschletz/formotron/tree/main"
+                "source": "https://github.com/hschletz/formotron/tree/release-0.1"
             },
-            "time": "2025-03-14T17:48:29+00:00"
+            "time": "2025-08-23T07:59:02+00:00"
         },
         {
             "name": "hschletz/nada",
@@ -7590,7 +7590,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "hschletz/formotron": 20,
         "php-db/phpdb": 20
     },
     "prefer-stable": false,

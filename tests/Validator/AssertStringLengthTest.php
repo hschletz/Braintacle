@@ -1,49 +1,75 @@
 <?php
 
-namespace Braintacle\Test\Validator;
+namespace Braintacle\Test\Transformer;
 
-use Braintacle\Test\DataProcessorTestTrait;
+use AssertionError;
 use Braintacle\Validator\AssertStringLength;
-use Braintacle\Validator\StringLengthValidator;
+use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\TestCase;
 
 class AssertStringLengthTest extends TestCase
 {
-    use DataProcessorTestTrait;
-
-    public function testExplicitMax()
+    public function testMinNegative()
     {
-        $validator = $this->createMock(StringLengthValidator::class);
-        $validator->method('getValidationErrors')->with($this->anything(), ['min' => 0, 'max' => 1])->willReturn([]);
-
-        $dataObject = new class
-        {
-            #[AssertStringLength(min: 0, max: 1)]
-            public string $value;
-        };
-        $result = $this->processData(
-            ['value' => 'str'],
-            get_class($dataObject),
-            [StringLengthValidator::class => $validator]
-        );
-        $this->assertEquals('str', $result->value);
+        $this->expectException(AssertionError::class);
+        new AssertStringLength(min: -1, max: 2);
     }
 
-    public function testDefaultMax()
+    public function testMaxLessThenOne()
     {
-        $validator = $this->createMock(StringLengthValidator::class);
-        $validator->method('getValidationErrors')->with($this->anything(), ['min' => 1, 'max' => null])->willReturn([]);
+        $this->expectException(AssertionError::class);
+        new AssertStringLength(min: 0, max: 0);
+    }
 
-        $dataObject = new class
-        {
-            #[AssertStringLength(min: 1)]
-            public string $value;
-        };
-        $result = $this->processData(
-            ['value' => 'str'],
-            get_class($dataObject),
-            [StringLengthValidator::class => $validator]
-        );
-        $this->assertEquals('str', $result->value);
+    public function testMaxLessThanMin()
+    {
+        $this->expectException(AssertionError::class);
+        new AssertStringLength(min: 2, max: 1);
+    }
+
+    public function testNullValueWithMinGreaterThanZero()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected string, got NULL');
+        $validator = new AssertStringLength(min: 1, max: 2);
+        $validator->validate(null);
+    }
+
+    public function testStringTooShort()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('String length 1 is lower than 2');
+        $validator = new AssertStringLength(min: 2, max: 2);
+        $validator->validate('ä');
+    }
+
+    public function testStringTooLong()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('String length 2 is higher than 1');
+        $validator = new AssertStringLength(min: 1, max: 1);
+        $validator->validate('ää');
+    }
+
+    public static function validArgumentsProvider()
+    {
+        return [
+            [null, 0, 1],
+            ['', 0, null],
+            ['', 0, 1],
+            ['ä', 0, 1],
+            ['ä', 1, 1],
+            ['ä', 1, null],
+        ];
+    }
+
+    #[DataProvider('validArgumentsProvider')]
+    #[DoesNotPerformAssertions]
+    public function testValidArguments(?string $value, int $min, ?int $max)
+    {
+        $validator = new AssertStringLength($min, $max);
+        $validator->validate($value);
     }
 }

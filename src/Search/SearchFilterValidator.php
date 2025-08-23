@@ -2,8 +2,8 @@
 
 namespace Braintacle\Search;
 
-use Formotron\AssertionFailedException;
 use Formotron\Validator;
+use InvalidArgumentException;
 use Model\Client\CustomFieldManager;
 use Model\Registry\RegistryManager;
 use Override;
@@ -74,26 +74,26 @@ class SearchFilterValidator implements Validator
     ) {}
 
     #[Override]
-    public function getValidationErrors(mixed $value, array $args): array
+    public function validate(mixed $value, array $args): void
     {
         if (str_starts_with($value, 'CustomFields')) {
             foreach (array_keys($this->customFieldManager->getFields()) as $name) {
                 if ($value == 'CustomFields.' . $name) {
-                    return [];
+                    return;
                 }
             }
         }
         if (str_starts_with($value, 'Registry.')) {
             foreach ($this->registryManager->getValueDefinitions() as $regValue) {
                 if ($value == 'Registry.' . $regValue->name) {
-                    return [];
+                    return;
                 }
             }
         }
         if (in_array($value, self::$staticNames)) {
-            return [];
+            return;
         }
 
-        throw new AssertionFailedException('Invalid search filter: ' . $value);
+        throw new InvalidArgumentException('Invalid search filter: ' . $value);
     }
 }

@@ -13,24 +13,24 @@ class TrimAndNullifyTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected string, got int');
         $transformer = new TrimAndNullify();
-        $transformer->transform(42, []);
+        $transformer->transform(42);
     }
 
     public function testNonEmptyString()
     {
         $transformer = new TrimAndNullify();
-        $this->assertEquals('äää', $transformer->transform('  äää  ', []));
+        $this->assertEquals('äää', $transformer->transform('  äää  '));
     }
 
     public function testEmptyString()
     {
         $transformer = new TrimAndNullify();
-        $this->assertNull($transformer->transform('', []));
+        $this->assertNull($transformer->transform(''));
     }
 
     public function testWhitespaceOnly()
     {
         $transformer = new TrimAndNullify();
-        $this->assertNull($transformer->transform('  ', []));
+        $this->assertNull($transformer->transform('  '));
     }
 }

@@ -8,31 +8,29 @@ use Braintacle\Search\SearchFilterValidator;
 use Braintacle\Search\SearchOperator;
 use Braintacle\Test\CsrfFormProcessorTestTrait;
 use Braintacle\Transformer\ToBool;
-use Braintacle\Transformer\ToBoolTransformer;
 use Braintacle\Transformer\TrimAndNullify;
 use Braintacle\Validator\AssertStringLength;
-use Braintacle\Validator\StringLengthValidator;
-use Formotron\AssertionFailedException;
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(NewGroupFormData::class)]
 #[UsesClass(AssertStringLength::class)]
-#[UsesClass(StringLengthValidator::class)]
 #[UsesClass(ToBool::class)]
-#[UsesClass(ToBoolTransformer::class)]
 #[UsesClass(TrimAndNullify::class)]
 class NewGroupFormDataTest extends TestCase
 {
     use CsrfFormProcessorTestTrait;
 
-    private function getFormData(string $name, string $description): NewGroupFormData
-    {
-        $searchFilterValidator = $this->createMock(SearchFilterValidator::class);
-        $searchFilterValidator->method('getValidationErrors')->with('_filter', [])->willReturn([]);
-
-        $dataProcessor = $this->createDataProcessor([SearchFilterValidator::class => $searchFilterValidator]);
+    private function getFormData(
+        string $name,
+        string $description,
+        ?SearchFilterValidator $searchFilterValidator = null,
+    ): NewGroupFormData {
+        $dataProcessor = $this->createDataProcessor([
+            SearchFilterValidator::class => $searchFilterValidator ?? $this->createStub(SearchFilterValidator::class),
+        ]);
         $formData = $dataProcessor->process([
             'filter' => '_filter',
             'search' => '_search',
@@ -43,7 +41,6 @@ class NewGroupFormDataTest extends TestCase
             'description' => $description,
         ], NewGroupFormData::class);
 
-        $this->assertEquals('_filter', $formData->filter);
         $this->assertEquals('_search', $formData->search);
         $this->assertEquals(SearchOperator::Equal, $formData->operator);
         $this->assertTrue($formData->invert);
@@ -63,19 +60,19 @@ class NewGroupFormDataTest extends TestCase
 
     public function testNameEmpty()
     {
-        $this->expectException(AssertionFailedException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->getFormData('', 'description');
     }
 
     public function testNameWhitespaceOnly()
     {
-        $this->expectException(AssertionFailedException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->getFormData(' ', 'description');
     }
 
     public function testNameTooLong()
     {
-        $this->expectException(AssertionFailedException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->getFormData(str_repeat('x', 256), 'description');
     }
 
@@ -93,7 +90,16 @@ class NewGroupFormDataTest extends TestCase
 
     public function testDescriptionTooLong()
     {
-        $this->expectException(AssertionFailedException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->getFormData('new_group', str_repeat('x', 256));
+    }
+
+    public function testSearchFilterValidator()
+    {
+        $searchFilterValidator = $this->createMock(SearchFilterValidator::class);
+        $searchFilterValidator->expects($this->once())->method('validate')->with('_filter', []);
+
+        $formData = $this->getFormData('name', '', $searchFilterValidator);
+        $this->assertEquals('_filter', $formData->filter);
     }
 }

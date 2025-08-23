@@ -3,8 +3,8 @@
 namespace Braintacle\Test;
 
 use DI\Container;
-use Formotron\AssertionFailedException;
 use Formotron\DataProcessor;
+use InvalidArgumentException;
 
 /**
  * Helpers for testing Formotron data objects.
@@ -31,7 +31,7 @@ trait DataProcessorTestTrait
 
     protected function assertInvalidFormData(array $input, string $className, array $services = []): void
     {
-        $this->expectException(AssertionFailedException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->processData($input, $className, $services);
     }
 }

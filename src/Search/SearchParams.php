@@ -3,8 +3,8 @@
 namespace Braintacle\Search;
 
 use Braintacle\Transformer\ToBool;
-use Formotron\Attribute\Assert;
 use Formotron\Attribute\UseBackingValue;
+use Formotron\Attribute\Validate;
 
 /**
  * Search form parameters.
@@ -14,7 +14,7 @@ class SearchParams
     /**
      * Filter type.
      */
-    #[Assert(SearchFilterValidator::class)]
+    #[Validate(SearchFilterValidator::class)]
     public string $filter;
 
     /**

@@ -2,33 +2,57 @@
 
 namespace Braintacle\Test\Transformer;
 
+use AssertionError;
 use Braintacle\Test\DataProcessorTestTrait;
 use Braintacle\Transformer\ToBool;
-use Braintacle\Transformer\ToBoolTransformer;
 use PHPUnit\Framework\TestCase;
+use UnhandledMatchError;
 
 class ToBoolTest extends TestCase
 {
     use DataProcessorTestTrait;
 
-    public function testAttribute()
+    public function testTrueValue()
     {
-        $transformer = $this->createMock(ToBoolTransformer::class);
-        $transformer
-            ->method('transform')
-            ->with($this->anything(), ['trueValue' => 'yes', 'falseValue' => 'no'])
-            ->willReturn(true);
-
         $dataObject = new class
         {
             #[ToBool(trueValue: 'yes', falseValue: 'no')]
             public bool $value;
         };
-        $result = $this->processData(
-            ['value' => 'yes'],
-            get_class($dataObject),
-            [ToBoolTransformer::class => $transformer]
-        );
+        $result = $this->processData(['value' => 'yes'], get_class($dataObject));
         $this->assertTrue($result->value);
+    }
+
+    public function testFalseValue()
+    {
+        $dataObject = new class
+        {
+            #[ToBool(trueValue: 'yes', falseValue: 'no')]
+            public bool $value;
+        };
+        $result = $this->processData(['value' => 'no'], get_class($dataObject));
+        $this->assertFalse($result->value);
+    }
+
+    public function testInvalidValue()
+    {
+        $dataObject = new class
+        {
+            #[ToBool(trueValue: 'yes', falseValue: 'no')]
+            public bool $value;
+        };
+        $this->expectException(UnhandledMatchError::class);
+        $this->processData(['value' => ''], get_class($dataObject));
+    }
+
+    public function testIdenticalArgs()
+    {
+        $dataObject = new class
+        {
+            #[ToBool(trueValue: 'yes', falseValue: 'yes')]
+            public bool $value;
+        };
+        $this->expectException(AssertionError::class);
+        $this->processData(['value' => 'yes'], get_class($dataObject));
     }
 }

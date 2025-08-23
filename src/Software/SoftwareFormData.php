@@ -4,7 +4,6 @@ namespace Braintacle\Software;
 
 use Braintacle\CsrfProcessor;
 use Braintacle\Validator\IsStringList;
-use Formotron\Attribute\Assert;
 use Formotron\Attribute\PreProcess;
 use Formotron\Attribute\UseBackingValue;
 
@@ -14,7 +13,7 @@ use Formotron\Attribute\UseBackingValue;
 #[PreProcess(CsrfProcessor::class)]
 class SoftwareFormData
 {
-    #[Assert(IsStringList::class)]
+    #[IsStringList]
     public array $software = [];
 
     #[UseBackingValue]

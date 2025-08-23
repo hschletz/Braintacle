@@ -9,7 +9,6 @@ use Braintacle\Search\SearchFilterValidator;
 use Braintacle\Search\SearchOperator;
 use Braintacle\Test\CsrfFormProcessorTestTrait;
 use Braintacle\Transformer\ToBool;
-use Braintacle\Transformer\ToBoolTransformer;
 use Model\Group\Group;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -17,7 +16,6 @@ use PHPUnit\Framework\TestCase;
 
 #[CoversClass(ExistingGroupFormData::class)]
 #[UsesClass(ToBool::class)]
-#[UsesClass(ToBoolTransformer::class)]
 class ExistingGroupFormDataTest extends TestCase
 {
     use CsrfFormProcessorTestTrait;
@@ -25,11 +23,7 @@ class ExistingGroupFormDataTest extends TestCase
     public function testDataProcessing()
     {
         $searchFilterValidator = $this->createMock(SearchFilterValidator::class);
-        $searchFilterValidator
-            ->expects($this->once())
-            ->method('getValidationErrors')
-            ->with('_filter', [])
-            ->willReturn([]);
+        $searchFilterValidator->expects($this->once())->method('validate')->with('_filter', []);
 
         $group = new Group();
         $groupTransformer = $this->createMock(GroupTransformer::class);

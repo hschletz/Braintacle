@@ -8,7 +8,6 @@ use Braintacle\Search\SearchParams;
 use Braintacle\Transformer\TrimAndNullify;
 use Braintacle\Validator\AssertStringLength;
 use Formotron\Attribute\PreProcess;
-use Formotron\Attribute\Transform;
 use Formotron\Attribute\UseBackingValue;
 
 /**
@@ -20,11 +19,11 @@ class NewGroupFormData extends SearchParams
     #[UseBackingValue]
     public Membership $membershipType;
 
-    #[Transform(TrimAndNullify::class)]
+    #[TrimAndNullify]
     #[AssertStringLength(min: 1, max: 255)]
     public string $name;
 
-    #[Transform(TrimAndNullify::class)]
+    #[TrimAndNullify]
     #[AssertStringLength(min: 0, max: 255)]
     public ?string $description;
 }

@@ -7,14 +7,12 @@ use Braintacle\Search\SearchOperator;
 use Braintacle\Search\SearchParams;
 use Braintacle\Test\DataProcessorTestTrait;
 use Braintacle\Transformer\ToBool;
-use Braintacle\Transformer\ToBoolTransformer;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(SearchParams::class)]
 #[UsesClass(ToBool::class)]
-#[UsesClass(ToBoolTransformer::class)]
 class SearchParamsTest extends TestCase
 {
     use DataProcessorTestTrait;
@@ -22,11 +20,7 @@ class SearchParamsTest extends TestCase
     public function testDataProcessing()
     {
         $searchFilterValidator = $this->createMock(SearchFilterValidator::class);
-        $searchFilterValidator
-            ->expects($this->once())
-            ->method('getValidationErrors')
-            ->with('_filter', [])
-            ->willReturn([]);
+        $searchFilterValidator->expects($this->once())->method('validate')->with('_filter', []);
 
         $dataProcessor = $this->createDataProcessor([SearchFilterValidator::class => $searchFilterValidator]);
         $searchParams = $dataProcessor->process([

@@ -2,28 +2,27 @@
 
 namespace Braintacle\Validator;
 
-use Formotron\Validator;
+use Attribute;
+use Formotron\Attribute\ValidatorAttribute;
+use InvalidArgumentException;
 use Override;
 
 /**
  * Validate string list (list<string>)
  */
-class IsStringList implements Validator
+#[Attribute(Attribute::TARGET_PROPERTY)]
+class IsStringList implements ValidatorAttribute
 {
     #[Override]
-    public function getValidationErrors(mixed $value, array $args): array
+    public function validate(mixed $value): void
     {
-        $messages = [];
         if (!array_is_list($value)) {
-            $messages[] = 'Input array is not a list';
+            throw new InvalidArgumentException('Input array is not a list');
         }
         foreach ($value as $element) {
             if (!is_string($element)) {
-                $messages[] = 'Input array contains non-string elements';
-                break;
+                throw new InvalidArgumentException('Input array contains non-string elements');
             }
         }
-
-        return $messages;
     }
 }
