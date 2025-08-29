@@ -20,6 +20,9 @@ final class TrimAndNullify implements TransformerAttribute
             throw new InvalidArgumentException('Expected string, got ' . gettype($value));
         }
 
-        return trim($value) ?: null;
+        $value = trim($value);
+
+        // strict comparison to avoid '0' to be returned as NULL
+        return $value === '' ? null : $value;
     }
 }

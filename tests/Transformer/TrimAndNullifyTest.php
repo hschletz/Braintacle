@@ -22,6 +22,12 @@ class TrimAndNullifyTest extends TestCase
         $this->assertEquals('äää', $transformer->transform('  äää  '));
     }
 
+    public function testZeroString()
+    {
+        $transformer = new TrimAndNullify();
+        $this->assertEquals('0', $transformer->transform('  0  '));
+    }
+
     public function testEmptyString()
     {
         $transformer = new TrimAndNullify();
