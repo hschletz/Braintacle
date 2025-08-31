@@ -136,7 +136,6 @@ class ClientControllerTest extends AbstractControllerTestCase
         $serviceManager->setService(RouteHelper::class, $routeHelper);
 
         $formManager = $serviceManager->get('FormElementManager');
-        $formManager->setService('Console\Form\ClientConfig', $this->createMock('Console\Form\ClientConfig'));
         $formManager->setService('Console\Form\CustomFields', $this->createMock('Console\Form\CustomFields'));
         $formManager->setService('Console\Form\DeleteClient', $this->createMock('Console\Form\DeleteClient'));
         $formManager->setService('Console\Form\Import', $this->createMock(Import::class));
@@ -1930,98 +1929,6 @@ class ClientControllerTest extends AbstractControllerTestCase
             'Die Informationen wurden aktualisiert.',
             $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
-    }
-
-    public function testConfigurationActionGet()
-    {
-        $config = array('name' => 'value');
-
-        /** @var MockObject|Client */
-        $client = $this->createMock(Client::class);
-        $client->id = 1;
-        $client->name = 'test';
-        $client->expects($this->once())->method('getAllConfig')->willReturn($config);
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\ClientConfig');
-        $form->expects($this->once())
-            ->method('setClientObject')
-            ->with($client);
-        $form->expects($this->once())
-            ->method('setData')
-            ->with($config);
-        $form->expects($this->never())
-            ->method('isValid');
-        $form->expects($this->never())
-            ->method('process');
-
-        $formHelper = $this->createMock(ClientConfig::class);
-        $formHelper->method('__invoke')->with($form)->willReturn('<form></form>');
-        $this->getApplicationServiceLocator()
-            ->get('ViewHelperManager')
-            ->setService('consoleFormClientConfig', $formHelper);
-
-        $this->dispatch('/console/client/configuration/?id=1');
-        $this->assertResponseStatusCode(200);
-        $this->assertXPathQuery('//form');
-    }
-
-    public function testConfigurationActionPostInvalid()
-    {
-        $postData = array('key' => 'value');
-
-        $client = $this->createMock(Client::class);
-        $client->id = 1;
-        $client->name = 'test';
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\ClientConfig');
-        $form->expects($this->once())
-            ->method('setClientObject')
-            ->with($client);
-        $form->expects($this->once())
-            ->method('setData')
-            ->with($postData);
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(false));
-        $form->expects($this->never())
-            ->method('process');
-
-        $formHelper = $this->createMock(ClientConfig::class);
-        $formHelper->method('__invoke')->with($form)->willReturn('<form></form>');
-        $this->getApplicationServiceLocator()
-            ->get('ViewHelperManager')
-            ->setService('consoleFormClientConfig', $formHelper);
-
-        $this->dispatch('/console/client/configuration/?id=1', 'POST', $postData);
-        $this->assertResponseStatusCode(200);
-        $this->assertXPathQuery('//form');
-    }
-
-    public function testConfigurationActionPostValid()
-    {
-        $postData = array('key' => 'value');
-
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap(array(array('Id', 1))));
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\ClientConfig');
-        $form->expects($this->once())
-            ->method('setClientObject')
-            ->with($client);
-        $form->expects($this->once())
-            ->method('setData')
-            ->with($postData);
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
-        $form->expects($this->once())
-            ->method('process');
-
-        $this->dispatch('/console/client/configuration/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/client/configuration/?id=1');
     }
 
     public function testDeleteActionGet()

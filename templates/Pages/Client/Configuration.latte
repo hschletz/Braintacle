@@ -1,0 +1,16 @@
+{var $layout = '../Pages/Client/ClientMenuLayout.latte'}
+{layout ../../Forms/ClientConfig.latte}
+
+{block header}
+    {include Header.latte}
+{/block}
+
+{block networks}
+    <label>
+        <span>{translate('Always scan this network')}</span>
+        <select name="scanThisNetwork" n:attr="disabled: !$networks">
+            <option></option>
+            <option n:foreach="$networks as $network" n:attr="selected: $values[scanThisNetwork] == $network">{$network}</option>
+        </select>
+    </label>
+{/block}

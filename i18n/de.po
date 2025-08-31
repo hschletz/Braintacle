@@ -29,10 +29,6 @@ msgstr "Die Informationen wurden aktualisiert."
 msgid "The requested client does not exist."
 msgstr "Der angeforderte Client existiert nicht."
 
-#: module/Console/Controller/GroupController.php
-msgid "The requested group does not exist."
-msgstr "Die angeforderte Gruppe existiert nicht."
-
 #: module/Console/Controller/PackageController.php
 #, php-format
 msgid "Error changing Package '%1$s' to '%2$s': %3$s"
@@ -109,79 +105,6 @@ msgstr "Hinzufügen"
 msgid "Change"
 msgstr "Ändern"
 
-#: module/Console/Form/ClientConfig.php
-#: templates/MainMenu/PreferencesMenuLayout.latte
-msgid "Agent"
-msgstr "Agent"
-
-#: module/Console/Form/ClientConfig.php
-#: module/Console/Form/Preferences/Agent.php
-msgid "Agent contact interval (in hours)"
-msgstr "Agenten-Kontaktintervall (in Stunden)"
-
-#: module/Console/Form/ClientConfig.php
-msgid "Allow network scanning"
-msgstr "Netzwerk-Scans erlauben"
-
-#: module/Console/Form/ClientConfig.php
-msgid "Always scan this network"
-msgstr "Dieses Netzwerk immer scannen"
-
-#: module/Console/Form/ClientConfig.php
-#: module/Console/Form/Preferences/Download.php
-msgid "Delay (in seconds) between cycles"
-msgstr "Pause (in Sekunden) zwischen Zyklen"
-
-#: module/Console/Form/ClientConfig.php
-#: module/Console/Form/Preferences/Download.php
-msgid "Delay (in seconds) between fragments"
-msgstr "Pause (in Sekunden) zwischen Fragmenten"
-
-#: module/Console/Form/ClientConfig.php
-#: module/Console/Form/Preferences/Download.php
-msgid "Delay (in seconds) between periods"
-msgstr "Pause (in Sekunden) zwischen Perioden"
-
-#: module/Console/Form/ClientConfig.php
-#: templates/MainMenu/PreferencesMenuLayout.latte
-msgid "Download"
-msgstr "Download"
-
-#: module/Console/Form/ClientConfig.php
-#: module/Console/Form/Preferences/Download.php
-msgid "Enable package download"
-msgstr "Download von Paketen aktivieren"
-
-#: module/Console/Form/ClientConfig.php
-#: module/Console/Form/Preferences/Agent.php
-msgid "Inventory interval (in days, 0 = always, -1 = never)"
-msgstr "Inventar-Intervall (in Tagen, 0 = immer, -1 = nie)"
-
-#: module/Console/Form/ClientConfig.php
-msgid "Maximum package priority"
-msgstr "Maximale Paket-Priorität"
-
-#: module/Console/Form/ClientConfig.php
-#: templates/MainMenu/PreferencesMenuLayout.latte
-msgid "Network scanning"
-msgstr "Netzwerk-Scans"
-
-#: module/Console/Form/ClientConfig.php module/Console/Form/NetworkDevice.php
-#: module/Console/Form/ProductKey.php module/Console/Form/Subnet.php
-#: templates/Pages/Client/Groups.latte templates/Pages/Group/AddToGroup.latte
-msgid "OK"
-msgstr "OK"
-
-#: module/Console/Form/ClientConfig.php
-#: module/Console/Form/Preferences/Download.php
-msgid "Timeout (in days)"
-msgstr "Timeout (in Tagen)"
-
-#: module/Console/Form/ClientConfig.php
-#: module/Console/Form/Preferences/NetworkScanning.php
-msgid "Use SNMP"
-msgstr "SNMP verwenden"
-
 #: module/Console/Form/CustomFields.php module/Console/Form/Search.php
 #: module/Console/views/console/client/index.php
 msgid "Category"
@@ -232,14 +155,14 @@ msgid "Delete interfaces from network listing"
 msgstr "Interfaces aus Netzwerkliste löschen"
 
 #: module/Console/Form/DeleteClient.php
-#: module/Console/View/Helper/Form/ClientConfig.php
 #: module/Library/View/Helper/FormYesNo.php templates/DialogButtons.latte
+#: templates/Forms/ClientConfig.latte
 msgid "No"
 msgstr "Nein"
 
 #: module/Console/Form/DeleteClient.php
-#: module/Console/View/Helper/Form/ClientConfig.php
 #: module/Library/View/Helper/FormYesNo.php templates/DialogButtons.latte
+#: templates/Forms/ClientConfig.latte
 msgid "Yes"
 msgstr "Ja"
 
@@ -299,6 +222,12 @@ msgstr "Werte"
 #: templates/Pages/Group/Overview.latte
 msgid "Description"
 msgstr "Beschreibung"
+
+#: module/Console/Form/NetworkDevice.php module/Console/Form/ProductKey.php
+#: module/Console/Form/Subnet.php templates/Forms/ClientConfig.latte
+#: templates/Pages/Client/Groups.latte templates/Pages/Group/AddToGroup.latte
+msgid "OK"
+msgstr "OK"
 
 #: module/Console/Form/NetworkDevice.php
 #: module/Console/views/console/client/display.php
@@ -425,13 +354,41 @@ msgstr "Erfolg"
 msgid "Set"
 msgstr "Setzen"
 
+#: module/Console/Form/Preferences/Agent.php templates/Forms/ClientConfig.latte
+msgid "Agent contact interval (in hours)"
+msgstr "Agenten-Kontaktintervall (in Stunden)"
+
 #: module/Console/Form/Preferences/Agent.php
 msgid "File with allowed non-OCS agents (FusionInventory etc.)"
 msgstr "Datei mit erlaubten nicht-OCS-Agenten (FusionInventory etc.)"
 
+#: module/Console/Form/Preferences/Agent.php templates/Forms/ClientConfig.latte
+msgid "Inventory interval (in days, 0 = always, -1 = never)"
+msgstr "Inventar-Intervall (in Tagen, 0 = immer, -1 = nie)"
+
 #: module/Console/Form/Preferences/Display.php
 msgid "Display ignored software"
 msgstr "Ignorierte Software anzeigen"
+
+#: module/Console/Form/Preferences/Download.php
+#: templates/Forms/ClientConfig.latte
+msgid "Delay (in seconds) between cycles"
+msgstr "Pause (in Sekunden) zwischen Zyklen"
+
+#: module/Console/Form/Preferences/Download.php
+#: templates/Forms/ClientConfig.latte
+msgid "Delay (in seconds) between fragments"
+msgstr "Pause (in Sekunden) zwischen Fragmenten"
+
+#: module/Console/Form/Preferences/Download.php
+#: templates/Forms/ClientConfig.latte
+msgid "Delay (in seconds) between periods"
+msgstr "Pause (in Sekunden) zwischen Perioden"
+
+#: module/Console/Form/Preferences/Download.php
+#: templates/Forms/ClientConfig.latte
+msgid "Enable package download"
+msgstr "Download von Paketen aktivieren"
 
 #: module/Console/Form/Preferences/Download.php
 msgid "HTTP package base URL"
@@ -451,6 +408,11 @@ msgstr ""
 #: module/Console/Form/Preferences/Download.php
 msgid "Package storage directory"
 msgstr "Paketverzeichnis"
+
+#: module/Console/Form/Preferences/Download.php
+#: templates/Forms/ClientConfig.latte
+msgid "Timeout (in days)"
+msgstr "Timeout (in Tagen)"
 
 #: module/Console/Form/Preferences/Filters.php
 msgid "Limit agent connections to trusted networks"
@@ -523,6 +485,11 @@ msgstr "Minimale Anzahl Tage bevor ein Scan-Client ersetzt wird"
 #: module/Console/Form/Preferences/NetworkScanning.php
 msgid "Number of scanning clients per subnet"
 msgstr "Anzahl der Scan-Clients pro Subnetz"
+
+#: module/Console/Form/Preferences/NetworkScanning.php
+#: templates/Forms/ClientConfig.latte
+msgid "Use SNMP"
+msgstr "SNMP verwenden"
 
 #: module/Console/Form/Preferences/Packages.php
 msgid "Allow user abort by default"
@@ -941,14 +908,6 @@ msgstr "%1$d Clients mit manuell eingegebenem Windows-Lizenzschlüssel"
 #, php-format
 msgid "%1$d clients with package '%2$s' successfully deployed"
 msgstr "%1$d Clients mit erfolgreich installiertem Paket '%2$s'"
-
-#: module/Console/View/Helper/Form/ClientConfig.php
-msgid "Default"
-msgstr "Standard"
-
-#: module/Console/View/Helper/Form/ClientConfig.php
-msgid "Effective"
-msgstr "Effektiv"
 
 #: module/Console/View/Helper/Form/Form.php
 #, php-format
@@ -1502,6 +1461,37 @@ msgstr "Zuweisen"
 msgid "Assign packages"
 msgstr "Pakete zuweisen"
 
+#: templates/Forms/ClientConfig.latte
+#: templates/MainMenu/PreferencesMenuLayout.latte
+msgid "Agent"
+msgstr "Agent"
+
+#: templates/Forms/ClientConfig.latte
+msgid "Allow network scanning"
+msgstr "Netzwerk-Scans erlauben"
+
+#: templates/Forms/ClientConfig.latte
+msgid "Default"
+msgstr "Standard"
+
+#: templates/Forms/ClientConfig.latte
+#: templates/MainMenu/PreferencesMenuLayout.latte
+msgid "Download"
+msgstr "Download"
+
+#: templates/Forms/ClientConfig.latte
+msgid "Effective"
+msgstr "Effektiv"
+
+#: templates/Forms/ClientConfig.latte
+msgid "Maximum package priority"
+msgstr "Maximale Paket-Priorität"
+
+#: templates/Forms/ClientConfig.latte
+#: templates/MainMenu/PreferencesMenuLayout.latte
+msgid "Network scanning"
+msgstr "Netzwerk-Scans"
+
 #: templates/Layout.latte templates/MainMenu/PreferencesMenuLayout.latte
 msgid "Inventory"
 msgstr "Inventar"
@@ -1570,6 +1560,10 @@ msgstr "Benutzer"
 #: templates/Pages/Client/Bios.latte templates/Pages/Client/Software.latte
 msgid "Version"
 msgstr "Version"
+
+#: templates/Pages/Client/Configuration.latte
+msgid "Always scan this network"
+msgstr "Dieses Netzwerk immer scannen"
 
 #: templates/Pages/Client/General.latte
 msgid "Inventory date"
@@ -1872,3 +1866,6 @@ msgstr "neu oder nicht kategorisiert"
 #: templates/Pages/Software.latte
 msgid "selected for display"
 msgstr "für Anzeige ausgewählt"
+
+#~ msgid "The requested group does not exist."
+#~ msgstr "Die angeforderte Gruppe existiert nicht."

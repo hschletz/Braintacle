@@ -433,41 +433,6 @@ form.form_package, form.form_search {
 
 /* Rules for individual forms */
 
-.form_clientconfig fieldset {
-    margin-top: 2ex;
-}
-.form_clientconfig fieldset > div {
-    display: grid;
-    grid-template-columns: [label-start] 50% [label-end element-start] 50% [element-end];
-    grid-gap: 1em;
-}
-.form_clientconfig fieldset > div > span {
-    grid-column: element;
-}
-.form_clientconfig fieldset input {
-    margin-right: 1em;
-}
-.form_clientconfig ul {
-    grid-column: element;
-    color: red;
-    margin: 0;
-    padding-left: 1em;
-}
-.form_clientconfig legend {
-    margin: auto;
-    padding-left: .5em;
-    padding-right: .5em;
-    font-weight: bold;
-}
-.form_clientconfig label span {
-    margin-right: 1em;
-}
-.form_clientconfig [type=submit] {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 .form_manageregistryvalues fieldset {
     border: none;
     margin-top: 3ex;

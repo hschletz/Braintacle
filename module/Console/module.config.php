@@ -23,9 +23,7 @@
 use Console\Mvc\Controller\Plugin\Service\TranslateFactory;
 use Console\Mvc\Controller\Plugin\Translate;
 use Console\View\Helper\ClientHeader;
-use Console\View\Helper\GroupHeader;
 use Console\View\Helper\Service\ClientHeaderFactory;
-use Console\View\Helper\Service\GroupHeaderFactory;
 
 return array(
     'controller_plugins' => array(
@@ -48,7 +46,6 @@ return array(
         'factories' => array(
             'accounts' => 'Console\Service\AccountsControllerFactory',
             'client' => 'Console\Service\ClientControllerFactory',
-            'group' => 'Console\Service\GroupControllerFactory',
             'licenses' => 'Console\Service\LicensesControllerFactory',
             'network' => 'Console\Service\NetworkControllerFactory',
             'package' => 'Console\Service\PackageControllerFactory',
@@ -104,7 +101,6 @@ return array(
             'clientHeader' => ClientHeader::class,
             'consoleUrl' => 'Console\View\Helper\ConsoleUrl',
             'filterDescription' => 'Console\View\Helper\FilterDescription',
-            'groupHeader' => GroupHeader::class,
             'table' => 'Console\View\Helper\Table',
             'consoleForm' => 'Console\View\Helper\Form\Form',
             'consoleFormFieldset' => 'Console\View\Helper\Form\Fieldset',
@@ -115,7 +111,6 @@ return array(
             ClientHeader::class => ClientHeaderFactory::class,
             'Console\View\Helper\ConsoleUrl' => 'Console\View\Helper\Service\ConsoleUrlFactory',
             'Console\View\Helper\FilterDescription' => 'Console\View\Helper\Service\FilterDescriptionFactory',
-            GroupHeader::class => GroupHeaderFactory::class,
             'Console\View\Helper\Table' => 'Console\View\Helper\Service\TableFactory',
             'Console\View\Helper\Form\Form' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\Fieldset' => 'Laminas\ServiceManager\Factory\InvokableFactory',

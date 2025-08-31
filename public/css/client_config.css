@@ -1,0 +1,40 @@
+.form_clientconfig {
+    fieldset {
+        display: grid;
+        grid-template-columns: 20em 5em 15em;
+        grid-gap: 1em;
+
+        margin-top: 2ex;
+        margin-left: auto;
+        margin-right: auto;
+
+        width: fit-content;
+
+        legend {
+            margin: auto;
+            padding-left: .5em;
+            padding-right: .5em;
+            padding-bottom: 1ex;
+            font-weight: bold;
+        }
+
+        label {
+            display: contents;
+
+            input[type=checkbox] {
+                margin: 0;
+                justify-self: start;
+            }
+        }
+
+        select {
+            grid-column: span 2;
+        }
+    }
+
+    button {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

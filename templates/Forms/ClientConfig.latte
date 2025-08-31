@@ -1,0 +1,62 @@
+{layout $layout}
+
+{var $default = translate('Default')}
+{var $effective = translate('Effective')}
+{var $yes = translate('Yes')}
+{var $no = translate('No')}
+
+{define numberRow, string $name, string $label, int $min, ?int $max}
+    <label>
+        <span>{$label}</span>
+        <input type="number" name="{$name}" value="{$values[$name]}" min="{$min}" n:attr="max: $max !== null ? $max">
+        <span>
+            ({$default}: {$defaults[$name]}{ifset $effectiveValues}, {$effective}: {$effectiveValues[$name]}{/ifset})
+        </span>
+    </label>
+{/define}
+
+{define checkboxRow, string $name, string $label, bool $toggle}
+    <label>
+        <span>{$label}</span>
+        <input type="checkbox" name="{$name}" n:class="$toggle ? toggle" n:attr="checked: $values[$name]">
+        <span>
+            ({$default}: {$defaults[$name] ? $yes : $no}{ifset $effectiveValues}, {$effective}: {$effectiveValues[$name] ? $yes : $no}{/ifset})
+        </span>
+    </label>
+{/define}
+
+{block content}
+    <link rel="stylesheet" href="{assetUrl('css/client_config.css')}">
+    <script type="module" src="{assetUrl('js/form_clientconfig.js')}"></script>
+
+    {block header}{/block}
+
+    <form method="post" class="form form_clientconfig">
+        <input type="hidden" name="csrfToken" value="{csrfToken()}">
+
+        <fieldset name="Agent">
+            <legend>{translate(Agent)}</legend>
+            {include numberRow, 'contactInterval', translate('Agent contact interval (in hours)'), 1}
+            {include numberRow, 'inventoryInterval', translate('Inventory interval (in days, 0 = always, -1 = never)'), -1}
+        </fieldset>
+
+        <fieldset name="Download">
+            <legend>{translate(Download)}</legend>
+            {include checkboxRow, 'packageDeployment', translate('Enable package download'), true}
+            {include numberRow, 'downloadPeriodDelay', translate('Delay (in seconds) between periods'), 1}
+            {include numberRow, 'downloadCycleDelay', translate('Delay (in seconds) between cycles'), 1}
+            {include numberRow, 'downloadFragmentDelay', translate('Delay (in seconds) between fragments'), 1}
+            {include numberRow, 'downloadMaxPriority', translate('Maximum package priority'), 0, 10}
+            {include numberRow, 'downloadTimeout', translate('Timeout (in days)'), 1}
+        </fieldset>
+
+        <fieldset name="Scan">
+            <legend>{translate('Network scanning')}</legend>
+            {include checkboxRow, 'allowScan', translate('Allow network scanning'), true}
+            {include checkboxRow, 'scanSnmp', translate('Use SNMP', false)}
+            {block networks}{/block}
+        </fieldset>
+
+        <button type="submit">{translate(OK)}</button>
+    </form>
+{/block content}

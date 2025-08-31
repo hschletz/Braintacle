@@ -360,34 +360,6 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Display/edit client configuration
-     *
-     * @return array|\Laminas\Http\Response [client, form (Console\Form\ClientConfig)] or redirect response
-     */
-    public function configurationAction()
-    {
-        $form = $this->_formManager->get('Console\Form\ClientConfig');
-        $form->setClientObject($this->_currentClient);
-        if ($this->getRequest()->isPost()) {
-            $form->setData($this->params()->fromPost());
-            if ($form->isValid()) {
-                $form->process();
-                return $this->redirectToRoute(
-                    'client',
-                    'configuration',
-                    array('id' => $this->_currentClient['Id'])
-                );
-            }
-        } else {
-            $form->setData($this->_currentClient->getAllConfig());
-        }
-        return array(
-            'client' => $this->_currentClient,
-            'form' => $form
-        );
-    }
-
-    /**
      * Delete client, display confirmation form
      *
      * @return array|\Laminas\Http\Response [client, form (Console\Form\DeleteClient)] or redirect response

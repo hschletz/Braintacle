@@ -25,18 +25,18 @@ namespace Model\Client\Item;
 /**
  * Network interface
  *
- * @property string $Description
- * @property string $Rate Link transfer rate including unit (Mb/s, Gb/s...)
- * @property \Library\MacAddress $MacAddress
- * @property string $IpAddress
- * @property string $Netmask
- * @property string $Gateway
- * @property string $Subnet Network address
- * @property string $DhcpServer IP address of DHCP server
- * @property string $Status Up|Down
- * @property string $IsBlacklisted TRUE if the MAC address is blacklisted for detection of duplicates
- * @property string $Type needs further processing to be useful
- * @property string $TypeMib needs further processing to be useful
+ * @property string $description
+ * @property string $rate Link transfer rate including unit (Mb/s, Gb/s...)
+ * @property \Library\MacAddress $macAddress
+ * @property string $ipAddress
+ * @property string $netmask
+ * @property string $gateway
+ * @property string $subnet Network address
+ * @property string $dhcpServer IP address of DHCP server
+ * @property string $status Up|Down
+ * @property bool $isBlacklisted TRUE if the MAC address is blacklisted for detection of duplicates
+ * @property string $type needs further processing to be useful
+ * @property string $typeMib needs further processing to be useful
  */
 class NetworkInterface extends \Model\AbstractModel
 {

@@ -43,6 +43,8 @@ class Router
         // All other routes get LoginMiddleware.
         $app->group('', function (RouteCollectorProxyInterface $group) {
             $group->get('/client{id}/bios', Client\SubPage\Bios::class)->setName('showClientBios');
+            $group->get('/client/{id}/configuration', Client\Configuration\ShowConfigurationHandler::class)->setName('showClientConfiguration');
+            $group->post('/client/{id}/configuration', Client\Configuration\SetConfigurationHandler::class)->setName('setClientConfiguration');
             $group->get('/client/{id}/export', Client\ExportHandler::class)->setName('export');
             $group->get('/client/{id}/general', Client\SubPage\General::class)->setName('showClientGeneral');
             $group->get('/client/{id}/groups', Client\Groups\GroupsPageHandler::class)->setName('showClientGroups');
@@ -58,6 +60,8 @@ class Router
             $group->get('/duplicates/{criterion}', Duplicates\ManageDuplicatesHandler::class)->setName('manageDuplicates');
             $group->post('/group', Group\Add\AddToGroupFormHandler::class)->setName('addGroup');
             $group->delete('/group', Group\DeleteHandler::class)->setName('deleteGroup');
+            $group->get('/group/configuration', Group\Configuration\ShowConfigurationHandler::class)->setName('showGroupConfiguration');
+            $group->post('/group/configuration', Group\Configuration\SetConfigurationHandler::class)->setName('setGroupConfiguration');
             $group->get('/group/excluded', Group\Members\ExcludedPageHandler::class)->setName('showGroupExcluded');
             $group->get('/group/general', Group\GeneralPageHandler::class)->setName('showGroupGeneral');
             $group->get('/group/members', Group\Members\MembersPageHandler::class)->setName('showGroupMembers');
@@ -72,7 +76,6 @@ class Router
             // to provide an alternative MVC-style URL that is composed by
             // legacy methods.
             $group->get('/console/accounts/index', ApplicationBridge::class)->setName('preferencesUsersList');
-            $group->get('/console/client/configuration', ApplicationBridge::class)->setName('showClientConfiguration');
             $group->get('/console/client/customfields', ApplicationBridge::class)->setName('showClientCustomFields');
             $group->get('/console/client/delete', ApplicationBridge::class)->setName('deleteClient');
             $group->get('/console/client/display', ApplicationBridge::class)->setName('showClientDisplay');
@@ -89,7 +92,6 @@ class Router
             $group->get('/console/client/virtualmachines', ApplicationBridge::class)->setName('showClientVirtualMachines');
             $group->get('/console/client/windows', ApplicationBridge::class)->setName('showClientWindows');
             $group->get('/console/group/add/', Group\Add\AddToGroupPageHandler::class)->setName('addGroupPage');
-            $group->get('/console/group/configuration', ApplicationBridge::class)->setName('showGroupConfiguration');
             $group->get('/console/licenses/index', ApplicationBridge::class)->setName('licensesPage');
             $group->get('/console/network/index', ApplicationBridge::class)->setName('networkPage');
             $group->get('/console/package/build', ApplicationBridge::class)->setName('packageBuildPage');

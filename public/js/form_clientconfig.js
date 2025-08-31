@@ -1,19 +1,12 @@
-/**
- * ClientConfig form.
- */
-
-// Show/hide all rows following the triggering checkbox within the same fieldset
 for (const checkbox of document.querySelectorAll('.form_clientconfig .toggle')) {
-    function onChange()
-    {
-        const display = checkbox.checked ? 'block' : 'none'
-        let node = checkbox.parentNode
-        while (node = node.nextSibling) {
-            node.style.display = display
-        }
-    }
-    checkbox.addEventListener('change', onChange)
+    checkbox.addEventListener('change', () => toggle(checkbox))
+    toggle(checkbox)
+}
 
-    // Show/hide rows according to initial checkbox state
-    onChange()
+function toggle(checkbox) {
+    const display = checkbox.checked ? 'contents' : 'none'
+    // Toggle all <label> elements except for the first (which contains the checkbox itself)
+    for (const row of checkbox.closest('fieldset').querySelectorAll('label:nth-of-type(n+2)')) {
+        row.style.display = display
+    }
 }
