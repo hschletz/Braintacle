@@ -42,7 +42,7 @@ class Router
 
         // All other routes get LoginMiddleware.
         $app->group('', function (RouteCollectorProxyInterface $group) {
-            $group->get('/client{id}/bios', Client\SubPage\Bios::class)->setName('showClientBios');
+            $group->get('/client/{id}/bios', Client\SubPage\Bios::class)->setName('showClientBios');
             $group->get('/client/{id}/configuration', Client\Configuration\ShowConfigurationHandler::class)->setName('showClientConfiguration');
             $group->post('/client/{id}/configuration', Client\Configuration\SetConfigurationHandler::class)->setName('setClientConfiguration');
             $group->get('/client/{id}/export', Client\ExportHandler::class)->setName('export');
