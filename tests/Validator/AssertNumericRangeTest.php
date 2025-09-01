@@ -3,10 +3,10 @@
 namespace Braintacle\Test\Validator;
 
 use AssertionError;
-use Braintacle\Validator\AssertIpAddress;
 use Braintacle\Validator\AssertNumericRange;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\TestCase;
 
@@ -34,18 +34,23 @@ final class AssertNumericRangeTest extends TestCase
         $validator->validate(2);
     }
 
-    public function testNotIntInvalid()
+    public static function invalidTypeProvider()
     {
-        $this->expectException(InvalidArgumentException::class);
-        $validator = new AssertNumericRange(1);
-        $validator->validate('1');
+        return [
+            [null],
+            [false],
+            ['1'],
+            [1.5],
+        ];
     }
 
-    #[DoesNotPerformAssertions]
-    public function testNullValid()
+    #[DataProvider('invalidTypeProvider')]
+    public function testInvalidType(mixed $value)
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected int, got ' . gettype($value));
         $validator = new AssertNumericRange(1);
-        $validator->validate(null);
+        $validator->validate($value);
     }
 
     #[DoesNotPerformAssertions]

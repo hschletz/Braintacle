@@ -25,9 +25,6 @@ class AssertNumericRange implements ValidatorAttribute
     #[Override]
     public function validate(mixed $value): void
     {
-        if ($value === null) {
-            return;
-        }
         if (!is_int($value)) {
             throw new InvalidArgumentException('Expected int, got ' . gettype($value));
         }

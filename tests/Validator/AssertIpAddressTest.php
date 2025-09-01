@@ -12,13 +12,6 @@ use PHPUnit\Framework\TestCase;
 final class AssertIpAddressTest extends TestCase
 {
     #[DoesNotPerformAssertions]
-    public function testNullValid()
-    {
-        $validator = new AssertIpAddress();
-        $validator->validate(null);
-    }
-
-    #[DoesNotPerformAssertions]
     public function testIpV4Valid()
     {
         $validator = new AssertIpAddress();

@@ -17,10 +17,6 @@ final class AssertIpAddress implements ValidatorAttribute
     #[Override]
     public function validate(mixed $value): void
     {
-        if ($value === null) {
-            return;
-        }
-
         $validator = new Ip();
         if (!$validator->isValid($value)) {
             throw new InvalidArgumentException(array_values($validator->getMessages())[0] ?? 'Not an IP address');

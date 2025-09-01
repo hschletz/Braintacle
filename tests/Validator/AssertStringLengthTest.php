@@ -29,12 +29,22 @@ class AssertStringLengthTest extends TestCase
         new AssertStringLength(min: 2, max: 1);
     }
 
-    public function testNullValueWithMinGreaterThanZero()
+    public static function invalidTypeProvider()
+    {
+        return [
+            [null],
+            [false],
+            [42],
+        ];
+    }
+
+    #[DataProvider('invalidTypeProvider')]
+    public function testInvalidType(mixed $value)
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Expected string, got NULL');
-        $validator = new AssertStringLength(min: 1, max: 2);
-        $validator->validate(null);
+        $this->expectExceptionMessage('Expected string, got ' . gettype($value));
+        $validator = new AssertStringLength(min: 1);
+        $validator->validate($value);
     }
 
     public function testStringTooShort()
@@ -56,7 +66,6 @@ class AssertStringLengthTest extends TestCase
     public static function validArgumentsProvider()
     {
         return [
-            [null, 0, 1],
             ['', 0, null],
             ['', 0, 1],
             ['ä', 0, 1],

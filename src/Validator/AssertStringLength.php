@@ -9,9 +9,6 @@ use Override;
 
 /**
  * Validate string length.
- *
- * NULL values are accepted if $min is 0. To allow only strings that may be
- * empty, constrain the target's datatype to be non-nullable.
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class AssertStringLength implements ValidatorAttribute
@@ -25,9 +22,6 @@ class AssertStringLength implements ValidatorAttribute
     #[Override]
     public function validate(mixed $value): void
     {
-        if ($value === null && $this->min == 0) {
-            return;
-        }
         if (!is_string($value)) {
             throw new InvalidArgumentException('Expected string, got ' . gettype($value));
         }
