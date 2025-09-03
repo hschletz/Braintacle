@@ -255,12 +255,6 @@ class Client extends \Model\ClientOrGroup
     protected $_configDefault = array();
 
     /**
-     * Cache for getEffectiveConfig() results
-     * @var array
-     */
-    protected $_configEffective = array();
-
-    /**
      * Cache for getGroups() result
      * @var \Model\Group\Group[]
      */
@@ -404,90 +398,6 @@ class Client extends \Model\ClientOrGroup
             $config['scanThisNetwork'] = $scanThisNetwork;
         }
         return $config;
-    }
-
-    /**
-     * Get effective configuration value
-     *
-     * This method returns the effective setting for an option. It is determined
-     * from this client's individual setting, the global setting and/or all
-     * groups of which the client is a member. The exact rules are:
-     *
-     * - packageDeployment, allowScan and scanSnmp return 0 if the setting is
-     *   disabled either globally, for any group or for the client, otherwise 1.
-     * - For inventoryInterval, if the global setting is one of the special
-     *   values 0 or -1, this setting is returned. Otherwise, return the
-     *   smallest value of the group and client setting. If this is undefined,
-     *   use global setting.
-     * - contactInterval, downloadMaxPriority and downloadTimeout evaluate (in
-     *   that order): the client setting, the smallest value of all group
-     *   settings and the global setting. The first non-null result is returned.
-     * - downloadPeriodDelay, downloadCycleDelay, downloadFragmentDelay evaluate
-     *   (in that order): the client setting, the largest value of all group
-     *   settings and the global setting. The first non-null result is returned.
-     * - For any other setting, the client's configured value is evaluated via
-     *   getConfig().
-     *
-     * @param string $option Option name
-     * @return mixed Effective value or NULL
-     */
-    public function getEffectiveConfig($option)
-    {
-        if (array_key_exists($option, $this->_configEffective)) {
-            return $this->_configEffective[$option];
-        }
-
-        switch ($option) {
-            case 'inventoryInterval':
-                $globalValue = $this->container->get(Config::class)->inventoryInterval;
-                // Special global values 0 and -1 always take precedence.
-                if ($globalValue <= 0) {
-                    $value = $globalValue;
-                } else {
-                    // Get smallest value of client and group settings
-                    $value = $this->getConfig('inventoryInterval');
-                    foreach ($this->getGroups() as $group) {
-                        $groupValue = $group->getConfig('inventoryInterval');
-                        if ($value === null or ($groupValue !== null and $groupValue < $value)) {
-                            $value = $groupValue;
-                        }
-                    }
-                    // Fall back to global default if not set anywhere else
-                    if ($value === null) {
-                        $value = $globalValue;
-                    }
-                }
-                break;
-            case 'contactInterval':
-            case 'downloadPeriodDelay':
-            case 'downloadCycleDelay':
-            case 'downloadFragmentDelay':
-            case 'downloadMaxPriority':
-            case 'downloadTimeout':
-                // Client value takes precedence.
-                $value = $this->getConfig($option);
-                if ($value === null) {
-                    $value = $this->getDefaultConfig($option);
-                }
-                break;
-            case 'packageDeployment':
-            case 'allowScan':
-            case 'scanSnmp':
-                // If default is 0, return 0.
-                // Otherwise override default if explicitly disabled.
-                $default = $this->getDefaultConfig($option);
-                if ($default and $this->getConfig($option) === 0) {
-                    $value = 0;
-                } else {
-                    $value = $default;
-                }
-                break;
-            default:
-                $value = $this->getConfig($option);
-        }
-
-        $this->_configEffective[$option] = $value;
-        return $value;
     }
 
     /**
