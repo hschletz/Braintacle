@@ -474,50 +474,6 @@ abstract class ClientOrGroup extends AbstractModel
     }
 
     /**
-     * Get all object-specific configuration values
-     *
-     * The returned array has 3 elements: 'Agent', 'Download' and 'Scan'. Each
-     * of these is an array with name/value pairs of object-specific values. If
-     * an option is not configured for this object, its value is NULL unless it
-     * can only be disabled, not enabled. In that case, the returned value is 1
-     * if it is not configured.
-     *
-     * Like with getConfig(), the returned options may not necessarily be
-     * effective.
-     *
-     * @return array[]
-     */
-    public function getAllConfig()
-    {
-        $options = [];
-        foreach ($this->_options as $option) {
-            $value = $this->getConfig($option);
-            if (in_array($option, $this->_optionsDisableOnly)) {
-                $value = (int) ($value === null);
-            }
-            $options[$option] = $value;
-        }
-        return [
-            'Agent' => [
-                'contactInterval' => $options['contactInterval'],
-                'inventoryInterval' => $options['inventoryInterval'],
-            ],
-            'Download' => [
-                'packageDeployment' => $options['packageDeployment'],
-                'downloadPeriodDelay' => $options['downloadPeriodDelay'],
-                'downloadCycleDelay' => $options['downloadCycleDelay'],
-                'downloadFragmentDelay' => $options['downloadFragmentDelay'],
-                'downloadMaxPriority' => $options['downloadMaxPriority'],
-                'downloadTimeout' => $options['downloadTimeout'],
-            ],
-            'Scan' => [
-                'allowScan' => $options['allowScan'],
-                'scanSnmp' => $options['scanSnmp'],
-            ],
-        ];
-    }
-
-    /**
      * Get all explicitly configured object-specific configuration values
      *
      * Returns a flat associative array with options which are explicitly

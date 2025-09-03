@@ -34,11 +34,24 @@ final class ClientConfig
      */
     public function getOptions(Client | Group $object): array
     {
-        $options = array_merge(...array_values($object->getAllConfig())); // flatten
+        $options = [];
+        foreach (self::OptionsWithDefaults as $option) {
+            $value = $object->getConfig($option);
+            if (in_array($option, self::BooleanOptions)) {
+                // These options can only be disabled ($value is 0) or
+                // unconfigured ($value is NULL), in which case the default is
+                // effective. Map condition to a boolean value.
+                /** @psalm-suppress UnhandledMatchCondition */
+                $value = match ($value) {
+                    null => true,
+                    0 => false,
+                };
+            }
+            $options[$option] = $value;
+        }
 
-        // Templates use n:attr which only works with real booleans
-        foreach (self::BooleanOptions as $option) {
-            $options[$option] = (bool) $options[$option];
+        if ($object instanceof Client) {
+            $options['scanThisNetwork'] = $object->getConfig('scanThisNetwork');
         }
 
         return $options;

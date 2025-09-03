@@ -23,24 +23,18 @@ class ClientConfigTest extends TestCase
     public function testGetOptionsForClient()
     {
         $client = $this->createStub(Client::class);
-        $client->method('getAllConfig')->willReturn([
-            'Agent' => [
-                'contactInterval' => null,
-                'inventoryInterval' => -1,
-            ],
-            'Download' => [
-                'packageDeployment' => 1,
-                'downloadPeriodDelay' => 2,
-                'downloadCycleDelay' => 3,
-                'downloadFragmentDelay' => 4,
-                'downloadMaxPriority' => 5,
-                'downloadTimeout' => 6,
-            ],
-            'Scan' => [
-                'allowScan' => 1,
-                'scanSnmp' => 0,
-                'scanThisNetwork' => '192.0.2.0',
-            ],
+        $client->method('getConfig')->willReturnMap([
+            ['contactInterval', null],
+            ['inventoryInterval', -1],
+            ['packageDeployment', null],
+            ['downloadPeriodDelay', 2],
+            ['downloadCycleDelay', 3],
+            ['downloadFragmentDelay', 4],
+            ['downloadMaxPriority', 5],
+            ['downloadTimeout', 6],
+            ['allowScan', null],
+            ['scanSnmp', 0],
+            ['scanThisNetwork', '192.0.2.0'],
         ]);
 
         $options = (new ClientConfig())->getOptions($client);
@@ -65,23 +59,17 @@ class ClientConfigTest extends TestCase
     public function testGetOptionsForGroup()
     {
         $group = $this->createStub(Group::class);
-        $group->method('getAllConfig')->willReturn([
-            'Agent' => [
-                'contactInterval' => null,
-                'inventoryInterval' => -1,
-            ],
-            'Download' => [
-                'packageDeployment' => 1,
-                'downloadPeriodDelay' => 2,
-                'downloadCycleDelay' => 3,
-                'downloadFragmentDelay' => 4,
-                'downloadMaxPriority' => 5,
-                'downloadTimeout' => 6,
-            ],
-            'Scan' => [
-                'allowScan' => 1,
-                'scanSnmp' => 0,
-            ],
+        $group->method('getConfig')->willReturnMap([
+            ['contactInterval', null],
+            ['inventoryInterval', -1],
+            ['packageDeployment', null],
+            ['downloadPeriodDelay', 2],
+            ['downloadCycleDelay', 3],
+            ['downloadFragmentDelay', 4],
+            ['downloadMaxPriority', 5],
+            ['downloadTimeout', 6],
+            ['allowScan', null],
+            ['scanSnmp', 0],
         ]);
 
         $options = (new ClientConfig())->getOptions($group);

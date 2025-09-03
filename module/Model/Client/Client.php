@@ -396,14 +396,6 @@ class Client extends \Model\ClientOrGroup
     }
 
     /** {@inheritdoc} */
-    public function getAllConfig()
-    {
-        $config = parent::getAllConfig();
-        $config['Scan']['scanThisNetwork'] = $this->getConfig('scanThisNetwork');
-        return $config;
-    }
-
-    /** {@inheritdoc} */
     public function getExplicitConfig()
     {
         $config = parent::getExplicitConfig();
