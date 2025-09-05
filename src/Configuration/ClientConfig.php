@@ -61,15 +61,92 @@ final class ClientConfig
     }
 
     /**
-     * Get default values for client/group options.
+     * Get default values for client options.
      *
-     * These defaults are effective if an option is not explicitly configured
-     * for a client/group.
+     * Returns the default settings that override or get overriden by the
+     * client's setting. They are determined from the global settings and/or all
+     * groups of which the client is a member.
      */
-    public function getDefaults(Client | Group $object): array
+    public function getClientDefaults(Client $client): array
+    {
+        $groups = $client->getGroups();
+        foreach (self::OptionsWithDefaults as $option) {
+            $groupValues = [];
+            foreach ($groups as $group) {
+                $groupValue = $group->getConfig($option);
+                if ($groupValue !== null) {
+                    $groupValues[] = $groupValue;
+                }
+            }
+
+            $default = null;
+            switch ($option) {
+                case 'inventoryInterval':
+                    $default = $this->config->inventoryInterval;
+                    // Special values 0 and -1 always take precedence if
+                    // configured globally. Otherwise use smallest value from
+                    // groups if defined.
+                    if ($groupValues && $default >= 1) {
+                        $default = min($groupValues);
+                    }
+                    break;
+                case 'contactInterval':
+                case 'downloadMaxPriority':
+                case 'downloadTimeout':
+                    if ($groupValues) {
+                        $default = min($groupValues);
+                    }
+                    break;
+                case 'downloadPeriodDelay':
+                case 'downloadCycleDelay':
+                case 'downloadFragmentDelay':
+                    if ($groupValues) {
+                        $default = max($groupValues);
+                    }
+                    break;
+                case 'packageDeployment':
+                case 'scanSnmp':
+                    // FALSE if disabled globally or in any group, otherwise TRUE.
+                    if (in_array(0, $groupValues)) {
+                        $default = false;
+                    } else {
+                        $default = (bool) $this->config->$option;
+                    }
+                    break;
+                case 'allowScan':
+                    // FALSE if disabled globally or in any group, otherwise TRUE.
+                    if (in_array(0, $groupValues)) {
+                        $default = false;
+                    } else {
+                        $default = (bool) $this->config->scannersPerSubnet;
+                    }
+                    break;
+            }
+            if ($default === null) {
+                assert($option != 'allowScan'); // $default is definitely set above
+                // Fall back to global value
+                $default = $this->config->$option;
+            }
+            $defaults[$option] = $default;
+        }
+
+        return $defaults;
+    }
+
+    /**
+     * Get global default values.
+     *
+     * Returns the global settings that override or get overriden by group
+     * and/or client settings.
+     */
+    public function getGlobalDefaults(): array
     {
         foreach (self::OptionsWithDefaults as $option) {
-            $default = $object->getDefaultConfig($option);
+            if ($option == 'allowScan') {
+                $default = $this->config->scannersPerSubnet;
+            } else {
+                $default = $this->config->$option;
+            }
             if (in_array($option, self::BooleanOptions)) {
                 $default = (bool) $default;
             }
@@ -104,7 +181,9 @@ final class ClientConfig
      */
     public function getEffectiveConfig(Client $client): array
     {
+        $defaults = $this->getClientDefaults($client);
         foreach (self::OptionsWithDefaults as $option) {
+            $default = $defaults[$option];
             if ($option == 'inventoryInterval') {
                 $globalValue = $this->config->inventoryInterval;
                 if ($globalValue <= 0) {
@@ -125,9 +204,8 @@ final class ClientConfig
                     }
                 }
             } elseif (in_array($option, self::BooleanOptions)) {
-                // If default is 0, return FALSE.
+                // If default is FALSE, return FALSE.
                 // Otherwise override default if explicitly disabled.
-                $default = $client->getDefaultConfig($option);
                 if ($default && $client->getConfig($option) === 0) {
                     $value = false;
                 } else {
@@ -137,7 +215,7 @@ final class ClientConfig
                 // Standard integer values. Client value takes precedence.
                 $value = $client->getConfig($option);
                 if ($value === null) {
-                    $value = $client->getDefaultConfig($option);
+                    $value = $default;
                 }
             }
 

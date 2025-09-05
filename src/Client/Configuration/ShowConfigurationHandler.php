@@ -36,7 +36,7 @@ final class ShowConfigurationHandler implements RequestHandlerInterface
         )->client;
 
         $values = $this->clientConfig->getOptions($client);
-        $defaults = $this->clientConfig->getDefaults($client);
+        $defaults = $this->clientConfig->getClientDefaults($client);
         $effective = $this->clientConfig->getEffectiveConfig($client);
         $networks = $this->clientDetails->getNetworks($client);
 

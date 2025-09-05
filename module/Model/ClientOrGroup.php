@@ -440,19 +440,6 @@ abstract class ClientOrGroup extends AbstractModel
     }
 
     /**
-     * Get default configuration value
-     *
-     * This method returns the default setting for an option that overrides or
-     * gets overriden by this object's setting. For groups, this is the global
-     * setting. For clients, it is determined from the global setting and/or
-     * all groups of which the client is a member.
-     *
-     * @param string $option Option name
-     * @return mixed Default value or NULL
-     */
-    abstract public function getDefaultConfig($option);
-
-    /**
      * Process config value before or after daterbase interaction
      *
      * @param string $option Option name

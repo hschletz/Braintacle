@@ -44,29 +44,6 @@ class GroupTest extends AbstractGroupTestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public static function getDefaultConfigProvider()
-    {
-        return array(
-            array('allowScan', 0, 'scannersPerSubnet', 0),
-            array('allowScan', 1, 'scannersPerSubnet', 2),
-            array('foo', 'bar', 'foo', 'bar'),
-        );
-    }
-    /**
-     * @dataProvider getDefaultConfigProvider
-     */
-    public function testGetDefaultConfig($option, $expectedValue, $globalOptionName, $globalOptionValue)
-    {
-        $config = $this->createMock('Model\Config');
-        $config->expects($this->once())->method('__get')->with($globalOptionName)->willReturn($globalOptionValue);
-        static::$serviceManager->setService(Config::class, $config);
-
-        $model = new Group();
-        $model->setContainer(static::$serviceManager);
-
-        $this->assertSame($expectedValue, $model->getDefaultConfig($option));
-    }
-
     public static function setMembersFromQueryProvider()
     {
         return array(

@@ -62,7 +62,7 @@ final class ShowConfigurationHandlerTest extends TestCase
             'scanSnmp' => false,
             'scanThisNetwork' => null,
         ]);
-        $clientConfig->method('getDefaults')->with($client)->willReturn([
+        $clientConfig->method('getClientDefaults')->with($client)->willReturn([
             'contactInterval' => 1,
             'inventoryInterval' => -1,
             'packageDeployment' => true,

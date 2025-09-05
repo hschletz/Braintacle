@@ -90,22 +90,6 @@ class Group extends \Model\ClientOrGroup
      */
     public DateTimeInterface $CacheExpirationDate;
 
-    /** {@inheritdoc} */
-    public function getDefaultConfig($option)
-    {
-        $config = $this->container->get(Config::class);
-        if ($option == 'allowScan') {
-            if ($config->scannersPerSubnet == 0) {
-                $value = 0;
-            } else {
-                $value = 1;
-            }
-        } else {
-            $value = $config->$option;
-        }
-        return $value;
-    }
-
     /**
      * Set group members based on query
      *

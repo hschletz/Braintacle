@@ -14,6 +14,7 @@ use Model\Group\Group;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(ClientConfig::class)]
@@ -21,9 +22,29 @@ class ClientConfigTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    private const Defaults = [
+        'contactInterval' => 'ignore',
+        'inventoryInterval' => 'ignore',
+        'packageDeployment' => 'ignore',
+        'downloadPeriodDelay' => 'ignore',
+        'downloadCycleDelay' => 'ignore',
+        'downloadFragmentDelay' => 'ignore',
+        'downloadMaxPriority' => 'ignore',
+        'downloadTimeout' => 'ignore',
+        'allowScan' => 'ignore',
+        'scanSnmp' => 'ignore',
+    ];
+
     private function createClientConfig(?Config $config = null): ClientConfig
     {
         return new ClientConfig($config ?? $this->createStub(Config::class));
+    }
+
+    private function createClientConfigMock(array $methods, ?Config $config = null): MockObject | ClientConfig
+    {
+        return $this->getMockBuilder(ClientConfig::class)->onlyMethods($methods)->setConstructorArgs([
+            $config ?? $this->createStub(Config::class),
+        ])->getMock();
     }
 
     public function testGetOptionsForClient()
@@ -96,50 +117,95 @@ class ClientConfigTest extends TestCase
         );
     }
 
-    public static function getDefaultsProvider()
+    public static function getClientDefaultsProvider()
     {
+        // All options have a default, so the global value can never be NULL.
         return [
-            [Client::class],
-            [Group::class],
+            ['inventoryInterval', -1, [0], -1], // global value -1 precedes
+            ['inventoryInterval', 0, [-1], 0], // global value 0 precedes
+            ['inventoryInterval', 1, [], 1], // no group values, default to global value
+            ['inventoryInterval', 1, [null], 1], // no group values, default to global value
+            ['inventoryInterval', 1, [2, null, 3], 2], // smallest group value
+            ['inventoryInterval', 4, [2, 3, null], 2], // smallest group value
+            ['contactInterval', 1, [2, 3, null], 2],
+            ['contactInterval', 1, [], 1],
+            ['downloadMaxPriority', 1, [2, 3, null], 2],
+            ['downloadMaxPriority', 1, [], 1],
+            ['downloadTimeout', 1, [2, 3, null], 2],
+            ['downloadTimeout', 1, [], 1],
+            ['downloadPeriodDelay', 3, [1, 2, null], 2],
+            ['downloadPeriodDelay', 1, [], 1],
+            ['downloadCycleDelay', 3, [1, 2, null], 2],
+            ['downloadCycleDelay', 1, [], 1],
+            ['downloadFragmentDelay', 3, [1, 2, null], 2],
+            ['downloadFragmentDelay', 1, [], 1],
+            ['packageDeployment', 0, [1], false],
+            ['packageDeployment', 1, [], true],
+            ['packageDeployment', 1, [null, 1], true],
+            ['packageDeployment', 1, [0, 1], false],
+            ['scanSnmp', 0, [1], false],
+            ['scanSnmp', 1, [], true],
+            ['scanSnmp', 1, [null, 1], true],
+            ['scanSnmp', 1, [0, 1], false],
+            ['allowScan', 0, [1], false],
+            ['allowScan', 1, [], true],
+            ['allowScan', 2, [null, 1], true],
+            ['allowScan', 2, [0, 1], false],
         ];
     }
 
-    /**
-     * @param class-string<Client|Group> $class
-     */
-    #[DataProvider('getDefaultsProvider')]
-    public function testGetDefaults(string $class)
-    {
-        $object = $this->createStub($class);
-        $object->method('getDefaultConfig')->willReturnMap([
-            ['contactInterval', null],
-            ['inventoryInterval', -1],
-            ['packageDeployment', 1],
-            ['downloadPeriodDelay', 2],
-            ['downloadCycleDelay', 3],
-            ['downloadFragmentDelay', 4],
-            ['downloadMaxPriority', 5],
-            ['downloadTimeout', 6],
-            ['allowScan', 1],
-            ['scanSnmp', 0],
-        ]);
+    #[DataProvider('getClientDefaultsProvider')]
+    public function testGetClientDefaults(
+        string $option,
+        int $globalValue,
+        array $groupValues,
+        int | bool $expectedValue,
+    ) {
+        $globalOption = (($option == 'allowScan') ? 'scannersPerSubnet' : $option);
 
-        $options = $this->createClientConfig()->getDefaults($object);
-        $this->assertSame(
-            [
-                'contactInterval' => null,
-                'inventoryInterval' => -1,
-                'packageDeployment' => true,
-                'downloadPeriodDelay' => 2,
-                'downloadCycleDelay' => 3,
-                'downloadFragmentDelay' => 4,
-                'downloadMaxPriority' => 5,
-                'downloadTimeout' => 6,
-                'allowScan' => true,
-                'scanSnmp' => false,
-            ],
-            $options,
+        $config = $this->createMock(Config::class);
+        $config->method('__get')->willReturnCallback(fn($arg) => ($arg == $globalOption) ? $globalValue : 'ignore');
+
+        $groups = [];
+        foreach ($groupValues as $groupValue) {
+            $group = $this->createMock(Group::class);
+            $group->method('getConfig')->willReturnCallback(fn($arg) => ($arg == $option) ? $groupValue : 'ignore');
+            $groups[] = $group;
+        }
+
+        $client = $this->createStub(Client::class);
+        $client->method('getGroups')->willReturn($groups);
+
+        $defaults = $this->createClientConfig($config)->getClientDefaults($client);
+        $this->assertSame($expectedValue, $defaults[$option]);
+    }
+
+    public static function getGroupDefaultsProvider()
+    {
+        return [
+            ['contactInterval', 1, 'contactInterval', 1],
+            ['packageDeployment', false, 'packageDeployment', 0],
+            ['allowScan', false, 'scannersPerSubnet', 0],
+            ['allowScan', true, 'scannersPerSubnet', 2],
+            ['scanSnmp', true, 'scannersPerSubnet', 1],
+        ];
+    }
+
+    #[DataProvider('getGroupDefaultsProvider')]
+    public function testGetGroupDefaults(
+        string $option,
+        int|bool $expectedValue,
+        string $globalOptionName,
+        int $globalOptionValue,
+    ) {
+        $config = $this->createMock(Config::class);
+        $config->method('__get')->willReturnCallback(
+            fn($arg) => ($arg == $globalOptionName) ? $globalOptionValue : 'ignore'
         );
+
+        $defaults = $this->createClientConfig($config)->getGlobalDefaults();
+
+        $this->assertSame($expectedValue, $defaults[$option]);
     }
 
     public static function getEffectiveConfigProvider()
@@ -163,35 +229,38 @@ class ClientConfigTest extends TestCase
             ['downloadTimeout', 1, null, 1],
             ['downloadTimeout', 1, 2, 2],
             ['downloadTimeout', 2, 1, 1],
-            ['packageDeployment', 0, 0, false],
-            ['packageDeployment', 0, null, false],
-            ['packageDeployment', 1, 0, false],
-            ['packageDeployment', 1, null, true],
-            ['allowScan', 0, 0, false],
-            ['allowScan', 0, null, false],
-            ['allowScan', 1, 0, false],
-            ['allowScan', 1, null, true],
-            ['scanSnmp', 0, 0, false],
-            ['scanSnmp', 0, null, false],
-            ['scanSnmp', 1, 0, false],
-            ['scanSnmp', 1, null, true],
+            ['packageDeployment', false, 0, false],
+            ['packageDeployment', false, null, false],
+            ['packageDeployment', true, 0, false],
+            ['packageDeployment', true, null, true],
+            ['allowScan', false, 0, false],
+            ['allowScan', false, null, false],
+            ['allowScan', true, 0, false],
+            ['allowScan', true, null, true],
+            ['scanSnmp', false, 0, false],
+            ['scanSnmp', false, null, false],
+            ['scanSnmp', true, 0, false],
+            ['scanSnmp', true, null, true],
         ];
     }
 
     #[DataProvider('getEffectiveConfigProvider')]
     public function testGetEffectiveConfig(
         string $option,
-        int $defaultValue,
+        int | bool $defaultValue,
         ?int $clientValue,
         int | bool $expectedValue,
     ) {
-        $client = $this->createPartialMock(Client::class, ['getDefaultConfig', 'getConfig']);
-        $client->method('getDefaultConfig')->willReturnCallback(
-            fn($arg) => ($arg === $option) ? $defaultValue : 'ignore'
-        );
+        $client = $this->createStub(Client::class);
         $client->method('getConfig')->willReturnCallback(fn($arg) => ($arg === $option) ? $clientValue : 'ignore');
 
-        $effectiveConfig = $this->createClientConfig()->getEffectiveConfig($client);
+        $defaults = self::Defaults;
+        $defaults[$option] = $defaultValue;
+
+        $clientConfig = $this->createClientConfigMock(['getClientDefaults']);
+        $clientConfig->method('getClientDefaults')->with($client)->willReturn($defaults);
+
+        $effectiveConfig = $clientConfig->getEffectiveConfig($client);
 
         $this->assertSame($expectedValue, $effectiveConfig[$option]);
     }
@@ -228,14 +297,16 @@ class ClientConfigTest extends TestCase
             $groups[] = $group;
         }
 
-        $client = $this->createPartialMock(Client::class, ['getConfig', 'getDefaultConfig', 'getGroups']);
+        $client = $this->createStub(Client::class);
         $client->method('getConfig')->willReturnCallback(
             fn($arg) => ($arg === 'inventoryInterval') ? $clientValue : 'ignore'
         );
-        $client->method('getDefaultConfig')->willReturn('ignore');
         $client->method('getGroups')->willReturn($groups);
 
-        $effectiveConfig = $this->createClientConfig($config)->getEffectiveConfig($client);
+        $clientConfig = $this->createClientConfigMock(['getClientDefaults'], $config);
+        $clientConfig->method('getClientDefaults')->with($client)->willReturn(self::Defaults);
+
+        $effectiveConfig = $clientConfig->getEffectiveConfig($client);
 
         $this->assertSame($expectedValue, $effectiveConfig['inventoryInterval']);
     }

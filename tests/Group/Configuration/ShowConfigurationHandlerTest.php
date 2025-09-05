@@ -55,7 +55,7 @@ final class ShowConfigurationHandlerTest extends TestCase
             'allowScan' =>  false,
             'scanSnmp' => false,
         ]);
-        $clientConfig->method('getDefaults')->with($group)->willReturn([
+        $clientConfig->method('getGlobalDefaults')->willReturn([
             'contactInterval' => 1,
             'inventoryInterval' => -1,
             'packageDeployment' => true,

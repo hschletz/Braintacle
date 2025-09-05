@@ -29,7 +29,7 @@ final class ShowConfigurationHandler implements RequestHandlerInterface
         $group = $this->dataProcessor->process($request->getQueryParams(), GroupRequestParameters::class)->group;
 
         $values = $this->clientConfig->getOptions($group);
-        $defaults = $this->clientConfig->getDefaults($group);
+        $defaults = $this->clientConfig->getGlobalDefaults();
 
         $this->response->getBody()->write($this->templateEngine->render('Pages/Group/Configuration.latte', [
             'group' => $group,

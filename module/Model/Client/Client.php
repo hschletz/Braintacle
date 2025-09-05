@@ -30,7 +30,6 @@ use Database\Table\GroupMemberships;
 use Database\Table\PackageHistory;
 use Database\Table\WindowsInstallations;
 use DateTimeInterface;
-use Model\Config;
 use Model\Group\GroupManager;
 use Protocol\Message\InventoryRequest;
 use ReturnTypeWillChange;
@@ -249,12 +248,6 @@ class Client extends \Model\ClientOrGroup
     public ?string $ipAddress;
 
     /**
-     * Cache for getDefaultConfig() results
-     * @var array
-     */
-    protected $_configDefault = array();
-
-    /**
      * Cache for getGroups() result
      * @var \Model\Group\Group[]
      */
@@ -313,79 +306,6 @@ class Client extends \Model\ClientOrGroup
             // Cache result
             $this->offsetSet($key, $value);
         }
-        return $value;
-    }
-
-    /** {@inheritdoc} */
-    public function getDefaultConfig($option)
-    {
-        if (array_key_exists($option, $this->_configDefault)) {
-            return $this->_configDefault[$option];
-        }
-
-        $config = $this->container->get(Config::class);
-
-        // Get non-NULL values from groups
-        $groupValues = array();
-        foreach ($this->getGroups() as $group) {
-            $groupValue = $group->getConfig($option);
-            if ($groupValue !== null) {
-                $groupValues[] = $groupValue;
-            }
-        }
-
-        $value = null;
-        switch ($option) {
-            case 'inventoryInterval':
-                $value = $config->inventoryInterval;
-                // Special values 0 and -1 always take precedence if
-                // configured globally. Otherwise use smallest value from
-                // groups if defined.
-                if ($value >= 1 and !empty($groupValues)) {
-                    $value = min($groupValues);
-                }
-                break;
-            case 'contactInterval':
-            case 'downloadMaxPriority':
-            case 'downloadTimeout':
-                // Get smallest value from groups
-                if ($groupValues) {
-                    $value = min($groupValues);
-                }
-                break;
-            case 'downloadPeriodDelay':
-            case 'downloadCycleDelay':
-            case 'downloadFragmentDelay':
-                // Get largest value from groups
-                if ($groupValues) {
-                    $value = max($groupValues);
-                }
-                break;
-            case 'packageDeployment':
-            case 'scanSnmp':
-                // 0 if global setting or any group setting is 0, otherwise 1.
-                if (in_array(0, $groupValues)) {
-                    $value = 0;
-                } else {
-                    $value = $config->$option;
-                }
-                break;
-            case 'allowScan':
-                // 0 scanning is disabled globally or any group setting is 0, otherwise 1.
-                if (in_array(0, $groupValues)) {
-                    $value = 0;
-                } else {
-                    // Limit result to 1
-                    $value = min($config->scannersPerSubnet, 1);
-                }
-                break;
-        }
-        if ($value === null) {
-            // Fall back to global value
-            $value = $config->$option;
-        }
-
-        $this->_configDefault[$option] = $value;
         return $value;
     }
 
