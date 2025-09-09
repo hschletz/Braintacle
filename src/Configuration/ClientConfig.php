@@ -226,6 +226,34 @@ final class ClientConfig
     }
 
     /**
+     * Get all explicitly configured client-specific configuration values.
+     *
+     * Returns an associative array with options which are explicitly configured
+     * for the given client. Unconfigured options are not returned.
+     *
+     * The returned options may not necessarily be effective, because they may
+     * be overridden globally or by a group.
+     *
+     * @return array<string, int|bool|string>
+     */
+    public function getExplicitConfig(Client $client): array
+    {
+        $config = [];
+        foreach (self::OptionsWithDefaults as $option) {
+            $value = $client->getConfig($option);
+            if ($value !== null) {
+                $config[$option] = $value;
+            }
+        }
+        $scanThisNetwork = $client->getConfig('scanThisNetwork');
+        if ($scanThisNetwork !== null) {
+            $config['scanThisNetwork'] = $scanThisNetwork;
+        }
+
+        return $config;
+    }
+
+    /**
      * @template T of Client|Group
      * @param T $object
      * @param (T is Client ? ClientConfigurationParameters : GroupConfigurationParameters) $options

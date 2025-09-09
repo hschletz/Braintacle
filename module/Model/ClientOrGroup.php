@@ -74,23 +74,6 @@ abstract class ClientOrGroup extends AbstractModel
     protected $_lockNestCount = 0;
 
     /**
-     * All config options
-     * @var string[]
-     */
-    private $_options = [
-        'contactInterval',
-        'inventoryInterval',
-        'packageDeployment',
-        'downloadPeriodDelay',
-        'downloadCycleDelay',
-        'downloadFragmentDelay',
-        'downloadMaxPriority',
-        'downloadTimeout',
-        'allowScan',
-        'scanSnmp',
-    ];
-
-    /**
      * Options which can only be disabled
      * @var string[]
      */
@@ -458,28 +441,5 @@ abstract class ClientOrGroup extends AbstractModel
             }
         }
         return $value;
-    }
-
-    /**
-     * Get all explicitly configured object-specific configuration values
-     *
-     * Returns a flat associative array with options which are explicitly
-     * configured for this object. Unconfigured options are not returned.
-     *
-     * Like with getConfig(), the returned options may not necessarily be
-     * effective.
-     *
-     * @return mixed[]
-     */
-    public function getExplicitConfig()
-    {
-        $options = [];
-        foreach ($this->_options as $option) {
-            $value = $this->getConfig($option);
-            if ($value !== null) {
-                $options[$option] = $value;
-            }
-        }
-        return $options;
     }
 }

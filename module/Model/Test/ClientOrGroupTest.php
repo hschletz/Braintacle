@@ -478,44 +478,4 @@ class ClientOrGroupTest extends AbstractTestCase
         $model->setContainer($serviceManager);
         $model->setConfig('allowScan', null);
     }
-
-    public function testGetExplicitConfigWithNonNullValues()
-    {
-        $model = Mockery::mock(ClientOrGroup::class)->makePartial();
-        $model->shouldReceive('getConfig')->with('contactInterval')->andReturn(0);
-        $model->shouldReceive('getConfig')->with('inventoryInterval')->andReturn(1);
-        $model->shouldReceive('getConfig')->with('downloadPeriodDelay')->andReturn(2);
-        $model->shouldReceive('getConfig')->with('downloadCycleDelay')->andReturn(3);
-        $model->shouldReceive('getConfig')->with('downloadFragmentDelay')->andReturn(4);
-        $model->shouldReceive('getConfig')->with('downloadMaxPriority')->andReturn(5);
-        $model->shouldReceive('getConfig')->with('downloadTimeout')->andReturn(6);
-        // The following options can only be 0 or NULL
-        $model->shouldReceive('getConfig')->with('packageDeployment')->andReturn(0);
-        $model->shouldReceive('getConfig')->with('allowScan')->andReturn(0);
-        $model->shouldReceive('getConfig')->with('scanSnmp')->andReturn(0);
-
-        $this->assertSame(
-            [
-                'contactInterval' => 0,
-                'inventoryInterval' => 1,
-                'packageDeployment' => 0,
-                'downloadPeriodDelay' => 2,
-                'downloadCycleDelay' => 3,
-                'downloadFragmentDelay' => 4,
-                'downloadMaxPriority' => 5,
-                'downloadTimeout' => 6,
-                'allowScan' => 0,
-                'scanSnmp' => 0,
-            ],
-            $model->getExplicitConfig()
-        );
-    }
-
-    public function testGetExplicitConfigWithNullValues()
-    {
-        $model = Mockery::mock(ClientOrGroup::class)->makePartial();
-        $model->shouldReceive('getConfig')->atLeast()->times(1)->andReturnNull();
-
-        $this->assertSame([], $model->getExplicitConfig());
-    }
 }

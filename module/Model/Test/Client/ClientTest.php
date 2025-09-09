@@ -222,50 +222,6 @@ class ClientTest extends AbstractTestCase
         $this->assertEquals('items', $model['ItemType']); // cached result
     }
 
-    public function testGetExplicitConfigWithNonNullValues()
-    {
-        $model = $this->createPartialMock(Client::class, ['getConfig']);
-        $model->method('getConfig')->willReturnMap([
-            ['contactInterval', 0],
-            ['inventoryInterval', 1],
-            ['downloadPeriodDelay', 2],
-            ['downloadCycleDelay', 3],
-            ['downloadFragmentDelay', 4],
-            ['downloadMaxPriority', 5],
-            ['downloadTimeout', 6],
-            ['scanThisNetwork', 'network'],
-            // The following options can only be 0 or NULL
-            ['packageDeployment', 0],
-            ['allowScan', 0],
-            ['scanSnmp', 0],
-        ]);
-
-        $this->assertSame(
-            [
-                'contactInterval' => 0,
-                'inventoryInterval' => 1,
-                'packageDeployment' => 0,
-                'downloadPeriodDelay' => 2,
-                'downloadCycleDelay' => 3,
-                'downloadFragmentDelay' => 4,
-                'downloadMaxPriority' => 5,
-                'downloadTimeout' => 6,
-                'allowScan' => 0,
-                'scanSnmp' => 0,
-                'scanThisNetwork' => 'network',
-            ],
-            $model->getExplicitConfig()
-        );
-    }
-
-    public function testGetExplicitConfigWithNullValues()
-    {
-        $model = $this->createPartialMock(Client::class, ['getConfig']);
-        $model->method('getConfig')->willReturn(null);
-
-        $this->assertSame([], $model->getExplicitConfig());
-    }
-
     public function testGetDownloadedPackageIds()
     {
         $model = new Client();

@@ -22,6 +22,7 @@
 
 namespace Model\Client;
 
+use Braintacle\Configuration\ClientConfig;
 use Braintacle\Direction;
 use Braintacle\Duplicates\Criterion;
 use Braintacle\Duplicates\DuplicatesColumn;
@@ -130,34 +131,23 @@ class DuplicatesManager
      */
     private SoftwareManager $_softwareManager;
 
-    /**
-     * Constructor
-     *
-     * @param \Database\Table\Clients $clients
-     * @param \Database\Table\NetworkInterfaces $networkInterfaces
-     * @param \Database\Table\DuplicateAssetTags $duplicateAssetTags
-     * @param \Database\Table\DuplicateSerials $duplicateSerials
-     * @param \Database\Table\DuplicateMacAddresses $duplicateMacAddresses
-     * @param \Database\Table\ClientConfig $clientConfig
-     * @param \Model\Client\ClientManager $clientManager
-     * @param \Model\SoftwareManager $softwareManager
-     */
     public function __construct(
         Table\Clients $clients,
         Table\NetworkInterfaces $networkInterfaces,
         Table\DuplicateAssetTags $duplicateAssetTags,
         Table\DuplicateSerials $duplicateSerials,
         Table\DuplicateMacAddresses $duplicateMacAddresses,
-        Table\ClientConfig $clientConfig,
+        Table\ClientConfig $clientConfigTable,
         \Model\Client\ClientManager $clientManager,
-        \Model\SoftwareManager $softwareManager
+        \Model\SoftwareManager $softwareManager,
+        private ClientConfig $clientConfig,
     ) {
         $this->_clients = $clients;
         $this->_networkInterfaces = $networkInterfaces;
         $this->_duplicateAssetTags = $duplicateAssetTags;
         $this->_duplicateSerials = $duplicateSerials;
         $this->_duplicateMacaddresses = $duplicateMacAddresses;
-        $this->_clientConfig = $clientConfig;
+        $this->_clientConfig = $clientConfigTable;
         $this->_clientManager = $clientManager;
         $this->_softwareManager = $softwareManager;
     }
@@ -445,10 +435,10 @@ class DuplicatesManager
         $options = [];
         foreach (array_reverse($olderClients) as $client) {
             // Add options that are not present yet
-            $options += $client->getExplicitConfig();
+            $options += $this->clientConfig->getExplicitConfig($client);
         }
         // Remove options that are present on the newest client
-        $options = array_diff_key($options, $newestClient->getExplicitConfig());
+        $options = array_diff_key($options, $this->clientConfig->getExplicitConfig($newestClient));
 
         foreach ($options as $option => $value) {
             $newestClient->setConfig($option, $value);

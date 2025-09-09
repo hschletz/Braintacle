@@ -311,6 +311,50 @@ class ClientConfigTest extends TestCase
         $this->assertSame($expectedValue, $effectiveConfig['inventoryInterval']);
     }
 
+    public function testGetExplicitConfigWithNonNullValues()
+    {
+        $client = $this->createStub(Client::class);
+        $client->method('getConfig')->willReturnMap([
+            ['contactInterval', 0],
+            ['inventoryInterval', 1],
+            ['downloadPeriodDelay', 2],
+            ['downloadCycleDelay', 3],
+            ['downloadFragmentDelay', 4],
+            ['downloadMaxPriority', 5],
+            ['downloadTimeout', 6],
+            ['scanThisNetwork', 'network'],
+            // The following options can only be 0 or NULL
+            ['packageDeployment', 0],
+            ['allowScan', 0],
+            ['scanSnmp', 0],
+        ]);
+
+        $this->assertSame(
+            [
+                'contactInterval' => 0,
+                'inventoryInterval' => 1,
+                'packageDeployment' => 0,
+                'downloadPeriodDelay' => 2,
+                'downloadCycleDelay' => 3,
+                'downloadFragmentDelay' => 4,
+                'downloadMaxPriority' => 5,
+                'downloadTimeout' => 6,
+                'allowScan' => 0,
+                'scanSnmp' => 0,
+                'scanThisNetwork' => 'network',
+            ],
+            $this->createClientConfig()->getExplicitConfig($client),
+        );
+    }
+
+    public function testGetExplicitConfigWithNullValues()
+    {
+        $client = $this->createStub(Client::class);
+        $client->method('getConfig')->willReturn(null);
+
+        $this->assertSame([], $this->createClientConfig()->getExplicitConfig($client));
+    }
+
     public static function setOptionsInvalidArgumentsProvider()
     {
         return [

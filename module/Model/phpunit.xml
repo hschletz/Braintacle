@@ -26,6 +26,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
     failOnAllIssues="true"
     displayDetailsOnAllIssues="true"
 >
+  <extensions>
+	<bootstrap class="DG\BypassFinals\PHPUnitExtension"/>
+  </extensions>
   <coverage>
     <report>
       <text outputFile="php://stdout" showOnlySummary="true"/>

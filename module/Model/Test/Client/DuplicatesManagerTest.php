@@ -22,11 +22,11 @@
 
 namespace Model\Test\Client;
 
+use Braintacle\Configuration\ClientConfig;
 use Braintacle\Direction;
 use Braintacle\Duplicates\Criterion;
 use Braintacle\Duplicates\DuplicatesColumn;
 use Database\Table;
-use Database\Table\ClientConfig;
 use Database\Table\Clients;
 use Database\Table\DuplicateAssetTags;
 use Database\Table\DuplicateMacAddresses;
@@ -231,9 +231,10 @@ class DuplicatesManagerTest extends AbstractTestCase
             static::$serviceManager->get(DuplicateAssetTags::class),
             static::$serviceManager->get(DuplicateSerials::class),
             static::$serviceManager->get(DuplicateMacAddresses::class),
-            static::$serviceManager->get(ClientConfig::class),
+            static::$serviceManager->get(Table\ClientConfig::class),
             $clientManager,
-            static::$serviceManager->get(SoftwareManager::class)
+            static::$serviceManager->get(SoftwareManager::class),
+            $this->createStub(ClientConfig::class),
         );
 
         $resultSet = $duplicates->find($criterion, $order, $direction);
@@ -297,6 +298,7 @@ class DuplicatesManagerTest extends AbstractTestCase
                 $this->createStub(Table\ClientConfig::class),
                 $clientManager,
                 $this->createStub(SoftwareManager::class),
+                $this->createStub(ClientConfig::class),
             ]
         );
         $model->expects($this->never())->method('mergeConfig');
@@ -351,9 +353,10 @@ class DuplicatesManagerTest extends AbstractTestCase
                 $this->createStub(DuplicateAssetTags::class),
                 $this->createStub(DuplicateSerials::class),
                 $this->createStub(DuplicateMacAddresses::class),
-                $this->createStub(ClientConfig::class),
+                $this->createStub(Table\ClientConfig::class),
                 $clientManager,
                 $this->createStub(SoftwareManager::class),
+                $this->createStub(ClientConfig::class),
             ]
         );
         $duplicatesManager->expects($this->never())->method('mergeConfig');
@@ -426,6 +429,8 @@ class DuplicatesManagerTest extends AbstractTestCase
                 $this->createStub(Table\ClientConfig::class),
                 $clientManager,
                 $this->createStub(SoftwareManager::class),
+                $this->createStub(ClientConfig::class),
+                $this->createStub(ClientConfig::class),
             ]
         );
         $model->expects($this->never())->method('mergeConfig');
@@ -493,6 +498,7 @@ class DuplicatesManagerTest extends AbstractTestCase
                 $this->createStub(Table\ClientConfig::class),
                 $clientManager,
                 $this->createStub(SoftwareManager::class),
+                $this->createStub(ClientConfig::class),
             ]
         )->makePartial();
 
@@ -650,7 +656,8 @@ EOT
             $this->createStub(Table\DuplicateMacAddresses::class),
             $this->createStub(Table\ClientConfig::class),
             $this->createStub(ClientManager::class),
-            $softwareManager
+            $softwareManager,
+            $this->createStub(ClientConfig::class),
         );
 
         $model->mergeProductKey($newestClient, $olderClients);
@@ -683,7 +690,8 @@ EOT
             $this->createStub(Table\DuplicateMacAddresses::class),
             $this->createStub(Table\ClientConfig::class),
             $this->createStub(ClientManager::class),
-            $softwareManager
+            $softwareManager,
+            $this->createStub(ClientConfig::class),
         );
 
         $model->mergeProductKey($newestClient, $olderClients);
@@ -713,26 +721,34 @@ EOT
         $options = [];
 
         $newest = $this->createMock('Model\Client\Client');
-        $newest->method('getExplicitConfig')->willReturn(
-            ['option1' => 'n1', 'option3' => 'n3', 'option5' => 'n5', 'option7' => 'n7']
-        );
         $newest->expects($this->exactly(3))->method('setConfig')->willReturnCallback(
             function ($option, $value) use (&$options) {
                 $options[$option] = $value;
             }
         );
 
-        $middle = $this->createMock('Model\Client\Client');
-        $middle->method('getExplicitConfig')->willReturn(
-            ['option2' => 'm2', 'option3' => 'm3', 'option6' => 'm6', 'option7' => 'm7']
-        );
+        $middle = $this->createStub(Client::class);
+        $oldest = $this->createStub(Client::class);
 
-        $oldest = $this->createMock('Model\Client\Client');
-        $oldest->method('getExplicitConfig')->willReturn(
-            ['option4' => 'o4', 'option5' => 'o5', 'option6' => 'o6', 'option7' => 'o7']
-        );
+        $clientConfig = $this->createStub(ClientConfig::class);
+        $clientConfig->method('getExplicitConfig')->willReturnMap([
+            [$newest, ['option1' => 'n1', 'option3' => 'n3', 'option5' => 'n5', 'option7' => 'n7']],
+            [$middle, ['option2' => 'm2', 'option3' => 'm3', 'option6' => 'm6', 'option7' => 'm7']],
+            [$oldest, ['option4' => 'o4', 'option5' => 'o5', 'option6' => 'o6', 'option7' => 'o7']],
+        ]);
 
-        $this->getModel()->mergeConfig($newest, [$oldest, $middle]);
+        $duplicatesManager = new DuplicatesManager(
+            $this->createStub(Table\Clients::class),
+            $this->createStub(Table\NetworkInterfaces::class),
+            $this->createStub(Table\DuplicateAssetTags::class),
+            $this->createStub(Table\DuplicateSerials::class),
+            $this->createStub(Table\DuplicateMacAddresses::class),
+            $this->createStub(Table\ClientConfig::class),
+            $this->createStub(ClientManager::class),
+            $this->createStub(SoftwareManager::class),
+            $clientConfig,
+        );
+        $duplicatesManager->mergeConfig($newest, [$oldest, $middle]);
 
         $this->assertEquals(['option2' => 'm2', 'option4' => 'o4', 'option6' => 'm6'], $options);
     }
