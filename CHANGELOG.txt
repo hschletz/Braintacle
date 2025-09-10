@@ -9,6 +9,12 @@ without any warranty.
 CHANGES IN VERSION 2.0
 =======================
 
+**Caveats**
+
+File attachments are dropped from the database. They were never implemented in
+Braintacle, but may be left over if the database was migrated from OCS Inventory
+NG (which is no longer supported).
+
 Upgrading from previous versions:
 
 - Required: If upgrading from a version earlier than 1.15, upgrade to 1.15 first

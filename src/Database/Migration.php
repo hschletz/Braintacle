@@ -17,6 +17,7 @@ use Override;
 abstract class Migration extends AbstractMigration
 {
     protected const TemplateTable = "Create table '%s'";
+    protected const TemplateTableDrop = "Drop table '%s'";
     protected const TemplateView = "Create view '%s'";
 
     protected const EngineInnoDb = 'InnoDB';

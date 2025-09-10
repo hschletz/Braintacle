@@ -22,7 +22,6 @@
 
 namespace Model\Client;
 
-use Database\Table\Attachments;
 use Database\Table\Clients;
 use Database\Table\ClientsAndGroups;
 use Database\Table\NetworkDevicesIdentified;
@@ -793,12 +792,6 @@ class ClientManager
             foreach ($tables as $table) {
                 $this->container->get("Database\\Table\\$table")->delete(['hardware_id' => $id]);
             }
-            $this->container->get(Attachments::class)->delete(
-                array(
-                    'id_dde' => $id,
-                    'table_name' => \Database\Table\Attachments::OBJECT_TYPE_CLIENT
-                )
-            );
             $this->container->get(ItemManager::class)->deleteItems($id);
 
             // Delete row in clients table

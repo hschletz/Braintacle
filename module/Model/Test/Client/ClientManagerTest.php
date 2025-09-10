@@ -23,7 +23,6 @@
 namespace Model\Test\Client;
 
 use Database\Table\AndroidInstallations;
-use Database\Table\Attachments;
 use Database\Table\ClientConfig;
 use Database\Table\Clients;
 use Database\Table\ClientsAndGroups;
@@ -1035,11 +1034,6 @@ class ClientManagerTest extends AbstractTestCase
         $clientConfig = $this->createMock('Database\Table\ClientConfig');
         $clientConfig->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
 
-        $attachments = $this->createMock('Database\Table\Attachments');
-        $attachments->expects($this->once())->method('delete')->with(
-            array('id_dde' => 42, 'table_name' => \Database\Table\Attachments::OBJECT_TYPE_CLIENT)
-        );
-
         $itemManager = $this->createMock('Model\Client\ItemManager');
         $itemManager->expects($this->once())->method('deleteItems')->with(42);
 
@@ -1050,7 +1044,6 @@ class ClientManagerTest extends AbstractTestCase
         $serviceLocator->method('get')->willReturnMap([
             [Adapter::class, $adapter],
             [AndroidInstallations::class, $androidInstallations],
-            [Attachments::class, $attachments],
             [ClientConfig::class, $clientConfig],
             [ClientsAndGroups::class, $clientsAndGroups],
             [ClientSystemInfo::class, $clientSystemInfo],
@@ -1098,11 +1091,6 @@ class ClientManagerTest extends AbstractTestCase
         $clientConfig = $this->createMock(ClientConfig::class);
         $clientConfig->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
-        $attachments = $this->createMock('Database\Table\Attachments');
-        $attachments->expects($this->once())->method('delete')->with(
-            array('id_dde' => 4, 'table_name' => \Database\Table\Attachments::OBJECT_TYPE_CLIENT)
-        );
-
         $itemManager = $this->createMock('Model\Client\ItemManager');
         $itemManager->expects($this->once())->method('deleteItems')->with(4);
 
@@ -1116,7 +1104,6 @@ class ClientManagerTest extends AbstractTestCase
             [NetworkDevicesScanned::class, static::$serviceManager->get(NetworkDevicesScanned::class)],
             [NetworkInterfaces::class, static::$serviceManager->get(NetworkInterfaces::class)],
             [AndroidInstallations::class, $androidInstallations],
-            [Attachments::class, $attachments],
             [ClientConfig::class, $clientConfig],
             [ClientsAndGroups::class, $clientsAndGroups],
             [ClientSystemInfo::class, $clientSystemInfo],
