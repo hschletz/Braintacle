@@ -4,6 +4,7 @@ namespace Braintacle\Template;
 
 use Braintacle\Template\Function\AssetUrlFunction;
 use Braintacle\Template\Function\CsrfTokenFunction;
+use Braintacle\Template\Function\OptionFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
 use Braintacle\Template\Function\TranslateFunction;
 use ErrorException;
@@ -20,6 +21,7 @@ class TemplateEngine
         TemplateLoader $templateLoader,
         AssetUrlFunction $assetUrlFunction,
         CsrfTokenFunction $csrfTokenFunction,
+        OptionFunction $optionFunction,
         PathForRouteFunction $pathForRouteFunction,
         TranslateFunction $translateFunction,
     ) {
@@ -28,6 +30,7 @@ class TemplateEngine
 
         $engine->addFunction('assetUrl', $assetUrlFunction);
         $engine->addFunction('csrfToken', $csrfTokenFunction);
+        $engine->addFunction('option', $optionFunction);
         $engine->addFunction('pathForRoute', $pathForRouteFunction);
         $engine->addFunction('translate', $translateFunction);
     }

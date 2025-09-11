@@ -4,6 +4,7 @@ namespace Braintacle\Test\Template\Function;
 
 use Braintacle\Template\Function\AssetUrlFunction;
 use Braintacle\Template\Function\CsrfTokenFunction;
+use Braintacle\Template\Function\OptionFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
 use Braintacle\Template\Function\TranslateFunction;
 use Braintacle\Template\TemplateEngine;
@@ -42,6 +43,7 @@ class TemplateEngineTest extends TestCase
         $templateLoader = $this->createStub(TemplateLoader::class);
         $assetUrlFunction = $this->createStub(AssetUrlFunction::class);
         $csrfTokenFunction = $this->createStub(CsrfTokenFunction::class);
+        $optionFunction = $this->createStub(OptionFunction::class);
         $pathForRouteFunction = $this->createStub(PathForRouteFunction::class);
         $translateFunction = $this->createStub(TranslateFunction::class);
 
@@ -51,6 +53,7 @@ class TemplateEngineTest extends TestCase
         $engine->shouldReceive('setLoader')->once()->with($templateLoader);
         $engine->shouldReceive('addFunction')->once()->with('assetUrl', $assetUrlFunction);
         $engine->shouldReceive('addFunction')->once()->with('csrfToken', $csrfTokenFunction);
+        $engine->shouldReceive('addFunction')->once()->with('option', $optionFunction);
         $engine->shouldReceive('addFunction')->once()->with('pathForRoute', $pathForRouteFunction);
         $engine->shouldReceive('addFunction')->once()->with('translate', $translateFunction);
 
@@ -62,6 +65,7 @@ class TemplateEngineTest extends TestCase
             $templateLoader,
             $assetUrlFunction,
             $csrfTokenFunction,
+            $optionFunction,
             $pathForRouteFunction,
             $translateFunction,
         );
@@ -74,6 +78,7 @@ class TemplateEngineTest extends TestCase
             $this->createStub(TemplateLoader::class),
             $this->createStub(AssetUrlFunction::class),
             $this->createStub(CsrfTokenFunction::class),
+            $this->createStub(OptionFunction::class),
             $this->createStub(PathForRouteFunction::class),
             $this->createStub(TranslateFunction::class),
         );

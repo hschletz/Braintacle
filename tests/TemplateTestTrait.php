@@ -4,6 +4,7 @@ namespace Braintacle\Test;
 
 use Braintacle\Template\Function\AssetUrlFunction;
 use Braintacle\Template\Function\CsrfTokenFunction;
+use Braintacle\Template\Function\OptionFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
 use Braintacle\Template\Function\TranslateFunction;
 use Braintacle\Template\TemplateEngine;
@@ -31,6 +32,7 @@ trait TemplateTestTrait
             new TemplateLoader(InstalledVersions::getRootPackage()['install_path'] . 'templates'),
             $templateFunctions[AssetUrlFunction::class] ?? $this->createStub(AssetUrlFunction::class),
             $templateFunctions[CsrfTokenFunction::class] ?? $this->createCsrfTokenFunctionStub(),
+            $templateFunctions[OptionFunction::class] ?? $this->createStub(OptionFunction::class),
             $templateFunctions[PathForRouteFunction::class] ?? $this->createPathForRouteFunctionStub(),
             $templateFunctions[TranslateFunction::class] ?? $this->createTranslateFunctionStub(),
         );

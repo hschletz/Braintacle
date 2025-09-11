@@ -25,16 +25,13 @@ use Braintacle\Http\RouteHelper;
 /** @var RouteHelper */
 $routeHelper = $this->routeHelper;
 
-foreach (array('error', 'success') as $namespace) {
-    $messages = $this->flashMessenger()->getMessagesFromNamespace($namespace);
-    if ($messages) {
-        print $this->htmlList(
-            $messages,
-            false,
-            array('class' => $namespace),
-            false
-        );
-    }
+if ($this->successMessages) {
+    print $this->htmlList(
+        $this->successMessages,
+        false,
+        ['class' => 'success'],
+        false
+    );
 }
 
 // Column headers

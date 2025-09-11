@@ -12,16 +12,6 @@ msgstr ""
 msgid "The information was successfully updated."
 msgstr ""
 
-#: module/Console/Controller/ClientController.php
-#, php-format
-msgid "Client '%s' was successfully deleted."
-msgstr ""
-
-#: module/Console/Controller/ClientController.php
-#, php-format
-msgid "Client '%s' could not be deleted."
-msgstr ""
-
 #: module/Console/Controller/PackageController.php
 #, php-format
 msgid "Package '%s' was successfully created."
@@ -146,24 +136,6 @@ msgstr ""
 #: templates/Pages/Client/Header.latte
 #: templates/Pages/Group/Header.latte
 msgid "Delete"
-msgstr ""
-
-#: module/Console/Form/DeleteClient.php
-msgid "Delete interfaces from network listing"
-msgstr ""
-
-#: module/Console/Form/DeleteClient.php
-#: module/Library/View/Helper/FormYesNo.php
-#: templates/DialogButtons.latte
-#: templates/Forms/ClientConfig.latte
-msgid "Yes"
-msgstr ""
-
-#: module/Console/Form/DeleteClient.php
-#: module/Library/View/Helper/FormYesNo.php
-#: templates/DialogButtons.latte
-#: templates/Forms/ClientConfig.latte
-msgid "No"
 msgstr ""
 
 #: module/Console/Form/Import.php
@@ -1004,11 +976,6 @@ msgstr ""
 msgid "Define fields"
 msgstr ""
 
-#: module/Console/views/console/client/delete.php
-#, php-format
-msgid "Client '%s' will be permanently deleted. Continue?"
-msgstr ""
-
 #: module/Console/views/console/client/display.php
 msgid "Chipset"
 msgstr ""
@@ -1485,6 +1452,23 @@ msgstr ""
 msgid "'%value%' is not a valid product key"
 msgstr ""
 
+#: module/Library/View/Helper/FormYesNo.php
+#: templates/DialogButtons.latte
+#: templates/Forms/ClientConfig.latte
+msgid "Yes"
+msgstr ""
+
+#: module/Library/View/Helper/FormYesNo.php
+#: templates/DialogButtons.latte
+#: templates/Forms/ClientConfig.latte
+msgid "No"
+msgstr ""
+
+#: src/Client/DeleteClientHandler.php
+#, php-format
+msgid "Client '%s' was successfully deleted."
+msgstr ""
+
 #: src/Duplicates/AllowDuplicatesHandler.php
 #, php-format
 msgid "'%s' is no longer considered duplicate."
@@ -1731,6 +1715,14 @@ msgstr ""
 
 #: templates/Pages/Client/Header.latte
 msgid "Export"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
+msgid "Client '%s' will be permanently deleted. Continue?"
+msgstr ""
+
+#: templates/Pages/Client/Header.latte
+msgid "Delete interfaces from network listing"
 msgstr ""
 
 #: templates/Pages/Client/Packages.latte

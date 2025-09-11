@@ -2,6 +2,7 @@
 
 namespace Braintacle\Test\Client;
 
+use Braintacle\Template\Function\OptionFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Template\TemplateLoader;
@@ -56,7 +57,6 @@ class ClientHeaderTemplateTest extends TestCase
         $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientGroups/?id=42"][text()="_Groups"]');
         $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientConfiguration/?id=42"][text()="_Configuration"]');
         $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="export/?id=42"][text()="_Export"]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="deleteClient/?id=42"][text()="_Delete"]');
     }
 
     public function testMenuEntriesForNonWindowsClients()
@@ -85,24 +85,28 @@ class ClientHeaderTemplateTest extends TestCase
         $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientGroups/?id=42"][text()="_Groups"]');
         $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="showClientConfiguration/?id=42"][text()="_Configuration"]');
         $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="export/?id=42"][text()="_Export"]');
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="deleteClient/?id=42"][text()="_Delete"]');
     }
 
-    public function testLegacyRoutes()
+    public function testNavigationRoutes()
     {
         $client = new Client();
         $client->id = 42;
         $client->name = 'name';
         $client->windows = null;
 
-        $pathForRouteFunction = $this->createMock(PathForRouteFunction::class);
-        $pathForRouteFunction->method('__invoke')
-            ->with($this->anything(), [], ['id' => 42])
+        $pathForRouteFunction = $this->createStub(PathForRouteFunction::class);
+        $pathForRouteFunction
+            ->method('__invoke')
             ->willReturnCallback(function (string $route, array $routeArguments, array $queryParams) {
-                if ($routeArguments) {
-                    $this->fail('pathForRoute() should not have been called with route arguments');
+                if (!$routeArguments && $route == 'showClientGeneral') {
+                    // simulate missing route argument, caught in template
+                    throw new Exception('missing Route argument');
+                } elseif ($routeArguments) {
+                    return "/client/{$routeArguments['id']}/$route";
+                } elseif ($queryParams) {
+                    return "/client/$route?id=" . $queryParams['id'];
                 } else {
-                    return '/route?id=' . $queryParams['id'];
+                    return $route; // not evaluated in this test
                 }
             });
 
@@ -112,32 +116,8 @@ class ClientHeaderTemplateTest extends TestCase
         $content = $engine->render(self::Template, ['client' => $client, 'currentAction' => '']);
         $xPath = $this->createXpath($content);
 
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/route?id=42"]');
-    }
-
-    public function testRouteArguments()
-    {
-        $client = new Client();
-        $client->id = 42;
-        $client->name = 'name';
-        $client->windows = null;
-
-        $pathForRouteFunction = $this->createMock(PathForRouteFunction::class);
-        $pathForRouteFunction->method('__invoke')->willReturnCallback(function (string $route, array $routeArguments) {
-            if ($routeArguments) {
-                return '/client/42/route';
-            } else {
-                throw new Exception(); // First invocation is without route arguments
-            }
-        });
-
-        $engine = $this->createTemplateEngine([
-            PathForRouteFunction::class => $pathForRouteFunction,
-        ]);
-        $content = $engine->render(self::Template, ['client' => $client, 'currentAction' => '']);
-        $xPath = $this->createXpath($content);
-
-        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/client/42/route"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/client/42/showClientGeneral"]');
+        $this->assertXpathMatches($xPath, self::Prefix . '/a[@href="/client/showClientStorage?id=42"]');
     }
 
     public function testActiveRoute()
@@ -166,5 +146,70 @@ class ClientHeaderTemplateTest extends TestCase
         $xPath = $this->createXpath($content);
 
         $this->assertXpathCount(1, $xPath, self::Prefix . '//a[@download]');
+    }
+
+    public function testDeleteRoute()
+    {
+        $client = new Client();
+        $client->id = 42;
+        $client->name = 'name';
+        $client->windows = null;
+
+        $engine = $this->createTemplateEngine();
+        $content = $engine->render(self::Template, ['client' => $client, 'currentAction' => '']);
+        $xPath = $this->createXpath($content);
+
+        $this->assertXpathMatches($xPath, '//dialog[@data-action="deleteClient/id=42?"]');
+    }
+
+    public function testDeleteMessage()
+    {
+        $client = new Client();
+        $client->id = 42;
+        $client->name = 'client_name';
+        $client->windows = null;
+
+        $engine = $this->createTemplateEngine();
+        $content = $engine->render(self::Template, ['client' => $client, 'currentAction' => '']);
+        $xPath = $this->createXpath($content);
+
+        $this->assertXpathMatches(
+            $xPath,
+            '//dialog/p[text()="_Client \'client_name\' will be permanently deleted. Continue?"]',
+        );
+    }
+
+    public function testDeleteInterfacesChecked()
+    {
+        $client = new Client();
+        $client->id = 42;
+        $client->name = 'client_name';
+        $client->windows = null;
+
+        $optionFunction = $this->createMock(OptionFunction::class);
+        $optionFunction->method('__invoke')->with('defaultDeleteInterfaces')->willReturn(1);
+
+        $engine = $this->createTemplateEngine([OptionFunction::class => $optionFunction]);
+        $content = $engine->render(self::Template, ['client' => $client, 'currentAction' => '']);
+        $xPath = $this->createXpath($content);
+
+        $this->assertXpathMatches($xPath, '//dialog/label/input[@type="checkbox"][@checked]');
+    }
+
+    public function testDeleteInterfacesNotChecked()
+    {
+        $client = new Client();
+        $client->id = 42;
+        $client->name = 'client_name';
+        $client->windows = null;
+
+        $optionFunction = $this->createMock(OptionFunction::class);
+        $optionFunction->method('__invoke')->with('defaultDeleteInterfaces')->willReturn(0);
+
+        $engine = $this->createTemplateEngine([OptionFunction::class => $optionFunction]);
+        $content = $engine->render(self::Template, ['client' => $client, 'currentAction' => '']);
+        $xPath = $this->createXpath($content);
+
+        $this->assertXpathMatches($xPath, '//dialog/label/input[@type="checkbox"][not(@checked)]');
     }
 }

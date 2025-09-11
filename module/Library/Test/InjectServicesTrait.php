@@ -7,6 +7,7 @@ use Braintacle\I18n\Translator;
 use Braintacle\Legacy\I18nTranslator;
 use Braintacle\Template\Function\AssetUrlFunction;
 use Braintacle\Template\Function\CsrfTokenFunction;
+use Braintacle\Template\Function\OptionFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
 use Braintacle\Template\Function\TranslateFunction;
 use Braintacle\Template\TemplateEngine;
@@ -58,6 +59,9 @@ trait InjectServicesTrait
         /** @var Mock|CsrfTokenFunction */
         $csrfTokenFunction = Mockery::mock(CsrfTokenFunction::class);
 
+        $optionFunction = Mockery::mock(OptionFunction::class);
+        $optionFunction->shouldReceive('__invoke')->andReturn(0); // never evaluated in this testsuite
+
         /** @var Mock|PathForRouteFunction */
         $pathForRouteFunction = Mockery::mock(PathForRouteFunction::class);
         $pathForRouteFunction->shouldReceive('__invoke')->andReturnUsing(
@@ -81,6 +85,7 @@ trait InjectServicesTrait
             new TemplateLoader($rootPath . '/templates'),
             $assetUrlFunction,
             $csrfTokenFunction,
+            $optionFunction,
             $pathForRouteFunction,
             new TranslateFunction($translator),
         );

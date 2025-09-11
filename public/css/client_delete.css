@@ -1,0 +1,8 @@
+#dialog_deleteClient {
+    label {
+        display: flex;
+        margin-bottom: 3ex;
+        align-items: end;
+        justify-self: center;
+    }
+}

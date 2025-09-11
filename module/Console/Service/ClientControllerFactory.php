@@ -22,6 +22,7 @@
 
 namespace Console\Service;
 
+use Braintacle\FlashMessages;
 use Braintacle\Http\RouteHelper;
 
 /**
@@ -38,6 +39,7 @@ class ClientControllerFactory implements \Laminas\ServiceManager\Factory\Factory
         ?array $options = null
     ) {
         return new \Console\Controller\ClientController(
+            $container->get(FlashMessages::class),
             $container->get(RouteHelper::class),
             $container->get('Model\Client\ClientManager'),
             $container->get('Model\Registry\RegistryManager'),

@@ -22,13 +22,13 @@
 
 namespace Console\Test\Controller;
 
+use Braintacle\FlashMessages;
 use Braintacle\Http\RouteHelper;
 use Console\Form\Import;
 use Console\Form\ProductKey;
 use Console\Form\Search as SearchForm;
 use Console\Mvc\Controller\Plugin\PrintForm;
 use Console\Test\AbstractControllerTestCase;
-use Console\View\Helper\Form\ClientConfig;
 use Console\View\Helper\Form\Search as SearchHelper;
 use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Text;
@@ -129,6 +129,10 @@ class ClientControllerTest extends AbstractControllerTestCase
         $serviceManager->setService('Model\Registry\RegistryManager', $this->_registryManager);
         $serviceManager->setService('Model\SoftwareManager', $this->_softwareManager);
 
+        $flashMessages = $this->createStub(FlashMessages::class);
+        $flashMessages->method('get')->willReturn([]);
+        $serviceManager->setService(FlashMessages::class, $flashMessages);
+
         $routeHelper = $this->createStub(RouteHelper::class);
         $routeHelper->method('getPathForRoute')->willReturnCallback(
             fn($name, $routeArguments) => "{$name}/{$routeArguments['id']}"
@@ -137,7 +141,6 @@ class ClientControllerTest extends AbstractControllerTestCase
 
         $formManager = $serviceManager->get('FormElementManager');
         $formManager->setService('Console\Form\CustomFields', $this->createMock('Console\Form\CustomFields'));
-        $formManager->setService('Console\Form\DeleteClient', $this->createMock('Console\Form\DeleteClient'));
         $formManager->setService('Console\Form\Import', $this->createMock(Import::class));
         $formManager->setService('Console\Form\ProductKey', $this->createMock('Console\Form\ProductKey'));
         $formManager->setService('Console\Form\Search', $this->createMock('Console\Form\Search'));
@@ -750,19 +753,17 @@ class ClientControllerTest extends AbstractControllerTestCase
 
     public function testIndexActionMessages()
     {
-        $flashMessenger = $this->createMock(FlashMessenger::class);
-        $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
-        $flashMessenger->method('__call')->willReturnMap([
-            ['getMessagesFromNamespace', ['error'], ['error']],
-            ['getMessagesFromNamespace', ['success'], ['success']],
-        ]);
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
+        $flashMessages = $this->createMock(FlashMessages::class);
+        $flashMessages->method('get')->with(FlashMessages::Success)->willReturn(['successMessage']);
+
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService(FlashMessages::class, $flashMessages);
 
         $this->_clientManager->expects($this->once())->method('getClients')->willReturn(array());
-        $this->disableTranslator();
+
         $this->dispatch('/console/client/index/');
-        $this->assertXpathQuery('//ul[@class="error"]/li[text()="error"]');
-        $this->assertXpathQuery('//ul[@class="success"]/li[text()="success"]');
+        $this->assertXpathQuery('//ul[@class="success"]/li[text()="successMessage"]');
     }
 
     public function testWindowsActionGet()
@@ -1928,101 +1929,6 @@ class ClientControllerTest extends AbstractControllerTestCase
         $this->assertContains(
             'Die Informationen wurden aktualisiert.',
             $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
-        );
-    }
-
-    public function testDeleteActionGet()
-    {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\DeleteClient');
-        $form->expects($this->once())
-            ->method('render')
-            ->will($this->returnValue('<form></form>'));
-        $map = array(
-            array('Name', 'name'),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
-
-        $this->_clientManager->method('getClient')->willReturn($client);
-        $this->_clientManager->expects($this->never())->method('deleteClient');
-
-        $this->dispatch('/console/client/delete/?id=1');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains(
-            '//p[@class="textcenter"]',
-            "\nClient 'name' wird dauerhaft gelöscht. Fortfahren?\n"
-        );
-        $this->assertXPathQuery('//form');
-    }
-
-    public function testDeleteActionPostNo()
-    {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\DeleteClient');
-        $form->expects($this->never())
-            ->method('render');
-        $map = array(
-            array('Id', 1),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
-
-        $this->_clientManager->method('getClient')->willReturn($client);
-        $this->_clientManager->expects($this->never())->method('deleteClient');
-
-        $this->dispatch('/console/client/delete/?id=1', 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/client/general/?id=1');
-    }
-
-    public function testDeleteActionPostYesDeleteInterfacesSuccess()
-    {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\DeleteClient');
-        $form->expects($this->never())
-            ->method('render');
-        $map = array(
-            array('Name', 'name'),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
-
-        $this->_clientManager->method('getClient')->willReturn($client);
-        $this->_clientManager->expects($this->once())->method('deleteClient')->with($client, true);
-
-        $postData = array('yes' => 'Yes', 'DeleteInterfaces' => '1');
-        $this->dispatch('/console/client/delete/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/client/index/');
-        $flashMessenger = $this->getControllerPlugin('FlashMessenger');
-        $this->assertEquals(
-            ["Client 'name' wurde erfolgreich gelöscht."],
-            $flashMessenger->getCurrentSuccessMessages()
-        );
-        $this->assertEmpty($flashMessenger->getCurrentErrorMessages());
-    }
-
-    public function testDeleteActionPostYesKeepInterfacesError()
-    {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\DeleteClient');
-        $form->expects($this->never())
-            ->method('render');
-        $map = array(
-            array('Name', 'name'),
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->method('offsetGet')->will($this->returnValueMap($map));
-
-        $this->_clientManager->method('getClient')->willReturn($client);
-        $this->_clientManager->expects($this->once())
-            ->method('deleteClient')
-            ->with($client, false)
-            ->willThrowException(new \RuntimeException());
-
-        $postData = array('yes' => 'Yes', 'DeleteInterfaces' => '0');
-        $this->dispatch('/console/client/delete/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/client/index/');
-        $flashMessenger = $this->getControllerPlugin('FlashMessenger');
-        $this->assertEmpty($flashMessenger->getCurrentSuccessMessages());
-        $this->assertEquals(
-            ["Client 'name' konnte nicht gelöscht werden."],
-            $flashMessenger->getCurrentErrorMessages()
         );
     }
 

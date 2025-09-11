@@ -75,7 +75,7 @@ class GroupsPageHanderTest extends TestCase
 
         $this->assertNotXpathMatches($xPath, '//h2');
         $this->assertNotXpathMatches($xPath, '//table');
-        $this->assertNotXpathMatches($xPath, '//form');
+        $this->assertNotXpathMatches($xPath, '//form[contains(@class, "form_groupmemberships")]');
     }
 
     public function testOnlyExcluded()
@@ -94,7 +94,7 @@ class GroupsPageHanderTest extends TestCase
         $this->assertXpathMatches($xPath, '//h2[text()="_Manage memberships"]');
         $this->assertXpathCount(1, $xPath, '//h2');
         $this->assertNotXpathMatches($xPath, '//table');
-        $this->assertXpathMatches($xPath, '//form');
+        $this->assertXpathMatches($xPath, '//form[contains(@class, "form_groupmemberships")]');
     }
 
     public function testMembers()
@@ -124,7 +124,7 @@ class GroupsPageHanderTest extends TestCase
         $this->assertXpathMatches($xPath, '//tr[3]/td[2][text()="_manual"]');
 
         $this->assertXpathMatches($xPath, '//h2[text()="_Manage memberships"]');
-        $this->assertXpathMatches($xPath, '//form');
+        $this->assertXpathMatches($xPath, '//form[contains(@class, "form_groupmemberships")]');
     }
 
     public function testForm()

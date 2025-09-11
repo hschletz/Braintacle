@@ -22,6 +22,7 @@
 
 namespace Console\Controller;
 
+use Braintacle\FlashMessages;
 use Braintacle\Http\RouteHelper;
 use Console\View\Helper\Form\Search;
 use Laminas\Stdlib\RequestInterface;
@@ -63,6 +64,7 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
     protected $_currentClient;
 
     public function __construct(
+        private FlashMessages $flashMessages,
         private RouteHelper $routeHelper,
         \Model\Client\ClientManager $clientManager,
         \Model\Registry\RegistryManager $registryManager,
@@ -199,6 +201,7 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
         $vars['isCustomSearch'] = $isCustomSearch;
         $vars['columns'] = $columns;
         $vars['routeHelper'] = $this->routeHelper;
+        $vars['successMessages'] = $this->flashMessages->get(FlashMessages::Success);
 
         return $vars;
     }
@@ -357,46 +360,6 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
             'client' => $this->_currentClient,
             'form' => $form
         );
-    }
-
-    /**
-     * Delete client, display confirmation form
-     *
-     * @return array|\Laminas\Http\Response [client, form (Console\Form\DeleteClient)] or redirect response
-     */
-    public function deleteAction()
-    {
-        $form = $this->_formManager->get('Console\Form\DeleteClient');
-        if ($this->getRequest()->isPost()) {
-            if ($this->params()->fromPost('yes')) {
-                $name = $this->_currentClient['Name'];
-                try {
-                    $this->_clientManager->deleteClient(
-                        $this->_currentClient,
-                        (bool) $this->params()->fromPost('DeleteInterfaces')
-                    );
-                    $this->flashMessenger()->addSuccessMessage(
-                        sprintf($this->_("Client '%s' was successfully deleted."), $name)
-                    );
-                } catch (\RuntimeException $e) {
-                    $this->flashMessenger()->addErrorMessage(
-                        sprintf($this->_("Client '%s' could not be deleted."), $name)
-                    );
-                }
-                return $this->redirectToRoute('client', 'index');
-            } else {
-                return $this->redirectToRoute(
-                    'client',
-                    'general',
-                    array('id' => $this->_currentClient['Id'])
-                );
-            }
-        } else {
-            return array(
-                'client' => $this->_currentClient,
-                'form' => $form
-            );
-        }
     }
 
     /**

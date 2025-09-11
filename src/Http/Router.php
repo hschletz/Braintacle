@@ -45,6 +45,7 @@ class Router
             $group->get('/client/{id}/bios', Client\SubPage\Bios::class)->setName('showClientBios');
             $group->get('/client/{id}/configuration', Client\Configuration\ShowConfigurationHandler::class)->setName('showClientConfiguration');
             $group->post('/client/{id}/configuration', Client\Configuration\SetConfigurationHandler::class)->setName('setClientConfiguration');
+            $group->delete('/client/{id}/delete', Client\DeleteClientHandler::class)->setName('deleteClient');
             $group->get('/client/{id}/export', Client\ExportHandler::class)->setName('export');
             $group->get('/client/{id}/general', Client\SubPage\General::class)->setName('showClientGeneral');
             $group->get('/client/{id}/groups', Client\Groups\GroupsPageHandler::class)->setName('showClientGroups');
@@ -77,7 +78,6 @@ class Router
             // legacy methods.
             $group->get('/console/accounts/index', ApplicationBridge::class)->setName('preferencesUsersList');
             $group->get('/console/client/customfields', ApplicationBridge::class)->setName('showClientCustomFields');
-            $group->get('/console/client/delete', ApplicationBridge::class)->setName('deleteClient');
             $group->get('/console/client/display', ApplicationBridge::class)->setName('showClientDisplay');
             $group->get('/console/client/import', ApplicationBridge::class)->setName('importPage');
             $group->get('/console/client/index', ApplicationBridge::class)->setName('clientList');

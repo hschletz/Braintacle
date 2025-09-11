@@ -12,16 +12,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: module/Console/Controller/ClientController.php
-#, php-format
-msgid "Client '%s' could not be deleted."
-msgstr "Client '%s' konnte nicht gelöscht werden."
-
-#: module/Console/Controller/ClientController.php
-#, php-format
-msgid "Client '%s' was successfully deleted."
-msgstr "Client '%s' wurde erfolgreich gelöscht."
-
-#: module/Console/Controller/ClientController.php
 msgid "The information was successfully updated."
 msgstr "Die Informationen wurden aktualisiert."
 
@@ -149,22 +139,6 @@ msgstr "Text"
 #: templates/Pages/Group/AddToGroup.latte
 msgid "The name already exists"
 msgstr "Der Name existiert bereits"
-
-#: module/Console/Form/DeleteClient.php
-msgid "Delete interfaces from network listing"
-msgstr "Interfaces aus Netzwerkliste löschen"
-
-#: module/Console/Form/DeleteClient.php
-#: module/Library/View/Helper/FormYesNo.php templates/DialogButtons.latte
-#: templates/Forms/ClientConfig.latte
-msgid "No"
-msgstr "Nein"
-
-#: module/Console/Form/DeleteClient.php
-#: module/Library/View/Helper/FormYesNo.php templates/DialogButtons.latte
-#: templates/Forms/ClientConfig.latte
-msgid "Yes"
-msgstr "Ja"
 
 #: module/Console/Form/Import.php
 msgid "File (*.ocs, *.xml)"
@@ -950,11 +924,6 @@ msgstr "Bearbeiten"
 msgid "Define fields"
 msgstr "Felder definieren"
 
-#: module/Console/views/console/client/delete.php
-#, php-format
-msgid "Client '%s' will be permanently deleted. Continue?"
-msgstr "Client '%s' wird dauerhaft gelöscht. Fortfahren?"
-
 #: module/Console/views/console/client/display.php
 msgid "Chipset"
 msgstr "Chipsatz"
@@ -1434,6 +1403,21 @@ msgstr "'%value%' ist in der Liste ungültiger Werte"
 msgid "'%value%' is not a valid product key"
 msgstr "'%value%' ist kein gültiger Lizenzschlüssel"
 
+#: module/Library/View/Helper/FormYesNo.php templates/DialogButtons.latte
+#: templates/Forms/ClientConfig.latte
+msgid "No"
+msgstr "Nein"
+
+#: module/Library/View/Helper/FormYesNo.php templates/DialogButtons.latte
+#: templates/Forms/ClientConfig.latte
+msgid "Yes"
+msgstr "Ja"
+
+#: src/Client/DeleteClientHandler.php
+#, php-format
+msgid "Client '%s' was successfully deleted."
+msgstr "Client '%s' wurde erfolgreich gelöscht."
+
 #: src/Duplicates/AllowDuplicatesHandler.php
 #, php-format
 msgid "'%s' is no longer considered duplicate."
@@ -1625,9 +1609,17 @@ msgstr "nie"
 msgid "BIOS"
 msgstr "BIOS"
 
+#: templates/Pages/Client/Header.latte
+msgid "Client '%s' will be permanently deleted. Continue?"
+msgstr "Client '%s' wird dauerhaft gelöscht. Fortfahren?"
+
 #: templates/Pages/Client/Header.latte templates/Pages/Group/Header.latte
 msgid "Configuration"
 msgstr "Konfiguration"
+
+#: templates/Pages/Client/Header.latte
+msgid "Delete interfaces from network listing"
+msgstr "Interfaces aus Netzwerkliste löschen"
 
 #: templates/Pages/Client/Header.latte
 msgid "Details for client '%s'"
@@ -1866,6 +1858,3 @@ msgstr "neu oder nicht kategorisiert"
 #: templates/Pages/Software.latte
 msgid "selected for display"
 msgstr "für Anzeige ausgewählt"
-
-#~ msgid "The requested group does not exist."
-#~ msgstr "Die angeforderte Gruppe existiert nicht."

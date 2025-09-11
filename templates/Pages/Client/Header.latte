@@ -13,6 +13,9 @@
     </li>
 {/define}
 
+<link rel="stylesheet" href="{assetUrl('css/client_delete.css')}">
+<script type="module" src="{assetUrl('js/client_delete.js')}"></script>
+
 <h1>{translate("Details for client '%s'", $client->name)}</h1>
 
 <ul class="navigation navigation_details">
@@ -38,5 +41,20 @@
     {include navigationItem, 'groups', translate('Groups'), 'showClientGroups'}
     {include navigationItem, 'configuration', translate('Configuration'), 'showClientConfiguration'}
     {include navigationItem, 'export', translate('Export'), 'export'}
-    {include navigationItem, 'delete', translate('Delete'), 'deleteClient'}
+    <li>
+        <button type="button" id="button_deleteClient" class="linkstyle">{translate('Delete')}</button>
+    </li>
 </ul>
+
+<dialog
+    id="dialog_deleteClient"
+    data-action="{pathForRoute(deleteClient, [id: $client->id])}"
+    data-redirect="{pathForRoute(clientList)}"
+>
+    <p>{translate("Client '%s' will be permanently deleted. Continue?", $client->name)}</p>
+    <label>
+        <input type="checkbox" n:attr="checked: (bool) option(defaultDeleteInterfaces)">
+        {translate('Delete interfaces from network listing')}
+    </label>
+    {include ../../DialogButtons.latte}
+</dialog>
