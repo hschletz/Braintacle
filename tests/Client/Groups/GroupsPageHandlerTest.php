@@ -23,7 +23,7 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(GroupsPageHandler::class)]
 #[UsesClass(TemplateEngine::class)]
 #[UsesClass(TemplateLoader::class)]
-class GroupsPageHanderTest extends TestCase
+class GroupsPageHandlerTest extends TestCase
 {
     use DomMatcherTrait;
     use HttpHandlerTestTrait;
