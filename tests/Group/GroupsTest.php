@@ -4,11 +4,11 @@ namespace Braintacle\Test\Group;
 
 use Braintacle\Database\Migration;
 use Braintacle\Database\Migrations;
+use Braintacle\Database\Table;
 use Braintacle\Direction;
 use Braintacle\Group\Groups;
 use Braintacle\Group\Members\ExcludedClient;
 use Braintacle\Group\Members\ExcludedColumn;
-use Braintacle\Group\Members\Member;
 use Braintacle\Group\Members\MembersColumn;
 use Braintacle\Group\Membership;
 use Braintacle\Test\DatabaseConnection;
@@ -62,15 +62,19 @@ final class GroupsTest extends TestCase
     public function testGetMembers(MembersColumn $order, Direction $direction, int $groupId, array $expected)
     {
         DatabaseConnection::with(function (Connection $connection) use ($order, $direction, $groupId, $expected): void {
-            DatabaseConnection::initializeTable('hardware', ['id', 'deviceid', 'name', 'userid', 'lastdate'], [
-                [1, 'id1', 'name1', 'user1', '2025-03-15T17:11:14'],
-                [2, 'id2', 'name2', 'user2', '2015-08-11T14:18:50'],
-                [3, 'id3', 'name3', 'user3', '2025-03-15T17:11:14'],
-                [4, '_SYSTEMGROUP_', 'group1', null, '2025-03-15T17:11:14'],
-                [5, '_SYSTEMGROUP_', 'group2', null, '2025-03-15T17:11:14'],
-                [6, '_SYSTEMGROUP_', 'group3', null, '2025-03-15T17:11:14'],
-            ]);
-            DatabaseConnection::initializeTable('groups_cache', ['hardware_id', 'group_id', 'static'], [
+            DatabaseConnection::initializeTable(
+                Table::Groups,
+                ['id', 'deviceid', 'name', 'userid', 'lastdate'],
+                [
+                    [1, 'id1', 'name1', 'user1', '2025-03-15T17:11:14'],
+                    [2, 'id2', 'name2', 'user2', '2015-08-11T14:18:50'],
+                    [3, 'id3', 'name3', 'user3', '2025-03-15T17:11:14'],
+                    [4, '_SYSTEMGROUP_', 'group1', null, '2025-03-15T17:11:14'],
+                    [5, '_SYSTEMGROUP_', 'group2', null, '2025-03-15T17:11:14'],
+                    [6, '_SYSTEMGROUP_', 'group3', null, '2025-03-15T17:11:14'],
+                ],
+            );
+            DatabaseConnection::initializeTable(Table::GroupMemberships, ['hardware_id', 'group_id', 'static'], [
                 [1, 4, 0],
                 [1, 5, 2],
                 [2, 4, 2],
@@ -109,15 +113,19 @@ final class GroupsTest extends TestCase
             $inventoryDate = '2025-03-15T12:11:14';
             $expectedInventoryDate = new DateTimeImmutable($inventoryDate);
 
-            DatabaseConnection::initializeTable('hardware', ['id', 'deviceid', 'name', 'userid', 'lastdate'], [
-                [1, 'id1', 'name1', 'user1', '2025-03-15T17:11:14'],
-                [2, 'id2', 'name2', 'user2', $inventoryDate],
-                [3, 'id3', 'name3', 'user3', '2025-03-15T17:11:14'],
-                [4, '_SYSTEMGROUP_', 'group1', null, '2025-03-15T17:11:14'],
-                [5, '_SYSTEMGROUP_', 'group2', null, '2025-03-15T17:11:14'],
-                [6, '_SYSTEMGROUP_', 'group3', null, '2025-03-15T17:11:14'],
-            ]);
-            DatabaseConnection::initializeTable('groups_cache', ['hardware_id', 'group_id', 'static'], [
+            DatabaseConnection::initializeTable(
+                Table::Groups,
+                ['id', 'deviceid', 'name', 'userid', 'lastdate'],
+                [
+                    [1, 'id1', 'name1', 'user1', '2025-03-15T17:11:14'],
+                    [2, 'id2', 'name2', 'user2', $inventoryDate],
+                    [3, 'id3', 'name3', 'user3', '2025-03-15T17:11:14'],
+                    [4, '_SYSTEMGROUP_', 'group1', null, '2025-03-15T17:11:14'],
+                    [5, '_SYSTEMGROUP_', 'group2', null, '2025-03-15T17:11:14'],
+                    [6, '_SYSTEMGROUP_', 'group3', null, '2025-03-15T17:11:14'],
+                ],
+            );
+            DatabaseConnection::initializeTable(Table::GroupMemberships, ['hardware_id', 'group_id', 'static'], [
                 [1, 4, 0],
                 [1, 5, 2],
                 [2, 4, 2],

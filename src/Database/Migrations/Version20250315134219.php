@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Braintacle\Database\Migrations;
 
 use Braintacle\Database\Migration;
+use Braintacle\Database\Table;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 use Override;
@@ -15,17 +16,17 @@ final class Version20250315134219 extends Migration
     #[Override]
     public function getDescription(): string
     {
-        return sprintf(self::TemplateTable, 'groups_cache');
+        return sprintf(self::TemplateTable, Table::GroupMemberships);
     }
 
     #[Override]
     public function up(Schema $schema): void
     {
-        if ($this->tableExists('groups_cache')) {
+        if ($this->tableExists(Table::GroupMemberships)) {
             return;
         }
 
-        $table = $this->createTable($schema, 'groups_cache', 'Group memberships');
+        $table = $this->createTable($schema, Table::GroupMemberships, 'Group memberships');
 
         $table->addColumn('hardware_id', Types::INTEGER)->setNotnull(true);
         $table->addColumn('group_id', Types::INTEGER)->setNotnull(true);

@@ -4,6 +4,7 @@ namespace Braintacle\Test\Package;
 
 use Braintacle\Database\Migration;
 use Braintacle\Database\Migrations;
+use Braintacle\Database\Table;
 use Braintacle\Package\Assignments;
 use Braintacle\Test\DatabaseConnection;
 use Braintacle\Test\DataProcessorTestTrait;
@@ -66,7 +67,7 @@ class AssignmentsTest extends TestCase
         DatabaseConnection::with(function (Connection $connection) use ($target): void {
             $targetId = 1;
             DatabaseConnection::initializeTable(
-                'download_available',
+                Table::Packages,
                 ['fileid', 'name', 'priority', 'fragments', 'size', 'osname'],
                 [
                     [2, 'package2', 5, 0, 0, 'LINUX'],
@@ -74,7 +75,7 @@ class AssignmentsTest extends TestCase
                 ],
             );
             DatabaseConnection::initializeTable(
-                'devices',
+                Table::PackageAssignments,
                 ['hardware_id', 'name', 'ivalue', 'tvalue', 'comments'],
                 [
                     [$targetId, 'DOWNLOAD', 2, 'NOTIFIED', 'Tue Dec 30 19:01:23 2014'],
@@ -124,7 +125,7 @@ class AssignmentsTest extends TestCase
     {
         DatabaseConnection::with(function (Connection $connection) use ($target): void {
             DatabaseConnection::initializeTable(
-                'devices',
+                Table::PackageAssignments,
                 ['hardware_id', 'name', 'ivalue'],
                 [
                     [1, 'DOWNLOAD', 2],
@@ -137,7 +138,7 @@ class AssignmentsTest extends TestCase
                 ],
             );
             DatabaseConnection::initializeTable(
-                'download_available',
+                Table::Packages,
                 ['fileid', 'name', 'priority', 'fragments', 'size', 'osname'],
                 [
                     [3, 'package3', 1, 1, 1, ''],
@@ -148,7 +149,7 @@ class AssignmentsTest extends TestCase
                 ],
             );
             DatabaseConnection::initializeTable(
-                'download_history',
+                Table::PackageHistory,
                 ['hardware_id', 'pkg_id'],
                 [
                     [1, 4],
@@ -173,7 +174,7 @@ class AssignmentsTest extends TestCase
         $targetId = 23;
 
         $connection = $this->createMock(Connection::class);
-        $connection->expects($this->once())->method('insert')->with('devices', [
+        $connection->expects($this->once())->method('insert')->with(Table::PackageAssignments, [
             'hardware_id' => $targetId,
             'name' => 'DOWNLOAD',
             'ivalue' => $packageId,
@@ -216,7 +217,7 @@ class AssignmentsTest extends TestCase
             $packageId = 10;
             $targetId = 1;
 
-            DatabaseConnection::initializeTable('devices', ['hardware_id', 'name', 'ivalue'], [
+            DatabaseConnection::initializeTable(Table::PackageAssignments, ['hardware_id', 'name', 'ivalue'], [
                 [$targetId, 'DOWNLOAD', 2], // preserved because ivalue != $packageId
                 [$targetId, 'DOWNLOAD', $packageId], // deleted
                 [$targetId, 'DOWNLOAD_suffix', $packageId], // deleted
@@ -276,13 +277,17 @@ class AssignmentsTest extends TestCase
             $targetId = 1;
             $packageName = 'packageName';
 
-            DatabaseConnection::initializeTable('devices', ['hardware_id', 'name', 'ivalue', 'tvalue', 'comments'], [
-                [1, 'DOWNLOAD', 1, 'SUCCESS', 'Tue Dec 30 19:02:23 2014'],
-                [1, 'DOWNLOAD', 2, 'NOTIFIED', 'Tue Dec 30 19:01:23 2014'],
-                [1, 'DOWNLOAD_FORCE', 2, '1', null],
-                [1, 'OTHER', 1, null, null],
-                [2, 'DOWNLOAD', $packageId, 'SUCCESS', 'Tue Dec 30 19:01:23 2014'],
-            ]);
+            DatabaseConnection::initializeTable(
+                Table::PackageAssignments,
+                ['hardware_id', 'name', 'ivalue', 'tvalue', 'comments'],
+                [
+                    [1, 'DOWNLOAD', 1, 'SUCCESS', 'Tue Dec 30 19:02:23 2014'],
+                    [1, 'DOWNLOAD', 2, 'NOTIFIED', 'Tue Dec 30 19:01:23 2014'],
+                    [1, 'DOWNLOAD_FORCE', 2, '1', null],
+                    [1, 'OTHER', 1, null, null],
+                    [2, 'DOWNLOAD', $packageId, 'SUCCESS', 'Tue Dec 30 19:01:23 2014'],
+                ]
+            );
 
             $package = new Package();
             $package->id = $packageId;
@@ -320,7 +325,7 @@ class AssignmentsTest extends TestCase
                 [$targetId, 'OTHER', $packageId],
                 [42, 'DOWNLOAD', $packageId],
             ];
-            DatabaseConnection::initializeTable('devices', ['hardware_id', 'name', 'ivalue'], $fixture);
+            DatabaseConnection::initializeTable(Table::PackageAssignments, ['hardware_id', 'name', 'ivalue'], $fixture);
 
             $package = new Package();
             $package->id = $packageId;
@@ -356,7 +361,7 @@ class AssignmentsTest extends TestCase
             $packageName = 'packageName';
 
             $fixture = [[$targetId, 'DOWNLOAD', $packageId]];
-            DatabaseConnection::initializeTable('devices', ['hardware_id', 'name', 'ivalue'], $fixture);
+            DatabaseConnection::initializeTable(Table::PackageAssignments, ['hardware_id', 'name', 'ivalue'], $fixture);
 
             $connectionProxy = Mockery::mock(Connection::class);
             $connectionProxy

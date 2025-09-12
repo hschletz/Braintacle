@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Braintacle\Database\Migrations;
 
 use Braintacle\Database\Migration;
+use Braintacle\Database\Table;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\View;
 use Override;
@@ -15,13 +16,13 @@ final class Version20250315135545 extends Migration
     #[Override]
     public function getDescription(): string
     {
-        return sprintf(self::TemplateView, 'clients');
+        return sprintf(self::TemplateView, Table::Clients);
     }
 
     #[Override]
     public function up(Schema $schema): void
     {
-        if ($this->viewExists('clients')) {
+        if ($this->viewExists(Table::Clients)) {
             return;
         }
 
@@ -68,7 +69,7 @@ final class Version20250315135545 extends Migration
                 'hardware_id = id'
             )->where("deviceid != '_SYSTEMGROUP_'");
 
-        $view = new View('clients', $queryBuilder->getSQL());
+        $view = new View(Table::Clients, $queryBuilder->getSQL());
         $this->sm->createView($view);
     }
 }

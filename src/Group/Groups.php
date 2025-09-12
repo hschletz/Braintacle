@@ -2,6 +2,7 @@
 
 namespace Braintacle\Group;
 
+use Braintacle\Database\Table;
 use Braintacle\Direction;
 use Braintacle\Group\Members\ExcludedClient;
 use Braintacle\Group\Members\ExcludedColumn;
@@ -16,8 +17,6 @@ use Model\Group\Group;
  */
 final class Groups
 {
-    private const TableClients = 'clients';
-    private const TableMemberships = 'groups_cache';
     private const ColumnClientId = 'id';
     private const ColumnClientFK = 'hardware_id';
     private const ColumnGroupId = 'group_id';
@@ -45,8 +44,8 @@ final class Groups
                 MembersColumn::cases()
             )
         );
-        $select->from(self::TableClients, 'c');
-        $select->innerJoin('c', self::TableMemberships, 'm', $expr->eq(self::ColumnClientFK, self::ColumnClientId));
+        $select->from(Table::Clients, 'c');
+        $select->innerJoin('c', Table::GroupMemberships, 'm', $expr->eq(self::ColumnClientFK, self::ColumnClientId));
         $select->where($expr->eq(self::ColumnGroupId, $queryBuilder->createPositionalParameter($group->id)));
         $select->andWhere(
             $expr->in(
@@ -75,8 +74,8 @@ final class Groups
                 ExcludedColumn::cases()
             )
         );
-        $select->from(self::TableClients, 'c');
-        $select->innerJoin('c', self::TableMemberships, 'm', $expr->eq(self::ColumnClientFK, self::ColumnClientId));
+        $select->from(Table::Clients, 'c');
+        $select->innerJoin('c', Table::GroupMemberships, 'm', $expr->eq(self::ColumnClientFK, self::ColumnClientId));
         $select->where($expr->eq(self::ColumnGroupId, $queryBuilder->createPositionalParameter($group->id)));
         $select->andWhere($expr->eq(self::ColumnMembershipType, Membership::Never->value));
         $select->orderBy($order->value, $direction->value);

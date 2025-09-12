@@ -2,6 +2,7 @@
 
 namespace Braintacle\Package;
 
+use Braintacle\Database\Table;
 use Doctrine\DBAL\Connection;
 use Formotron\DataProcessor;
 use Model\Client\Client;
@@ -14,10 +15,6 @@ use Throwable;
 
 final class Assignments
 {
-    private const TableAssignments = 'devices';
-    private const TablePackages = 'download_available';
-    private const TableHistory = 'download_history';
-
     private const Target = 'hardware_id';
     private const Action = 'name';
     private const PackageId = 'ivalue';
@@ -47,8 +44,8 @@ final class Assignments
         $expr = $queryBuilder->expr();
         $select = $queryBuilder
             ->select('p.' . self::PackageName, self::Status, self::Timestamp)
-            ->from(self::TableAssignments, 'a')
-            ->innerJoin('a', self::TablePackages, 'p', $expr->eq('p.' . self::PackageKey, 'a.' . self::PackageId))
+            ->from(Table::PackageAssignments, 'a')
+            ->innerJoin('a', Table::Packages, 'p', $expr->eq('p.' . self::PackageKey, 'a.' . self::PackageId))
             ->where($expr->eq(self::Target, $queryBuilder->createPositionalParameter($target->id)))
             ->andWhere($expr->eq('a.' . self::Action, $queryBuilder->createPositionalParameter(self::ActionDownload)))
             ->orderBy('p.' . self::PackageName);
@@ -70,10 +67,10 @@ final class Assignments
         $expr = $queryBuilder->expr();
         $select = $queryBuilder
             ->select('p.' . self::PackageName)
-            ->from(self::TablePackages, 'p')
+            ->from(Table::Packages, 'p')
             ->leftJoin( // assigned packages
                 'p',
-                self::TableAssignments,
+                Table::PackageAssignments,
                 'a',
                 $expr->and(
                     $expr->eq(self::PackageId, self::PackageKey),
@@ -83,7 +80,7 @@ final class Assignments
             )
             ->leftJoin( // packages from history
                 'p',
-                self::TableHistory,
+                Table::PackageHistory,
                 'h',
                 $expr->and(
                     $expr->eq(self::HistoryId, self::PackageKey),
@@ -101,7 +98,7 @@ final class Assignments
     public function assignPackage(string $packageName, Client|Group $target): void
     {
         $package = $this->packageManager->getPackage($packageName);
-        $this->connection->insert(self::TableAssignments, [
+        $this->connection->insert(Table::PackageAssignments, [
             self::Target => $target->id,
             self::Action => self::ActionDownload,
             self::PackageId => $package->id,
@@ -126,7 +123,7 @@ final class Assignments
         $queryBuilder = $this->connection->createQueryBuilder();
         $expr = $queryBuilder->expr();
         $queryBuilder
-            ->delete(self::TableAssignments)
+            ->delete(Table::PackageAssignments)
             ->where($expr->eq(self::Target, $queryBuilder->createPositionalParameter($target->id)))
             ->andWhere($expr->eq(self::PackageId, $queryBuilder->createPositionalParameter($package->id)))
             ->andWhere($expr->like(self::Action, self::DeletePattern));
@@ -145,7 +142,7 @@ final class Assignments
             $expr = $queryBuilder->expr();
             $select = $queryBuilder
                 ->select('count(*)')
-                ->from(self::TableAssignments)
+                ->from(Table::PackageAssignments)
                 ->where($expr->eq(self::Target, $queryBuilder->createPositionalParameter($target->id)))
                 ->andWhere($expr->eq(self::PackageId, $queryBuilder->createPositionalParameter($package->id)))
                 ->andWhere($expr->eq(self::Action, $queryBuilder->createPositionalParameter(self::ActionDownload)));
@@ -161,12 +158,12 @@ final class Assignments
             $expr = $queryBuilder->expr();
             $select = $queryBuilder
                 ->select('count(*)')
-                ->from(self::TableAssignments)
+                ->from(Table::PackageAssignments)
                 ->where($expr->eq(self::Target, $queryBuilder->createPositionalParameter($target->id)))
                 ->andWhere($expr->eq(self::PackageId, $queryBuilder->createPositionalParameter($package->id)))
                 ->andWhere($expr->eq(self::Action, $queryBuilder->createPositionalParameter(self::ActionReset)));
             if ($select->fetchOne() != 1) {
-                $this->connection->insert(self::TableAssignments, [
+                $this->connection->insert(Table::PackageAssignments, [
                     self::Target => $target->id,
                     self::Action => self::ActionReset,
                     self::PackageId => $package->id,
@@ -176,7 +173,7 @@ final class Assignments
 
             // Reset assignment row
             $this->connection->update(
-                self::TableAssignments,
+                Table::PackageAssignments,
                 [
                     self::Status => Assignment::PENDING,
                     self::Timestamp => $this->clock->now()->format(Assignment::DATEFORMAT),

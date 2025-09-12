@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Braintacle\Database\Migrations;
 
 use Braintacle\Database\Migration;
+use Braintacle\Database\Table;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 use Override;
@@ -15,17 +16,17 @@ final class Version20250308180102 extends Migration
     #[Override]
     public function getDescription(): string
     {
-        return sprintf(self::TemplateTable, 'download_available');
+        return sprintf(self::TemplateTable, Table::Packages);
     }
 
     #[Override]
     public function up(Schema $schema): void
     {
-        if ($this->tableExists('download_available')) {
+        if ($this->tableExists(Table::Packages)) {
             return;
         }
 
-        $table = $this->createTable($schema, 'download_available', 'Packages');
+        $table = $this->createTable($schema, Table::Packages, 'Packages');
 
         $table->addColumn('fileid', Types::INTEGER)->setNotnull(true)->setComment(
             'Unix timestamp of package creation, also used as PK'
