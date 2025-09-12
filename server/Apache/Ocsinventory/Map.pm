@@ -511,21 +511,6 @@ our %DATA_MAP= (
     }
   },
 
-  itmgmt_comments => {
-    mask => 0,
-    multi => 1,
-    auto => 0,
-    delOnReplace => 0,
-    sortBy => 'DATE_INSERT',
-    writeDiff => 0,
-    cache => 0,
-    fields =>  {
-      COMMENTS => {},
-      USER_INSERT => {},
-      DATE_INSERT => {}
-    }
-  },
-
   devices => {
    mask => 0,
    multi => 1,

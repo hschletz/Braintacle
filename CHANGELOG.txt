@@ -11,9 +11,9 @@ CHANGES IN VERSION 2.0
 
 **Caveats**
 
-File attachments are dropped from the database. They were never implemented in
-Braintacle, but may be left over if the database was migrated from OCS Inventory
-NG (which is no longer supported).
+User-supplied comments and file attachments are dropped from the database. They
+were never implemented in Braintacle, but may be left over if the database was
+migrated from OCS Inventory NG (which is no longer supported).
 
 Upgrading from previous versions:
 

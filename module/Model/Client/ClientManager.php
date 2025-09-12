@@ -782,7 +782,6 @@ class ClientManager
             $tables = array(
                 'AndroidInstallations',
                 'ClientSystemInfo',
-                'Comments',
                 'CustomFields',
                 'PackageHistory',
                 'WindowsProductKeys',

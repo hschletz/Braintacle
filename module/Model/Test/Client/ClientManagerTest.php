@@ -27,7 +27,6 @@ use Database\Table\ClientConfig;
 use Database\Table\Clients;
 use Database\Table\ClientsAndGroups;
 use Database\Table\ClientSystemInfo;
-use Database\Table\Comments;
 use Database\Table\CustomFields;
 use Database\Table\GroupMemberships;
 use Database\Table\NetworkDevicesIdentified;
@@ -1016,9 +1015,6 @@ class ClientManagerTest extends AbstractTestCase
         $clientSystemInfo = $this->createMock('Database\Table\ClientSystemInfo');
         $clientSystemInfo->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
 
-        $comments = $this->createMock('Database\Table\Comments');
-        $comments->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
-
         $customFields = $this->createMock('Database\Table\CustomFields');
         $customFields->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
 
@@ -1047,7 +1043,6 @@ class ClientManagerTest extends AbstractTestCase
             [ClientConfig::class, $clientConfig],
             [ClientsAndGroups::class, $clientsAndGroups],
             [ClientSystemInfo::class, $clientSystemInfo],
-            [Comments::class, $comments],
             [CustomFields::class, $customFields],
             [GroupMemberships::class, $groupMemberships],
             [ItemManager::class, $itemManager],
@@ -1072,9 +1067,6 @@ class ClientManagerTest extends AbstractTestCase
 
         $clientSystemInfo = $this->createMock(ClientSystemInfo::class);
         $clientSystemInfo->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
-
-        $comments = $this->createMock(Comments::class);
-        $comments->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
 
         $customFields = $this->createMock(CustomFields::class);
         $customFields->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
@@ -1107,7 +1099,6 @@ class ClientManagerTest extends AbstractTestCase
             [ClientConfig::class, $clientConfig],
             [ClientsAndGroups::class, $clientsAndGroups],
             [ClientSystemInfo::class, $clientSystemInfo],
-            [Comments::class, $comments],
             [CustomFields::class, $customFields],
             [GroupMemberships::class, $groupMemberships],
             [ItemManager::class, $itemManager],

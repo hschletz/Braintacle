@@ -242,12 +242,11 @@ sub _duplicate_replace{
   ) ;
   $dbh->do("DELETE FROM hardware WHERE ID=?", {}, $device) ;
 
-  # We keep the informations of the following tables: devices, accountinfo, itmgmt_comments
+  # We keep the informations of the following tables: devices, accountinfo
   $dbh->do('DELETE FROM accountinfo WHERE HARDWARE_ID=?', {}, $DeviceID) ;
   $dbh->do('UPDATE accountinfo SET HARDWARE_ID=? WHERE HARDWARE_ID=?', {}, $DeviceID, $device) ;
   $dbh->do('DELETE FROM devices WHERE HARDWARE_ID=?', {}, $DeviceID) ;
   $dbh->do('UPDATE devices SET HARDWARE_ID=? WHERE HARDWARE_ID=?', {}, $DeviceID, $device) ;
-  $dbh->do('UPDATE itmgmt_comments SET HARDWARE_ID=? WHERE HARDWARE_ID=?', {}, $DeviceID, $device) ;
   # We keep the static inclusions/exclusions (STATIC=1|2)
   $dbh->do('UPDATE groups_cache SET HARDWARE_ID=? WHERE HARDWARE_ID=? AND (STATIC=1 OR STATIC=2)', {}, $DeviceID, $device) ;
   # The computer may not correspond to the previous dynamic groups, as its inventory could potentially change
