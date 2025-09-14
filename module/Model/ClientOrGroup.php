@@ -83,17 +83,6 @@ abstract class ClientOrGroup extends AbstractModel
         'scanSnmp',
     ];
 
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        if ($this->_lockNestCount > 1) {
-            $this->_lockNestCount = 1;
-        }
-        $this->unlock();
-    }
-
     public function setContainer(ContainerInterface $container)
     {
         $this->container = $container;
@@ -102,18 +91,20 @@ abstract class ClientOrGroup extends AbstractModel
     /**
      * Lock this object (prevent altering by server or another console user)
      *
-     * The lock will be released automatically in the destructor. It can also
-     * be released manually via unlock().
+     * Locks should be released as soon as possible. A try/finally block can
+     * prevent stale locks in case of an error. If a lock does not get released,
+     * it will expire after the configured timeout.
      *
      * Locks can be nested. If lock() is called more than once on the same
      * instance, the lock is only released after a matching number of unlock()
-     * calls or in the destructor. This does not refresh the expiry timeout -
-     * only the first lock() call sets the timeout.
+     * calls. This does not refresh the expiry timeout - only the first lock()
+     * call sets the timeout.
      *
      * The lock is implemented as a row in the "locks" table. This must be
      * accounted for when using transactions.
      *
-     * @return bool TRUE if the object could be locked (i.e. not already locked by another process)
+     * @return bool TRUE if the object could be locked (i.e. not already locked
+     * by another process)
      */
     public function lock()
     {

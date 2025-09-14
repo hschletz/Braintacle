@@ -27,13 +27,16 @@ use Database\Table\GroupInfo;
 use Database\Table\GroupMemberships;
 use DateTimeInterface;
 use Laminas\Db\Adapter\Adapter;
+use Laminas\Db\Sql\Expression;
 use Laminas\Db\Sql\Literal;
+use Laminas\Db\Sql\Predicate\NotIn;
 use Laminas\Db\Sql\Sql;
 use Model\Client\Client;
 use Model\Client\ClientManager;
 use Model\Config;
 use Psr\Clock\ClockInterface;
 use Random\Randomizer;
+use Throwable;
 
 /**
  * A group of clients
@@ -144,41 +147,43 @@ class Group extends \Model\ClientOrGroup
             while (!$this->lock()) {
                 sleep(1);
             }
-            // Get list of existing memberships
-            $existingMemberships = array();
-            $groupMemberships = $this->container->get(GroupMemberships::class);
-            $select = $groupMemberships->getSql()->select();
-            $select->columns(array('hardware_id', 'static'))->where(array('group_id' => $id));
-            foreach ($groupMemberships->selectWith($select) as $membership) {
-                $existingMemberships[$membership['hardware_id']] = $membership['static'];
-            }
-            // Insert/update membership entries
-            $connection = $groupMemberships->getAdapter()->getDriver()->getConnection();
-            $connection->beginTransaction();
             try {
-                foreach ($members as $member) {
-                    $member = $member['Id'];
-                    if (isset($existingMemberships[$member])) {
-                        // Update only memberships of a different type
-                        if ($existingMemberships[$member] != $type) {
-                            $groupMemberships->update(
-                                array('static' => $type),
-                                array('group_id' => $id, 'hardware_id' => $member)
+                // Get list of existing memberships
+                $existingMemberships = [];
+                $groupMemberships = $this->container->get(GroupMemberships::class);
+                $select = $groupMemberships->getSql()->select();
+                $select->columns(['hardware_id', 'static'])->where(['group_id' => $id]);
+                foreach ($groupMemberships->selectWith($select) as $membership) {
+                    $existingMemberships[$membership['hardware_id']] = $membership['static'];
+                }
+                // Insert/update membership entries
+                $connection = $groupMemberships->getAdapter()->getDriver()->getConnection();
+                $connection->beginTransaction();
+                try {
+                    foreach ($members as $member) {
+                        $member = $member['Id'];
+                        if (isset($existingMemberships[$member])) {
+                            // Update only memberships of a different type
+                            if ($existingMemberships[$member] != $type) {
+                                $groupMemberships->update(
+                                    ['static' => $type],
+                                    ['group_id' => $id, 'hardware_id' => $member],
+                                );
+                            }
+                        } else {
+                            $groupMemberships->insert(
+                                ['group_id' => $id, 'hardware_id' => $member, 'static' => $type]
                             );
                         }
-                    } else {
-                        $groupMemberships->insert(
-                            array('group_id' => $id, 'hardware_id' => $member, 'static' => $type)
-                        );
                     }
+                    $connection->commit();
+                } catch (Throwable $throwable) {
+                    $connection->rollBack();
+                    throw $throwable;
                 }
-                $connection->commit();
-            } catch (\Exception $exception) {
-                $connection->rollBack();
+            } finally {
                 $this->unlock();
-                throw $exception;
             }
-            $this->unlock();
         }
     }
 
@@ -207,56 +212,52 @@ class Group extends \Model\ClientOrGroup
             return; // Another process is currently updating this group.
         }
 
-        $clients = $this->container->get(Clients::class);
-        $groupInfo = $this->container->get(GroupInfo::class);
-        $groupMemberships = $this->container->get(GroupMemberships::class);
-        $config = $this->container->get(Config::class);
+        try {
+            $clients = $this->container->get(Clients::class);
+            $groupInfo = $this->container->get(GroupInfo::class);
+            $groupMemberships = $this->container->get(GroupMemberships::class);
+            $config = $this->container->get(Config::class);
 
-        // Remove dynamic memberships where client no longer meets the criteria
-        $groupMemberships->delete(
-            array(
+            // Remove dynamic memberships where client no longer meets the criteria
+            $groupMemberships->delete([
                 'group_id' => $this['Id'],
-                'static' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
-                "hardware_id NOT IN($this[DynamicMembersSql])"
-            )
-        );
+                'static' => Client::MEMBERSHIP_AUTOMATIC,
+                "hardware_id NOT IN({$this['DynamicMembersSql']})",
+            ]);
 
-        // Add dynamic memberships for clients which meet the criteria and don't
-        // already have an entry in the cache (which might be dynamic, static or
-        // excluded).
-        $subquery = $groupMemberships->getSql()->select();
-        $subquery->columns(array('hardware_id'))->where(array('group_id' => $this['Id']));
-        $select = $clients->getSql()->select();
-        $select->columns(
-            array(
+            // Add dynamic memberships for clients which meet the criteria and don't
+            // already have an entry in the cache (which might be dynamic, static or
+            // excluded).
+            $subquery = $groupMemberships->getSql()->select();
+            $subquery->columns(['hardware_id'])->where(['group_id' => $this['Id']]);
+            $select = $clients->getSql()->select();
+            $select->columns([
                 'hardware_id' => 'id',
-                'group_id' => new \Laminas\Db\Sql\Expression('?', $this['Id']),
+                'group_id' => new Expression('?', $this['Id']),
                 'static' => new Literal((string) Client::MEMBERSHIP_AUTOMATIC),
-            )
-        )->where(
-            array(
+            ])->where([
                 "id IN ($this[DynamicMembersSql])",
-                new \Laminas\Db\Sql\Predicate\NotIn('id', $subquery),
-            )
-        );
-        $groupMemberships->insert($select);
+                new NotIn('id', $subquery),
+            ]);
+            $groupMemberships->insert($select);
 
-        // Update CacheCreationDate and CacheExpirationDate
-        $minExpires = $now->modify(
-            sprintf(
-                '+%d seconds',
-                $this->container->get(Randomizer::class)->getInt(0, $config->groupCacheExpirationFuzz)
-            )
-        );
-        $groupInfo->update(
-            array(
-                'create_time' => $now->getTimestamp(),
-                'revalidate_from' => $minExpires->getTimestamp(),
-            ),
-            array('hardware_id' => $this['Id'])
-        );
-
-        $this->unlock();
+            // Update CacheCreationDate and CacheExpirationDate
+            $minExpires = $now->modify(
+                sprintf(
+                    '+%d seconds',
+                    $this->container->get(Randomizer::class)->getInt(0, $config->groupCacheExpirationFuzz)
+                )
+            );
+            $groupInfo->update(
+                [
+                    'create_time' => $now->getTimestamp(),
+                    'revalidate_from' => $minExpires->getTimestamp(),
+                ],
+                ['hardware_id' => $this['Id']],
+            );
+        } finally {
+            $this->unlock();
+        }
 
         $this->offsetSet('CacheCreationDate', $now);
         $this->offsetSet(

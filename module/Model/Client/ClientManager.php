@@ -38,6 +38,7 @@ use Model\Group\Group;
 use Model\Package\Assignment;
 use Nada\Database\AbstractDatabase;
 use Psr\Container\ContainerInterface;
+use Throwable;
 
 /**
  * Client manager
@@ -750,20 +751,20 @@ class ClientManager
         }
 
         $connection = $this->container->get(Adapter::class)->getDriver()->getConnection();
-        $id = $client['Id'];
-
-        // Start transaction to keep database consistent in case of errors
-        // If a transaction is already in progress, an exception will be thrown
-        // which has to be caught. The commit() and rollBack() methods can only
-        // be called if the transaction has been started here.
         try {
-            $connection->beginTransaction();
-            $transactionStarted = true;
-        } catch (\Exception $exception) {
-            $transactionStarted = false;
-        }
+            $id = $client['Id'];
 
-        try {
+            // Start transaction to keep database consistent in case of errors
+            // If a transaction is already in progress, an exception will be thrown
+            // which has to be caught. The commit() and rollBack() methods can only
+            // be called if the transaction has been started here.
+            try {
+                $connection->beginTransaction();
+                $transactionStarted = true;
+            } catch (Throwable) {
+                $transactionStarted = false;
+            }
+
             // If requested, delete client's network interfaces from the list of
             // scanned interfaces. Also delete any manually entered description.
             if ($deleteInterfaces) {
@@ -799,15 +800,14 @@ class ClientManager
             if ($transactionStarted) {
                 $connection->commit();
             }
-        } catch (\Exception $exception) {
+        } catch (Throwable $throwable) {
             if ($transactionStarted) {
                 $connection->rollback();
             }
+            throw $throwable;
+        } finally {
             $client->unlock();
-            throw $exception;
         }
-
-        $client->unlock();
     }
 
     /**

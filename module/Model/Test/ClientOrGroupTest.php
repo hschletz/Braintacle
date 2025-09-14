@@ -77,7 +77,7 @@ class ClientOrGroupTest extends AbstractTestCase
     /**
      * Compose a ClientOrGroup mock with stubs for the given methods.
      */
-    public function composeMock(array $mockedMethods = ['__destruct']): MockObject & ClientOrGroup
+    public function composeMock(array $mockedMethods = []): MockObject & ClientOrGroup
     {
         return $this->getMockForAbstractClass(ClientOrGroup::class, [], '', false, true, true, $mockedMethods);
     }
@@ -110,36 +110,6 @@ class ClientOrGroupTest extends AbstractTestCase
     public function testInterface()
     {
         $this->assertTrue(true); // Test does not apply to this class
-    }
-
-    public function testDestructor()
-    {
-        $model = $this->composeMock(['unlock']);
-        $model->expects($this->once())->method('unlock');
-        $model->__destruct();
-    }
-
-    public function testDestructorWithNestedLocks()
-    {
-        $config = $this->createMock('Model\Config');
-        $config->method('__get')->with('lockValidity')->willReturn(42);
-
-        $serviceManager = $this->createMock(ContainerInterface::class);
-        $serviceManager->method('get')->willReturnMap([
-            [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
-            [Locks::class, static::$serviceManager->get(Locks::class)],
-            [Adapter::class, static::$serviceManager->get(Adapter::class)],
-            [Config::class, $config],
-        ]);
-
-        $model = $this->getMockBuilder($this->getClass())->getMockForAbstractClass();
-        $model->setContainer($serviceManager);
-        $model['Id'] = 23;
-
-        $model->lock();
-        $model->lock();
-        $model->__destruct();
-        $this->assertLocksTableEquals(null);
     }
 
     public static function lockWithDatabaseTimeProvider()
@@ -205,7 +175,7 @@ class ClientOrGroupTest extends AbstractTestCase
 
     public function testUnlockWithoutLock()
     {
-        $model = $this->composeMock(['__destruct', 'isLocked']);
+        $model = $this->composeMock(['isLocked']);
         $model->expects($this->once())->method('isLocked')->willReturn(false);
         $model->unlock();
     }
@@ -219,7 +189,7 @@ class ClientOrGroupTest extends AbstractTestCase
             [Adapter::class, static::$serviceManager->get(Adapter::class)],
         ]);
 
-        $model = $this->composeMock(['__destruct', 'isLocked']);
+        $model = $this->composeMock(['isLocked']);
         $model->expects($this->once())->method('isLocked')->willReturn(true);
         $model->setContainer($serviceManager);
         $model['Id'] = 1;
@@ -244,7 +214,7 @@ class ClientOrGroupTest extends AbstractTestCase
         ]);
 
         /** @var MockObject|ClientOrGroup */
-        $model = $this->composeMock(['__destruct', 'isLocked']);
+        $model = $this->composeMock(['isLocked']);
         $model->expects($this->once())->method('isLocked')->willReturn(true);
         $model->setContainer($serviceManager);
 
@@ -403,7 +373,7 @@ class ClientOrGroupTest extends AbstractTestCase
             )
         );
 
-        $model = $this->composeMock(['__destruct', 'getConfig']);
+        $model = $this->composeMock(['getConfig']);
         if ($normalizedValue === null) {
             $model->expects($this->never())->method('getConfig');
         } else {
@@ -442,7 +412,7 @@ class ClientOrGroupTest extends AbstractTestCase
             )
         );
 
-        $model = $this->composeMock(['__destruct', 'getConfig']);
+        $model = $this->composeMock(['getConfig']);
         $model->expects($this->once())->method('getConfig')->with('inventoryInterval')->willReturn(23);
         $model->setContainer($serviceManager);
         $model['Id'] = 10;

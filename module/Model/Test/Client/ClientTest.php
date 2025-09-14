@@ -331,7 +331,7 @@ class ClientTest extends AbstractTestCase
                 )
             );
 
-        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn($oldMemberships);
         $model->setContainer($serviceManager);
@@ -398,7 +398,7 @@ class ClientTest extends AbstractTestCase
                 )
             );
 
-        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn($oldMemberships);
         $model->setContainer($serviceManager);
@@ -465,7 +465,7 @@ class ClientTest extends AbstractTestCase
                 )
             );
 
-        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn(array(1 => $oldMembership));
         $model->setContainer($serviceManager);
@@ -524,7 +524,7 @@ class ClientTest extends AbstractTestCase
                 )
             );
 
-        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn([1 => $oldMembership]);
         $model->setContainer($serviceManager);
@@ -570,7 +570,7 @@ class ClientTest extends AbstractTestCase
                 )
             );
 
-        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn(array(2 => \Model\Client\Client::MEMBERSHIP_ALWAYS));
         $model->setContainer($serviceManager);
@@ -597,7 +597,7 @@ class ClientTest extends AbstractTestCase
                 array(array('Model\Group\GroupManager', $groupManager))
             );
 
-        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships', '__destruct']);
+        $model = $this->createPartialMock(Client::class, ['offsetGet', 'getGroupMemberships']);
         $model->method('offsetGet')->with('Id')->willReturn(42);
         $model->method('getGroupMemberships')->willReturn(array());
         $model->setContainer($serviceManager);

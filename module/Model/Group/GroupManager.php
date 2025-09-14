@@ -32,6 +32,7 @@ use Model\Config;
 use Nada\Database\AbstractDatabase;
 use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
+use Throwable;
 
 /**
  * Group manager
@@ -185,21 +186,23 @@ class GroupManager
             throw new RuntimeException('Cannot delete group because it is locked');
         }
 
-        $id = $group['Id'];
-        $connection = $this->container->get(Adapter::class)->getDriver()->getConnection();
-        $connection->beginTransaction();
         try {
-            $this->container->get(GroupMemberships::class)->delete(array('group_id' => $id));
-            $this->container->get(ClientConfig::class)->delete(array('hardware_id' => $id));
-            $this->container->get(GroupInfo::class)->delete(array('hardware_id' => $id));
-            $this->container->get(ClientsAndGroups::class)->delete(array('id' => $id));
-            $connection->commit();
-        } catch (\Exception $e) {
-            $connection->rollBack();
+            $id = $group['Id'];
+            $connection = $this->container->get(Adapter::class)->getDriver()->getConnection();
+            $connection->beginTransaction();
+            try {
+                $this->container->get(GroupMemberships::class)->delete(['group_id' => $id]);
+                $this->container->get(ClientConfig::class)->delete(['hardware_id' => $id]);
+                $this->container->get(GroupInfo::class)->delete(['hardware_id' => $id]);
+                $this->container->get(ClientsAndGroups::class)->delete(['id' => $id]);
+                $connection->commit();
+            } catch (Throwable $throwable) {
+                $connection->rollBack();
+                throw $throwable;
+            }
+        } finally {
             $group->unlock();
-            throw $e;
         }
-        $group->unlock();
     }
 
     /**
