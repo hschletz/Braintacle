@@ -2,13 +2,13 @@
 
 namespace Braintacle\Test\Duplicates;
 
+use Braintacle\Client\Duplicates;
 use Braintacle\CsrfProcessor;
 use Braintacle\Duplicates\MergeDuplicatesHandler;
 use Braintacle\FlashMessages;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Console\Form\ShowDuplicates as Validator;
 use Laminas\Translator\TranslatorInterface;
-use Model\Client\DuplicatesManager;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 
@@ -35,15 +35,15 @@ class MergeDuplicatesHandlerTest extends TestCase
         $validator->method('getData')->willReturn($validatedData);
         $validator->method('getMessages')->willReturn(['level1' => ['level2' => 'message']]);
 
-        $duplicatesManager = $this->createMock(DuplicatesManager::class);
+        $duplicates = $this->createMock(Duplicates::class);
         $flashMessages = $this->createMock(FlashMessages::class);
         $message = 'success message';
 
         if ($isValid) {
-            $duplicatesManager->expects($this->once())->method('merge')->with($clients, $options);
+            $duplicates->expects($this->once())->method('merge')->with($clients, $options);
             $flashMessages->expects($this->once())->method('add')->with(FlashMessages::Success, $message);
         } else {
-            $duplicatesManager->expects($this->never())->method('merge');
+            $duplicates->expects($this->never())->method('merge');
             $flashMessages->expects($this->never())->method('add');
         }
 
@@ -54,7 +54,7 @@ class MergeDuplicatesHandlerTest extends TestCase
             $this->response,
             $csrfProcessor,
             $validator,
-            $duplicatesManager,
+            $duplicates,
             $flashMessages,
             $translator,
         );

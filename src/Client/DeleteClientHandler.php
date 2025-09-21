@@ -6,7 +6,6 @@ use Braintacle\FlashMessages;
 use Braintacle\Http\RouteHelper;
 use Formotron\DataProcessor;
 use Laminas\Translator\TranslatorInterface;
-use Model\Client\ClientManager;
 use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -21,7 +20,7 @@ final class DeleteClientHandler implements RequestHandlerInterface
         private ResponseInterface $response,
         private RouteHelper $routeHelper,
         private DataProcessor $dataProcessor,
-        private ClientManager $clientManager,
+        private Clients $clients,
         private TranslatorInterface $translator,
         private FlashMessages $flashMessages,
     ) {}
@@ -34,7 +33,7 @@ final class DeleteClientHandler implements RequestHandlerInterface
             ClientRequestParameters::class,
         )->client;
 
-        $this->clientManager->deleteClient(
+        $this->clients->delete(
             $client,
             isset($request->getQueryParams()['delete_interfaces']),
         );

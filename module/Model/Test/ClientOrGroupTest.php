@@ -22,10 +22,8 @@
 
 namespace Model\Test;
 
-use Database\Table\ClientConfig;
 use Database\Table\Locks;
 use Laminas\Db\Adapter\Adapter;
-use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Mockery;
 use Mockery\Mock;
 use Model\ClientOrGroup;
@@ -287,13 +285,13 @@ class ClientOrGroupTest extends AbstractTestCase
     public static function getConfigProvider()
     {
         return array(
-            array(10, 'packageDeployment', 0),
+            array(10, 'packageDeployment', false),
             array(11, 'packageDeployment', null),
-            array(10, 'allowScan', 0),
+            array(10, 'allowScan', false),
             array(11, 'allowScan', null),
             array(10, 'scanThisNetwork', '192.0.2.0'),
             array(11, 'scanThisNetwork', null),
-            array(10, 'scanSnmp', 0),
+            array(10, 'scanSnmp', false),
             array(11, 'scanSnmp', null),
             array(10, 'inventoryInterval', 23),
             array(11, 'inventoryInterval', null),
@@ -335,117 +333,5 @@ class ClientOrGroupTest extends AbstractTestCase
         $cache->setValue($model, array('option' => 'value'));
 
         $this->assertEquals('value', $model->getConfig('option'));
-    }
-
-    public static function setConfigProvider()
-    {
-        return array(
-            array(10, 'inventoryInterval', 'FREQUENCY', null, null, null, 'SetConfigRegularDelete'),
-            array(10, 'inventoryInterval', 'FREQUENCY', 42, 23, 42, 'SetConfigRegularUpdate'),
-            array(10, 'contactInterval', 'PROLOG_FREQ', 42, null, 42, 'SetConfigRegularInsert'),
-            array(10, 'packageDeployment', 'DOWNLOAD', 1, 0, null, 'SetConfigPackageDeploymentEnable'),
-            array(10, 'scanSnmp', 'SNMP', 1, 0, null, 'SetConfigScanSnmpEnable'),
-            array(10, 'allowScan', 'IPDISCOVER', 1, 0, null, 'SetConfigAllowScanEnable'),
-            array(11, 'packageDeployment', 'DOWNLOAD', 0, null, 0, 'SetConfigPackageDeploymentDisable'),
-            array(11, 'scanSnmp', 'SNMP', 0, null, 0, 'SetConfigScanSnmpDisable'),
-            array(11, 'allowScan', 'IPDISCOVER', 0, null, 0, 'SetConfigAllowScanDisable'),
-            array(11, 'scanThisNetwork', 'IPDISCOVER', 'addr', null, 'addr', 'SetConfigScanThisNetworkInsert'),
-            array(10, 'scanThisNetwork', 'IPDISCOVER', null, 'addr', null, 'SetConfigScanThisNetworkDelete'),
-        );
-    }
-
-    /**
-     * @dataProvider setConfigProvider
-     */
-    public function testSetConfig($id, $option, $identifier, $value, $oldValue, $normalizedValue, $dataSet)
-    {
-        $config = $this->createMock('Model\Config');
-        $config->method('getDbIdentifier')->with($option)->willReturn($identifier);
-
-        $serviceManager = $this->createMock(ContainerInterface::class);
-        $serviceManager->method('get')->willReturnMap(
-            array(
-                array(
-                    'Database\Table\ClientConfig',
-                    static::$serviceManager->get('Database\Table\ClientConfig')
-                ),
-                array('Model\Config', $config),
-            )
-        );
-
-        $model = $this->composeMock(['getConfig']);
-        if ($normalizedValue === null) {
-            $model->expects($this->never())->method('getConfig');
-        } else {
-            $model->expects($this->once())->method('getConfig')->with($option)->willReturn($oldValue);
-        }
-        $model->setContainer($serviceManager);
-        $model['Id'] = $id;
-
-        $model->setConfig($option, $value);
-        $this->assertTablesEqual(
-            $this->loadDataSet($dataSet)->getTable('devices'),
-            $this->getConnection()->createQueryTable(
-                'devices',
-                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ' .
-                    'WHERE hardware_id >= 10 ORDER BY hardware_id, name, ivalue'
-            )
-        );
-    }
-
-    public function testSetConfigUnchanged()
-    {
-        $config = $this->createMock('Model\Config');
-        $config->method('getDbIdentifier')->with('inventoryInterval')->willReturn('FREQUENCY');
-
-        $clientConfig = $this->createMock('Database\Table\ClientConfig');
-        $clientConfig->method('getAdapter')->willReturn(static::$serviceManager->get(Adapter::class));
-        $clientConfig->expects($this->never())->method('insert');
-        $clientConfig->expects($this->never())->method('update');
-        $clientConfig->expects($this->never())->method('delete');
-
-        $serviceManager = $this->createMock(ContainerInterface::class);
-        $serviceManager->method('get')->willReturnMap(
-            array(
-                array('Database\Table\ClientConfig', $clientConfig),
-                array('Model\Config', $config),
-            )
-        );
-
-        $model = $this->composeMock(['getConfig']);
-        $model->expects($this->once())->method('getConfig')->with('inventoryInterval')->willReturn(23);
-        $model->setContainer($serviceManager);
-        $model['Id'] = 10;
-
-        $model->setConfig('inventoryInterval', '23');
-    }
-
-    public function testSetConfigRollbackOnException()
-    {
-        $connection = $this->createMock(ConnectionInterface::class);
-        $connection->expects($this->once())->method('beginTransaction');
-        $connection->expects($this->once())->method('rollback');
-        $connection->expects($this->never())->method('commit');
-
-        $driver = $this->createMock('Laminas\Db\Adapter\Driver\DriverInterface');
-        $driver->method('getConnection')->willReturn($connection);
-
-        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
-        $adapter->method('getDriver')->willReturn($driver);
-
-        $clientConfig = $this->createMock(ClientConfig::class);
-        $clientConfig->method('getAdapter')->willReturn($adapter);
-        $clientConfig->method('delete')->willThrowException(new \RuntimeException('test message'));
-
-        $serviceManager = $this->createMock(ContainerInterface::class);
-        $serviceManager->method('get')->with('Database\Table\ClientConfig')->willReturn($clientConfig);
-
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('test message');
-
-        $model = $this->composeMock(['offsetGet']);
-        $model->method('offsetGet')->willReturn(1);
-        $model->setContainer($serviceManager);
-        $model->setConfig('allowScan', null);
     }
 }

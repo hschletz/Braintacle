@@ -23,10 +23,6 @@
 namespace Model\Client;
 
 use Database\Table\Clients;
-use Database\Table\ClientsAndGroups;
-use Database\Table\NetworkDevicesIdentified;
-use Database\Table\NetworkDevicesScanned;
-use Database\Table\NetworkInterfaces;
 use Database\Table\WindowsInstallations;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\Select;
@@ -735,79 +731,6 @@ class ClientManager
         }
 
         return array($tableGateway, $column);
-    }
-
-    /**
-     * Delete a client
-     *
-     * @param \Model\Client\Client $client Client to be deleted
-     * @param bool $deleteInterfaces Delete interfaces from scanned interfaces
-     * @throws \RuntimeException if the client is locked by another instance
-     */
-    public function deleteClient(\Model\Client\Client $client, $deleteInterfaces)
-    {
-        if (!$client->lock()) {
-            throw new \RuntimeException('Could not lock client for deletion');
-        }
-
-        $connection = $this->container->get(Adapter::class)->getDriver()->getConnection();
-        try {
-            $id = $client['Id'];
-
-            // Start transaction to keep database consistent in case of errors
-            // If a transaction is already in progress, an exception will be thrown
-            // which has to be caught. The commit() and rollBack() methods can only
-            // be called if the transaction has been started here.
-            try {
-                $connection->beginTransaction();
-                $transactionStarted = true;
-            } catch (Throwable) {
-                $transactionStarted = false;
-            }
-
-            // If requested, delete client's network interfaces from the list of
-            // scanned interfaces. Also delete any manually entered description.
-            if ($deleteInterfaces) {
-                $macAddresses = $this->container->get(NetworkInterfaces::class)->getSql()->select();
-                $macAddresses->columns(array('macaddr'));
-                $macAddresses->where(array('hardware_id' => $id));
-                $this->container->get(NetworkDevicesIdentified::class)->delete(
-                    new \Laminas\Db\Sql\Predicate\In('macaddr', $macAddresses)
-                );
-                $this->container->get(NetworkDevicesScanned::class)->delete(
-                    new \Laminas\Db\Sql\Predicate\In('mac', $macAddresses)
-                );
-            }
-
-            // Delete rows from foreign tables
-            $tables = array(
-                'AndroidInstallations',
-                'ClientSystemInfo',
-                'CustomFields',
-                'PackageHistory',
-                'WindowsProductKeys',
-                'GroupMemberships',
-                'ClientConfig',
-            );
-            foreach ($tables as $table) {
-                $this->container->get("Database\\Table\\$table")->delete(['hardware_id' => $id]);
-            }
-            $this->container->get(ItemManager::class)->deleteItems($id);
-
-            // Delete row in clients table
-            $this->container->get(ClientsAndGroups::class)->delete(['id' => $id]);
-
-            if ($transactionStarted) {
-                $connection->commit();
-            }
-        } catch (Throwable $throwable) {
-            if ($transactionStarted) {
-                $connection->rollback();
-            }
-            throw $throwable;
-        } finally {
-            $client->unlock();
-        }
     }
 
     /**

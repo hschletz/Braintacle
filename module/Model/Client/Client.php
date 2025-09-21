@@ -494,7 +494,7 @@ class Client extends \Model\ClientOrGroup
     /**
      * Set values for custom fields
      *
-     * @param array $values Field name => Value
+     * @param array|CustomFields $values Field name => Value
      */
     public function setCustomFields($values)
     {

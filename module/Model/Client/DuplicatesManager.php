@@ -22,15 +22,12 @@
 
 namespace Model\Client;
 
-use Braintacle\Configuration\ClientConfig;
 use Braintacle\Direction;
 use Braintacle\Duplicates\Criterion;
 use Braintacle\Duplicates\DuplicatesColumn;
 use Database\Table;
 use Laminas\Db\ResultSet\AbstractResultSet;
 use Laminas\Db\Sql\Select;
-use Model\SoftwareManager;
-use RuntimeException;
 
 /**
  * Class for managing duplicate clients
@@ -115,21 +112,10 @@ class DuplicatesManager
     protected $_duplicateMacaddresses;
 
     /**
-     * ClientConfig prototype
-     * @var \Database\Table\ClientConfig
-     */
-    protected $_clientConfig;
-
-    /**
      * Client manager
      * @var \Model\Client\ClientManager
      */
     protected $_clientManager;
-
-    /**
-     * Software manager
-     */
-    private SoftwareManager $_softwareManager;
 
     public function __construct(
         Table\Clients $clients,
@@ -137,19 +123,14 @@ class DuplicatesManager
         Table\DuplicateAssetTags $duplicateAssetTags,
         Table\DuplicateSerials $duplicateSerials,
         Table\DuplicateMacAddresses $duplicateMacAddresses,
-        Table\ClientConfig $clientConfigTable,
         \Model\Client\ClientManager $clientManager,
-        \Model\SoftwareManager $softwareManager,
-        private ClientConfig $clientConfig,
     ) {
         $this->_clients = $clients;
         $this->_networkInterfaces = $networkInterfaces;
         $this->_duplicateAssetTags = $duplicateAssetTags;
         $this->_duplicateSerials = $duplicateSerials;
         $this->_duplicateMacaddresses = $duplicateMacAddresses;
-        $this->_clientConfig = $clientConfigTable;
         $this->_clientManager = $clientManager;
-        $this->_softwareManager = $softwareManager;
     }
 
     /**
@@ -260,189 +241,6 @@ class DuplicatesManager
         }
 
         return $this->_clients->selectWith($select);
-    }
-
-    /**
-     * Merge clients
-     *
-     * This method is used to eliminate duplicates in the database. Based on the
-     * last contact, the newest entry is preserved. All older entries are
-     * deleted. Some information from the older entries can be preserved on the
-     * remaining client.
-     *
-     * @param integer[] $clientIds IDs of clients to merge
-     * @param array $options Attributes to merge, see MERGE_* constants
-     * @throws \RuntimeException if an affected client cannot be locked
-     */
-    public function merge(array $clientIds, array $options)
-    {
-        // Remove duplicate IDs
-        $clientIds = array_unique($clientIds);
-        if (count($clientIds) < 2) {
-            return; // Nothing to do
-        }
-
-        $connection = $this->_clients->getConnection();
-        $connection->beginTransaction();
-        try {
-            // Lock all given clients and create a list sorted by LastContactDate.
-            $clients = [];
-            foreach ($clientIds as $id) {
-                $client = $this->_clientManager->getClient($id);
-                if (!$client->lock()) {
-                    throw new \RuntimeException("Cannot lock client $id");
-                }
-                $timestamp = $client['LastContactDate']->getTimestamp();
-                if (isset($clients[$timestamp])) {
-                    throw new RuntimeException('Cannot merge because clients have identical lastContactDate');
-                }
-                $clients[$timestamp] = $client;
-            }
-            ksort($clients);
-            // Now that the list is sorted, renumber the indices
-            $clients = array_values($clients);
-
-            // Newest client will be the only one not to be deleted, remove it from the list
-            $newest = array_pop($clients);
-
-            if (in_array(self::MERGE_CONFIG, $options)) {
-                $this->mergeConfig($newest, $clients);
-            }
-            if (in_array(self::MERGE_CUSTOM_FIELDS, $options)) {
-                $this->mergeCustomFields($newest, $clients);
-            }
-            if (in_array(self::MERGE_GROUPS, $options)) {
-                $this->mergeGroups($newest, $clients);
-            }
-            if (in_array(self::MERGE_PACKAGES, $options)) {
-                $this->mergePackages($newest, $clients);
-            }
-            if (in_array(self::MERGE_PRODUCT_KEY, $options)) {
-                $this->mergeProductKey($newest, $clients);
-            }
-
-            // Delete all older clients
-            foreach ($clients as $client) {
-                $this->_clientManager->deleteClient($client, false);
-            }
-            // Unlock remaining client
-            $newest->unlock();
-            $connection->commit();
-        } catch (\Exception $exception) {
-            $connection->rollback();
-            throw ($exception);
-        }
-    }
-
-    /**
-     * Overwrite custom fields on newest client with values from oldest client
-     *
-     * @param \Model\Client\Client $newestClient
-     * @param \Model\Client\Client[] $olderClients sorted by LastContactDate (ascending)
-     */
-    public function mergeCustomFields($newestClient, $olderClients)
-    {
-        $newestClient->setCustomFields($olderClients[0]['CustomFields']);
-    }
-
-    /**
-     * Merge manual group memberships from older clients into newest client
-     *
-     * If clients have different membership types for the same group, the
-     * resulting membership type is undefined.
-     *
-     * @param \Model\Client\Client $newestClient
-     * @param \Model\Client\Client[] $olderClients sorted by LastContactDate (ascending)
-     */
-    public function mergeGroups($newestClient, $olderClients)
-    {
-        $groupList = [];
-        foreach ($olderClients as $client) {
-            $groupList += $client->getGroupMemberships(\Model\Client\Client::MEMBERSHIP_MANUAL);
-        }
-        $newestClient->setGroupMemberships($groupList);
-    }
-
-    /**
-     * Add missing package assignments from older clients on the newest client
-     *
-     * @param \Model\Client\Client $newestClient
-     * @param \Model\Client\Client[] $olderClients sorted by LastContactDate (ascending)
-     */
-    public function mergePackages($newestClient, $olderClients)
-    {
-        $id = $newestClient['Id'];
-
-        // Exclude packages that are already assigned.
-        $notIn = $this->_clientConfig->getSql()->select();
-        $notIn->columns(['ivalue'])->where(['hardware_id' => $id, 'name' => 'DOWNLOAD']);
-
-        foreach ($olderClients as $client) {
-            $where = [
-                'hardware_id' => $client['Id'],
-                new \Laminas\Db\Sql\Predicate\Operator('name', '!=', 'DOWNLOAD_SWITCH'),
-                new \Laminas\Db\Sql\Predicate\Like('name', 'DOWNLOAD%'),
-            ];
-            // Construct list of package IDs because MySQL does not support subquery here
-            $exclude = array_column($this->_clientConfig->selectWith($notIn)->toArray(), 'ivalue');
-            // Avoid empty list
-            if ($exclude) {
-                $where[] = new \Laminas\Db\Sql\Predicate\NotIn('ivalue', $exclude);
-            }
-            // Update the client IDs directly.
-            $this->_clientConfig->update(array('hardware_id' => $id), $where);
-        }
-    }
-
-    /**
-     * Set newest client's Windows manual product key to the newest key of all given clients
-     *
-     * @param \Model\Client\Client $newestClient
-     * @param \Model\Client\Client[] $olderClients sorted by LastContactDate (ascending)
-     */
-    public function mergeProductKey($newestClient, $olderClients)
-    {
-        if (!$newestClient['Windows']) {
-            return;
-        }
-        if ($newestClient['Windows']['ManualProductKey']) {
-            return;
-        }
-        // Iterate over all clients, newest first, and pick first key found.
-        foreach (array_reverse($olderClients) as $client) {
-            $windows = $client['Windows'];
-            if ($windows) {
-                if ($windows['ManualProductKey']) {
-                    $this->_softwareManager->setProductKey($newestClient, $windows['ManualProductKey']);
-                    return;
-                }
-            }
-        }
-    }
-
-    /**
-     * Merge config on newest client with values from older clients
-     *
-     * If a config option is not set on the newest client, set it to a
-     * value configured on an older client (if any). If multiple older clients
-     * have a value configured, the value from the most recent client is used.
-     *
-     * @param \Model\Client\Client $newestClient
-     * @param \Model\Client\Client[] $olderClients sorted by LastContactDate (ascending)
-     */
-    public function mergeConfig($newestClient, $olderClients)
-    {
-        $options = [];
-        foreach (array_reverse($olderClients) as $client) {
-            // Add options that are not present yet
-            $options += $this->clientConfig->getExplicitConfig($client);
-        }
-        // Remove options that are present on the newest client
-        $options = array_diff_key($options, $this->clientConfig->getExplicitConfig($newestClient));
-
-        foreach ($options as $option => $value) {
-            $newestClient->setConfig($option, $value);
-        }
     }
 
     /**

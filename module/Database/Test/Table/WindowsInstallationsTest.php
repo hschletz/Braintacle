@@ -27,14 +27,6 @@ use Database\Table\WindowsProductKeys;
 
 class WindowsInstallationsTest extends AbstractTestCase
 {
-    public static function setUpBeforeClass(): void
-    {
-        // These tables must exist before the view can be created
-        $serviceManager = static::createServiceManager();
-        $serviceManager->get(WindowsProductKeys::class)->updateSchema(true);
-        parent::setUpBeforeClass();
-    }
-
     public function getDataSet()
     {
         return new \PHPUnit\DbUnit\DataSet\DefaultDataSet();

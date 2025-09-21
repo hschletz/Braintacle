@@ -5,19 +5,28 @@ namespace Braintacle\Test\Configuration;
 use AssertionError;
 use Braintacle\Client\Configuration\ClientConfigurationParameters;
 use Braintacle\Configuration\ClientConfig;
+use Braintacle\Database\Migration;
+use Braintacle\Database\Migrations;
+use Braintacle\Database\Table;
 use Braintacle\Group\Configuration\GroupConfigurationParameters;
+use Braintacle\Test\DatabaseConnection;
+use Doctrine\DBAL\Connection;
+use Exception;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery\Mock;
 use Model\Client\Client;
 use Model\Config;
 use Model\Group\Group;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(ClientConfig::class)]
+#[UsesClass(Migration::class)]
+#[UsesClass(Migrations::class)]
 class ClientConfigTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -35,15 +44,24 @@ class ClientConfigTest extends TestCase
         'scanSnmp' => 'ignore',
     ];
 
-    private function createClientConfig(?Config $config = null): ClientConfig
-    {
-        return new ClientConfig($config ?? $this->createStub(Config::class));
+    private function createClientConfig(
+        ?Config $config = null,
+        ?Connection $connection = null,
+    ): ClientConfig {
+        return new ClientConfig(
+            $config ?? $this->createStub(Config::class),
+            $connection ?? $this->createStub(Connection::class),
+        );
     }
 
-    private function createClientConfigMock(array $methods, ?Config $config = null): MockObject | ClientConfig
-    {
+    private function createClientConfigMock(
+        array $methods,
+        ?Config $config = null,
+        ?Connection $connection = null,
+    ): MockObject | ClientConfig {
         return $this->getMockBuilder(ClientConfig::class)->onlyMethods($methods)->setConstructorArgs([
             $config ?? $this->createStub(Config::class),
+            $connection ?? $this->createStub(Connection::class),
         ])->getMock();
     }
 
@@ -60,7 +78,7 @@ class ClientConfigTest extends TestCase
             ['downloadMaxPriority', 5],
             ['downloadTimeout', 6],
             ['allowScan', null],
-            ['scanSnmp', 0],
+            ['scanSnmp', false],
             ['scanThisNetwork', '192.0.2.0'],
         ]);
 
@@ -96,7 +114,7 @@ class ClientConfigTest extends TestCase
             ['downloadMaxPriority', 5],
             ['downloadTimeout', 6],
             ['allowScan', null],
-            ['scanSnmp', 0],
+            ['scanSnmp', false],
         ]);
 
         $options = $this->createClientConfig()->getOptions($group);
@@ -355,6 +373,308 @@ class ClientConfigTest extends TestCase
         $this->assertSame([], $this->createClientConfig()->getExplicitConfig($client));
     }
 
+    public static function setOptionProvider()
+    {
+        return [
+            'regular delete' => [
+                Group::class,
+                10,
+                'inventoryInterval',
+                null,
+                null,
+                [
+                    [10, 'DOWNLOAD_SWITCH', 0, null],
+                    [10, 'IPDISCOVER', 0, null],
+                    [10, 'IPDISCOVER', 2, '192.0.2.0'],
+                    [10, 'SNMP_SWITCH', 0, null],
+                    [11, 'DOWNLOAD_SWITCH', 1, null],
+                    [11, 'IPDISCOVER', 1, null],
+                    [11, 'SNMP_SWITCH', 1, null],
+                ]
+            ],
+            'regular update' => [
+                Group::class,
+                10,
+                'inventoryInterval',
+                42,
+                23,
+                [
+                    [10, 'DOWNLOAD_SWITCH', 0, null],
+                    [10, 'FREQUENCY', 42, null],
+                    [10, 'IPDISCOVER', 0, null],
+                    [10, 'IPDISCOVER', 2, '192.0.2.0'],
+                    [10, 'SNMP_SWITCH', 0, null],
+                    [11, 'DOWNLOAD_SWITCH', 1, null],
+                    [11, 'IPDISCOVER', 1, null],
+                    [11, 'SNMP_SWITCH', 1, null],
+                ],
+            ],
+            'regular insert' => [
+                Group::class,
+                10,
+                'contactInterval',
+                42,
+                null,
+                [
+                    [10, 'DOWNLOAD_SWITCH', 0, null],
+                    [10, 'FREQUENCY', 23, null],
+                    [10, 'IPDISCOVER', 0, null],
+                    [10, 'IPDISCOVER', 2, '192.0.2.0'],
+                    [10, 'PROLOG_FREQ', 42, null],
+                    [10, 'SNMP_SWITCH', 0, null],
+                    [11, 'DOWNLOAD_SWITCH', 1, null],
+                    [11, 'IPDISCOVER', 1, null],
+                    [11, 'SNMP_SWITCH', 1, null],
+                ],
+            ],
+            'package deployment enable' => [
+                Group::class,
+                10,
+                'packageDeployment',
+                true,
+                0,
+                [
+                    [10, 'FREQUENCY', 23, null],
+                    [10, 'IPDISCOVER', 0, null],
+                    [10, 'IPDISCOVER', 2, '192.0.2.0'],
+                    [10, 'SNMP_SWITCH', 0, null],
+                    [11, 'DOWNLOAD_SWITCH', 1, null],
+                    [11, 'IPDISCOVER', 1, null],
+                    [11, 'SNMP_SWITCH', 1, null],
+
+                ],
+            ],
+            'package deployment disable' => [
+                Group::class,
+                11,
+                'packageDeployment',
+                false,
+                null,
+                [
+                    [10, 'DOWNLOAD_SWITCH', 0, null],
+                    [10, 'FREQUENCY', 23, null],
+                    [10, 'IPDISCOVER', 0, null],
+                    [10, 'IPDISCOVER', 2, '192.0.2.0'],
+                    [10, 'SNMP_SWITCH', 0, null],
+                    [11, 'DOWNLOAD_SWITCH', 0, null],
+                    [11, 'IPDISCOVER', 1, null],
+                    [11, 'SNMP_SWITCH', 1, null],
+                ],
+            ],
+            'scan snmp enable' => [
+                Group::class,
+                10,
+                'scanSnmp',
+                true,
+                0,
+                [
+                    [10, 'DOWNLOAD_SWITCH', 0, null],
+                    [10, 'FREQUENCY', 23, null],
+                    [10, 'IPDISCOVER', 0, null],
+                    [10, 'IPDISCOVER', 2, '192.0.2.0'],
+                    [11, 'DOWNLOAD_SWITCH', 1, null],
+                    [11, 'IPDISCOVER', 1, null],
+                    [11, 'SNMP_SWITCH', 1, null],
+                ],
+            ],
+            'scan snmp disable' => [
+                Group::class,
+                11,
+                'scanSnmp',
+                false,
+                null,
+                [
+                    [10, 'DOWNLOAD_SWITCH', 0, null],
+                    [10, 'FREQUENCY', 23, null],
+                    [10, 'IPDISCOVER', 0, null],
+                    [10, 'IPDISCOVER', 2, '192.0.2.0'],
+                    [10, 'SNMP_SWITCH', 0, null],
+                    [11, 'DOWNLOAD_SWITCH', 1, null],
+                    [11, 'IPDISCOVER', 1, null],
+                    [11, 'SNMP_SWITCH', 0, null],
+                ],
+            ],
+            'scan snmp unset' => [
+                Group::class,
+                11,
+                'scanSnmp',
+                null,
+                null,
+                [
+                    [10, 'DOWNLOAD_SWITCH', 0, null],
+                    [10, 'FREQUENCY', 23, null],
+                    [10, 'IPDISCOVER', 0, null],
+                    [10, 'IPDISCOVER', 2, '192.0.2.0'],
+                    [10, 'SNMP_SWITCH', 0, null],
+                    [11, 'DOWNLOAD_SWITCH', 1, null],
+                    [11, 'IPDISCOVER', 1, null],
+                ],
+            ],
+            'allow scan enable' => [
+                Group::class,
+                10,
+                'allowScan',
+                true,
+                0,
+                [
+                    [10, 'DOWNLOAD_SWITCH', 0, null],
+                    [10, 'FREQUENCY', 23, null],
+                    [10, 'IPDISCOVER', 2, '192.0.2.0'],
+                    [10, 'SNMP_SWITCH', 0, null],
+                    [11, 'DOWNLOAD_SWITCH', 1, null],
+                    [11, 'IPDISCOVER', 1, null],
+                    [11, 'SNMP_SWITCH', 1, null],
+                ],
+            ],
+            'allow scan disable' => [
+                Group::class,
+                11,
+                'allowScan',
+                false,
+                null,
+                [
+                    [10, 'DOWNLOAD_SWITCH', 0, null],
+                    [10, 'FREQUENCY', 23, null],
+                    [10, 'IPDISCOVER', 0, null],
+                    [10, 'IPDISCOVER', 2, '192.0.2.0'],
+                    [10, 'SNMP_SWITCH', 0, null],
+                    [11, 'DOWNLOAD_SWITCH', 1, null],
+                    [11, 'IPDISCOVER', 0, null],
+                    [11, 'SNMP_SWITCH', 1, null],
+                ],
+            ],
+            'scan this network insert' => [
+                Client::class,
+                11,
+                'scanThisNetwork',
+                'addr',
+                null,
+                [
+                    [10, 'DOWNLOAD_SWITCH', 0, null],
+                    [10, 'FREQUENCY', 23, null],
+                    [10, 'IPDISCOVER', 0, null],
+                    [10, 'IPDISCOVER', 2, '192.0.2.0'],
+                    [10, 'SNMP_SWITCH', 0, null],
+                    [11, 'DOWNLOAD_SWITCH', 1, null],
+                    [11, 'IPDISCOVER', 2, 'addr'],
+                    [11, 'SNMP_SWITCH', 1, null],
+
+                ]
+            ],
+            'scan this network delete' => [
+                Client::class,
+                10,
+                'scanThisNetwork',
+                null,
+                'addr',
+                [
+                    [10, 'DOWNLOAD_SWITCH', 0, null],
+                    [10, 'FREQUENCY', 23, null],
+                    [10, 'IPDISCOVER', 0, null],
+                    [10, 'SNMP_SWITCH', 0, null],
+                    [11, 'DOWNLOAD_SWITCH', 1, null],
+                    [11, 'IPDISCOVER', 1, null],
+                    [11, 'SNMP_SWITCH', 1, null],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @param class-string<Client|Group> $class
+     */
+    #[DataProvider('setOptionProvider')]
+    public function testSetOption(
+        string $class,
+        int $id,
+        string $option,
+        int | string | bool | null $value,
+        int | string | null $oldValue,
+        array $expectedContent,
+    ) {
+        DatabaseConnection::with(
+            function (Connection $connection) use ($class, $id, $option, $value, $oldValue, $expectedContent) {
+                $columns = ['hardware_id', 'name', 'ivalue', 'tvalue'];
+                DatabaseConnection::initializeTable(Table::ClientConfig, $columns, [
+                    [10, 'DOWNLOAD_SWITCH', 0, null],
+                    [10, 'FREQUENCY', 23, null],
+                    [10, 'IPDISCOVER', 0, null],
+                    [10, 'IPDISCOVER', 2, '192.0.2.0'],
+                    [10, 'SNMP_SWITCH', 0, null],
+                    [11, 'DOWNLOAD_SWITCH', 1, null],
+                    [11, 'IPDISCOVER', 1, null],
+                    [11, 'SNMP_SWITCH', 1, null],
+                ]);
+
+                $config = $this->createMock(Config::class);
+                $config->method('getDbIdentifier')->with($option)->willReturnMap([
+                    ['contactInterval', 'PROLOG_FREQ'],
+                    ['inventoryInterval', 'FREQUENCY'],
+                    ['packageDeployment', 'DOWNLOAD'],
+                    ['scanSnmp', 'SNMP'],
+                ]);
+
+                $object = $this->createMock($class);
+                $object->method('getConfig')->with($option)->willReturn($oldValue);
+                if ($class == Group::class) {
+                    $object->method('__get')->with('id')->willReturn($id);
+                } else {
+                    $object->id = $id;
+                }
+
+                $clientConfig = $this->createClientConfig($config, $connection);
+                $clientConfig->setOption($object, $option, $value);
+
+                $content = $connection
+                    ->createQueryBuilder()
+                    ->select(...$columns)
+                    ->from(Table::ClientConfig)
+                    ->addOrderBy('hardware_id')
+                    ->addOrderBy('name')
+                    ->addOrderBy('ivalue')
+                    ->fetchAllNumeric();
+
+                $this->assertEquals($expectedContent, $content);
+            }
+        );
+    }
+
+    public function testSetOptionUnchanged()
+    {
+        $config = $this->createMock(Config::class);
+        $config->method('getDbIdentifier')->with('inventoryInterval')->willReturn('FREQUENCY');
+
+        $connection = $this->createMock(Connection::class);
+        $connection->expects($this->never())->method('insert');
+        $connection->expects($this->never())->method('update');
+        $connection->expects($this->never())->method('delete');
+
+        $clientConfig = $this->createClientConfig($config, $connection);
+
+        $client = $this->createMock(Client::class);
+        $client->expects($this->once())->method('getConfig')->with('inventoryInterval')->willReturn(23);
+        $client->id = 10;
+
+        $clientConfig->setOption($client, 'inventoryInterval', 23);
+    }
+
+    public function testSetConfigRollbackOnException()
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection->expects($this->once())->method('beginTransaction');
+        $connection->expects($this->once())->method('rollBack');
+        $connection->expects($this->never())->method('commit');
+        $connection->method('delete')->willThrowException(new Exception('test message'));
+
+        $client = $this->createStub(Client::class);
+        $client->id = 42;
+
+        $this->expectExceptionMessage('test message');
+
+        $clientConfig = $this->createClientConfig(connection: $connection);
+        $clientConfig->setOption($client, 'allowScan', false);
+    }
+
     public static function setOptionsInvalidArgumentsProvider()
     {
         return [
@@ -476,16 +796,18 @@ class ClientConfigTest extends TestCase
      * @param class-string<ClientConfigurationParameters|GroupConfigurationParameters> $configClass
      */
     #[DataProvider('setOptionsProvider')]
-    #[DoesNotPerformAssertions]
     public function testSetOptions(
         string $objectClass,
         string $configClass,
         array $inputOptions,
         array $expectedOptions,
     ) {
-        $object = Mockery::mock($objectClass);
+        $object = $this->createStub($objectClass);
+
+        /** @var Mock|ClientConfig */
+        $clientConfig = Mockery::mock(ClientConfig::class)->makePartial();
         foreach ($expectedOptions as $option => $value) {
-            $object->shouldReceive('setConfig')->with($option, Mockery::isSame($value));
+            $clientConfig->shouldReceive('setOption')->once()->with($object, $option, Mockery::isSame($value));
         }
 
         $config = new ($configClass);
@@ -493,6 +815,6 @@ class ClientConfigTest extends TestCase
             $config->$option = $value;
         }
 
-        $this->createClientConfig()->setOptions($object, $config);
+        $clientConfig->setOptions($object, $config);
     }
 }

@@ -22,52 +22,31 @@
 
 namespace Model\Test\Client;
 
-use Database\Table\AndroidInstallations;
-use Database\Table\ClientConfig;
 use Database\Table\Clients;
-use Database\Table\ClientsAndGroups;
-use Database\Table\ClientSystemInfo;
 use Database\Table\CustomFields;
-use Database\Table\GroupMemberships;
-use Database\Table\NetworkDevicesIdentified;
-use Database\Table\NetworkDevicesScanned;
-use Database\Table\NetworkInterfaces;
-use Database\Table\PackageHistory;
 use Database\Table\RegistryData;
 use Database\Table\WindowsInstallations;
-use Database\Table\WindowsProductKeys;
 use Laminas\Db\Adapter\Adapter;
-use Laminas\Db\Adapter\Driver\ConnectionInterface;
-use Laminas\Db\Adapter\Driver\DriverInterface;
 use Laminas\Http\Client as HttpClient;
-use Model\Client\Client;
 use Model\Client\ClientManager;
 use Model\Client\CustomFieldManager;
 use Model\Client\ItemManager;
 use Model\Config;
-use Model\Group\Group;
 use Model\Test\AbstractTestCase;
 use Nada\Column\AbstractColumn as Column;
 use Nada\Database\AbstractDatabase;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
-use RuntimeException;
 
 class ClientManagerTest extends AbstractTestCase
 {
     protected static $_tables = array(
-        'CustomFields',
         'Filesystems',
-        'NetworkDevicesIdentified',
-        'NetworkDevicesScanned',
-        'NetworkInterfaces',
         'RegistryData',
         'Software',
         'SoftwareDefinitions',
         'SoftwareRaw',
-        'WindowsProductKeys',
         'WindowsInstallations',
     );
 
@@ -973,219 +952,6 @@ class ClientManagerTest extends AbstractTestCase
         $model = $this->createPartialMock(ClientManager::class, ['getClients']);
         $model->method('getClients')->with(null, null, null, 'Id', 42)->willReturn($resultSet);
         $model->getClient(42);
-    }
-
-    public static function deleteClientNoDeleteInterfacesProvider()
-    {
-        return [
-            [false],
-            [true],
-        ];
-    }
-
-    #[DataProvider('deleteClientNoDeleteInterfacesProvider')]
-    public function testDeleteClientNoDeleteInterfaces(bool $throwOnBeginTransaction)
-    {
-        $connection = $this->createMock(ConnectionInterface::class);
-        if ($throwOnBeginTransaction) {
-            $connection->expects($this->once())->method('beginTransaction')->willThrowException(new RuntimeException());
-            $connection->expects($this->never())->method('commit');
-            $connection->expects($this->never())->method('rollback');
-        } else {
-            $connection->expects($this->once())->method('beginTransaction');
-            $connection->expects($this->once())->method('commit');
-            $connection->expects($this->never())->method('rollback');
-        }
-
-        /** @var MockObject|Client */
-        $client = $this->createMock('Model\Client\Client');
-        $client->expects($this->once())->method('lock')->willReturn(true);
-        $client->expects($this->once())->method('offsetGet')->with('Id')->willReturn(42);
-        $client->expects($this->once())->method('unlock');
-
-        $driver = $this->createMock(DriverInterface::class);
-        $driver->method('getConnection')->willReturn($connection);
-
-        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
-        $adapter->method('getDriver')->willReturn($driver);
-
-        $androidInstallations = $this->createMock('Database\Table\AndroidInstallations');
-        $androidInstallations->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
-
-        $clientSystemInfo = $this->createMock('Database\Table\ClientSystemInfo');
-        $clientSystemInfo->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
-
-        $customFields = $this->createMock('Database\Table\CustomFields');
-        $customFields->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
-
-        $packageHistory = $this->createMock('Database\Table\PackageHistory');
-        $packageHistory->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
-
-        $windowsProductKeys = $this->createMock('Database\Table\WindowsProductKeys');
-        $windowsProductKeys->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
-
-        $groupMemberships = $this->createMock('Database\Table\GroupMemberships');
-        $groupMemberships->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
-
-        $clientConfig = $this->createMock('Database\Table\ClientConfig');
-        $clientConfig->expects($this->once())->method('delete')->with(array('hardware_id' => 42));
-
-        $itemManager = $this->createMock('Model\Client\ItemManager');
-        $itemManager->expects($this->once())->method('deleteItems')->with(42);
-
-        $clientsAndGroups = $this->createMock('Database\Table\ClientsAndGroups');
-        $clientsAndGroups->expects($this->once())->method('delete')->with(array('id' => 42));
-
-        $serviceLocator = $this->createMock(ContainerInterface::class);
-        $serviceLocator->method('get')->willReturnMap([
-            [Adapter::class, $adapter],
-            [AndroidInstallations::class, $androidInstallations],
-            [ClientConfig::class, $clientConfig],
-            [ClientsAndGroups::class, $clientsAndGroups],
-            [ClientSystemInfo::class, $clientSystemInfo],
-            [CustomFields::class, $customFields],
-            [GroupMemberships::class, $groupMemberships],
-            [ItemManager::class, $itemManager],
-            [PackageHistory::class, $packageHistory],
-            [WindowsProductKeys::class, $windowsProductKeys],
-        ]);
-
-        $clientManager = new ClientManager($serviceLocator);
-        $clientManager->deleteClient($client, false);
-    }
-
-    public function testDeleteClientDeleteInterfaces()
-    {
-        /** @var MockObject|Client */
-        $client = $this->createMock('Model\Client\Client');
-        $client->expects($this->once())->method('lock')->willReturn(true);
-        $client->expects($this->once())->method('offsetGet')->with('Id')->willReturn(4);
-        $client->expects($this->once())->method('unlock');
-
-        $androidInstallations = $this->createMock('Database\Table\AndroidInstallations');
-        $androidInstallations->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
-
-        $clientSystemInfo = $this->createMock(ClientSystemInfo::class);
-        $clientSystemInfo->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
-
-        $customFields = $this->createMock(CustomFields::class);
-        $customFields->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
-
-        $packageHistory = $this->createMock(PackageHistory::class);
-        $packageHistory->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
-
-        $windowsProductKeys = $this->createMock(WindowsProductKeys::class);
-        $windowsProductKeys->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
-
-        $groupMemberships = $this->createMock(GroupMemberships::class);
-        $groupMemberships->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
-
-        $clientConfig = $this->createMock(ClientConfig::class);
-        $clientConfig->expects($this->once())->method('delete')->with(array('hardware_id' => 4));
-
-        $itemManager = $this->createMock('Model\Client\ItemManager');
-        $itemManager->expects($this->once())->method('deleteItems')->with(4);
-
-        $clientsAndGroups = $this->createMock(ClientsAndGroups::class);
-        $clientsAndGroups->expects($this->once())->method('delete')->with(array('id' => 4));
-
-        $serviceLocator = $this->createMock(ContainerInterface::class);
-        $serviceLocator->method('get')->willReturnMap([
-            [Adapter::class, static::$serviceManager->get(Adapter::class)],
-            [NetworkDevicesIdentified::class, static::$serviceManager->get(NetworkDevicesIdentified::class)],
-            [NetworkDevicesScanned::class, static::$serviceManager->get(NetworkDevicesScanned::class)],
-            [NetworkInterfaces::class, static::$serviceManager->get(NetworkInterfaces::class)],
-            [AndroidInstallations::class, $androidInstallations],
-            [ClientConfig::class, $clientConfig],
-            [ClientsAndGroups::class, $clientsAndGroups],
-            [ClientSystemInfo::class, $clientSystemInfo],
-            [CustomFields::class, $customFields],
-            [GroupMemberships::class, $groupMemberships],
-            [ItemManager::class, $itemManager],
-            [PackageHistory::class, $packageHistory],
-            [WindowsProductKeys::class, $windowsProductKeys],
-        ]);
-
-        $clientManager = new ClientManager($serviceLocator);
-        $clientManager->deleteClient($client, true);
-
-        $dataSet = $this->loadDataSet('DeleteClientDeleteInterfaces');
-        $connection = $this->getConnection();
-        $this->assertTablesEqual(
-            $dataSet->getTable('netmap'),
-            $connection->createQueryTable('netmap', 'SELECT mac FROM netmap ORDER BY mac')
-        );
-        $this->assertTablesEqual(
-            $dataSet->getTable('network_devices'),
-            $connection->createQueryTable('network_devices', 'SELECT macaddr FROM network_devices ORDER BY macaddr')
-        );
-    }
-
-    public function testDeleteClientLockingFailure()
-    {
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('Could not lock client for deletion');
-
-        /** @var MockObject|Client */
-        $client = $this->createMock('Model\Client\Client');
-        $client->expects($this->once())->method('lock')->willReturn(false);
-        $client->expects($this->never())->method('unlock');
-
-        $serviceLocator = $this->createMock(ContainerInterface::class);
-        $serviceLocator->expects($this->never())->method('get');
-
-        $clientManager = new ClientManager($serviceLocator);
-        $clientManager->deleteClient($client, false);
-    }
-
-    public static function deleteClientExceptionProvider()
-    {
-        return [
-            [false],
-            [true],
-        ];
-    }
-
-    #[DataProvider('deleteClientExceptionProvider')]
-    public function testDeleteClientException(bool $throwOnBeginTransaction)
-    {
-        $connection = $this->createMock(ConnectionInterface::class);
-        if ($throwOnBeginTransaction) {
-            $connection->expects($this->once())->method('beginTransaction')->willThrowException(new RuntimeException());
-            $connection->expects($this->never())->method('commit');
-            $connection->expects($this->never())->method('rollback');
-        } else {
-            $connection->expects($this->once())->method('beginTransaction');
-            $connection->expects($this->never())->method('commit');
-            $connection->expects($this->once())->method('rollback');
-        }
-
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('message');
-
-        /** @var MockObject|Client */
-        $client = $this->createMock('Model\Client\Client');
-        $client->expects($this->once())->method('lock')->willReturn(true);
-        $client->expects($this->once())->method('offsetGet')->with('Id')->willReturn(42);
-        $client->expects($this->once())->method('unlock');
-
-        $driver = $this->createMock(DriverInterface::class);
-        $driver->method('getConnection')->willReturn($connection);
-
-        $adapter = $this->createMock('Laminas\Db\Adapter\Adapter');
-        $adapter->method('getDriver')->willReturn($driver);
-
-        $androidInstallations = $this->createMock(AndroidInstallations::class);
-        $androidInstallations->method('delete')->willThrowException(new \RuntimeException('message'));
-
-        $serviceLocator = $this->createMock(ContainerInterface::class);
-        $serviceLocator->method('get')->willReturnMap([
-            [Adapter::class, $adapter],
-            [AndroidInstallations::class, $androidInstallations],
-        ]);
-
-        $clientManager = new ClientManager($serviceLocator);
-        $clientManager->deleteClient($client, false);
     }
 
     public function testImportFile()

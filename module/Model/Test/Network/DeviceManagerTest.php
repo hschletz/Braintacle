@@ -31,10 +31,7 @@ class DeviceManagerTest extends AbstractTestCase
 {
     /** {@inheritdoc} */
     protected static $_tables = array(
-        'NetworkDevicesIdentified',
-        'NetworkDevicesScanned',
         'NetworkDeviceTypes',
-        'NetworkInterfaces',
     );
 
     public function testGetDevicesNoFilterOrderByVendorDesc()

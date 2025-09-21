@@ -37,9 +37,6 @@ use PHPUnit\Framework\MockObject\Stub;
  */
 class CustomFieldManagerTest extends AbstractTestCase
 {
-    /** {@inheritdoc} */
-    protected static $_tables = array('CustomFields');
-
     public function testGetFields()
     {
         $fieldInfo = array('field' => array('column' => 'column_name', 'type' => 'text'));

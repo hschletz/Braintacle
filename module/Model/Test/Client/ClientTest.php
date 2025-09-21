@@ -41,8 +41,6 @@ class ClientTest extends AbstractTestCase
     use MockeryPHPUnitIntegration;
 
     protected static $_tables = [
-        'AndroidInstallations',
-        'WindowsProductKeys',
         'WindowsInstallations',
         'DuplicateSerials',
         'DuplicateAssetTags',

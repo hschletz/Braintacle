@@ -33,7 +33,6 @@ class SoftwareManagerTest extends AbstractTestCase
         'Software',
         'SoftwareDefinitions',
         'SoftwareRaw',
-        'WindowsProductKeys',
         'WindowsInstallations',
     ];
 

@@ -46,39 +46,6 @@ bios:
     ssn: "duplicate"
     assettag: "duplicate"
 
-# Package assignments for duplicates that should be merged
-devices:
-  -
-    hardware_id: 2
-    name: "DOWNLOAD"
-    ivalue: 1
-    tvalue: "NOTIFIED"
-  -
-    hardware_id: 2
-    name: "DOWNLOAD"
-    ivalue: 2
-    tvalue: "NOTIFIED"
-  - # Should be merged too
-    hardware_id: 2
-    name: "DOWNLOAD_FORCE"
-    ivalue: 1
-    tvalue: null
-  - # Should not be merged
-    hardware_id: 2
-    name: "DOWNLOAD_SWITCH"
-    ivalue: 0
-    tvalue: null
-  -
-    hardware_id: 3
-    name: "DOWNLOAD"
-    ivalue: 2
-    tvalue: "SUCCESS"
-  -
-    hardware_id: 3
-    name: "DOWNLOAD"
-    ivalue: 3
-    tvalue: "SUCCESS"
-
 # Network interfaces
 networks:
   -

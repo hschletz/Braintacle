@@ -3,10 +3,13 @@
 namespace Braintacle\Configuration;
 
 use Braintacle\Client\Configuration\ClientConfigurationParameters;
+use Braintacle\Database\Table;
 use Braintacle\Group\Configuration\GroupConfigurationParameters;
+use Doctrine\DBAL\Connection;
 use Model\Client\Client;
 use Model\Config;
 use Model\Group\Group;
+use Throwable;
 
 /**
  * Manage client/group configuration.
@@ -27,7 +30,7 @@ final class ClientConfig
     ];
     private const BooleanOptions = ['packageDeployment', 'allowScan', 'scanSnmp'];
 
-    public function __construct(private Config $config) {}
+    public function __construct(private Config $config, private Connection $connection) {}
 
     /**
      * Get configured options for client/group.
@@ -47,7 +50,7 @@ final class ClientConfig
                 /** @psalm-suppress UnhandledMatchCondition */
                 $value = match ($value) {
                     null => true,
-                    0 => false,
+                    false => false,
                 };
             }
             $options[$option] = $value;
@@ -253,6 +256,86 @@ final class ClientConfig
         return $config;
     }
 
+    public function setOption(Client | Group $object, string $option, int | bool | string | null $value): void
+    {
+        // Determine 'name' column in the ClientConfig table
+        if ($option == 'allowScan' || $option == 'scanThisNetwork') {
+            $name = 'IPDISCOVER';
+        } else {
+            $name = $this->config->getDbIdentifier($option);
+            if ($option == 'packageDeployment' || $option == 'scanSnmp') {
+                $name .= '_SWITCH';
+            }
+        }
+
+        // Set affected columns
+        if ($option == 'scanThisNetwork') {
+            assert($value === null || is_string($value));
+            $columns = [
+                'ivalue' => Client::SCAN_EXPLICIT,
+                'tvalue' => $value,
+            ];
+        } else {
+            if ($value !== null && in_array($option, self::BooleanOptions)) {
+                assert(is_bool($value));
+                // These options are only evaluated if their default setting is
+                // enabled, i.e. they only have an effect if they get disabled.
+                // To keep things clearer in the database, the option is unset
+                // if enabled, with the same effect (i.e. none).
+                $value = $value ? null : 0;
+            } else {
+                assert($value === null || is_int($value));
+            }
+            $columns = ['ivalue' => $value];
+        }
+
+        // Filter for delete()/update()
+        $condition = [
+            'hardware_id' => $object->id,
+            'name' => $name,
+        ];
+
+        $this->connection->beginTransaction();
+        try {
+            if ($value === null) {
+                // Unset option. For scan options, also check ivalue to prevent
+                // accidental deletion of unrelated setting.
+                if ($option == 'allowScan') {
+                    $condition['ivalue'] = Client::SCAN_DISABLED;
+                } elseif ($option == 'scanThisNetwork') {
+                    $condition['ivalue'] = Client::SCAN_EXPLICIT;
+                }
+                $this->connection->delete(Table::ClientConfig, $condition);
+            } else {
+                $oldValue = $object->getConfig($option);
+                if ($oldValue === null) {
+                    // Not set yet, insert new record
+                    if ($name == 'IPDISCOVER' or $name == 'DOWNLOAD_SWITCH' or $name == 'SNMP_SWITCH') {
+                        // There may already be a record with a different
+                        // ivalue. For IPDISCOVER, this can happen because
+                        // different $option values map to it. For *_SWITCH,
+                        // this can happen if the database value is 1 (which is
+                        // only possible if the record was not written by
+                        // Braintacle), which getConfig() reports as NULL. Since
+                        // there may only be 1 record per hardware_id/name, the
+                        // old record must be deleted first.
+                        $this->connection->delete(Table::ClientConfig, $condition);
+                    }
+                    $columns['hardware_id'] = $object->id;
+                    $columns['name'] = $name;
+                    $this->connection->insert(Table::ClientConfig, $columns);
+                } elseif ($oldValue != $value) {
+                    // Already set to a different value, update record
+                    $this->connection->update(Table::ClientConfig, $columns, $condition);
+                }
+            }
+            $this->connection->commit();
+        } catch (Throwable $throwable) {
+            $this->connection->rollBack();
+            throw $throwable;
+        }
+    }
+
     /**
      * @template T of Client|Group
      * @param T $object
@@ -283,7 +366,7 @@ final class ClientConfig
                 'scanThisNetwork',
                 => $options->allowScan ? $value : null,
             };
-            $object->setConfig($option, $value);
+            $this->setOption($object, $option, $value);
         }
     }
 }

@@ -316,7 +316,11 @@ abstract class ClientOrGroup extends AbstractModel
         if ($row) {
             $value = $row[$column];
             if ($column == 'ivalue') {
-                $value = (int) $value;
+                if (in_array($option, $this->_optionsDisableOnly)) {
+                    $value = (bool) $value;
+                } else {
+                    $value = (int) $value;
+                }
             }
             $value = $this->normalizeConfig($option, $value);
         } else {
@@ -325,92 +329,6 @@ abstract class ClientOrGroup extends AbstractModel
 
         $this->_configCache[$option] = $value;
         return $value;
-    }
-
-    /**
-     * Store configuration value
-     *
-     * See getConfig() for available options. A stored setting is not
-     * necessarily in effect - it may be overridden somewhere else.
-     *
-     * @param string $option Option name
-     * @param mixed $value Value to store, NULL to reset to default
-     */
-    public function setConfig($option, $value)
-    {
-        // Determine 'name' column in the 'devices' table
-        if ($option == 'allowScan' or $option == 'scanThisNetwork') {
-            $name = 'IPDISCOVER';
-        } else {
-            $name = $this->container->get(Config::class)->getDbIdentifier($option);
-            if ($option == 'packageDeployment' or $option == 'scanSnmp') {
-                $name .= '_SWITCH';
-            }
-        }
-
-        if ($value !== null and $option != 'scanThisNetwork') {
-            $value = (int) $value; // Strict type required for cache
-        }
-        $value = $this->normalizeConfig($option, $value);
-
-        // Set affected columns
-        if ($option == 'scanThisNetwork') {
-            $columns = array(
-                'ivalue' => self::SCAN_EXPLICIT,
-                'tvalue' => $value
-            );
-        } else {
-            $columns = array('ivalue' => $value);
-        }
-
-        // Filter for delete()/update()
-        $condition = array(
-            'hardware_id' => $this['Id'],
-            'name' => $name,
-        );
-
-        $clientConfig = $this->container->get(ClientConfig::class);
-        $connection = $clientConfig->getAdapter()->getDriver()->getConnection();
-        $connection->beginTransaction();
-        try {
-            if ($value === null) {
-                // Unset option. For scan options, also check ivalue to prevent
-                // accidental deletion of unrelated setting.
-                if ($option == 'allowScan') {
-                    $condition['ivalue'] = self::SCAN_DISABLED;
-                } elseif ($option == 'scanThisNetwork') {
-                    $condition['ivalue'] = self::SCAN_EXPLICIT;
-                }
-                $clientConfig->delete($condition);
-            } else {
-                $oldValue = $this->getConfig($option);
-                if ($oldValue === null) {
-                    // Not set yet, insert new record
-                    if ($name == 'IPDISCOVER' or $name == 'DOWNLOAD_SWITCH' or $name == 'SNMP_SWITCH') {
-                        // There may already be a record with a different ivalue.
-                        // For IPDISCOVER, this can happen because different $option
-                        // values map to it. For *_SWITCH, this can happen if the
-                        // database value is 1 (which is only possible if the record
-                        // was not written by Braintacle), which getConfig() reports
-                        // as NULL.
-                        // Since there may only be 1 record per hardware_id/name,
-                        // the old record must be deleted first.
-                        $clientConfig->delete($condition);
-                    }
-                    $columns['hardware_id'] = $this['Id'];
-                    $columns['name'] = $name;
-                    $clientConfig->insert($columns);
-                } elseif ($oldValue != $value) {
-                    // Already set to a different value, update record
-                    $clientConfig->update($columns, $condition);
-                }
-            }
-            $connection->commit();
-        } catch (\Exception $e) {
-            $connection->rollback();
-            throw $e;
-        }
-        $this->_configCache[$option] = $value;
     }
 
     /**

@@ -27,7 +27,6 @@ use Model\Test\AbstractTestCase;
 class ItemManagerTest extends AbstractTestCase
 {
     protected static $_tables = array(
-        'AndroidInstallations',
         'DuplicateMacAddresses',
         'SoftwareDefinitions',
         'AudioDevices',
@@ -41,7 +40,6 @@ class ItemManagerTest extends AbstractTestCase
         'MemorySlots',
         'Modems',
         'MsOfficeProducts',
-        'NetworkInterfaces',
         'Ports',
         'Printers',
         'RegistryData',
@@ -212,7 +210,8 @@ class ItemManagerTest extends AbstractTestCase
         $model = $this->getModel();
         $model->deleteItems(1);
         $dataSet = new \PHPUnit\DbUnit\DataSet\QueryDataSet($this->getConnection());
-        foreach (static::$_tables as $table) {
+        $tables = array_merge(static::$_tables, ['AndroidInstallations', 'NetworkInterfaces']);
+        foreach ($tables as $table) {
             if ($table == 'DuplicateMacAddresses' or $table == 'SoftwareDefinitions') {
                 continue;
             }

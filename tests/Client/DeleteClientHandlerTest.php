@@ -3,6 +3,7 @@
 namespace Braintacle\Test\Client;
 
 use Braintacle\Client\ClientRequestParameters;
+use Braintacle\Client\Clients;
 use Braintacle\Client\DeleteClientHandler;
 use Braintacle\FlashMessages;
 use Braintacle\Http\RouteHelper;
@@ -10,7 +11,6 @@ use Braintacle\Test\HttpHandlerTestTrait;
 use Formotron\DataProcessor;
 use Laminas\Translator\TranslatorInterface;
 use Model\Client\Client;
-use Model\Client\ClientManager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -50,8 +50,8 @@ final class DeleteClientHandlerTest extends TestCase
             ->with($routeArguments, ClientRequestParameters::class)
             ->willReturn($requestParameters);
 
-        $clientManager = $this->createMock(ClientManager::class);
-        $clientManager->expects($this->once())->method('deleteClient')->with($client, $deleteInterfaces);
+        $clients = $this->createMock(Clients::class);
+        $clients->expects($this->once())->method('delete')->with($client, $deleteInterfaces);
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator->method('translate')->willReturnCallback(fn($message) => '_' . $message);
@@ -66,7 +66,7 @@ final class DeleteClientHandlerTest extends TestCase
             $this->response,
             $routeHelper,
             $dataProcessor,
-            $clientManager,
+            $clients,
             $translator,
             $flashMessages,
         );
