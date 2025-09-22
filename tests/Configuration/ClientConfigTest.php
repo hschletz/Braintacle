@@ -68,21 +68,23 @@ class ClientConfigTest extends TestCase
     public function testGetOptionsForClient()
     {
         $client = $this->createStub(Client::class);
-        $client->method('getConfig')->willReturnMap([
-            ['contactInterval', null],
-            ['inventoryInterval', -1],
-            ['packageDeployment', null],
-            ['downloadPeriodDelay', 2],
-            ['downloadCycleDelay', 3],
-            ['downloadFragmentDelay', 4],
-            ['downloadMaxPriority', 5],
-            ['downloadTimeout', 6],
-            ['allowScan', null],
-            ['scanSnmp', false],
-            ['scanThisNetwork', '192.0.2.0'],
+
+        $clientConfig = $this->createClientConfigMock(['getOption']);
+        $clientConfig->method('getOption')->willReturnMap([
+            [$client, 'contactInterval', null],
+            [$client, 'inventoryInterval', -1],
+            [$client, 'packageDeployment', null],
+            [$client, 'downloadPeriodDelay', 2],
+            [$client, 'downloadCycleDelay', 3],
+            [$client, 'downloadFragmentDelay', 4],
+            [$client, 'downloadMaxPriority', 5],
+            [$client, 'downloadTimeout', 6],
+            [$client, 'allowScan', null],
+            [$client, 'scanSnmp', false],
+            [$client, 'scanThisNetwork', '192.0.2.0'],
         ]);
 
-        $options = $this->createClientConfig()->getOptions($client);
+        $options = $clientConfig->getOptions($client);
         $this->assertSame(
             [
                 'contactInterval' => null,
@@ -104,20 +106,22 @@ class ClientConfigTest extends TestCase
     public function testGetOptionsForGroup()
     {
         $group = $this->createStub(Group::class);
-        $group->method('getConfig')->willReturnMap([
-            ['contactInterval', null],
-            ['inventoryInterval', -1],
-            ['packageDeployment', null],
-            ['downloadPeriodDelay', 2],
-            ['downloadCycleDelay', 3],
-            ['downloadFragmentDelay', 4],
-            ['downloadMaxPriority', 5],
-            ['downloadTimeout', 6],
-            ['allowScan', null],
-            ['scanSnmp', false],
+
+        $clientConfig = $this->createClientConfigMock(['getOption']);
+        $clientConfig->method('getOption')->willReturnMap([
+            [$group, 'contactInterval', null],
+            [$group, 'inventoryInterval', -1],
+            [$group, 'packageDeployment', null],
+            [$group, 'downloadPeriodDelay', 2],
+            [$group, 'downloadCycleDelay', 3],
+            [$group, 'downloadFragmentDelay', 4],
+            [$group, 'downloadMaxPriority', 5],
+            [$group, 'downloadTimeout', 6],
+            [$group, 'allowScan', null],
+            [$group, 'scanSnmp', false],
         ]);
 
-        $options = $this->createClientConfig()->getOptions($group);
+        $options = $clientConfig->getOptions($group);
         $this->assertSame(
             [
                 'contactInterval' => null,
@@ -185,16 +189,20 @@ class ClientConfigTest extends TestCase
         $config->method('__get')->willReturnCallback(fn($arg) => ($arg == $globalOption) ? $globalValue : 'ignore');
 
         $groups = [];
+        $map = [];
         foreach ($groupValues as $groupValue) {
             $group = $this->createMock(Group::class);
-            $group->method('getConfig')->willReturnCallback(fn($arg) => ($arg == $option) ? $groupValue : 'ignore');
+            $map[] = [$group, $option, $groupValue];
             $groups[] = $group;
         }
 
         $client = $this->createStub(Client::class);
         $client->method('getGroups')->willReturn($groups);
 
-        $defaults = $this->createClientConfig($config)->getClientDefaults($client);
+        $clientConfig = $this->createClientConfigMock(['getOption'], $config);
+        $clientConfig->method('getOption')->willReturnMap($map);
+
+        $defaults = $clientConfig->getClientDefaults($client);
         $this->assertSame($expectedValue, $defaults[$option]);
     }
 
@@ -270,13 +278,13 @@ class ClientConfigTest extends TestCase
         int | bool $expectedValue,
     ) {
         $client = $this->createStub(Client::class);
-        $client->method('getConfig')->willReturnCallback(fn($arg) => ($arg === $option) ? $clientValue : 'ignore');
 
         $defaults = self::Defaults;
         $defaults[$option] = $defaultValue;
 
-        $clientConfig = $this->createClientConfigMock(['getClientDefaults']);
+        $clientConfig = $this->createClientConfigMock(['getClientDefaults', 'getOption']);
         $clientConfig->method('getClientDefaults')->with($client)->willReturn($defaults);
+        $clientConfig->method('getOption')->willReturnMap([[$client, $option, $clientValue]]);
 
         $effectiveConfig = $clientConfig->getEffectiveConfig($client);
 
@@ -309,20 +317,20 @@ class ClientConfigTest extends TestCase
         $config->method('__get')->with('inventoryInterval')->willReturn($globalValue);
 
         $groups = [];
+        $map = [];
         foreach ($groupValues as $groupValue) {
             $group = $this->createMock(Group::class);
-            $group->method('getConfig')->with('inventoryInterval')->willReturn($groupValue);
             $groups[] = $group;
+            $map[] = [$group, 'inventoryInterval', $groupValue];
         }
 
         $client = $this->createStub(Client::class);
-        $client->method('getConfig')->willReturnCallback(
-            fn($arg) => ($arg === 'inventoryInterval') ? $clientValue : 'ignore'
-        );
         $client->method('getGroups')->willReturn($groups);
+        $map[] = [$client, 'inventoryInterval', $clientValue];
 
-        $clientConfig = $this->createClientConfigMock(['getClientDefaults'], $config);
+        $clientConfig = $this->createClientConfigMock(['getClientDefaults', 'getOption'], $config);
         $clientConfig->method('getClientDefaults')->with($client)->willReturn(self::Defaults);
+        $clientConfig->method('getOption')->willReturnMap($map);
 
         $effectiveConfig = $clientConfig->getEffectiveConfig($client);
 
@@ -332,45 +340,101 @@ class ClientConfigTest extends TestCase
     public function testGetExplicitConfigWithNonNullValues()
     {
         $client = $this->createStub(Client::class);
-        $client->method('getConfig')->willReturnMap([
-            ['contactInterval', 0],
-            ['inventoryInterval', 1],
-            ['downloadPeriodDelay', 2],
-            ['downloadCycleDelay', 3],
-            ['downloadFragmentDelay', 4],
-            ['downloadMaxPriority', 5],
-            ['downloadTimeout', 6],
-            ['scanThisNetwork', 'network'],
-            // The following options can only be 0 or NULL
-            ['packageDeployment', 0],
-            ['allowScan', 0],
-            ['scanSnmp', 0],
+
+        $clientConfig = $this->createClientConfigMock(['getOption']);
+        $clientConfig->method('getOption')->willReturnMap([
+            [$client, 'contactInterval', 0],
+            [$client, 'inventoryInterval', 1],
+            [$client, 'downloadPeriodDelay', 2],
+            [$client, 'downloadCycleDelay', 3],
+            [$client, 'downloadFragmentDelay', 4],
+            [$client, 'downloadMaxPriority', 5],
+            [$client, 'downloadTimeout', 6],
+            [$client, 'scanThisNetwork', 'network'],
+            // The following options can only be FALSE or NULL
+            [$client, 'packageDeployment', false],
+            [$client, 'allowScan', false],
+            [$client, 'scanSnmp', false],
         ]);
 
         $this->assertSame(
             [
                 'contactInterval' => 0,
                 'inventoryInterval' => 1,
-                'packageDeployment' => 0,
+                'packageDeployment' => false,
                 'downloadPeriodDelay' => 2,
                 'downloadCycleDelay' => 3,
                 'downloadFragmentDelay' => 4,
                 'downloadMaxPriority' => 5,
                 'downloadTimeout' => 6,
-                'allowScan' => 0,
-                'scanSnmp' => 0,
+                'allowScan' => false,
+                'scanSnmp' => false,
                 'scanThisNetwork' => 'network',
             ],
-            $this->createClientConfig()->getExplicitConfig($client),
+            $clientConfig->getExplicitConfig($client),
         );
     }
 
     public function testGetExplicitConfigWithNullValues()
     {
         $client = $this->createStub(Client::class);
-        $client->method('getConfig')->willReturn(null);
 
-        $this->assertSame([], $this->createClientConfig()->getExplicitConfig($client));
+        $clientConfig = $this->createClientConfigMock(['getOption']);
+        $clientConfig
+            ->expects($this->atLeastOnce())
+            ->method('getOption')
+            ->with($client, $this->anything())
+            ->willReturn(null);
+
+        $this->assertSame([], $clientConfig->getExplicitConfig($client));
+    }
+
+    public static function getOptionProvider()
+    {
+        return [
+            [Client::class, 10, 'packageDeployment', false],
+            [Group::class, 11, 'packageDeployment', null],
+            [Client::class, 10, 'allowScan', false],
+            [Group::class, 11, 'allowScan', null],
+            [Client::class, 10, 'scanThisNetwork', '192.0.2.0'],
+            [Group::class, 11, 'scanThisNetwork', null],
+            [Client::class, 10, 'scanSnmp', false],
+            [Group::class, 11, 'scanSnmp', null],
+            [Client::class, 10, 'inventoryInterval', 23],
+            [Group::class, 11, 'inventoryInterval', null],
+        ];
+    }
+
+    /**
+     * @param class-string<Client|Group> $class
+     */
+    #[DataProvider('getOptionProvider')]
+    public function testGetOption(string $class, int $id, string $option, int | string | bool | null $expectedValue)
+    {
+        DatabaseConnection::with(function (Connection $connection) use ($class, $id, $option, $expectedValue): void {
+            DatabaseConnection::initializeTable(Table::ClientConfig, ['hardware_id', 'name', 'ivalue', 'tvalue'], [
+                [10, 'DOWNLOAD_SWITCH', 0, null],
+                [10, 'FREQUENCY', 23, null],
+                [10, 'IPDISCOVER', 0, null],
+                [10, 'IPDISCOVER', 2, '192.0.2.0'],
+                [10, 'SNMP_SWITCH', 0, null],
+                [11, 'DOWNLOAD_SWITCH', 1, null],
+            ]);
+
+            $config = $this->createMock(Config::class);
+            $config->method('getDbIdentifier')->with('inventoryInterval')->willReturn('FREQUENCY');
+
+            $clientConfig = $this->createClientConfig($config, $connection);
+
+            $object = $this->createMock($class);
+            if ($class == Group::class) {
+                $object->method('__get')->with('id')->willReturn($id);
+            } else {
+                $object->id = $id;
+            }
+
+            $this->assertSame($expectedValue, $clientConfig->getOption($object, $option));
+        });
     }
 
     public static function setOptionProvider()
@@ -615,14 +679,14 @@ class ClientConfigTest extends TestCase
                 ]);
 
                 $object = $this->createMock($class);
-                $object->method('getConfig')->with($option)->willReturn($oldValue);
                 if ($class == Group::class) {
                     $object->method('__get')->with('id')->willReturn($id);
                 } else {
                     $object->id = $id;
                 }
 
-                $clientConfig = $this->createClientConfig($config, $connection);
+                $clientConfig = $this->createClientConfigMock(['getOption'], $config, $connection);
+                $clientConfig->method('getOption')->with($object, $option)->willReturn($oldValue);
                 $clientConfig->setOption($object, $option, $value);
 
                 $content = $connection
@@ -649,11 +713,11 @@ class ClientConfigTest extends TestCase
         $connection->expects($this->never())->method('update');
         $connection->expects($this->never())->method('delete');
 
-        $clientConfig = $this->createClientConfig($config, $connection);
-
         $client = $this->createMock(Client::class);
-        $client->expects($this->once())->method('getConfig')->with('inventoryInterval')->willReturn(23);
         $client->id = 10;
+
+        $clientConfig = $this->createClientConfigMock(['getOption'], $config, $connection);
+        $clientConfig->expects($this->once())->method('getOption')->with($client, 'inventoryInterval')->willReturn(23);
 
         $clientConfig->setOption($client, 'inventoryInterval', 23);
     }
@@ -671,7 +735,8 @@ class ClientConfigTest extends TestCase
 
         $this->expectExceptionMessage('test message');
 
-        $clientConfig = $this->createClientConfig(connection: $connection);
+        $clientConfig = $this->createClientConfigMock(['getOption'], connection: $connection);
+        $clientConfig->method('getOption')->willReturn(null);
         $clientConfig->setOption($client, 'allowScan', false);
     }
 

@@ -7,6 +7,7 @@ use Braintacle\Database\Table;
 use Braintacle\Group\Configuration\GroupConfigurationParameters;
 use Doctrine\DBAL\Connection;
 use Model\Client\Client;
+use Model\ClientOrGroup;
 use Model\Config;
 use Model\Group\Group;
 use Throwable;
@@ -42,7 +43,7 @@ final class ClientConfig
     {
         $options = [];
         foreach (self::OptionsWithDefaults as $option) {
-            $value = $object->getConfig($option);
+            $value = $this->getOption($object, $option);
             if (in_array($option, self::BooleanOptions)) {
                 // These options can only be disabled ($value is 0) or
                 // unconfigured ($value is NULL), in which case the default is
@@ -57,7 +58,7 @@ final class ClientConfig
         }
 
         if ($object instanceof Client) {
-            $options['scanThisNetwork'] = $object->getConfig('scanThisNetwork');
+            $options['scanThisNetwork'] = $this->getOption($object, 'scanThisNetwork');
         }
 
         return $options;
@@ -76,7 +77,7 @@ final class ClientConfig
         foreach (self::OptionsWithDefaults as $option) {
             $groupValues = [];
             foreach ($groups as $group) {
-                $groupValue = $group->getConfig($option);
+                $groupValue = $this->getOption($group, $option);
                 if ($groupValue !== null) {
                     $groupValues[] = $groupValue;
                 }
@@ -194,9 +195,9 @@ final class ClientConfig
                     $value = $globalValue;
                 } else {
                     // Get smallest value of client and group settings
-                    $value = $client->getConfig('inventoryInterval');
+                    $value = $this->getOption($client, 'inventoryInterval');
                     foreach ($client->getGroups() as $group) {
-                        $groupValue = $group->getConfig('inventoryInterval');
+                        $groupValue = $this->getOption($group, 'inventoryInterval');
                         if ($value === null || ($groupValue !== null && $groupValue < $value)) {
                             $value = $groupValue;
                         }
@@ -209,14 +210,14 @@ final class ClientConfig
             } elseif (in_array($option, self::BooleanOptions)) {
                 // If default is FALSE, return FALSE.
                 // Otherwise override default if explicitly disabled.
-                if ($default && $client->getConfig($option) === 0) {
+                if ($default && $this->getOption($client, $option) === 0) {
                     $value = false;
                 } else {
                     $value = (bool) $default;
                 }
             } else {
                 // Standard integer values. Client value takes precedence.
-                $value = $client->getConfig($option);
+                $value = $this->getOption($client, $option);
                 if ($value === null) {
                     $value = $default;
                 }
@@ -243,17 +244,78 @@ final class ClientConfig
     {
         $config = [];
         foreach (self::OptionsWithDefaults as $option) {
-            $value = $client->getConfig($option);
+            $value = $this->getOption($client, $option);
             if ($value !== null) {
                 $config[$option] = $value;
             }
         }
-        $scanThisNetwork = $client->getConfig('scanThisNetwork');
+        $scanThisNetwork = $this->getOption($client, 'scanThisNetwork');
         if ($scanThisNetwork !== null) {
             $config['scanThisNetwork'] = $scanThisNetwork;
         }
 
         return $config;
+    }
+
+    /**
+     * Get configuration value.
+     *
+     * Returns configuration values stored for the given client/group. If no
+     * explicit configuration is stored, NULL is returned. A returned setting is
+     * not necessarily in effect - it may be overridden somewhere else.
+     *
+     * Any valid global option name can be passed for $option, though most
+     * options are not object-specific and would always yield NULL. In addition
+     * to the global options, the following options are available:
+     *
+     * - **allowScan:** If FALSE, prevents client or group members from scanning
+     *   networks.
+     *
+     * - **scanThisNetwork:** Causes a client to always scan networks with the
+     *   given address (not taking a network mask into account), overriding the
+     *   server's automatic choice.
+     *
+     * packageDeployment, allowScan and scanSnmp are never evaluated if disabled
+     * globally or by groups of which a client is a member. For this reason,
+     * these options can only be FALSE (explicitly disabled if enabled on a
+     * higher level) or NULL (inherit behavior).
+     */
+    public function getOption(Client | Group $object, string $option): int | string | bool | null
+    {
+        $name = match ($option) {
+            'packageDeployment' => 'DOWNLOAD_SWITCH',
+            'scanSnmp' => 'SNMP_SWITCH',
+            'allowScan', 'scanThisNetwork' => 'IPDISCOVER',
+            default => $name = $this->config->getDbIdentifier($option),
+        };
+        $ivalue = match ($option) {
+            'allowScan' => ClientOrGroup::SCAN_DISABLED,
+            'scanThisNetwork' => ClientOrGroup::SCAN_EXPLICIT,
+            default => null,
+        };
+        $column = ($option == 'scanThisNetwork') ? 'tvalue' : 'ivalue';
+
+        $select = $this->connection
+            ->createQueryBuilder()
+            ->select($column)
+            ->from(Table::ClientConfig)
+            ->where('hardware_id = :id', 'name = :name')
+            ->setParameter('id', $object->id)
+            ->setParameter('name', $name);
+        if (isset($ivalue)) {
+            $select->andWhere('ivalue = :ivalue')->setParameter('ivalue', $ivalue);
+        }
+
+        $value = $select->fetchOne();
+        if ($value === false) { // no row found
+            $value = null;
+        } elseif (in_array($option, self::BooleanOptions)) {
+            $value = $value ? null : false;
+        } elseif ($column == 'ivalue') {
+            $value = (int) $value;
+        }
+
+        return $value;
     }
 
     public function setOption(Client | Group $object, string $option, int | bool | string | null $value): void
@@ -307,7 +369,7 @@ final class ClientConfig
                 }
                 $this->connection->delete(Table::ClientConfig, $condition);
             } else {
-                $oldValue = $object->getConfig($option);
+                $oldValue = $this->getOption($object, $option);
                 if ($oldValue === null) {
                     // Not set yet, insert new record
                     if ($name == 'IPDISCOVER' or $name == 'DOWNLOAD_SWITCH' or $name == 'SNMP_SWITCH') {

@@ -22,7 +22,6 @@
 
 namespace Model;
 
-use Database\Table\ClientConfig;
 use Database\Table\Locks;
 use Laminas\Db\Adapter\Adapter;
 use Nada\Column\AbstractColumn as Column;
@@ -56,12 +55,6 @@ abstract class ClientOrGroup extends AbstractModel
     protected ContainerInterface $container;
 
     /**
-     * Cache for getConfig() results
-     * @var array
-     */
-    protected $_configCache = array();
-
-    /**
      * Timestamp when a lock held by this instance will expire
      * @var \DateTime
      */
@@ -72,16 +65,6 @@ abstract class ClientOrGroup extends AbstractModel
      * @var integer
      */
     protected $_lockNestCount = 0;
-
-    /**
-     * Options which can only be disabled
-     * @var string[]
-     */
-    private $_optionsDisableOnly = [
-        'packageDeployment',
-        'allowScan',
-        'scanSnmp',
-    ];
 
     public function setContainer(ContainerInterface $container)
     {
@@ -246,109 +229,5 @@ abstract class ClientOrGroup extends AbstractModel
     public function isLocked()
     {
         return (bool) $this->_lockNestCount;
-    }
-
-    /**
-     * Get configuration value
-     *
-     * Returns configuration values stored for this object. If no explicit
-     * configuration is stored, NULL is returned. A returned setting is not
-     * necessarily in effect - it may be overridden somewhere else.
-     *
-     * Any valid option name can be passed for $option, though most options are
-     * not object-specific and would always yield NULL. In addition to the
-     * options defined in \Model\Config, the following options are available:
-     *
-     * - **allowScan:** If 0, prevents client or group members from scanning
-     *   networks.
-     *
-     * - **scanThisNetwork:** Causes a client to always scan networks with the
-     *   given address (not taking a network mask into account), overriding the
-     *   server's automatic choice.
-     *
-     * packageDeployment, allowScan and scanSnmp are never evaluated if disabled
-     * globally or by groups of which a client is a member. For this reason,
-     * these options can only be 0 (explicitly disabled if enabled on a higher
-     * level) or NULL (inherit behavior).
-     *
-     * Results are cached per instance.
-     *
-     * @param string $option Option name
-     * @return mixed Stored value or NULL
-     */
-    public function getConfig($option)
-    {
-        $id = $this['Id'];
-        if (array_key_exists($option, $this->_configCache)) {
-            return $this->_configCache[$option];
-        }
-
-        $column = 'ivalue';
-        switch ($option) {
-            case 'packageDeployment':
-                $name = 'DOWNLOAD_SWITCH'; // differs from global database option name
-                break;
-            case 'allowScan':
-                $name = 'IPDISCOVER';
-                $ivalue = self::SCAN_DISABLED;
-                break;
-            case 'scanThisNetwork':
-                $name = 'IPDISCOVER';
-                $ivalue = self::SCAN_EXPLICIT;
-                $column = 'tvalue';
-                break;
-            case 'scanSnmp':
-                $name = 'SNMP_SWITCH'; // differs from global database option name
-                break;
-            default:
-                $name = $this->container->get(Config::class)->getDbIdentifier($option);
-        }
-        $clientConfig = $this->container->get(ClientConfig::class);
-        $select = $clientConfig->getSql()->select();
-        $select->columns(array($column))
-            ->where(
-                array('hardware_id' => $id, 'name' => $name)
-            );
-        if (isset($ivalue)) {
-            $select->where(array('ivalue' => $ivalue));
-        }
-        $row = $clientConfig->selectWith($select)->current();
-        if ($row) {
-            $value = $row[$column];
-            if ($column == 'ivalue') {
-                if (in_array($option, $this->_optionsDisableOnly)) {
-                    $value = (bool) $value;
-                } else {
-                    $value = (int) $value;
-                }
-            }
-            $value = $this->normalizeConfig($option, $value);
-        } else {
-            $value = null;
-        }
-
-        $this->_configCache[$option] = $value;
-        return $value;
-    }
-
-    /**
-     * Process config value before or after daterbase interaction
-     *
-     * @param string $option Option name
-     * @param mixed $value Raw value
-     * @return mixed Normalized value
-     */
-    protected function normalizeConfig($option, $value)
-    {
-        if (in_array($option, $this->_optionsDisableOnly)) {
-            // These options are only evaluated if their default setting is
-            // enabled, i.e. they only have an effect if they get disabled.
-            // To keep things clearer in the database, the option is unset if
-            // enabled, with the same effect (i.e. none).
-            if ($value != 0) {
-                $value = null;
-            }
-        }
-        return $value;
     }
 }
