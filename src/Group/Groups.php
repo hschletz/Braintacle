@@ -8,9 +8,17 @@ use Braintacle\Group\Members\ExcludedClient;
 use Braintacle\Group\Members\ExcludedColumn;
 use Braintacle\Group\Members\Member;
 use Braintacle\Group\Members\MembersColumn;
+use Braintacle\Search\Search;
+use Braintacle\Search\SearchParams;
+use Braintacle\Time;
 use Doctrine\DBAL\Connection;
 use Formotron\DataProcessor;
+use Laminas\Db\Sql\Select;
+use Laminas\Db\Sql\Sql;
+use LogicException;
+use Model\Client\Client;
 use Model\Group\Group;
+use Throwable;
 
 /**
  * Manage groups.
@@ -26,6 +34,9 @@ final class Groups
     public function __construct(
         private Connection $connection,
         private DataProcessor $dataProcessor,
+        private Search $search,
+        private Sql $sql,
+        private Time $time,
     ) {}
 
     /**
@@ -81,5 +92,97 @@ final class Groups
         $select->orderBy($order->value, $direction->value);
 
         return $this->dataProcessor->iterate($select->executeQuery()->iterateAssociative(), ExcludedClient::class);
+    }
+
+    /**
+     * Set memberships from search result.
+     */
+    public function setSearchResults(Group $group, SearchParams $searchParams, Membership $membershipType): void
+    {
+        if ($membershipType == Membership::Automatic) {
+            $this->setQuery($group, $this->search->getQuery($searchParams));
+        } else {
+            $this->setMembers(
+                $group,
+                $this->search->getClients($searchParams),
+                $membershipType,
+            );
+        }
+    }
+
+    /**
+     * Set Query for automatic group membership.
+     */
+    public function setQuery(Group $group, Select $select): void
+    {
+        $numColumns = count($select->getRawState(Select::COLUMNS));
+        foreach ($select->getRawState(Select::JOINS) as $join) {
+            $numColumns += count($join['columns']);
+        }
+        if ($numColumns != 1) {
+            throw new LogicException('Expected 1 column, got ' . $numColumns);
+        }
+
+        $sql = $this->sql->buildSqlString($select);
+
+        $this->connection->update(
+            Table::GroupInfo,
+            ['request' => $sql],
+            ['hardware_id' => $group->id]
+        );
+
+        $group->dynamicMembersSql = $sql;
+        $group->update(force: true); // Force cache update, effectively validating query
+    }
+
+    /**
+     * Set manually included/excluded members.
+     *
+     * @param iterable<Client> $clients
+     */
+    public function setMembers(Group $group, iterable $clients, Membership $membershipType): void
+    {
+        $groupId = $group->id;
+        $membership = $membershipType->value;
+        while (!$group->lock()) {
+            $this->time->sleep(1);
+        }
+        try {
+            $existingMemberships = $this->connection
+                ->createQueryBuilder()
+                ->select('hardware_id', 'static')
+                ->from(Table::GroupMemberships)
+                ->where('group_id = :id')
+                ->setParameter('id', $groupId)
+                ->fetchAllKeyValue();
+
+            $this->connection->beginTransaction();
+            try {
+                foreach ($clients as $client) {
+                    $clientId = $client->id;
+                    if (isset($existingMemberships[$clientId])) {
+                        // Update only memberships of a different type
+                        if ($existingMemberships[$clientId] != $membership) {
+                            $this->connection->update(
+                                Table::GroupMemberships,
+                                ['static' => $membership],
+                                ['group_id' => $groupId, 'hardware_id' => $clientId],
+                            );
+                        }
+                    } else {
+                        $this->connection->insert(
+                            Table::GroupMemberships,
+                            ['group_id' => $groupId, 'hardware_id' => $clientId, 'static' => $membership],
+                        );
+                    }
+                }
+                $this->connection->commit();
+            } catch (Throwable $throwable) {
+                $this->connection->rollBack();
+                throw $throwable;
+            }
+        } finally {
+            $group->unlock();
+        }
     }
 }

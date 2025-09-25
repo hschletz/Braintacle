@@ -14,6 +14,7 @@ use DI\Container as DIContainer;
 use Doctrine\DBAL\Connection;
 use Laminas\Authentication\AuthenticationServiceInterface;
 use Laminas\Db\Adapter\Adapter;
+use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Mvc\Application as MvcApplication;
 use Laminas\Translator\TranslatorInterface;
 use Laminas\Session\Validator\Csrf;
@@ -47,6 +48,7 @@ class Container extends DIContainer
         parent::__construct([
             AbstractDatabase::class => factory(DatabaseFactory::class),
             Adapter::class => factory(AdapterFactory::class),
+            AdapterInterface::class => get(Adapter::class),
             AppConfig::class => create(AppConfig::class)->constructor(
                 new Filesystem(),
                 getenv('BRAINTACLE_CONFIG') ?:
@@ -54,7 +56,7 @@ class Container extends DIContainer
             ),
             AuthenticationServiceInterface::class => get(AuthenticationService::class),
             Client::class => factory(ClientOrGroupFactory::class),
-            ClockInterface::class => get(Clock::class),
+            ClockInterface::class => get(Time::class),
             Connection::class => factory(ConnectionFactory::class),
             Csrf::class => create(Csrf::class)->constructor(['timeout' => null]),
             Group::class => factory(ClientOrGroupFactory::class),

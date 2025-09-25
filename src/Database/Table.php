@@ -42,6 +42,12 @@ final class Table
 
     public const CustomFields = 'accountinfo';
 
+    /**
+     * Extra information on groups, supplementing the information in the Groups
+     * table.
+     */
+    public const GroupInfo = 'groups';
+
     public const GroupMemberships = 'groups_cache';
 
     /**

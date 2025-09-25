@@ -69,7 +69,6 @@ abstract class AbstractGroupTestCase extends AbstractTestCase
             ]);
 
             $this->_groupInfo = new \Database\Table\GroupInfo($serviceManager);
-            $this->_groupInfo->updateSchema(true);
             $this->_groupInfo->initialize();
         }
         parent::setUp();

@@ -5,6 +5,7 @@ namespace Braintacle\Test\Group\Add;
 use Braintacle\Group\Add\AddToGroupFormHandler;
 use Braintacle\Group\Add\ExistingGroupFormData;
 use Braintacle\Group\Add\NewGroupFormData;
+use Braintacle\Group\Groups;
 use Braintacle\Group\Membership;
 use Braintacle\Http\RouteHelper;
 use Braintacle\Search\SearchOperator;
@@ -39,12 +40,12 @@ class AddToGroupFormHandlerTest extends TestCase
         $dataProcessor->method('process')->with($parsedBody, get_class($formData))->willReturn($formData);
 
         $group->method('__get')->with('name')->willReturn('_name');
-        $group->expects($this->once())->method('setMembersFromQuery')->with(
-            Membership::Never->value,
-            '_filter',
-            '_search',
-            SearchOperator::Equal->value,
-            true,
+
+        $groups = $this->createMock(Groups::class);
+        $groups->expects($this->once())->method('setSearchResults')->with(
+            $group,
+            $formData,
+            Membership::Never,
         );
 
         $routeHelper = $this->createMock(RouteHelper::class);
@@ -53,7 +54,7 @@ class AddToGroupFormHandlerTest extends TestCase
             ->with('showGroupMembers', [], ['name' => '_name'])
             ->willReturn('redirect');
 
-        $handler = new AddToGroupFormHandler($this->response, $dataProcessor, $groupManager, $routeHelper);
+        $handler = new AddToGroupFormHandler($this->response, $dataProcessor, $groupManager, $groups, $routeHelper);
         $response = $handler->handle($this->request->withParsedBody($parsedBody));
 
         $this->assertResponseStatusCode(302, $response);

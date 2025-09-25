@@ -26,17 +26,13 @@ use Database\Table\Clients;
 use Database\Table\GroupInfo;
 use Database\Table\GroupMemberships;
 use DateTimeInterface;
-use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\Expression;
 use Laminas\Db\Sql\Literal;
 use Laminas\Db\Sql\Predicate\NotIn;
-use Laminas\Db\Sql\Sql;
 use Model\Client\Client;
-use Model\Client\ClientManager;
 use Model\Config;
 use Psr\Clock\ClockInterface;
 use Random\Randomizer;
-use Throwable;
 
 /**
  * A group of clients
@@ -92,100 +88,6 @@ class Group extends \Model\ClientOrGroup
      * Timestamp when cache will expire and get rebuilt
      */
     public DateTimeInterface $CacheExpirationDate;
-
-    /**
-     * Set group members based on query
-     *
-     * If $type is \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
-     * the DynamicMembersSql property will be set to the resulting query. For
-     * other values, the query will be executed and $type is stored as manual
-     * membership/exclusion on the results.
-     *
-     * The query arguments are passed to \Model\Client\ClientManager::getClients().
-     *
-     * @param integer $type Membership type
-     * @param string|array $filter Name or array of names of a pre-defined filter routine
-     * @param string|array $search Search parameter(s) passed to the filter
-     * @param string|array $operator Comparision operator
-     * @param bool|array $invert Invert query results (return all clients NOT matching criteria)
-     * @throws \LogicException if the query does not yield exactly 1 column (internal validation, should never fail)
-     */
-    public function setMembersFromQuery($type, $filter, $search, $operator, $invert)
-    {
-        $id = $this['Id'];
-        $members = $this->container->get(ClientManager::class)->getClients(
-            array('Id'),
-            null,
-            null,
-            $filter,
-            $search,
-            $operator,
-            $invert,
-            false,
-            true,
-            ($type != \Model\Client\Client::MEMBERSHIP_AUTOMATIC)
-        );
-
-        if ($type == \Model\Client\Client::MEMBERSHIP_AUTOMATIC) {
-            $numCols = count($members->getRawState(\Laminas\Db\Sql\Select::COLUMNS));
-            foreach ($members->getRawState(\Laminas\Db\Sql\Select::JOINS) as $join) {
-                $numCols += count($join['columns']);
-            }
-            if ($numCols != 1) {
-                throw new \LogicException('Expected 1 column, got ' . $numCols);
-            }
-            $sql = new Sql($this->container->get(Adapter::class));
-            $query = $sql->buildSqlString($members);
-            $this->container->get(GroupInfo::class)->update(
-                array('request' => $query),
-                array('hardware_id' => $id)
-            );
-            $this->offsetSet('DynamicMembersSql', $query);
-            $this->update(true); // Force cache update, effectively validating query
-        } else {
-            // Wait until lock can be obtained
-            while (!$this->lock()) {
-                sleep(1);
-            }
-            try {
-                // Get list of existing memberships
-                $existingMemberships = [];
-                $groupMemberships = $this->container->get(GroupMemberships::class);
-                $select = $groupMemberships->getSql()->select();
-                $select->columns(['hardware_id', 'static'])->where(['group_id' => $id]);
-                foreach ($groupMemberships->selectWith($select) as $membership) {
-                    $existingMemberships[$membership['hardware_id']] = $membership['static'];
-                }
-                // Insert/update membership entries
-                $connection = $groupMemberships->getAdapter()->getDriver()->getConnection();
-                $connection->beginTransaction();
-                try {
-                    foreach ($members as $member) {
-                        $member = $member['Id'];
-                        if (isset($existingMemberships[$member])) {
-                            // Update only memberships of a different type
-                            if ($existingMemberships[$member] != $type) {
-                                $groupMemberships->update(
-                                    ['static' => $type],
-                                    ['group_id' => $id, 'hardware_id' => $member],
-                                );
-                            }
-                        } else {
-                            $groupMemberships->insert(
-                                ['group_id' => $id, 'hardware_id' => $member, 'static' => $type]
-                            );
-                        }
-                    }
-                    $connection->commit();
-                } catch (Throwable $throwable) {
-                    $connection->rollBack();
-                    throw $throwable;
-                }
-            } finally {
-                $this->unlock();
-            }
-        }
-    }
 
     /**
      * Update the cache for dynamic memberships

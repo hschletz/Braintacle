@@ -2,6 +2,7 @@
 
 namespace Braintacle\Group\Add;
 
+use Braintacle\Group\Groups;
 use Braintacle\Http\RouteHelper;
 use Formotron\DataProcessor;
 use Model\Group\GroupManager;
@@ -19,6 +20,7 @@ class AddToGroupFormHandler implements RequestHandlerInterface
         private ResponseInterface $response,
         private DataProcessor $dataProcessor,
         private GroupManager $groupManager,
+        private Groups $groups,
         private RouteHelper $routeHelper,
     ) {}
 
@@ -34,13 +36,8 @@ class AddToGroupFormHandler implements RequestHandlerInterface
             $formData = $this->dataProcessor->process($request->getParsedBody(), ExistingGroupFormData::class);
             $group = $formData->group;
         }
-        $group->setMembersFromQuery(
-            $formData->membershipType->value,
-            $formData->filter,
-            $formData->search,
-            $formData->operator->value,
-            $formData->invert,
-        );
+
+        $this->groups->setSearchResults($group, $formData, $formData->membershipType);
 
         return $this->response->withStatus(302)->withHeader(
             'Location',
