@@ -117,6 +117,7 @@ abstract class AbstractTable extends \Laminas\Db\TableGateway\AbstractTableGatew
      *
      * @param bool $prune Drop obsolete columns
      * @codeCoverageIgnore
+     * @psalm-suppress PossiblyUnusedMethod (referenced dynamically)
      */
     public function updateSchema($prune = false)
     {
