@@ -334,11 +334,7 @@ class ClientTest extends AbstractTestCase
         $model->method('getGroupMemberships')->willReturn($oldMemberships);
         $model->setContainer($serviceManager);
 
-        $cache = new \ReflectionProperty($model, '_groups');
-        $cache->setValue($model, 'cache');
-
         $model->setGroupMemberships($newMemberships);
-        $this->assertEquals('cache', $cache->getValue($model));
     }
 
     public static function setGroupMembershipsInsertProvider()
@@ -401,11 +397,7 @@ class ClientTest extends AbstractTestCase
         $model->method('getGroupMemberships')->willReturn($oldMemberships);
         $model->setContainer($serviceManager);
 
-        $cache = new \ReflectionProperty($model, '_groups');
-        $cache->setValue($model, 'cache');
-
         $model->setGroupMemberships(array('group1' => $newMembership));
-        $this->assertNull($cache->getValue($model));
     }
 
     public static function setGroupMembershipsUpdateProvider()
@@ -468,11 +460,7 @@ class ClientTest extends AbstractTestCase
         $model->method('getGroupMemberships')->willReturn(array(1 => $oldMembership));
         $model->setContainer($serviceManager);
 
-        $cache = new \ReflectionProperty($model, '_groups');
-        $cache->setValue($model, 'cache');
-
         $model->setGroupMemberships(array('group1' => $newMembership));
-        $this->assertNull($cache->getValue($model));
     }
 
     public static function setGroupMembershipsDeleteProvider()
@@ -527,11 +515,7 @@ class ClientTest extends AbstractTestCase
         $model->method('getGroupMemberships')->willReturn([1 => $oldMembership]);
         $model->setContainer($serviceManager);
 
-        $cache = new \ReflectionProperty($model, '_groups');
-        $cache->setValue($model, 'cache');
-
         $model->setGroupMemberships(array('group1' => \Model\Client\Client::MEMBERSHIP_AUTOMATIC));
-        $this->assertNull($cache->getValue($model));
     }
 
     public function testSetGroupMembershipsMixedKeys()
@@ -670,7 +654,7 @@ class ClientTest extends AbstractTestCase
         $groups = array('group1', 'group2');
 
         $groupManager = $this->createMock(GroupManager::class);
-        $groupManager->expects($this->once())->method('getGroups')->with('Member', 42)->willReturn(
+        $groupManager->method('getGroups')->with('Member', 42)->willReturn(
             new \ArrayIterator($groups)
         );
         static::$serviceManager->setService(GroupManager::class, $groupManager);
@@ -680,7 +664,6 @@ class ClientTest extends AbstractTestCase
         $model->id = 42;
 
         $this->assertEquals($groups, $model->getGroups());
-        $this->assertEquals($groups, $model->getGroups()); // cached result
     }
 
     public function testSetCustomFields()

@@ -247,12 +247,6 @@ class Client extends \Model\ClientOrGroup
      */
     public ?string $ipAddress;
 
-    /**
-     * Cache for getGroups() result
-     * @var \Model\Group\Group[]
-     */
-    protected $_groups;
-
     #[ReturnTypeWillChange]
     public function offsetGet($key)
     {
@@ -365,7 +359,6 @@ class Client extends \Model\ClientOrGroup
         }
         $oldMemberships = $this->getGroupMemberships(self::MEMBERSHIP_ANY);
 
-        $resetCache = false;
         foreach ($newMemberships as $groupKey => $newMembership) {
             if (is_int($groupKey)) {
                 $group = @$groupsById[$groupKey];
@@ -398,7 +391,6 @@ class Client extends \Model\ClientOrGroup
                             )
                         );
                         $group->update(true);
-                        $resetCache = true;
                     }
                     break;
                 case self::MEMBERSHIP_ALWAYS:
@@ -411,7 +403,6 @@ class Client extends \Model\ClientOrGroup
                                 'static' => $newMembership,
                             )
                         );
-                        $resetCache = true;
                     } elseif ($oldMembership !== $newMembership) {
                         $groupMemberships->update(
                             array(
@@ -422,16 +413,11 @@ class Client extends \Model\ClientOrGroup
                                 'group_id' => $groupId,
                             )
                         );
-                        $resetCache = true;
                     }
                     break;
                 default:
                     throw new \InvalidArgumentException('Invalid membership type: ' . $newMembership);
             }
-        }
-
-        if ($resetCache) {
-            $this->_groups = null;
         }
     }
 
@@ -478,18 +464,13 @@ class Client extends \Model\ClientOrGroup
     /**
      * Get groups of which this client is a member
      *
-     * Result gets cached.
-     *
      * @return \Model\Group\Group[]
      */
     public function getGroups()
     {
-        if ($this->_groups === null) {
-            $this->_groups = iterator_to_array(
-                $this->container->get(GroupManager::class)->getGroups('Member', $this->id)
-            );
-        }
-        return $this->_groups;
+        return iterator_to_array(
+            $this->container->get(GroupManager::class)->getGroups('Member', $this->id)
+        );
     }
     /**
      * Set values for custom fields
