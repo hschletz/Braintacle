@@ -4,6 +4,7 @@ namespace Braintacle\Client;
 
 use Braintacle\Configuration\ClientConfig;
 use Braintacle\Database\Table;
+use Braintacle\Group\Membership;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Model\Client\Client;
@@ -143,9 +144,12 @@ final class Duplicates
     {
         $groupList = [];
         foreach ($olderClients as $client) {
-            $groupList += $client->getGroupMemberships(Client::MEMBERSHIP_MANUAL);
+            $groupList += array_map(
+                fn(int $membership) => Membership::from($membership),
+                $client->getGroupMemberships(Client::MEMBERSHIP_MANUAL),
+            );
         }
-        $newestClient->setGroupMemberships($groupList);
+        $this->clients->setGroupMemberships($newestClient, $groupList);
     }
 
     /**

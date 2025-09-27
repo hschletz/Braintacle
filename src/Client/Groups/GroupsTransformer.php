@@ -22,7 +22,7 @@ class GroupsTransformer implements Transformer
             if (!is_string($group)) {
                 throw new AssertionFailedException('Expected string, got ' . gettype($group));
             }
-            $membership = Membership::from($membership)->value;
+            $membership = Membership::from($membership);
         }
 
         return $value;

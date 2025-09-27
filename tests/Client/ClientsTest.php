@@ -6,12 +6,18 @@ use Braintacle\Client\Clients;
 use Braintacle\Database\Migration;
 use Braintacle\Database\Migrations;
 use Braintacle\Database\Table;
+use Braintacle\Group\Membership;
 use Braintacle\Test\DatabaseConnection;
 use Doctrine\DBAL\Connection;
 use Exception;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\Client\Client;
 use Model\Client\ItemManager;
+use Model\Group\Group;
+use Model\Group\GroupManager;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -21,6 +27,20 @@ use RuntimeException;
 #[UsesClass(Migrations::class)]
 final class ClientsTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
+    private function createClients(
+        ?Connection $connection = null,
+        ?ItemManager $itemManager = null,
+        ?GroupManager $groupManager = null,
+    ): Clients {
+        return new Clients(
+            $connection ?? $this->createStub(Connection::class),
+            $itemManager ?? $this->createStub(ItemManager::class),
+            $groupManager ?? $this->createStub(GroupManager::class),
+        );
+    }
+
     private function fetchColumn(Connection $connection, string $table, string $column)
     {
         return $connection->createQueryBuilder()->select($column)->from($table)->orderBy($column)->fetchFirstColumn();
@@ -139,7 +159,7 @@ final class ClientsTest extends TestCase
             $itemManager = $this->createMock(ItemManager::class);
             $itemManager->expects($this->once())->method('deleteItems')->with($clientId);
 
-            $clients = new Clients($connection, $itemManager);
+            $clients = $this->createClients($connection, $itemManager);
             $clients->delete($client, deleteInterfaces: false);
 
             $this->assertClientDeleted($connection);
@@ -161,7 +181,7 @@ final class ClientsTest extends TestCase
             $itemManager = $this->createMock(ItemManager::class);
             $itemManager->expects($this->once())->method('deleteItems')->with($clientId);
 
-            $clients = new Clients($connection, $itemManager);
+            $clients = $this->createClients($connection, $itemManager);
             $clients->delete($client, deleteInterfaces: true);
 
             $this->assertClientDeleted($connection);
@@ -183,7 +203,7 @@ final class ClientsTest extends TestCase
             $itemManager = $this->createMock(ItemManager::class);
             $itemManager->expects($this->never())->method('deleteItems');
 
-            $clients = new Clients($connection, $itemManager);
+            $clients = $this->createClients($connection, $itemManager);
             try {
                 $clients->delete($client, deleteInterfaces: true);
                 $this->fail('Expected Exception was not thrown');
@@ -210,7 +230,7 @@ final class ClientsTest extends TestCase
             $itemManager = $this->createMock(ItemManager::class);
             $itemManager->expects($this->once())->method('deleteItems')->willThrowException(new Exception('test'));
 
-            $clients = new Clients($connection, $itemManager);
+            $clients = $this->createClients($connection, $itemManager);
             try {
                 $clients->delete($client, deleteInterfaces: true);
                 $this->fail('Expected Exception was not thrown');
@@ -221,5 +241,259 @@ final class ClientsTest extends TestCase
             $this->assertNotClientDeleted($connection);
             $this->assertNotInterfacesDeleted($connection);
         });
+    }
+
+    public static function setGroupMembershipsNoActionProvider()
+    {
+        return [
+            [
+                [],
+                [],
+            ],
+            [
+                [],
+                ['group1' => Membership::Automatic],
+            ],
+            [
+                [2 => Membership::Automatic->value],
+                ['group1' => Membership::Automatic],
+            ],
+            [
+                [1 => Membership::Automatic->value],
+                ['group1' => Membership::Automatic],
+            ],
+            [
+                [1 => Membership::Manual->value],
+                ['group1' => Membership::Manual],
+            ],
+            [
+                [1 => Membership::Never->value],
+                ['group1' => Membership::Never],
+            ],
+            [
+                [],
+                ['ignore' => Membership::Manual],
+            ],
+        ];
+    }
+
+    #[DataProvider('setGroupMembershipsNoActionProvider')]
+    public function testSetGroupMembershipsNoAction(array $oldMemberships, array $newMemberships)
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection->expects($this->never())->method('insert');
+        $connection->expects($this->never())->method('update');
+        $connection->expects($this->never())->method('delete');
+
+        $group1 = $this->createStub(Group::class);
+        $group1->method('__get')->willReturnMap([['id', 1], ['name', 'name1']]);
+
+        $group2 = $this->createStub(Group::class);
+        $group2->method('__get')->willReturnMap([['id', 2], ['name', 'name2']]);
+
+        $groupManager = $this->createMock(GroupManager::class);
+        $groupManager->method('getGroups')->with()->willReturn([$group1, $group2]);
+
+        $client = $this->createMock(Client::class);
+        $client->method('offsetGet')->with('Id')->willReturn(42);
+        $client->method('getGroupMemberships')->willReturn($oldMemberships);
+
+        $clients = $this->createClients(connection: $connection, groupManager: $groupManager);
+        $clients->setGroupMemberships($client, $newMemberships);
+    }
+
+    public static function setGroupMembershipsInsertProvider()
+    {
+        return [
+            [
+                [],
+                Membership::Manual,
+            ],
+            [
+                [],
+                Membership::Never,
+            ],
+            [
+                [2 => Membership::Automatic->value],
+                Membership::Manual,
+            ],
+            [
+                [2 => Membership::Automatic->value],
+                Membership::Never,
+            ],
+        ];
+    }
+
+    #[DataProvider('setGroupMembershipsInsertProvider')]
+    public function testSetGroupMembershipsInsert(array $oldMemberships, Membership $newMembership)
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection->expects($this->once())->method('insert')->with(Table::GroupMemberships, [
+            'hardware_id' => 42,
+            'group_id' => 1,
+            'static' => $newMembership->value,
+        ]);
+        $connection->expects($this->never())->method('update');
+        $connection->expects($this->never())->method('delete');
+
+        $group1 = $this->createStub(Group::class);
+        $group1->method('__get')->willReturnMap([['id', 1], ['name', 'name1']]);
+
+        $group2 = $this->createStub(Group::class);
+        $group2->method('__get')->willReturnMap([['id', 2], ['name', 'name2']]);
+
+        $groupManager = $this->createMock(GroupManager::class);
+        $groupManager->method('getGroups')->with()->willReturn([$group1, $group2]);
+
+        $client = $this->createMock(Client::class);
+        $client->method('getGroupMemberships')->willReturn($oldMemberships);
+        $client->id = 42;
+
+        $clients = $this->createClients(connection: $connection, groupManager: $groupManager);
+        $clients->setGroupMemberships($client, ['name1' => $newMembership]);
+    }
+
+    public static function setGroupMembershipsUpdateProvider()
+    {
+        return [
+            [
+                Membership::Automatic,
+                Membership::Manual,
+            ],
+            [
+                Membership::Automatic,
+                Membership::Never,
+            ],
+            [
+                Membership::Manual,
+                Membership::Never,
+            ],
+            [
+                Membership::Never,
+                Membership::Manual,
+            ],
+        ];
+    }
+
+    #[DataProvider('setGroupMembershipsUpdateProvider')]
+    public function testSetGroupMembershipsUpdate(Membership $oldMembership, Membership $newMembership)
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection->expects($this->never())->method('insert');
+        $connection->expects($this->once())->method('update')->with(
+            Table::GroupMemberships,
+            ['static' => $newMembership->value],
+            [
+                'hardware_id' => 42,
+                'group_id' => 1,
+            ]
+        );
+        $connection->expects($this->never())->method('delete');
+
+        $group1 = $this->createStub(Group::class);
+        $group1->method('__get')->willReturnMap([['id', 1], ['name', 'name1']]);
+
+        $group2 = $this->createStub(Group::class);
+        $group2->method('__get')->willReturnMap([['id', 2], ['name', 'name2']]);
+
+        $groupManager = $this->createMock(GroupManager::class);
+        $groupManager->method('getGroups')->with()->willReturn([$group1, $group2]);
+
+        $client = $this->createMock(Client::class);
+        $client->method('getGroupMemberships')->willReturn([1 => $oldMembership->value]);
+        $client->id = 42;
+
+        $clients = $this->createClients(connection: $connection, groupManager: $groupManager);
+        $clients->setGroupMemberships($client, ['name1' => $newMembership]);
+    }
+
+    public static function setGroupMembershipsDeleteProvider()
+    {
+        return [
+            [Membership::Manual],
+            [Membership::Never],
+        ];
+    }
+
+    #[DataProvider('setGroupMembershipsDeleteProvider')]
+    public function testSetGroupMembershipsDelete(Membership $oldMembership)
+    {
+        $group1 = $this->createMock(Group::class);
+        $group1->method('__get')->willReturnMap([['id', 1], ['name', 'name1']]);
+        $group1->expects($this->once())->method('update')->with(true);
+
+        $group2 = $this->createMock(Group::class);
+        $group2->method('__get')->willReturnMap([['id', 2], ['name', 'name2']]);
+        $group2->expects($this->never())->method('update');
+
+        $connection = $this->createMock(Connection::class);
+        $connection->expects($this->never())->method('insert');
+        $connection->expects($this->never())->method('update');
+        $connection->expects($this->once())->method('delete')->with(
+            Table::GroupMemberships,
+            [
+                'hardware_id' => 42,
+                'group_id' => 1,
+            ],
+        );
+
+        $groupManager = $this->createMock(GroupManager::class);
+        $groupManager->method('getGroups')->with()->willReturn([$group1, $group2]);
+
+        $client = $this->createMock(Client::class);
+        $client->method('getGroupMemberships')->willReturn([1 => $oldMembership->value]);
+        $client->id = 42;
+
+        $clients = $this->createClients(connection: $connection, groupManager: $groupManager);
+        $clients->setGroupMemberships($client, ['name1' => Membership::Automatic]);
+    }
+
+    public function testSetGroupMembershipsMixedKeys()
+    {
+        $connection = Mockery::mock(Connection::class);
+        $connection->shouldReceive('insert')->once()->with(
+            Table::GroupMemberships,
+            [
+                'hardware_id' => 42,
+                'group_id' => 1,
+                'static' => Membership::Manual->value,
+            ]
+        );
+        $connection->shouldReceive('insert')->once()->with(
+            Table::GroupMemberships,
+            [
+                'hardware_id' => 42,
+                'group_id' => 3,
+                'static' => Membership::Never->value,
+            ],
+        );
+        $connection->shouldNotReceive('update');
+        $connection->shouldNotReceive('delete');
+
+        $group1 = $this->createStub(Group::class);
+        $group1->method('__get')->willReturnMap([['id', 1], ['name', 'name1']]);
+
+        $group2 = $this->createStub(Group::class);
+        $group2->method('__get')->willReturnMap([['id', 2], ['name', 'name2']]);
+
+        $group3 = $this->createStub(Group::class);
+        $group3->method('__get')->willReturnMap([['id', 3], ['name', 'name3']]);
+
+        $groupManager = $this->createMock(GroupManager::class);
+        $groupManager->method('getGroups')->with()->willReturn([$group1, $group2, $group3]);
+
+        $client = $this->createMock(Client::class);
+        $client->method('getGroupMemberships')->willReturn([2 => Membership::Manual->value]);
+        $client->id = 42;
+
+        $clients = $this->createClients(connection: $connection, groupManager: $groupManager);
+        $clients->setGroupMemberships(
+            $client,
+            [
+                1 => Membership::Manual,
+                'name2' => Membership::Manual,
+                'name3' => Membership::Never,
+            ]
+        );
     }
 }

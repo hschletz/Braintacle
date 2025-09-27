@@ -8,6 +8,7 @@ use Braintacle\Configuration\ClientConfig;
 use Braintacle\Database\Migration;
 use Braintacle\Database\Migrations;
 use Braintacle\Database\Table;
+use Braintacle\Group\Membership;
 use Braintacle\Test\DatabaseConnection;
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
@@ -54,6 +55,22 @@ final class DuplicatesTest extends TestCase
         [3, 'DOWNLOAD', 2, 'SUCCESS'],
         [3, 'DOWNLOAD', 3, 'SUCCESS'],
     ];
+
+    private function createDuplicates(
+        ?Connection $connection = null,
+        ?ClientConfig $clientConfig = null,
+        ?ClientManager $clientManager = null,
+        ?Clients $clients = null,
+        ?SoftwareManager $softwareManager = null,
+    ): Duplicates {
+        return new Duplicates(
+            $connection ?? $this->createStub(Connection::class),
+            $clientConfig ?? $this->createStub(ClientConfig::class),
+            $clientManager ?? $this->createStub(ClientManager::class),
+            $clients ?? $this->createStub(Clients::class),
+            $softwareManager ?? $this->createStub(SoftwareManager::class),
+        );
+    }
 
     public static function mergeNoneWithLessThan2ClientsProvider()
     {
@@ -354,12 +371,7 @@ final class DuplicatesTest extends TestCase
 
     public function testMergeGroups()
     {
-        $newestClient = $this->createMock(Client::class);
-        $newestClient->expects($this->once())->method('setGroupMemberships')->with([
-            1 => Client::MEMBERSHIP_ALWAYS,
-            2 => Client::MEMBERSHIP_NEVER,
-            3 => Client::MEMBERSHIP_ALWAYS,
-        ]);
+        $newestClient = $this->createStub(Client::class);
 
         $client1 = $this->createMock(Client::class);
         $client1->method('getGroupMemberships')->with(Client::MEMBERSHIP_MANUAL)->willReturn([
@@ -373,24 +385,20 @@ final class DuplicatesTest extends TestCase
             3 => Client::MEMBERSHIP_ALWAYS,
         ]);
 
-        $duplicates = new Duplicates(
-            $this->createStub(Connection::class),
-            $this->createStub(ClientConfig::class),
-            $this->createStub(ClientManager::class),
-            $this->createStub(Clients::class),
-            $this->createStub(SoftwareManager::class),
-        );
+        $clients = $this->createMock(Clients::class);
+        $clients->expects($this->once())->method('setGroupMemberships')->with($newestClient, [
+            1 => Membership::Manual,
+            2 => Membership::Never,
+            3 => Membership::Manual,
+        ]);
+
+        $duplicates = $this->createDuplicates(clients: $clients);
         $duplicates->mergeGroups($newestClient, [$client1, $client2]);
     }
 
     public function testMergeGroupsWithConflictingMemberships()
     {
-        // The resulting membership type is undefinded. Just check for the
-        // correct group ID and size.
-        $newestClient = $this->createMock(Client::class);
-        $newestClient->expects($this->once())
-            ->method('setGroupMemberships')
-            ->with($this->logicalAnd($this->countOf(1), $this->arrayHasKey(1)));
+        $newestClient = $this->createStub(Client::class);
 
         $client1 = $this->createMock(Client::class);
         $client1->method('getGroupMemberships')->with(Client::MEMBERSHIP_MANUAL)->willReturn([
@@ -402,13 +410,14 @@ final class DuplicatesTest extends TestCase
             1 => Client::MEMBERSHIP_NEVER,
         ]);
 
-        $duplicates = new Duplicates(
-            $this->createStub(Connection::class),
-            $this->createStub(ClientConfig::class),
-            $this->createStub(ClientManager::class),
-            $this->createStub(Clients::class),
-            $this->createStub(SoftwareManager::class),
-        );
+        // The resulting membership type is undefinded. Just check for the
+        // correct group ID and size.
+        $clients = $this->createMock(Clients::class);
+        $clients->expects($this->once())
+            ->method('setGroupMemberships')
+            ->with($newestClient, $this->logicalAnd($this->countOf(1), $this->arrayHasKey(1)));
+
+        $duplicates = $this->createDuplicates(clients: $clients);
         $duplicates->mergeGroups($newestClient, [$client1, $client2]);
     }
 

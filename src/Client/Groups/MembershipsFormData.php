@@ -3,6 +3,7 @@
 namespace Braintacle\Client\Groups;
 
 use Braintacle\CsrfProcessor;
+use Braintacle\Group\Membership;
 use Formotron\Attribute\PreProcess;
 use Formotron\Attribute\Transform;
 
@@ -14,7 +15,7 @@ class MembershipsFormData
 {
     /**
      * Map of group names to membership types.
-     * @var array<string, 0|1|2>
+     * @var array<string, Membership>
      */
     #[Transform(GroupsTransformer::class)]
     public array $groups;

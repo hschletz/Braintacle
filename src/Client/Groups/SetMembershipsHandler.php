@@ -3,6 +3,7 @@
 namespace Braintacle\Client\Groups;
 
 use Braintacle\Client\ClientRequestParameters;
+use Braintacle\Client\Clients;
 use Braintacle\Http\RouteHelper;
 use Formotron\DataProcessor;
 use Override;
@@ -19,6 +20,7 @@ class SetMembershipsHandler implements RequestHandlerInterface
         private ResponseInterface $response,
         private RouteHelper $routeHelper,
         private DataProcessor $dataProcessor,
+        private Clients $clients,
     ) {}
 
     #[Override]
@@ -29,7 +31,7 @@ class SetMembershipsHandler implements RequestHandlerInterface
             $this->routeHelper->getRouteArguments(),
             ClientRequestParameters::class
         )->client;
-        $client->setGroupMemberships($groups);
+        $this->clients->setGroupMemberships($client, $groups);
 
         return $this->response->withStatus(302)->withHeader(
             'Location',

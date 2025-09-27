@@ -3,8 +3,8 @@
 namespace Braintacle\Test\Client\Groups;
 
 use Braintacle\Client\Groups\GroupsTransformer;
+use Braintacle\Group\Membership;
 use Formotron\AssertionFailedException;
-use Model\Client\Client;
 use PHPUnit\Framework\TestCase;
 use ValueError;
 
@@ -14,13 +14,13 @@ class GroupsTransformerTest extends TestCase
     {
         $input = [
             'automatic' => '0',
-            'always' => '1',
+            'manual' => '1',
             'never' => '2',
         ];
         $output = [
-            'automatic' => Client::MEMBERSHIP_AUTOMATIC,
-            'always' => Client::MEMBERSHIP_ALWAYS,
-            'never' => Client::MEMBERSHIP_NEVER,
+            'automatic' => Membership::Automatic,
+            'manual' => Membership::Manual,
+            'never' => Membership::Never,
         ];
         $transformer = new GroupsTransformer();
         $this->assertSame($output, $transformer->transform($input, []));
