@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Braintacle\Database;
 
-use Doctrine\DBAL\Schema\Name\UnqualifiedName;
+use Doctrine\DBAL\Schema\Name\UnquotedIdentifierFolding;
 use Doctrine\DBAL\Schema\PrimaryKeyConstraint;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
@@ -44,7 +44,11 @@ abstract class Migration extends AbstractMigration
     protected function viewExists(string $name): bool
     {
         foreach ($this->sm->listViews() as $view) {
-            if ($view->getName() == $name) {
+            $normalizedName = $view
+                ->getObjectName()
+                ->getUnqualifiedName()
+                ->toNormalizedValue(UnquotedIdentifierFolding::LOWER);
+            if ($normalizedName == strtolower($name)) {
                 $this->write('View exists: ' . $name);
                 return true;
             }
