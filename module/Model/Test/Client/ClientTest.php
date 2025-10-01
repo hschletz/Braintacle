@@ -263,66 +263,6 @@ class ClientTest extends AbstractTestCase
         $this->assertSame($result, $model->getItems('type', 'order', 'direction', array('filter' => 'arg')));
     }
 
-    public static function getGroupMembershipsProvider()
-    {
-        return array(
-            array(
-                \Model\Client\Client::MEMBERSHIP_ANY,
-                array(
-                    1 => \Model\Client\Client::MEMBERSHIP_ALWAYS,
-                    2 => \Model\Client\Client::MEMBERSHIP_NEVER,
-                    3 => \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
-                )
-            ),
-            array(
-                \Model\Client\Client::MEMBERSHIP_MANUAL,
-                array(
-                    1 => \Model\Client\Client::MEMBERSHIP_ALWAYS,
-                    2 => \Model\Client\Client::MEMBERSHIP_NEVER,
-                )
-            ),
-            array(
-                \Model\Client\Client::MEMBERSHIP_ALWAYS,
-                array(1 => \Model\Client\Client::MEMBERSHIP_ALWAYS)
-            ),
-            array(
-                \Model\Client\Client::MEMBERSHIP_NEVER,
-                array(2 => \Model\Client\Client::MEMBERSHIP_NEVER)
-            ),
-            array(
-                \Model\Client\Client::MEMBERSHIP_AUTOMATIC,
-                array(3 => \Model\Client\Client::MEMBERSHIP_AUTOMATIC)
-            ),
-        );
-    }
-
-    /**
-     * @dataProvider getGroupMembershipsProvider
-     */
-    public function testGetGroupMemberships($type, $expected)
-    {
-        $groupManager = $this->createMock(GroupManager::class);
-        $groupManager->expects($this->once())->method('updateCache');
-
-        static::$serviceManager->setService(GroupManager::class, $groupManager);
-
-        $model = new Client();
-        $model->id = 1;
-        $model->setContainer(static::$serviceManager);
-
-        $this->assertSame($expected, $model->getGroupMemberships($type));
-    }
-
-    public function testGetGroupMembershipsInvalidType()
-    {
-        $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage('Bad value for membership: 42');
-
-        $model = new Client();
-        $model->setContainer(static::$serviceManager);
-        $model->getGroupMemberships(42);
-    }
-
     public function testGetGroups()
     {
         $groups = array('group1', 'group2');

@@ -88,6 +88,38 @@ final class Clients
     }
 
     /**
+     * Retrieve group memberships.
+     *
+     * If no type is specified, memberships of all types are returned.
+     *
+     * @return array<int,Membership> Group ID => membership type
+     */
+    public function getGroupMemberships(Client $client, Membership ...$membershipTypes): array
+    {
+        $select = $this->connection
+            ->createQueryBuilder()
+            ->select('group_id', 'static')
+            ->from(Table::GroupMemberships)
+            ->where('hardware_id = :id')
+            ->setParameter('id', $client->id);
+
+        if ($membershipTypes) {
+            $select->andWhere('static IN (:types)')->setParameter(
+                'types',
+                array_map((fn(Membership $membership) => $membership->value), $membershipTypes),
+                ArrayParameterType::INTEGER,
+            );
+        }
+
+        $this->groupManager->updateCache();
+
+        return array_map(
+            fn(int $membership) => Membership::from($membership),
+            $select->fetchAllKeyValue(),
+        );
+    }
+
+    /**
      * Set group memberships.
      *
      * Groups which are not present in $newMemberships remain unchanged. The
@@ -104,10 +136,7 @@ final class Clients
             $groupsById[$group->id] = $group;
             $groupsByName[$group->name] = $group;
         }
-        $oldMemberships = array_map(
-            fn(int $membership) => Membership::from($membership),
-            $client->getGroupMemberships(Client::MEMBERSHIP_ANY),
-        );
+        $oldMemberships = $this->getGroupMemberships($client);
 
         foreach ($newMemberships as $groupKey => $newMembership) {
             assert($newMembership instanceof Membership);
@@ -122,6 +151,7 @@ final class Clients
 
             $groupId = $group->id;
             $oldMembership = $oldMemberships[$groupId] ?? null;
+            assert($oldMembership === null || $oldMembership instanceof Membership);
             if ($newMembership == Membership::Automatic) {
                 if ($oldMembership != Membership::Automatic) {
                     // Delete manual membership and update group cache because

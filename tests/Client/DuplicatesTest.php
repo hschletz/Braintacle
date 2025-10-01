@@ -374,18 +374,20 @@ final class DuplicatesTest extends TestCase
         $newestClient = $this->createStub(Client::class);
 
         $client1 = $this->createMock(Client::class);
-        $client1->method('getGroupMemberships')->with(Client::MEMBERSHIP_MANUAL)->willReturn([
-            1 => Client::MEMBERSHIP_ALWAYS,
-            2 => Client::MEMBERSHIP_NEVER,
-        ]);
 
         $client2 = $this->createMock(Client::class);
-        $client2->method('getGroupMemberships')->with(Client::MEMBERSHIP_MANUAL)->willReturn([
-            2 => Client::MEMBERSHIP_NEVER,
-            3 => Client::MEMBERSHIP_ALWAYS,
-        ]);
 
         $clients = $this->createMock(Clients::class);
+        $clients->method('getGroupMemberships')->willReturnMap([
+            [$client1, Membership::Manual, Membership::Never, [
+                1 => Membership::Manual,
+                2 => Membership::Never,
+            ]],
+            [$client2, Membership::Manual, Membership::Never, [
+                2 => Membership::Never,
+                3 => Membership::Manual,
+            ]],
+        ]);
         $clients->expects($this->once())->method('setGroupMemberships')->with($newestClient, [
             1 => Membership::Manual,
             2 => Membership::Never,
@@ -401,21 +403,28 @@ final class DuplicatesTest extends TestCase
         $newestClient = $this->createStub(Client::class);
 
         $client1 = $this->createMock(Client::class);
-        $client1->method('getGroupMemberships')->with(Client::MEMBERSHIP_MANUAL)->willReturn([
-            1 => Client::MEMBERSHIP_ALWAYS,
-        ]);
-
         $client2 = $this->createMock(Client::class);
-        $client2->method('getGroupMemberships')->with(Client::MEMBERSHIP_MANUAL)->willReturn([
-            1 => Client::MEMBERSHIP_NEVER,
-        ]);
 
-        // The resulting membership type is undefinded. Just check for the
+        // The resulting membership type is undefined. Just check for the
         // correct group ID and size.
-        $clients = $this->createMock(Clients::class);
-        $clients->expects($this->once())
-            ->method('setGroupMemberships')
-            ->with($newestClient, $this->logicalAnd($this->countOf(1), $this->arrayHasKey(1)));
+        $clients = Mockery::mock(Clients::class);
+        $clients
+            ->shouldReceive('getGroupMemberships')
+            ->once()
+            ->with($client1, Membership::Manual, Membership::Never)
+            ->andReturn([1 => Membership::Manual]);
+        $clients
+            ->shouldReceive('getGroupMemberships')
+            ->once()
+            ->with($client2, Membership::Manual, Membership::Never)
+            ->andReturn([1 => Membership::Never]);
+        $clients
+            ->shouldReceive('setGroupMemberships')
+            ->once()
+            ->with(
+                $newestClient,
+                Mockery::on(fn($arg) => count($arg) == 1 && $arg[1] instanceof Membership),
+            );
 
         $duplicates = $this->createDuplicates(clients: $clients);
         $duplicates->mergeGroups($newestClient, [$client1, $client2]);

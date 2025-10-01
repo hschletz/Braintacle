@@ -3,10 +3,11 @@
 namespace Braintacle\Client\Groups;
 
 use Braintacle\Client\ClientRequestParameters;
+use Braintacle\Client\Clients;
+use Braintacle\Group\Membership;
 use Braintacle\Http\RouteHelper;
 use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
-use Model\Client\Client;
 use Model\Group\GroupManager;
 use Override;
 use Psr\Http\Message\ServerRequestInterface;
@@ -23,6 +24,7 @@ class GroupsPageHandler implements RequestHandlerInterface
         private RouteHelper $routeHelper,
         private DataProcessor $dataProcessor,
         private GroupManager $groupManager,
+        private Clients $clients,
         private TemplateEngine $templateEngine,
     ) {}
 
@@ -36,19 +38,24 @@ class GroupsPageHandler implements RequestHandlerInterface
         $formData = [];
         $groups = $this->groupManager->getGroups(null, null, 'Name');
         if (count($groups)) {
-            $memberships = $client->getGroupMemberships(Client::MEMBERSHIP_ANY);
+            $memberships = $this->clients->getGroupMemberships(
+                $client,
+                Membership::Automatic,
+                Membership::Manual,
+                Membership::Never,
+            );
             foreach ($groups as $group) {
                 $id = $group->id;
                 $name = $group->name;
                 if (isset($memberships[$id])) {
                     $type = $memberships[$id];
-                    $formData[$name] = $type;
-                    if ($type != Client::MEMBERSHIP_NEVER) {
-                        $effectiveMemberships[$name] = $type;
+                    $formData[$name] = $type->value;
+                    if ($type != Membership::Never) {
+                        $effectiveMemberships[$name] = $type->value;
                     }
                 } else {
                     // Default to automatic membership
-                    $formData[$name] = Client::MEMBERSHIP_AUTOMATIC;
+                    $formData[$name] = Membership::Automatic->value;
                 }
             }
         }

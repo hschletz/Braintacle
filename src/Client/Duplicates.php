@@ -144,10 +144,7 @@ final class Duplicates
     {
         $groupList = [];
         foreach ($olderClients as $client) {
-            $groupList += array_map(
-                fn(int $membership) => Membership::from($membership),
-                $client->getGroupMemberships(Client::MEMBERSHIP_MANUAL),
-            );
+            $groupList += $this->clients->getGroupMemberships($client, Membership::Manual, Membership::Never);
         }
         $this->clients->setGroupMemberships($newestClient, $groupList);
     }

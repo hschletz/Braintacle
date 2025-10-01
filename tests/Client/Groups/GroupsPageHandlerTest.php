@@ -4,7 +4,9 @@ namespace Braintacle\Test\Client\Groups;
 
 use ArrayIterator;
 use Braintacle\Client\ClientRequestParameters;
+use Braintacle\Client\Clients;
 use Braintacle\Client\Groups\GroupsPageHandler;
+use Braintacle\Group\Membership;
 use Braintacle\Http\RouteHelper;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Template\TemplateLoader;
@@ -29,12 +31,13 @@ class GroupsPageHandlerTest extends TestCase
     use HttpHandlerTestTrait;
     use TemplateTestTrait;
 
-    private function getXpath(array $groups, Client $client): DOMXPath
+    private function getXpath(array $groups, Clients $clients): DOMXPath
     {
         $clientId = '42';
         $clientName = 'client_name';
         $routeArguments = ['id' => $clientId];
 
+        $client = $this->createStub(Client::class);
         $client->id = (int) $clientId;
         $client->name = $clientName;
 
@@ -59,7 +62,14 @@ class GroupsPageHandlerTest extends TestCase
 
         $templateEngine = $this->createTemplateEngine();
 
-        $handler = new GroupsPageHandler($this->response, $routeHelper, $dataProcessor, $groupManager, $templateEngine);
+        $handler = new GroupsPageHandler(
+            $this->response,
+            $routeHelper,
+            $dataProcessor,
+            $groupManager,
+            $clients,
+            $templateEngine,
+        );
         $response = $handler->handle($this->request);
         $this->assertResponseStatusCode(200, $response);
 
@@ -68,10 +78,10 @@ class GroupsPageHandlerTest extends TestCase
 
     public function testNoGroups()
     {
-        $client = $this->createMock(Client::class);
-        $client->expects($this->never())->method('getGroupMemberships');
+        $clients = $this->createMock(Clients::class);
+        $clients->expects($this->never())->method('getGroupMemberships');
 
-        $xPath = $this->getXpath([], $client);
+        $xPath = $this->getXpath([], $clients);
 
         $this->assertNotXpathMatches($xPath, '//h2');
         $this->assertNotXpathMatches($xPath, '//table');
@@ -84,12 +94,15 @@ class GroupsPageHandlerTest extends TestCase
         $group->id = 1;
         $group->name = 'group';
 
-        $client = $this->createMock(Client::class);
-        $client->expects($this->once())->method('getGroupMemberships')->with(Client::MEMBERSHIP_ANY)->willReturn([
-            1 => Client::MEMBERSHIP_NEVER,
-        ]);
+        $clients = $this->createMock(Clients::class);
+        $clients->expects($this->once())->method('getGroupMemberships')->with(
+            $this->isInstanceOf(Client::class),
+            Membership::Automatic,
+            Membership::Manual,
+            Membership::Never,
+        )->willReturn([1 => Membership::Never]);
 
-        $xPath = $this->getXpath([$group], $client);
+        $xPath = $this->getXpath([$group], $clients);
 
         $this->assertXpathMatches($xPath, '//h2[text()="_Manage memberships"]');
         $this->assertXpathCount(1, $xPath, '//h2');
@@ -107,13 +120,18 @@ class GroupsPageHandlerTest extends TestCase
         $group2->id = 2;
         $group2->name = 'group2';
 
-        $client = $this->createMock(Client::class);
-        $client->expects($this->once())->method('getGroupMemberships')->with(Client::MEMBERSHIP_ANY)->willReturn([
-            1 => Client::MEMBERSHIP_AUTOMATIC,
-            2 => Client::MEMBERSHIP_ALWAYS,
+        $clients = $this->createMock(Clients::class);
+        $clients->expects($this->once())->method('getGroupMemberships')->with(
+            $this->isInstanceOf(Client::class),
+            Membership::Automatic,
+            Membership::Manual,
+            Membership::Never,
+        )->willReturn([
+            1 => Membership::Automatic,
+            2 => Membership::Manual,
         ]);
 
-        $xPath = $this->getXpath([$group1, $group2], $client);
+        $xPath = $this->getXpath([$group1, $group2], $clients);
 
         $this->assertXpathMatches($xPath, '//h2[text()="_Group memberships"]');
 
@@ -145,15 +163,20 @@ class GroupsPageHandlerTest extends TestCase
         $group4->id = 4;
         $group4->name = 'group4';
 
-        $client = $this->createMock(Client::class);
-        $client->expects($this->once())->method('getGroupMemberships')->with(Client::MEMBERSHIP_ANY)->willReturn([
-            1 => Client::MEMBERSHIP_AUTOMATIC,
-            2 => Client::MEMBERSHIP_ALWAYS,
-            3 => Client::MEMBERSHIP_NEVER,
+        $clients = $this->createMock(Clients::class);
+        $clients->expects($this->once())->method('getGroupMemberships')->with(
+            $this->isInstanceOf(Client::class),
+            Membership::Automatic,
+            Membership::Manual,
+            Membership::Never,
+        )->willReturn([
+            1 => Membership::Automatic,
+            2 => Membership::Manual,
+            3 => Membership::Never,
             // group4 will be present in the form with implicit "automatic".
         ]);
 
-        $xPath = $this->getXpath([$group1, $group2, $group3, $group4], $client);
+        $xPath = $this->getXpath([$group1, $group2, $group3, $group4], $clients);
 
         // phpcs:disable Generic.Files.LineLength.TooLong
         $this->assertXpathMatches($xPath, '//form[@action="manageGroupMemberships/id=42?"]');

@@ -19,6 +19,7 @@ use Model\Group\GroupManager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -39,6 +40,19 @@ final class ClientsTest extends TestCase
             $itemManager ?? $this->createStub(ItemManager::class),
             $groupManager ?? $this->createStub(GroupManager::class),
         );
+    }
+
+    private function createClientsMock(
+        array $methods,
+        ?Connection $connection = null,
+        ?ItemManager $itemManager = null,
+        ?GroupManager $groupManager = null,
+    ): MockObject | Clients {
+        return $this->getMockBuilder(Clients::class)->onlyMethods($methods)->setConstructorArgs([
+            $connection ?? $this->createStub(Connection::class),
+            $itemManager ?? $this->createStub(ItemManager::class),
+            $groupManager ?? $this->createStub(GroupManager::class),
+        ])->getMock();
     }
 
     private function fetchColumn(Connection $connection, string $table, string $column)
@@ -243,6 +257,65 @@ final class ClientsTest extends TestCase
         });
     }
 
+    public static function getGroupMembershipsProvider()
+    {
+        return [
+            [
+                [],
+                [
+                    1 => Membership::Manual,
+                    2 => Membership::Never,
+                    3 => Membership::Automatic,
+                ]
+            ],
+            [
+                [Membership::Manual, Membership::Never],
+                [
+                    1 => Membership::Manual,
+                    2 => Membership::Never,
+                ]
+            ],
+            [
+                [Membership::Manual],
+                [1 => Membership::Manual],
+            ],
+            [
+                [Membership::Never],
+                [2 => Membership::Never],
+            ],
+            [
+                [Membership::Automatic],
+                [3 => Membership::Automatic],
+            ],
+        ];
+    }
+
+    #[DataProvider('getGroupMembershipsProvider')]
+    public function testGetGroupMemberships(array $types, array $expected)
+    {
+        DatabaseConnection::with(function (Connection $connection) use ($types, $expected): void {
+            DatabaseConnection::initializeTable(Table::GroupMemberships, ['hardware_id', 'group_id', 'static'], [
+                [1, 1, 1],
+                [1, 2, 2],
+                [1, 3, 0],
+                [2, 1, 0],
+                [2, 2, 1],
+                [2, 3, 3],
+            ]);
+
+            $groupManager = $this->createMock(GroupManager::class);
+            $groupManager->expects($this->once())->method('updateCache');
+
+            $client = $this->createStub(Client::class);
+            $client->id = 1;
+
+            $clients = $this->createClients(connection: $connection, groupManager: $groupManager);
+            $memberships = $clients->getGroupMemberships($client, ...$types);
+            ksort($memberships);
+            $this->assertSame($expected, $memberships);
+        });
+    }
+
     public static function setGroupMembershipsNoActionProvider()
     {
         return [
@@ -255,19 +328,19 @@ final class ClientsTest extends TestCase
                 ['group1' => Membership::Automatic],
             ],
             [
-                [2 => Membership::Automatic->value],
+                [2 => Membership::Automatic],
                 ['group1' => Membership::Automatic],
             ],
             [
-                [1 => Membership::Automatic->value],
+                [1 => Membership::Automatic],
                 ['group1' => Membership::Automatic],
             ],
             [
-                [1 => Membership::Manual->value],
+                [1 => Membership::Manual],
                 ['group1' => Membership::Manual],
             ],
             [
-                [1 => Membership::Never->value],
+                [1 => Membership::Never],
                 ['group1' => Membership::Never],
             ],
             [
@@ -294,11 +367,14 @@ final class ClientsTest extends TestCase
         $groupManager = $this->createMock(GroupManager::class);
         $groupManager->method('getGroups')->with()->willReturn([$group1, $group2]);
 
-        $client = $this->createMock(Client::class);
-        $client->method('offsetGet')->with('Id')->willReturn(42);
-        $client->method('getGroupMemberships')->willReturn($oldMemberships);
+        $client = $this->createStub(Client::class);
 
-        $clients = $this->createClients(connection: $connection, groupManager: $groupManager);
+        $clients = $this->createClientsMock(
+            ['getGroupMemberships'],
+            connection: $connection,
+            groupManager: $groupManager,
+        );
+        $clients->method('getGroupMemberships')->with($client)->willReturn($oldMemberships);
         $clients->setGroupMemberships($client, $newMemberships);
     }
 
@@ -345,11 +421,15 @@ final class ClientsTest extends TestCase
         $groupManager = $this->createMock(GroupManager::class);
         $groupManager->method('getGroups')->with()->willReturn([$group1, $group2]);
 
-        $client = $this->createMock(Client::class);
-        $client->method('getGroupMemberships')->willReturn($oldMemberships);
+        $client = $this->createStub(Client::class);
         $client->id = 42;
 
-        $clients = $this->createClients(connection: $connection, groupManager: $groupManager);
+        $clients = $this->createClientsMock(
+            ['getGroupMemberships'],
+            connection: $connection,
+            groupManager: $groupManager,
+        );
+        $clients->method('getGroupMemberships')->with($client)->willReturn($oldMemberships);
         $clients->setGroupMemberships($client, ['name1' => $newMembership]);
     }
 
@@ -400,10 +480,14 @@ final class ClientsTest extends TestCase
         $groupManager->method('getGroups')->with()->willReturn([$group1, $group2]);
 
         $client = $this->createMock(Client::class);
-        $client->method('getGroupMemberships')->willReturn([1 => $oldMembership->value]);
         $client->id = 42;
 
-        $clients = $this->createClients(connection: $connection, groupManager: $groupManager);
+        $clients = $this->createClientsMock(
+            ['getGroupMemberships'],
+            connection: $connection,
+            groupManager: $groupManager,
+        );
+        $clients->method('getGroupMemberships')->with($client)->willReturn([1 => $oldMembership]);
         $clients->setGroupMemberships($client, ['name1' => $newMembership]);
     }
 
@@ -441,10 +525,14 @@ final class ClientsTest extends TestCase
         $groupManager->method('getGroups')->with()->willReturn([$group1, $group2]);
 
         $client = $this->createMock(Client::class);
-        $client->method('getGroupMemberships')->willReturn([1 => $oldMembership->value]);
         $client->id = 42;
 
-        $clients = $this->createClients(connection: $connection, groupManager: $groupManager);
+        $clients = $this->createClientsMock(
+            ['getGroupMemberships'],
+            connection: $connection,
+            groupManager: $groupManager,
+        );
+        $clients->method('getGroupMemberships')->with($client)->willReturn([1 => $oldMembership]);
         $clients->setGroupMemberships($client, ['name1' => Membership::Automatic]);
     }
 
@@ -483,10 +571,14 @@ final class ClientsTest extends TestCase
         $groupManager->method('getGroups')->with()->willReturn([$group1, $group2, $group3]);
 
         $client = $this->createMock(Client::class);
-        $client->method('getGroupMemberships')->willReturn([2 => Membership::Manual->value]);
         $client->id = 42;
 
-        $clients = $this->createClients(connection: $connection, groupManager: $groupManager);
+        $clients = $this->createClientsMock(
+            ['getGroupMemberships'],
+            connection: $connection,
+            groupManager: $groupManager,
+        );
+        $clients->method('getGroupMemberships')->with($client)->willReturn([2 => Membership::Manual]);
         $clients->setGroupMemberships(
             $client,
             [

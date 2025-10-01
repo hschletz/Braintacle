@@ -26,7 +26,6 @@ use Braintacle\Group\Membership;
 use Database\Table\AndroidInstallations;
 use Database\Table\DuplicateAssetTags;
 use Database\Table\DuplicateSerials;
-use Database\Table\GroupMemberships;
 use Database\Table\PackageHistory;
 use Database\Table\WindowsInstallations;
 use DateTimeInterface;
@@ -86,16 +85,6 @@ class Client extends \Model\ClientOrGroup
      * Value denoting that the client is excluded from a group
      */
     const MEMBERSHIP_NEVER = 2;
-
-    /**
-     * Value denoting either MEMBERSHIP_ALWAYS or MEMBERSHIP_NEVER - only as argument for getGroupMemberships()
-     */
-    const MEMBERSHIP_MANUAL = -1;
-
-    /**
-     * Value denoting any membership value - only as argument for getGroupMemberships()
-     */
-    const MEMBERSHIP_ANY = -2;
 
     /**
      * Primary key
@@ -336,46 +325,6 @@ class Client extends \Model\ClientOrGroup
             $order,
             $direction
         );
-    }
-
-    /**
-     * Retrieve group membership information
-     *
-     * @param integer $membershipType Membership type (one of the MEMBERSHIP_* constants)
-     * @return array Group ID => membership type
-     * @throws \InvalidArgumentException if $membershipType is invalid
-     */
-    public function getGroupMemberships($membershipType)
-    {
-        $groupMemberships = $this->container->get(GroupMemberships::class);
-        $select = $groupMemberships->getSql()->select();
-        $select->columns(array('group_id', 'static'));
-
-        switch ($membershipType) {
-            case self::MEMBERSHIP_ANY:
-                break;
-            case self::MEMBERSHIP_MANUAL:
-                $select->where(
-                    new \Laminas\Db\Sql\Predicate\Operator('static', '!=', self::MEMBERSHIP_AUTOMATIC)
-                );
-                break;
-            case self::MEMBERSHIP_AUTOMATIC:
-            case self::MEMBERSHIP_ALWAYS:
-            case self::MEMBERSHIP_NEVER:
-                $select->where(array('static' => $membershipType));
-                break;
-            default:
-                throw new \InvalidArgumentException("Bad value for membership: $membershipType");
-        }
-        $select->where(array('hardware_id' => $this['Id']));
-
-        $this->container->get(GroupManager::class)->updateCache();
-
-        $result = array();
-        foreach ($groupMemberships->selectWith($select) as $row) {
-            $result[(int) $row['group_id']] = (int) $row['static'];
-        }
-        return $result;
     }
 
     /**
