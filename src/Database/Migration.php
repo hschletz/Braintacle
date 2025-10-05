@@ -21,6 +21,7 @@ abstract class Migration extends AbstractMigration
     protected const TemplateView = "Create view '%s'";
 
     protected const EngineInnoDb = 'InnoDB';
+    protected const EngineMemory = 'MEMORY';
 
     #[Override]
     public function down(Schema $schema): void {}

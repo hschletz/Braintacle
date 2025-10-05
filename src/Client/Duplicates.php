@@ -5,6 +5,7 @@ namespace Braintacle\Client;
 use Braintacle\Configuration\ClientConfig;
 use Braintacle\Database\Table;
 use Braintacle\Group\Membership;
+use Braintacle\Locks;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Model\Client\Client;
@@ -24,6 +25,7 @@ final class Duplicates
         private ClientConfig $clientConfig,
         private ClientManager $clientManager,
         private Clients $clients,
+        private Locks $locks,
         private SoftwareManager $softwareManager,
     ) {}
 
@@ -53,7 +55,7 @@ final class Duplicates
             $clients = [];
             foreach ($clientIds as $id) {
                 $client = $this->clientManager->getClient($id);
-                if (!$client->lock()) {
+                if (!$this->locks->lock($client)) {
                     throw new RuntimeException("Cannot lock client $id");
                 }
                 $timestamp = $client->lastContactDate->getTimestamp();
@@ -90,7 +92,7 @@ final class Duplicates
                 $this->clients->delete($client, deleteInterfaces: false);
             }
             // Unlock remaining client
-            $newest->unlock();
+            $this->locks->release($newest);
             $this->connection->commit();
         } catch (Throwable $throwable) {
             $this->connection->rollBack();

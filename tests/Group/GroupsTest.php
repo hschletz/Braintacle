@@ -11,6 +11,7 @@ use Braintacle\Group\Members\ExcludedClient;
 use Braintacle\Group\Members\ExcludedColumn;
 use Braintacle\Group\Members\MembersColumn;
 use Braintacle\Group\Membership;
+use Braintacle\Locks;
 use Braintacle\Search\Search;
 use Braintacle\Search\SearchParams;
 use Braintacle\Test\DatabaseConnection;
@@ -48,6 +49,7 @@ final class GroupsTest extends TestCase
     private function createGroups(
         ?Connection $connection = null,
         ?DataProcessor $dataProcessor = null,
+        ?Locks $locks = null,
         ?Search $search = null,
         ?Sql $sql = null,
         ?Time $time = null,
@@ -55,6 +57,7 @@ final class GroupsTest extends TestCase
         return new Groups(
             $connection ?? $this->createStub(Connection::class),
             $dataProcessor ?? $this->createStub(DataProcessor::class),
+            $locks ?? $this->createStub(Locks::class),
             $search ?? $this->createStub(Search::class),
             $sql ?? $this->createStub(Sql::class),
             $time ?? $this->createStub(Time::class),
@@ -65,6 +68,7 @@ final class GroupsTest extends TestCase
         array $methods,
         ?Connection $connection = null,
         ?DataProcessor $dataProcessor = null,
+        ?Locks $locks = null,
         ?Search $search = null,
         ?Sql $sql = null,
         ?Time $time = null,
@@ -72,6 +76,7 @@ final class GroupsTest extends TestCase
         return $this->getMockBuilder(Groups::class)->onlyMethods($methods)->setConstructorArgs([
             $connection ?? $this->createStub(Connection::class),
             $dataProcessor ?? $this->createStub(DataProcessor::class),
+            $locks ?? $this->createStub(Locks::class),
             $search ?? $this->createStub(Search::class),
             $sql ?? $this->createStub(Sql::class),
             $time ?? $this->createStub(Time::class),
@@ -377,19 +382,22 @@ final class GroupsTest extends TestCase
 
             $clients = [$client1, $client2, $client3, $client5];
 
-            $group = $this->createMock(Group::class);
+            $locks = $this->createMock(Locks::class);
+            $locks->expects($this->once())->method('release');
+
             $time = $this->createMock(Time::class);
             if ($simulateLockFailure) {
-                $group->expects($this->exactly(2))->method('lock')->willReturn(false, true);
+                $locks->expects($this->exactly(2))->method('lock')->willReturn(false, true);
                 $time->expects($this->once())->method('sleep')->with(1);
             } else {
-                $group->expects($this->once())->method('lock')->willReturn(true);
+                $locks->expects($this->once())->method('lock')->willReturn(true);
                 $time->expects($this->never())->method('sleep');
             }
-            $group->expects($this->once())->method('unlock');
+
+            $group = $this->createMock(Group::class);
             $group->method('__get')->with('id')->willReturn(10);
 
-            $groups = $this->createGroups($connection, time: $time);
+            $groups = $this->createGroups($connection, locks: $locks, time: $time);
             $groups->setMembers($group, $clients, $type);
 
             $content = $connection
@@ -418,15 +426,17 @@ final class GroupsTest extends TestCase
             $connection->expects($this->never())->method('commit');
             $connection->method('insert')->willThrowException(new Exception('test'));
 
+            $locks = $this->createMock(Locks::class);
+            $locks->expects($this->once())->method('lock')->willReturn(true);
+            $locks->expects($this->once())->method('release');
+
             $group = $this->createMock(Group::class);
-            $group->expects($this->once())->method('lock')->willReturn(true);
-            $group->expects($this->once())->method('unlock');
             $group->method('__get')->with('id')->willReturn(10);
 
             $client = $this->createStub(Client::class);
             $client->id = 1;
 
-            $groups = $this->createGroups($connection);
+            $groups = $this->createGroups($connection, locks: $locks);
             $groups->setMembers($group, [$client], Membership::Manual);
         });
     }

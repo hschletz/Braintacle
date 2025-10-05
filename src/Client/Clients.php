@@ -4,6 +4,7 @@ namespace Braintacle\Client;
 
 use Braintacle\Database\Table;
 use Braintacle\Group\Membership;
+use Braintacle\Locks;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Model\Client\Client;
@@ -21,6 +22,7 @@ final class Clients
         private Connection $connection,
         private ItemManager $itemManager,
         private GroupManager $groupManager,
+        private Locks $locks,
     ) {}
 
     /**
@@ -29,7 +31,7 @@ final class Clients
      */
     public function delete(Client $client, bool $deleteInterfaces): void
     {
-        if (!$client->lock()) {
+        if (!$this->locks->lock($client)) {
             throw new RuntimeException('Could not lock client for deletion');
         }
 
@@ -83,7 +85,7 @@ final class Clients
             $this->connection->rollBack();
             throw $throwable;
         } finally {
-            $client->unlock();
+            $this->locks->release($client);
         }
     }
 

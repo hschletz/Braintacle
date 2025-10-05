@@ -7,6 +7,7 @@ use Braintacle\Database\Migration;
 use Braintacle\Database\Migrations;
 use Braintacle\Database\Table;
 use Braintacle\Group\Membership;
+use Braintacle\Locks;
 use Braintacle\Test\DatabaseConnection;
 use Doctrine\DBAL\Connection;
 use Exception;
@@ -34,11 +35,13 @@ final class ClientsTest extends TestCase
         ?Connection $connection = null,
         ?ItemManager $itemManager = null,
         ?GroupManager $groupManager = null,
+        ?Locks $locks = null,
     ): Clients {
         return new Clients(
             $connection ?? $this->createStub(Connection::class),
             $itemManager ?? $this->createStub(ItemManager::class),
             $groupManager ?? $this->createStub(GroupManager::class),
+            $locks ?? $this->createStub(Locks::class),
         );
     }
 
@@ -47,11 +50,13 @@ final class ClientsTest extends TestCase
         ?Connection $connection = null,
         ?ItemManager $itemManager = null,
         ?GroupManager $groupManager = null,
+        ?Locks $locks = null,
     ): MockObject | Clients {
         return $this->getMockBuilder(Clients::class)->onlyMethods($methods)->setConstructorArgs([
             $connection ?? $this->createStub(Connection::class),
             $itemManager ?? $this->createStub(ItemManager::class),
             $groupManager ?? $this->createStub(GroupManager::class),
+            $locks ?? $this->createStub(Locks::class),
         ])->getMock();
     }
 
@@ -166,14 +171,16 @@ final class ClientsTest extends TestCase
 
             $clientId = 2;
             $client = $this->createMock(Client::class);
-            $client->expects($this->once())->method('lock')->willReturn(true);
-            $client->expects($this->once())->method('unlock');
             $client->id = $clientId;
 
             $itemManager = $this->createMock(ItemManager::class);
             $itemManager->expects($this->once())->method('deleteItems')->with($clientId);
 
-            $clients = $this->createClients($connection, $itemManager);
+            $locks = $this->createMock(Locks::class);
+            $locks->expects($this->once())->method('lock')->willReturn(true);
+            $locks->expects($this->once())->method('release');
+
+            $clients = $this->createClients($connection, $itemManager, locks: $locks);
             $clients->delete($client, deleteInterfaces: false);
 
             $this->assertClientDeleted($connection);
@@ -188,14 +195,16 @@ final class ClientsTest extends TestCase
 
             $clientId = 2;
             $client = $this->createMock(Client::class);
-            $client->expects($this->once())->method('lock')->willReturn(true);
-            $client->expects($this->once())->method('unlock');
             $client->id = $clientId;
 
             $itemManager = $this->createMock(ItemManager::class);
             $itemManager->expects($this->once())->method('deleteItems')->with($clientId);
 
-            $clients = $this->createClients($connection, $itemManager);
+            $locks = $this->createMock(Locks::class);
+            $locks->expects($this->once())->method('lock')->willReturn(true);
+            $locks->expects($this->once())->method('release');
+
+            $clients = $this->createClients($connection, $itemManager, locks: $locks);
             $clients->delete($client, deleteInterfaces: true);
 
             $this->assertClientDeleted($connection);
@@ -210,14 +219,16 @@ final class ClientsTest extends TestCase
 
             $clientId = 2;
             $client = $this->createMock(Client::class);
-            $client->expects($this->once())->method('lock')->willReturn(false);
-            $client->expects($this->never())->method('unlock');
             $client->id = $clientId;
 
             $itemManager = $this->createMock(ItemManager::class);
             $itemManager->expects($this->never())->method('deleteItems');
 
-            $clients = $this->createClients($connection, $itemManager);
+            $locks = $this->createMock(Locks::class);
+            $locks->expects($this->once())->method('lock')->willReturn(false);
+            $locks->expects($this->never())->method('release');
+
+            $clients = $this->createClients($connection, $itemManager, locks: $locks);
             try {
                 $clients->delete($client, deleteInterfaces: true);
                 $this->fail('Expected Exception was not thrown');
@@ -237,14 +248,16 @@ final class ClientsTest extends TestCase
 
             $clientId = 2;
             $client = $this->createMock(Client::class);
-            $client->expects($this->once())->method('lock')->willReturn(true);
-            $client->expects($this->once())->method('unlock');
             $client->id = $clientId;
 
             $itemManager = $this->createMock(ItemManager::class);
             $itemManager->expects($this->once())->method('deleteItems')->willThrowException(new Exception('test'));
 
-            $clients = $this->createClients($connection, $itemManager);
+            $locks = $this->createMock(Locks::class);
+            $locks->expects($this->once())->method('lock')->willReturn(true);
+            $locks->expects($this->once())->method('release');
+
+            $clients = $this->createClients($connection, $itemManager, locks: $locks);
             try {
                 $clients->delete($client, deleteInterfaces: true);
                 $this->fail('Expected Exception was not thrown');

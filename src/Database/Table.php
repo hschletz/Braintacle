@@ -55,6 +55,11 @@ final class Table
      */
     public const Groups = 'hardware';
 
+    /**
+     * Advisory locks for clients and groups.
+     */
+    public const Locks = 'locks';
+
     public const NetworkDevicesIdentified = 'network_devices';
 
     public const NetworkDevicesScanned = 'netmap';

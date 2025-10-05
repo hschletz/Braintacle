@@ -8,6 +8,7 @@ use Braintacle\Group\Members\ExcludedClient;
 use Braintacle\Group\Members\ExcludedColumn;
 use Braintacle\Group\Members\Member;
 use Braintacle\Group\Members\MembersColumn;
+use Braintacle\Locks;
 use Braintacle\Search\Search;
 use Braintacle\Search\SearchParams;
 use Braintacle\Time;
@@ -34,6 +35,7 @@ final class Groups
     public function __construct(
         private Connection $connection,
         private DataProcessor $dataProcessor,
+        private Locks $locks,
         private Search $search,
         private Sql $sql,
         private Time $time,
@@ -144,7 +146,7 @@ final class Groups
     {
         $groupId = $group->id;
         $membership = $membershipType->value;
-        while (!$group->lock()) {
+        while (!$this->locks->lock($group)) {
             $this->time->sleep(1);
         }
         try {
@@ -182,7 +184,7 @@ final class Groups
                 throw $throwable;
             }
         } finally {
-            $group->unlock();
+            $this->locks->release($group);
         }
     }
 }

@@ -9,6 +9,7 @@ use Braintacle\Database\Migration;
 use Braintacle\Database\Migrations;
 use Braintacle\Database\Table;
 use Braintacle\Group\Membership;
+use Braintacle\Locks;
 use Braintacle\Test\DatabaseConnection;
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
@@ -22,6 +23,7 @@ use Model\SoftwareManager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -61,6 +63,7 @@ final class DuplicatesTest extends TestCase
         ?ClientConfig $clientConfig = null,
         ?ClientManager $clientManager = null,
         ?Clients $clients = null,
+        ?Locks $locks = null,
         ?SoftwareManager $softwareManager = null,
     ): Duplicates {
         return new Duplicates(
@@ -68,8 +71,32 @@ final class DuplicatesTest extends TestCase
             $clientConfig ?? $this->createStub(ClientConfig::class),
             $clientManager ?? $this->createStub(ClientManager::class),
             $clients ?? $this->createStub(Clients::class),
+            $locks ?? $this->createStub(Locks::class),
             $softwareManager ?? $this->createStub(SoftwareManager::class),
         );
+    }
+
+    private function createDuplicatesMock(
+        array $methods,
+        ?Connection $connection = null,
+        ?ClientConfig $clientConfig = null,
+        ?ClientManager $clientManager = null,
+        ?Clients $clients = null,
+        ?Locks $locks = null,
+        ?SoftwareManager $softwareManager = null,
+    ): MockObject | Duplicates {
+        return $this
+            ->getMockBuilder(Duplicates::class)
+            ->onlyMethods($methods)
+            ->setConstructorArgs([
+                $connection ?? $this->createStub(Connection::class),
+                $clientConfig ?? $this->createStub(ClientConfig::class),
+                $clientManager ?? $this->createStub(ClientManager::class),
+                $clients ?? $this->createStub(Clients::class),
+                $locks ?? $this->createStub(Locks::class),
+                $softwareManager ?? $this->createStub(SoftwareManager::class),
+            ])
+            ->getMock();
     }
 
     public static function mergeNoneWithLessThan2ClientsProvider()
@@ -105,7 +132,6 @@ final class DuplicatesTest extends TestCase
         $connection->expects($this->never())->method('commit');
 
         $client = $this->createStub(Client::class);
-        $client->method('lock')->willReturn(false);
 
         $clientManager = $this->createMock(ClientManager::class);
         $clientManager->method('getClient')->willReturn($client);
@@ -113,16 +139,16 @@ final class DuplicatesTest extends TestCase
         $clients = $this->createMock(Clients::class);
         $clients->expects($this->never())->method('delete');
 
-        $duplicates = $this
-            ->getMockBuilder(Duplicates::class)
-            ->onlyMethods(self::MergeMethods)
-            ->setConstructorArgs([
-                $connection,
-                $this->createStub(ClientConfig::class),
-                $clientManager,
-                $clients,
-                $this->createStub(SoftwareManager::class),
-            ])->getMock();
+        $locks = $this->createMock(Locks::class);
+        $locks->expects($this->once())->method('lock')->with($client)->willReturn(false);
+
+        $duplicates = $this->createDuplicatesMock(
+            self::MergeMethods,
+            connection: $connection,
+            clientManager: $clientManager,
+            clients: $clients,
+            locks: $locks,
+        );
         $duplicates->expects($this->never())->method('mergeConfig');
         $duplicates->expects($this->never())->method('mergeCustomFields');
         $duplicates->expects($this->never())->method('mergeGroups');
@@ -145,11 +171,9 @@ final class DuplicatesTest extends TestCase
         $date = new DateTimeImmutable();
 
         $client1 = $this->createStub(Client::class);
-        $client1->method('lock')->willReturn(true);
         $client1->lastContactDate = $date;
 
         $client2 = $this->createStub(Client::class);
-        $client2->method('lock')->willReturn(true);
         $client2->lastContactDate = $date;
 
         $clientManager = $this->createStub(ClientManager::class);
@@ -161,16 +185,17 @@ final class DuplicatesTest extends TestCase
         $clients = $this->createMock(Clients::class);
         $clients->expects($this->never())->method('delete');
 
-        $duplicates = $this
-            ->getMockBuilder(Duplicates::class)
-            ->onlyMethods(self::MergeMethods)
-            ->setConstructorArgs([
-                $connection,
-                $this->createStub(ClientConfig::class),
-                $clientManager,
-                $clients,
-                $this->createStub(SoftwareManager::class),
-            ])->getMock();
+        $locks = Mockery::mock(Locks::class);
+        $locks->shouldReceive('lock')->once()->with($client1)->andReturn(true);
+        $locks->shouldReceive('lock')->once()->with($client2)->andReturn(true);
+
+        $duplicates = $this->createDuplicatesMock(
+            self::MergeMethods,
+            connection: $connection,
+            clientManager: $clientManager,
+            clients: $clients,
+            locks: $locks
+        );
 
         $duplicates->expects($this->never())->method('mergeConfig');
         $duplicates->expects($this->never())->method('mergeCustomFields');
@@ -199,19 +224,13 @@ final class DuplicatesTest extends TestCase
         $connection->expects($this->never())->method('rollBack');
 
         $client1 = $this->createMock(Client::class);
-        $client1->method('lock')->willReturn(true);
-        $client1->expects($this->never())->method('unlock');
         $client1->lastContactDate = new DateTimeImmutable('2025-09-16T17:00:01');
 
         $client2 = $this->createMock(Client::class);
-        $client2->method('lock')->willReturn(true);
-        $client2->expects($this->never())->method('unlock');
         $client2->lastContactDate = new DateTimeImmutable('2025-09-16T17:00:02');
 
         // The newest client that gets preserved
         $client3 = $this->createMock(Client::class);
-        $client3->method('lock')->willReturn(true);
-        $client3->expects($this->once())->method('unlock');
         $client3->lastContactDate = new DateTimeImmutable('2025-09-16T17:00:03');
 
         $clientManager = Mockery::mock(ClientManager::class);
@@ -223,16 +242,19 @@ final class DuplicatesTest extends TestCase
         $clients->shouldReceive('delete')->once()->with($client1, false);
         $clients->shouldReceive('delete')->once()->with($client2, false);
 
-        $duplicates = $this
-            ->getMockBuilder(Duplicates::class)
-            ->onlyMethods(self::MergeMethods)
-            ->setConstructorArgs([
-                $connection,
-                $this->createStub(ClientConfig::class),
-                $clientManager,
-                $clients,
-                $this->createStub(SoftwareManager::class),
-            ])->getMock();
+        $locks = Mockery::mock(Locks::class);
+        $locks->shouldReceive('lock')->once()->with($client1)->andReturn(true);
+        $locks->shouldReceive('lock')->once()->with($client2)->andReturn(true);
+        $locks->shouldReceive('lock')->once()->with($client3)->andReturn(true);
+        $locks->shouldReceive('release')->once()->with($client3);
+
+        $duplicates = $this->createDuplicatesMock(
+            self::MergeMethods,
+            connection: $connection,
+            clientManager: $clientManager,
+            clients: $clients,
+            locks: $locks,
+        );
 
         $duplicates->expects($this->never())->method('mergeConfig');
         $duplicates->expects($this->never())->method('mergeCustomFields');
@@ -261,16 +283,13 @@ final class DuplicatesTest extends TestCase
         $connection = $this->createStub(Connection::class);
 
         $client1 = $this->createMock(Client::class);
-        $client1->method('lock')->willReturn(true);
         $client1->lastContactDate = new DateTimeImmutable('2025-09-16T19:12:01');
 
         $client2 = $this->createMock(Client::class);
-        $client2->method('lock')->willReturn(true);
         $client2->lastContactDate = new DateTimeImmutable('2025-09-16T19:12:02');
 
         // The newest client that gets preserved
         $client3 = $this->createMock(Client::class);
-        $client3->method('lock')->willReturn(true);
         $client3->lastContactDate = new DateTimeImmutable('2025-09-16T19:12:03');
 
         $clientManager = Mockery::mock(ClientManager::class);
@@ -278,16 +297,18 @@ final class DuplicatesTest extends TestCase
         $clientManager->shouldReceive('getClient')->once()->with(2)->andReturn($client2);
         $clientManager->shouldReceive('getClient')->once()->with(3)->andReturn($client3);
 
-        $duplicates = $this
-            ->getMockBuilder(Duplicates::class)
-            ->onlyMethods(self::MergeMethods)
-            ->setConstructorArgs([
-                $connection,
-                $this->createStub(ClientConfig::class),
-                $clientManager,
-                $this->createStub(Clients::class),
-                $this->createStub(SoftwareManager::class),
-            ])->getMock();
+        $locks = Mockery::mock(Locks::class);
+        $locks->shouldReceive('lock')->once()->with($client1)->andReturn(true);
+        $locks->shouldReceive('lock')->once()->with($client2)->andReturn(true);
+        $locks->shouldReceive('lock')->once()->with($client3)->andReturn(true);
+        $locks->shouldReceive('release')->once()->with($client3);
+
+        $duplicates = $this->createDuplicatesMock(
+            self::MergeMethods,
+            connection: $connection,
+            clientManager: $clientManager,
+            locks: $locks,
+        );
 
         foreach (self::AllOptions as $option) {
             // Option names are identical to corresponding method names.
@@ -338,13 +359,7 @@ final class DuplicatesTest extends TestCase
         $clientConfig->shouldReceive('setOption')->once()->with($newest, 'option4', 'o4');
         $clientConfig->shouldReceive('setOption')->once()->with($newest, 'option6', 'm6');
 
-        $duplicates = new Duplicates(
-            $this->createStub(Connection::class),
-            $clientConfig,
-            $this->createStub(ClientManager::class),
-            $this->createStub(Clients::class),
-            $this->createStub(SoftwareManager::class),
-        );
+        $duplicates = $this->createDuplicates(clientConfig: $clientConfig);
         $duplicates->mergeConfig($newest, [$oldest, $middle]);
     }
 
@@ -359,13 +374,7 @@ final class DuplicatesTest extends TestCase
         $client2 = $this->createMock(Client::class);
         $client2->expects($this->never())->method('__get');
 
-        $duplicates = new Duplicates(
-            $this->createStub(Connection::class),
-            $this->createStub(ClientConfig::class),
-            $this->createStub(ClientManager::class),
-            $this->createStub(Clients::class),
-            $this->createStub(SoftwareManager::class),
-        );
+        $duplicates = $this->createDuplicates();
         $duplicates->mergeCustomFields($newestClient, [$client1, $client2]);
     }
 
@@ -442,13 +451,7 @@ final class DuplicatesTest extends TestCase
             $olderClient = $this->createStub(Client::class);
             $olderClient->id = 2;
 
-            $duplicates = new Duplicates(
-                $connection,
-                $this->createStub(ClientConfig::class),
-                $this->createStub(ClientManager::class),
-                $this->createStub(Clients::class),
-                $this->createStub(SoftwareManager::class),
-            );
+            $duplicates = $this->createDuplicates(connection: $connection);
             $duplicates->mergePackages($newestClient, [$olderClient]);
 
             // Test results for newest client only (ID 3). Remaining entries for
@@ -484,13 +487,7 @@ final class DuplicatesTest extends TestCase
             $olderClient = $this->createStub(Client::class);
             $olderClient->id = 1;
 
-            $duplicates = new Duplicates(
-                $connection,
-                $this->createStub(ClientConfig::class),
-                $this->createStub(ClientManager::class),
-                $this->createStub(Clients::class),
-                $this->createStub(SoftwareManager::class),
-            );
+            $duplicates = $this->createDuplicates(connection: $connection);
             $duplicates->mergePackages($newestClient, [$olderClient]);
 
             // Table shlould be unchanged.
@@ -545,13 +542,7 @@ final class DuplicatesTest extends TestCase
         $softwareManager = $this->createMock(SoftwareManager::class);
         $softwareManager->expects($this->never())->method('setProductKey');
 
-        $duplicates = new Duplicates(
-            $this->createStub(Connection::class),
-            $this->createStub(ClientConfig::class),
-            $this->createStub(ClientManager::class),
-            $this->createStub(Clients::class),
-            $softwareManager,
-        );
+        $duplicates = $this->createDuplicates(softwareManager: $softwareManager);
         $duplicates->mergeProductKey($newestClient, [$olderClient]);
     }
 
@@ -586,13 +577,7 @@ final class DuplicatesTest extends TestCase
         $softwareManager = $this->createMock(SoftwareManager::class);
         $softwareManager->expects($this->once())->method('setProductKey')->with($newestClient, 'key2');
 
-        $duplicates = new Duplicates(
-            $this->createStub(Connection::class),
-            $this->createStub(ClientConfig::class),
-            $this->createStub(ClientManager::class),
-            $this->createStub(Clients::class),
-            $softwareManager,
-        );
+        $duplicates = $this->createDuplicates(softwareManager: $softwareManager);
         $duplicates->mergeProductKey($newestClient, [$client1, $client2, $client3, $client4]);
     }
 }

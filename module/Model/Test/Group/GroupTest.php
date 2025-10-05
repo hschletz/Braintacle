@@ -22,6 +22,7 @@
 
 namespace Model\Test\Group;
 
+use Braintacle\Locks;
 use Database\Table\Clients;
 use Database\Table\GroupInfo;
 use Database\Table\GroupMemberships;
@@ -73,27 +74,29 @@ class GroupTest extends AbstractGroupTestCase
             )
         );
 
-        $serviceManager = $this->createStub(ContainerInterface::class);
-        $serviceManager->method('get')
-            ->willReturnMap([
-                [Clients::class, static::$serviceManager->get(Clients::class)],
-                [GroupInfo::class, $this->_groupInfo],
-                [GroupMemberships::class, static::$serviceManager->get(GroupMemberships::class)],
-                [ClockInterface::class, $clock],
-                [Randomizer::class, $randomizer],
-                [Config::class, $config],
-            ]);
-
-        $model = $this->createPartialMock(Group::class, ['lock', 'unlock']);
-        $model->method('lock')->willReturn($lockSuccess);
-        if ($dataSet !== null) {
-            $model->expects($this->once())->method('unlock');
-        }
-        $model->setContainer($serviceManager);
+        $model = new Group();
         $model['Id'] = 10;
         $model['DynamicMembersSql'] = $setSql ? 'SELECT id FROM hardware WHERE id IN(2,3,4,5)' : null;
         $model['CacheCreationDate'] = null;
         $model['CacheExpirationDate'] = $expires;
+
+        $locks = $this->createMock(Locks::class);
+        $locks->method('lock')->with($model)->willReturn($lockSuccess);
+        if ($dataSet !== null) {
+            $locks->expects($this->once())->method('release');
+        }
+
+        $serviceManager = $this->createStub(ContainerInterface::class);
+        $serviceManager->method('get')->willReturnMap([
+            [Clients::class, static::$serviceManager->get(Clients::class)],
+            [GroupInfo::class, $this->_groupInfo],
+            [GroupMemberships::class, static::$serviceManager->get(GroupMemberships::class)],
+            [ClockInterface::class, $clock],
+            [Randomizer::class, $randomizer],
+            [Config::class, $config],
+            [Locks::class, $locks],
+        ]);
+        $model->setContainer($serviceManager);
 
         $model->update($force);
         // CacheCreationDate is only updated when there was data to alter ($dataSet !== null)

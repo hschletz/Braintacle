@@ -22,6 +22,7 @@
 
 namespace Model\Group;
 
+use Braintacle\Locks;
 use Database\Table\Clients;
 use Database\Table\GroupInfo;
 use Database\Table\GroupMemberships;
@@ -110,7 +111,9 @@ class Group extends \Model\ClientOrGroup
             return;
         }
 
-        if (!$this->lock()) {
+        /** @var Locks */
+        $locks = $this->container->get(Locks::class);
+        if (!$locks->lock($this)) {
             return; // Another process is currently updating this group.
         }
 
@@ -158,7 +161,7 @@ class Group extends \Model\ClientOrGroup
                 ['hardware_id' => $this['Id']],
             );
         } finally {
-            $this->unlock();
+            $locks->release($this);
         }
 
         $this->offsetSet('CacheCreationDate', $now);

@@ -22,6 +22,7 @@
 
 namespace Model\Test\Group;
 
+use Braintacle\Locks;
 use Database\Table\ClientConfig;
 use Database\Table\ClientsAndGroups;
 use Database\Table\GroupInfo;
@@ -292,9 +293,11 @@ class GroupManagerTest extends AbstractGroupTestCase
     {
         /** @var MockObject|Group */
         $group = $this->createMock('Model\Group\Group');
-        $group->method('lock')->willReturn(true);
         $group->method('offsetGet')->with('Id')->willReturn(1);
-        $group->expects($this->once())->method('unlock');
+
+        $locks = $this->createMock(Locks::class);
+        $locks->method('lock')->with($group)->willReturn(true);
+        $locks->expects($this->once())->method('release')->with($group);
 
         $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
@@ -303,6 +306,7 @@ class GroupManagerTest extends AbstractGroupTestCase
             [ClientsAndGroups::class, static::$serviceManager->get(ClientsAndGroups::class)],
             [GroupMemberships::class, static::$serviceManager->get(GroupMemberships::class)],
             [GroupInfo::class, $this->_groupInfo],
+            [Locks::class, $locks],
         ]);
 
         $model = new GroupManager($serviceManager);
@@ -343,9 +347,14 @@ class GroupManagerTest extends AbstractGroupTestCase
     public function testDeleteGroupLocked()
     {
         $group = $this->createMock('Model\Group\Group');
-        $group->method('lock')->willReturn(false);
 
-        $model = $this->getModel();
+        $locks = $this->createMock(Locks::class);
+        $locks->method('lock')->with($group)->willReturn(false);
+
+        $serviceManager = $this->createMock(ContainerInterface::class);
+        $serviceManager->method('get')->with(Locks::class)->willReturn($locks);
+
+        $model = new GroupManager($serviceManager);
         try {
             $model->deleteGroup($group);
             $this->fail('Expected exception was not thrown');
@@ -388,10 +397,12 @@ class GroupManagerTest extends AbstractGroupTestCase
     {
         /** @var MockObject|Group */
         $group = $this->createMock('Model\Group\Group');
-        $group->method('lock')->willReturn(true);
 
         $clientsAndGroups = $this->createMock(ClientsAndGroups::class);
         $clientsAndGroups->method('delete')->will($this->throwException(new \RuntimeException('database error')));
+
+        $locks = $this->createMock(Locks::class);
+        $locks->method('lock')->with($group)->willReturn(true);
 
         $serviceManager = $this->createMock(ContainerInterface::class);
         $serviceManager->method('get')->willReturnMap([
@@ -400,6 +411,7 @@ class GroupManagerTest extends AbstractGroupTestCase
             [GroupMemberships::class, static::$serviceManager->get(GroupMemberships::class)],
             [ClientsAndGroups::class, $clientsAndGroups],
             [GroupInfo::class, $this->_groupInfo],
+            [Locks::class, $locks],
         ]);
 
         $model = new GroupManager($serviceManager);

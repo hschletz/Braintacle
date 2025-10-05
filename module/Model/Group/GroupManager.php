@@ -22,6 +22,7 @@
 
 namespace Model\Group;
 
+use Braintacle\Locks;
 use Countable;
 use Database\Table\ClientConfig;
 use Database\Table\ClientsAndGroups;
@@ -182,7 +183,9 @@ class GroupManager
      */
     public function deleteGroup(\Model\Group\Group $group)
     {
-        if (!$group->lock()) {
+        /** @var Locks */
+        $locks = $this->container->get(Locks::class);
+        if (!$locks->lock($group)) {
             throw new RuntimeException('Cannot delete group because it is locked');
         }
 
@@ -201,7 +204,7 @@ class GroupManager
                 throw $throwable;
             }
         } finally {
-            $group->unlock();
+            $locks->release($group);
         }
     }
 
