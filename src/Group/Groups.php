@@ -11,7 +11,6 @@ use Braintacle\Group\Members\MembersColumn;
 use Braintacle\Locks;
 use Braintacle\Search\Search;
 use Braintacle\Search\SearchParams;
-use Braintacle\Time;
 use Doctrine\DBAL\Connection;
 use Formotron\DataProcessor;
 use Laminas\Db\Sql\Select;
@@ -38,7 +37,6 @@ final class Groups
         private Locks $locks,
         private Search $search,
         private Sql $sql,
-        private Time $time,
     ) {}
 
     /**
@@ -144,11 +142,14 @@ final class Groups
      */
     public function setMembers(Group $group, iterable $clients, Membership $membershipType): void
     {
+        if (!$this->locks->lock($group)) {
+            // Another request is either updating memberships or deleting the
+            // group. Proceeding would be pointless.
+            return;
+        }
+
         $groupId = $group->id;
         $membership = $membershipType->value;
-        while (!$this->locks->lock($group)) {
-            $this->time->sleep(1);
-        }
         try {
             $existingMemberships = $this->connection
                 ->createQueryBuilder()

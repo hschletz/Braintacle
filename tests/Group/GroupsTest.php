@@ -52,7 +52,6 @@ final class GroupsTest extends TestCase
         ?Locks $locks = null,
         ?Search $search = null,
         ?Sql $sql = null,
-        ?Time $time = null,
     ): Groups {
         return new Groups(
             $connection ?? $this->createStub(Connection::class),
@@ -60,7 +59,6 @@ final class GroupsTest extends TestCase
             $locks ?? $this->createStub(Locks::class),
             $search ?? $this->createStub(Search::class),
             $sql ?? $this->createStub(Sql::class),
-            $time ?? $this->createStub(Time::class),
         );
     }
 
@@ -71,7 +69,6 @@ final class GroupsTest extends TestCase
         ?Locks $locks = null,
         ?Search $search = null,
         ?Sql $sql = null,
-        ?Time $time = null,
     ): MockObject | Groups {
         return $this->getMockBuilder(Groups::class)->onlyMethods($methods)->setConstructorArgs([
             $connection ?? $this->createStub(Connection::class),
@@ -79,7 +76,6 @@ final class GroupsTest extends TestCase
             $locks ?? $this->createStub(Locks::class),
             $search ?? $this->createStub(Search::class),
             $sql ?? $this->createStub(Sql::class),
-            $time ?? $this->createStub(Time::class),
         ])->getMock();
     }
 
@@ -337,7 +333,7 @@ final class GroupsTest extends TestCase
     public static function setMembersProvider()
     {
         return [
-            [Membership::Manual, false, [
+            [Membership::Manual, [
                 [1, 10, 1],
                 [2, 10, 1],
                 [3, 10, 1],
@@ -345,7 +341,7 @@ final class GroupsTest extends TestCase
                 [5, 10, 1],
                 [1, 11, 0],
             ]],
-            [Membership::Never, true, [
+            [Membership::Never, [
                 [1, 10, 2],
                 [2, 10, 2],
                 [3, 10, 2],
@@ -357,9 +353,9 @@ final class GroupsTest extends TestCase
     }
 
     #[DataProvider('setMembersProvider')]
-    public function testSetMembers(Membership $type, bool $simulateLockFailure, array $expected)
+    public function testSetMembers(Membership $type, array $expected)
     {
-        DatabaseConnection::with(function (Connection $connection) use ($type, $simulateLockFailure, $expected) {
+        DatabaseConnection::with(function (Connection $connection) use ($type, $expected) {
             DatabaseConnection::initializeTable(Table::GroupMemberships, ['hardware_id', 'group_id', 'static'], [
                 [1, 10, 0],
                 [2, 10, 1],
@@ -382,22 +378,14 @@ final class GroupsTest extends TestCase
 
             $clients = [$client1, $client2, $client3, $client5];
 
-            $locks = $this->createMock(Locks::class);
-            $locks->expects($this->once())->method('release');
-
-            $time = $this->createMock(Time::class);
-            if ($simulateLockFailure) {
-                $locks->expects($this->exactly(2))->method('lock')->willReturn(false, true);
-                $time->expects($this->once())->method('sleep')->with(1);
-            } else {
-                $locks->expects($this->once())->method('lock')->willReturn(true);
-                $time->expects($this->never())->method('sleep');
-            }
-
             $group = $this->createMock(Group::class);
             $group->method('__get')->with('id')->willReturn(10);
 
-            $groups = $this->createGroups($connection, locks: $locks, time: $time);
+            $locks = $this->createMock(Locks::class);
+            $locks->expects($this->once())->method('lock')->with($group)->willReturn(true);
+            $locks->expects($this->once())->method('release');
+
+            $groups = $this->createGroups($connection, locks: $locks);
             $groups->setMembers($group, $clients, $type);
 
             $content = $connection
@@ -408,6 +396,36 @@ final class GroupsTest extends TestCase
                 ->addOrderBy('hardware_id')
                 ->fetchAllNumeric();
             $this->assertEquals($expected, $content);
+        });
+    }
+
+    public function testSetMembersLockingFailure()
+    {
+        DatabaseConnection::with(function (Connection $connection): void {
+            DatabaseConnection::initializeTable(Table::GroupMemberships, ['hardware_id', 'group_id', 'static'], [
+                [1, 10, 0],
+            ]);
+
+            $group = $this->createStub(Group::class);
+
+            $locks = $this->createMock(Locks::class);
+            $locks->expects($this->once())->method('lock')->with($group)->willReturn(false);
+            $locks->expects($this->never())->method('release');
+
+            $client = $this->createStub(Client::class);
+            $client->id = 1;
+
+            $groups = $this->createGroups($connection, locks: $locks);
+            $groups->setMembers($group, [$client], Membership::Manual);
+
+            $content = $connection
+                ->createQueryBuilder()
+                ->select('hardware_id', 'group_id', 'static')
+                ->from(Table::GroupMemberships)
+                ->addOrderBy('group_id')
+                ->addOrderBy('hardware_id')
+                ->fetchAllNumeric();
+            $this->assertEquals([[1, 10, 0]], $content);
         });
     }
 

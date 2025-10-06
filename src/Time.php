@@ -27,14 +27,6 @@ class Time implements ClockInterface
     }
 
     /**
-     * @codeCoverageIgnore
-     */
-    public function sleep(int $seconds): void
-    {
-        sleep($seconds);
-    }
-
-    /**
      * Get current time from the database.
      *
      * Current time is queried from the database, which may differ from the
