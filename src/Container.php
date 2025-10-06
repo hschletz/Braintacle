@@ -25,12 +25,14 @@ use Model\Group\Group;
 use Model\Operator\AuthenticationService;
 use Model\Package\Storage\Direct as DirectStorage;
 use Model\Package\Storage\StorageInterface;
+use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Nada\Database\AbstractDatabase;
 use Nyholm\Psr7\Response;
 use Psr\Clock\ClockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Symfony\Component\Filesystem\Filesystem;
 
 use function DI\autowire;
@@ -60,7 +62,10 @@ class Container extends DIContainer
             Connection::class => factory(ConnectionFactory::class),
             Csrf::class => create(Csrf::class)->constructor(['timeout' => null]),
             Group::class => factory(ClientOrGroupFactory::class),
-            LoggerInterface::class => create(Logger::class)->constructor('Braintacle'),
+            LoggerInterface::class => create(Logger::class)->constructor(
+                'Braintacle',
+                [new StreamHandler('php://stderr', LogLevel::WARNING)],
+            ),
             MvcApplication::class => factory(Application::init(...))->parameter('module', 'Console'),
             ResponseInterface::class => get(Response::class),
             StorageInterface::class => get(DirectStorage::class),
