@@ -7,7 +7,6 @@ use Braintacle\Database\Table;
 use Braintacle\Group\Configuration\GroupConfigurationParameters;
 use Doctrine\DBAL\Connection;
 use Model\Client\Client;
-use Model\ClientOrGroup;
 use Model\Config;
 use Model\Group\Group;
 use Throwable;
@@ -17,6 +16,9 @@ use Throwable;
  */
 final class ClientConfig
 {
+    private const ScanDisabled = 0;
+    private const ScanExplicit = 2;
+
     private const OptionsWithDefaults = [
         'contactInterval',
         'inventoryInterval',
@@ -289,8 +291,8 @@ final class ClientConfig
             default => $name = $this->config->getDbIdentifier($option),
         };
         $ivalue = match ($option) {
-            'allowScan' => ClientOrGroup::SCAN_DISABLED,
-            'scanThisNetwork' => ClientOrGroup::SCAN_EXPLICIT,
+            'allowScan' => self::ScanDisabled,
+            'scanThisNetwork' => self::ScanExplicit,
             default => null,
         };
         $column = ($option == 'scanThisNetwork') ? 'tvalue' : 'ivalue';
@@ -334,7 +336,7 @@ final class ClientConfig
         if ($option == 'scanThisNetwork') {
             assert($value === null || is_string($value));
             $columns = [
-                'ivalue' => Client::SCAN_EXPLICIT,
+                'ivalue' => self::ScanExplicit,
                 'tvalue' => $value,
             ];
         } else {
@@ -363,9 +365,9 @@ final class ClientConfig
                 // Unset option. For scan options, also check ivalue to prevent
                 // accidental deletion of unrelated setting.
                 if ($option == 'allowScan') {
-                    $condition['ivalue'] = Client::SCAN_DISABLED;
+                    $condition['ivalue'] = self::ScanDisabled;
                 } elseif ($option == 'scanThisNetwork') {
-                    $condition['ivalue'] = Client::SCAN_EXPLICIT;
+                    $condition['ivalue'] = self::ScanExplicit;
                 }
                 $this->connection->delete(Table::ClientConfig, $condition);
             } else {

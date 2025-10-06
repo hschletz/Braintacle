@@ -36,18 +36,6 @@ use Psr\Container\ContainerInterface;
  */
 abstract class ClientOrGroup extends AbstractModel
 {
-    /**
-     * @internal
-     * Scan value in 'devices' table
-     */
-    const SCAN_DISABLED = 0;
-
-    /**
-     * @internal
-     * Scan value in 'devices' table
-     */
-    const SCAN_EXPLICIT = 2;
-
     protected ContainerInterface $container;
 
     public function setContainer(ContainerInterface $container)
