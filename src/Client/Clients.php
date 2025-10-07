@@ -3,6 +3,7 @@
 namespace Braintacle\Client;
 
 use Braintacle\Database\Table;
+use Braintacle\Group\Groups;
 use Braintacle\Group\Membership;
 use Braintacle\Locks;
 use Doctrine\DBAL\ArrayParameterType;
@@ -22,6 +23,7 @@ final class Clients
         private Connection $connection,
         private ItemManager $itemManager,
         private GroupManager $groupManager,
+        private Groups $groups,
         private Locks $locks,
     ) {}
 
@@ -162,7 +164,7 @@ final class Clients
                         'hardware_id' => $client->id,
                         'group_id' => $groupId,
                     ]);
-                    $group->update(true);
+                    $this->groups->updateMemberships($group, true);
                 }
             } else { // Manual or Never
                 if ($oldMembership === null) {

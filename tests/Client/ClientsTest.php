@@ -6,6 +6,7 @@ use Braintacle\Client\Clients;
 use Braintacle\Database\Migration;
 use Braintacle\Database\Migrations;
 use Braintacle\Database\Table;
+use Braintacle\Group\Groups;
 use Braintacle\Group\Membership;
 use Braintacle\Locks;
 use Braintacle\Test\DatabaseConnection;
@@ -35,12 +36,14 @@ final class ClientsTest extends TestCase
         ?Connection $connection = null,
         ?ItemManager $itemManager = null,
         ?GroupManager $groupManager = null,
+        ?Groups $groups = null,
         ?Locks $locks = null,
     ): Clients {
         return new Clients(
             $connection ?? $this->createStub(Connection::class),
             $itemManager ?? $this->createStub(ItemManager::class),
             $groupManager ?? $this->createStub(GroupManager::class),
+            $groups ?? $this->createStub(Groups::class),
             $locks ?? $this->createStub(Locks::class),
         );
     }
@@ -50,12 +53,14 @@ final class ClientsTest extends TestCase
         ?Connection $connection = null,
         ?ItemManager $itemManager = null,
         ?GroupManager $groupManager = null,
+        ?Groups $groups = null,
         ?Locks $locks = null,
     ): MockObject | Clients {
         return $this->getMockBuilder(Clients::class)->onlyMethods($methods)->setConstructorArgs([
             $connection ?? $this->createStub(Connection::class),
             $itemManager ?? $this->createStub(ItemManager::class),
             $groupManager ?? $this->createStub(GroupManager::class),
+            $groups ?? $this->createStub(Groups::class),
             $locks ?? $this->createStub(Locks::class),
         ])->getMock();
     }
@@ -517,11 +522,9 @@ final class ClientsTest extends TestCase
     {
         $group1 = $this->createMock(Group::class);
         $group1->method('__get')->willReturnMap([['id', 1], ['name', 'name1']]);
-        $group1->expects($this->once())->method('update')->with(true);
 
         $group2 = $this->createMock(Group::class);
         $group2->method('__get')->willReturnMap([['id', 2], ['name', 'name2']]);
-        $group2->expects($this->never())->method('update');
 
         $connection = $this->createMock(Connection::class);
         $connection->expects($this->never())->method('insert');
@@ -537,6 +540,9 @@ final class ClientsTest extends TestCase
         $groupManager = $this->createMock(GroupManager::class);
         $groupManager->method('getGroups')->with()->willReturn([$group1, $group2]);
 
+        $groups = $this->createMock(Groups::class);
+        $groups->expects($this->once())->method('updateMemberships')->with($group1, true);
+
         $client = $this->createMock(Client::class);
         $client->id = 42;
 
@@ -544,6 +550,7 @@ final class ClientsTest extends TestCase
             ['getGroupMemberships'],
             connection: $connection,
             groupManager: $groupManager,
+            groups: $groups,
         );
         $clients->method('getGroupMemberships')->with($client)->willReturn([1 => $oldMembership]);
         $clients->setGroupMemberships($client, ['name1' => Membership::Automatic]);

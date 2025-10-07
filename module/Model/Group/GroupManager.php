@@ -22,6 +22,7 @@
 
 namespace Model\Group;
 
+use Braintacle\Group\Groups;
 use Braintacle\Locks;
 use Countable;
 use Database\Table\ClientConfig;
@@ -213,8 +214,10 @@ class GroupManager
      */
     public function updateCache()
     {
+        /** @var Groups */
+        $groups = $this->container->get(Groups::class);
         foreach ($this->getGroups('Expired') as $group) {
-            $group->update(true);
+            $groups->updateMemberships($group, force: true);
         }
     }
 }

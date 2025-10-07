@@ -22,6 +22,7 @@
 
 namespace Model\Test\Group;
 
+use Braintacle\Group\Groups;
 use Braintacle\Locks;
 use Database\Table\ClientConfig;
 use Database\Table\ClientsAndGroups;
@@ -456,9 +457,18 @@ class GroupManagerTest extends AbstractGroupTestCase
     public function testUpdateCache()
     {
         $group = $this->createMock('Model\Group\Group');
-        $group->expects($this->once())->method('update')->with(true);
 
-        $model = $this->createPartialMock(GroupManager::class, ['getGroups']);
+        $groups = $this->createMock(Groups::class);
+        $groups->expects($this->once())->method('updateMemberships')->with($group, true);
+
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('get')->with(Groups::class)->willReturn($groups);
+
+        $model = $this
+            ->getMockBuilder(GroupManager::class)
+            ->onlyMethods(['getGroups'])
+            ->setConstructorArgs([$container])
+            ->getMock();
         $model->method('getGroups')->with('Expired')->willReturn([$group]);
         $model->updateCache();
     }

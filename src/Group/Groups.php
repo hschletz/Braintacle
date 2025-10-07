@@ -17,7 +17,11 @@ use Laminas\Db\Sql\Select;
 use Laminas\Db\Sql\Sql;
 use LogicException;
 use Model\Client\Client;
+use Model\Config;
 use Model\Group\Group;
+use Psr\Clock\ClockInterface;
+use Random\Engine;
+use Random\Randomizer;
 use Throwable;
 
 /**
@@ -32,11 +36,14 @@ final class Groups
 
 
     public function __construct(
+        private ClockInterface $clock,
+        private Config $config,
         private Connection $connection,
         private DataProcessor $dataProcessor,
         private Locks $locks,
         private Search $search,
         private Sql $sql,
+        private ?Engine $engine = null,
     ) {}
 
     /**
@@ -44,7 +51,7 @@ final class Groups
      */
     public function getMembers(Group $group, MembersColumn $order, Direction $direction)
     {
-        $group->update();
+        $this->updateMemberships($group);
 
         $queryBuilder = $this->connection->createQueryBuilder();
         $expr = $queryBuilder->expr();
@@ -74,7 +81,7 @@ final class Groups
      */
     public function getExcludedClients(Group $group, ExcludedColumn $order, Direction $direction): iterable
     {
-        $group->update();
+        $this->updateMemberships($group);
 
         $queryBuilder = $this->connection->createQueryBuilder();
         $expr = $queryBuilder->expr();
@@ -132,7 +139,7 @@ final class Groups
         );
 
         $group->dynamicMembersSql = $sql;
-        $group->update(force: true); // Force cache update, effectively validating query
+        $this->updateMemberships($group, force: true); // Force cache update, effectively validating query
     }
 
     /**
@@ -187,5 +194,89 @@ final class Groups
         } finally {
             $this->locks->release($group);
         }
+    }
+
+    /**
+     * Update the cache for dynamic memberships.
+     *
+     * Dynamic memberships are always determined from the cache. This method
+     * updates the cache for a group. By default, the cache is not updated
+     * before its expiration time has been reached.
+     *
+     * @param bool $force always rebuild cache, ignoring expiration time
+     */
+    public function updateMemberships(Group $group, bool $force = false): void
+    {
+        if (!$group->dynamicMembersSql) {
+            return; // Nothing to do if no SQL query is defined.
+        }
+
+        $now = $this->clock->now();
+        if (!$force and $group->cacheExpirationDate > $now) {
+            return;
+        }
+
+        if (!$this->locks->lock($group)) {
+            return; // Another request is currently updating or deleting the group.
+        }
+
+        $groupId = $group->id;
+        try {
+            // Remove dynamic memberships where client no longer meets the criteria.
+            $this->connection
+                ->createQueryBuilder()
+                ->delete(Table::GroupMemberships)
+                ->where(
+                    'group_id = :id',
+                    'static = ' . Membership::Automatic->value,
+                    "hardware_id NOT IN({$group->dynamicMembersSql})",
+                )
+                ->setParameter('id', $groupId)
+                ->executeStatement();
+
+            // Add dynamic memberships for clients which meet the criteria and
+            // don't already have an entry in the cache (which might be dynamic,
+            // static or excluded).
+            $existingMemberships = $this->connection
+                ->createQueryBuilder()
+                ->select('hardware_id')
+                ->from(Table::GroupMemberships)
+                ->where('group_id = :groupId')
+                ->getSQL();
+            $select = $this->connection
+                ->createQueryBuilder()
+                ->select(
+                    'id AS hardware_id',
+                    ':groupId AS group_id',
+                    Membership::Automatic->value . ' AS static',
+                )->from(Table::Clients)
+                ->where(
+                    "id IN ({$group->dynamicMembersSql})",
+                    "id NOT IN ($existingMemberships)",
+                )->getSQL();
+            $this->connection->executeStatement(
+                'INSERT INTO groups_cache (hardware_id, group_id, static) ' . $select,
+                ['groupId' => $groupId],
+            );
+
+            // Update timestamps.
+            $fuzz = (new Randomizer($this->engine))->getInt(0, $this->config->groupCacheExpirationFuzz);
+            $minExpires = $now->modify("+$fuzz seconds");
+            $this->connection->update(
+                Table::GroupInfo,
+                [
+                    'create_time' => $now->getTimestamp(),
+                    'revalidate_from' => $minExpires->getTimestamp(),
+                ],
+                ['hardware_id' => $groupId],
+            );
+        } finally {
+            $this->locks->release($group);
+        }
+
+        $group->cacheCreationDate = $now;
+        $group->cacheExpirationDate = $minExpires->modify(
+            sprintf('+%d seconds', $this->config->groupCacheExpirationInterval)
+        );
     }
 }

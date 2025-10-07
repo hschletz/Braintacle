@@ -22,18 +22,7 @@
 
 namespace Model\Group;
 
-use Braintacle\Locks;
-use Database\Table\Clients;
-use Database\Table\GroupInfo;
-use Database\Table\GroupMemberships;
 use DateTimeInterface;
-use Laminas\Db\Sql\Expression;
-use Laminas\Db\Sql\Literal;
-use Laminas\Db\Sql\Predicate\NotIn;
-use Model\Client\Client;
-use Model\Config;
-use Psr\Clock\ClockInterface;
-use Random\Randomizer;
 
 /**
  * A group of clients
@@ -89,87 +78,4 @@ class Group extends \Model\ClientOrGroup
      * Timestamp when cache will expire and get rebuilt
      */
     public DateTimeInterface $CacheExpirationDate;
-
-    /**
-     * Update the cache for dynamic memberships
-     *
-     * Dynamic memberships are always determined from the cache. This method
-     * updates the cache for a group. By default, the cache is not updated
-     * before its expiration time has been reached.
-     *
-     * @param bool $force always rebuild cache, ignoring expiration time
-     */
-    public function update($force = false)
-    {
-        if (!$this['DynamicMembersSql']) {
-            return; // Nothing to do if no SQL query is defined for this group
-        }
-
-        $now = $this->container->get(ClockInterface::class)->now();
-        // Do nothing if cache has not expired yet and update is not forced.
-        if (!$force and $this['CacheExpirationDate'] > $now) {
-            return;
-        }
-
-        /** @var Locks */
-        $locks = $this->container->get(Locks::class);
-        if (!$locks->lock($this)) {
-            return; // Another process is currently updating this group.
-        }
-
-        try {
-            $clients = $this->container->get(Clients::class);
-            $groupInfo = $this->container->get(GroupInfo::class);
-            $groupMemberships = $this->container->get(GroupMemberships::class);
-            $config = $this->container->get(Config::class);
-
-            // Remove dynamic memberships where client no longer meets the criteria
-            $groupMemberships->delete([
-                'group_id' => $this['Id'],
-                'static' => Client::MEMBERSHIP_AUTOMATIC,
-                "hardware_id NOT IN({$this['DynamicMembersSql']})",
-            ]);
-
-            // Add dynamic memberships for clients which meet the criteria and don't
-            // already have an entry in the cache (which might be dynamic, static or
-            // excluded).
-            $subquery = $groupMemberships->getSql()->select();
-            $subquery->columns(['hardware_id'])->where(['group_id' => $this['Id']]);
-            $select = $clients->getSql()->select();
-            $select->columns([
-                'hardware_id' => 'id',
-                'group_id' => new Expression('?', $this['Id']),
-                'static' => new Literal((string) Client::MEMBERSHIP_AUTOMATIC),
-            ])->where([
-                "id IN ($this[DynamicMembersSql])",
-                new NotIn('id', $subquery),
-            ]);
-            $groupMemberships->insert($select);
-
-            // Update CacheCreationDate and CacheExpirationDate
-            $minExpires = $now->modify(
-                sprintf(
-                    '+%d seconds',
-                    $this->container->get(Randomizer::class)->getInt(0, $config->groupCacheExpirationFuzz)
-                )
-            );
-            $groupInfo->update(
-                [
-                    'create_time' => $now->getTimestamp(),
-                    'revalidate_from' => $minExpires->getTimestamp(),
-                ],
-                ['hardware_id' => $this['Id']],
-            );
-        } finally {
-            $locks->release($this);
-        }
-
-        $this->offsetSet('CacheCreationDate', $now);
-        $this->offsetSet(
-            'CacheExpirationDate',
-            $minExpires->modify(
-                sprintf('+%d seconds', $config->groupCacheExpirationInterval)
-            )
-        );
-    }
 }
