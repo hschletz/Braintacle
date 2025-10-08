@@ -26,6 +26,23 @@ class DuplicatesRequestParametersTest extends TestCase
         $this->assertEquals(Direction::Ascending, $duplicatesRequestParameters->direction);
     }
 
+    public function testExplicitValues()
+    {
+        $dataProcessor = $this->createDataProcessor();
+        $duplicatesRequestParameters = $dataProcessor->process(
+            [
+                'criterion' => 'name',
+                'order' => 'mac_address',
+                'direction' => 'desc',
+            ],
+            DuplicatesRequestParameters::class
+        );
+
+        $this->assertEquals(Criterion::Name, $duplicatesRequestParameters->criterion);
+        $this->assertEquals(DuplicatesColumn::MacAddress, $duplicatesRequestParameters->order);
+        $this->assertEquals(Direction::Descending, $duplicatesRequestParameters->direction);
+    }
+
     public function testCriterionMissing()
     {
         $this->assertInvalidFormData([], DuplicatesRequestParameters::class);

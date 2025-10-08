@@ -13,6 +13,7 @@ class DuplicatesRequestParameters
     #[UseBackingValue]
     public Criterion $criterion;
 
+    #[UseBackingValue]
     public DuplicatesColumn $order = DuplicatesColumn::Id;
 
     #[UseBackingValue]

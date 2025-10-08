@@ -13,6 +13,9 @@ class SoftwarePageFormData
     #[UseBackingValue]
     public SoftwareFilter $filter = SoftwareFilter::Accepted;
 
+    #[UseBackingValue]
     public SoftwarePageColumn $order = SoftwarePageColumn::Name;
+
+    #[UseBackingValue]
     public Direction $direction = Direction::Ascending;
 }

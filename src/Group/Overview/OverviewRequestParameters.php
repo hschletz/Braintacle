@@ -3,6 +3,7 @@
 namespace Braintacle\Group\Overview;
 
 use Braintacle\Direction;
+use Formotron\Attribute\UseBackingValue;
 
 /**
  * Query parameters for groups overview page.
@@ -10,5 +11,7 @@ use Braintacle\Direction;
 class OverviewRequestParameters
 {
     public OverviewColumn $order = OverviewColumn::Name;
+
+    #[UseBackingValue]
     public Direction $direction = Direction::Ascending;
 }
