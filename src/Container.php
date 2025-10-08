@@ -4,7 +4,7 @@ namespace Braintacle;
 
 use Braintacle\Database\ConnectionFactory;
 use Braintacle\I18n\Translator;
-use Braintacle\Legacy\ClientOrGroupFactory;
+use Braintacle\Legacy\ClientFactory;
 use Braintacle\Legacy\Database\AdapterFactory;
 use Braintacle\Legacy\Database\DatabaseFactory;
 use Braintacle\Template\TemplateEngine;
@@ -21,7 +21,6 @@ use Laminas\Session\Validator\Csrf;
 use Library\Application;
 use Locale;
 use Model\Client\Client;
-use Model\Group\Group;
 use Model\Operator\AuthenticationService;
 use Model\Package\Storage\Direct as DirectStorage;
 use Model\Package\Storage\StorageInterface;
@@ -57,11 +56,10 @@ class Container extends DIContainer
                     InstalledVersions::getRootPackage()['install_path'] . '/config/braintacle.ini',
             ),
             AuthenticationServiceInterface::class => get(AuthenticationService::class),
-            Client::class => factory(ClientOrGroupFactory::class),
+            Client::class => factory(ClientFactory::class),
             ClockInterface::class => get(Time::class),
             Connection::class => factory(ConnectionFactory::class),
             Csrf::class => create(Csrf::class)->constructor(['timeout' => null]),
-            Group::class => factory(ClientOrGroupFactory::class),
             LoggerInterface::class => create(Logger::class)->constructor(
                 'Braintacle',
                 [new StreamHandler('php://stderr', LogLevel::WARNING)],

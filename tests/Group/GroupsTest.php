@@ -173,8 +173,8 @@ final class GroupsTest extends TestCase
 
             $dataProcessor = $this->createDataProcessor([DateTimeTransformer::class => $dateTimeTransformer]);
 
-            $group = $this->createMock(Group::class);
-            $group->method('__get')->with('id')->willReturn($groupId);
+            $group = new Group();
+            $group->id = $groupId;
 
             $groups = $this->createGroupsMock(
                 ['updateMemberships'],
@@ -239,8 +239,8 @@ final class GroupsTest extends TestCase
 
             $dataProcessor = $this->createDataProcessor([DateTimeTransformer::class => $dateTimeTransformer]);
 
-            $group = $this->createMock(Group::class);
-            $group->method('__get')->with('id')->willReturn($groupId);
+            $group = new Group();
+            $group->id = $groupId;
 
             $groups = $this->createGroupsMock(
                 ['updateMemberships'],
@@ -427,8 +427,8 @@ final class GroupsTest extends TestCase
 
             $clients = [$client1, $client2, $client3, $client5];
 
-            $group = $this->createMock(Group::class);
-            $group->method('__get')->with('id')->willReturn(10);
+            $group = new Group();
+            $group->id = 10;
 
             $locks = $this->createMock(Locks::class);
             $locks->expects($this->once())->method('lock')->with($group)->willReturn(true);
@@ -497,8 +497,8 @@ final class GroupsTest extends TestCase
             $locks->expects($this->once())->method('lock')->willReturn(true);
             $locks->expects($this->once())->method('release');
 
-            $group = $this->createMock(Group::class);
-            $group->method('__get')->with('id')->willReturn(10);
+            $group = new Group();
+            $group->id = 10;
 
             $client = $this->createStub(Client::class);
             $client->id = 1;

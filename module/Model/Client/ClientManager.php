@@ -125,9 +125,12 @@ class ClientManager
             $invert = array($invert);
         }
         foreach ($filter as $index => $type) {
+            /** @var array $search */
             $arg = $search[$index];
+            /** @var array $operators */
             $operator = $operators[$index];
             $matchExact = ($operator == 'eq');
+            /** @var array $invert */
             $invertResult = $invert[$index];
             switch ($type) {
                 case '':

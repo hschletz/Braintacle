@@ -195,7 +195,7 @@ class GroupManager
         }
 
         try {
-            $id = $group['Id'];
+            $id = $group->id;
             $connection = $this->container->get(Adapter::class)->getDriver()->getConnection();
             $connection->beginTransaction();
             try {

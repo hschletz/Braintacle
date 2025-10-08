@@ -24,6 +24,7 @@ namespace Database\Test\Table;
 
 use Database\Table\Config as ConfigTable;
 use Laminas\Db\Adapter\Adapter;
+use Laminas\Hydrator\ObjectPropertyHydrator;
 use Model\Config as ConfigModel;
 use Model\Config;
 use Model\Group\Group;
@@ -65,40 +66,32 @@ class GroupInfoTest extends AbstractTestCase
         $table = new \Database\Table\GroupInfo($serviceManager);
 
         $hydrator = $table->getHydrator();
-        $this->assertInstanceOf(\Laminas\Hydrator\ArraySerializableHydrator::class, $hydrator);
+        $this->assertInstanceOf(ObjectPropertyHydrator::class, $hydrator);
 
         $map = $hydrator->getNamingStrategy();
         $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $map);
 
-        $this->assertEquals('Id', $map->hydrate('id'));
-        $this->assertEquals('Name', $map->hydrate('name'));
-        $this->assertEquals('Description', $map->hydrate('description'));
-        $this->assertEquals('CreationDate', $map->hydrate('lastdate'));
-        $this->assertEquals('DynamicMembersSql', $map->hydrate('request'));
-        $this->assertEquals('CacheCreationDate', $map->hydrate('create_time'));
-        $this->assertEquals('CacheExpirationDate', $map->hydrate('revalidate_from'));
+        $this->assertEquals('id', $map->hydrate('id'));
+        $this->assertEquals('name', $map->hydrate('name'));
+        $this->assertEquals('description', $map->hydrate('description'));
+        $this->assertEquals('creationDate', $map->hydrate('lastdate'));
+        $this->assertEquals('dynamicMembersSql', $map->hydrate('request'));
+        $this->assertEquals('cacheCreationDate', $map->hydrate('create_time'));
+        $this->assertEquals('cacheExpirationDate', $map->hydrate('revalidate_from'));
 
-        $this->assertEquals('id', $map->extract('Id'));
-        $this->assertEquals('name', $map->extract('Name'));
-        $this->assertEquals('description', $map->extract('Description'));
-        $this->assertEquals('lastdate', $map->extract('CreationDate'));
-        $this->assertEquals('request', $map->extract('DynamicMembersSql'));
-        $this->assertEquals('create_time', $map->extract('CacheCreationDate'));
-        $this->assertEquals('revalidate_from', $map->extract('CacheExpirationDate'));
-
-        $dateTimeFormatterStrategy = $hydrator->getStrategy('CreationDate');
+        $dateTimeFormatterStrategy = $hydrator->getStrategy('creationDate');
         $this->assertInstanceOf(
             'Laminas\Hydrator\Strategy\DateTimeFormatterStrategy',
             $dateTimeFormatterStrategy
         );
         $this->assertSame($dateTimeFormatterStrategy, $hydrator->getStrategy('lastdate'));
 
-        $cacheCreationDateStrategy = $hydrator->getStrategy('CacheCreationDate');
+        $cacheCreationDateStrategy = $hydrator->getStrategy('cacheCreationDate');
         $this->assertInstanceOf('Database\Hydrator\Strategy\Groups\CacheDate', $cacheCreationDateStrategy);
         $this->assertSame($cacheCreationDateStrategy, $hydrator->getStrategy('create_time'));
         $this->assertEquals(0, $cacheCreationDateStrategy->offset);
 
-        $cacheExpirationDateStrategy = $hydrator->getStrategy('CacheExpirationDate');
+        $cacheExpirationDateStrategy = $hydrator->getStrategy('cacheExpirationDate');
         $this->assertInstanceOf('Database\Hydrator\Strategy\Groups\CacheDate', $cacheExpirationDateStrategy);
         $this->assertSame($cacheExpirationDateStrategy, $hydrator->getStrategy('revalidate_from'));
         $this->assertEquals(42, $cacheExpirationDateStrategy->offset);

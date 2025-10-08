@@ -32,8 +32,8 @@ class ShowPackagesHandlerTest extends TestCase
         $groupName = '<groupName>';
         $queryParams = ['group' => $groupName];
 
-        $group = $this->createMock(Group::class);
-        $group->method('__get')->with('name')->willReturn($groupName);
+        $group = new Group();
+        $group->name = $groupName;
 
         $formData = new GroupRequestParameters();
         $formData->group = $group;

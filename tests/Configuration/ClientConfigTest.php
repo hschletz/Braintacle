@@ -427,11 +427,7 @@ class ClientConfigTest extends TestCase
             $clientConfig = $this->createClientConfig($config, $connection);
 
             $object = $this->createMock($class);
-            if ($class == Group::class) {
-                $object->method('__get')->with('id')->willReturn($id);
-            } else {
-                $object->id = $id;
-            }
+            $object->id = $id;
 
             $this->assertSame($expectedValue, $clientConfig->getOption($object, $option));
         });
@@ -679,11 +675,7 @@ class ClientConfigTest extends TestCase
                 ]);
 
                 $object = $this->createMock($class);
-                if ($class == Group::class) {
-                    $object->method('__get')->with('id')->willReturn($id);
-                } else {
-                    $object->id = $id;
-                }
+                $object->id = $id;
 
                 $clientConfig = $this->createClientConfigMock(['getOption'], $config, $connection);
                 $clientConfig->method('getOption')->with($object, $option)->willReturn($oldValue);

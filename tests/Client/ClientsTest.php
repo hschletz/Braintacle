@@ -376,11 +376,13 @@ final class ClientsTest extends TestCase
         $connection->expects($this->never())->method('update');
         $connection->expects($this->never())->method('delete');
 
-        $group1 = $this->createStub(Group::class);
-        $group1->method('__get')->willReturnMap([['id', 1], ['name', 'name1']]);
+        $group1 = new Group();
+        $group1->id = 1;
+        $group1->name = 'name1';
 
-        $group2 = $this->createStub(Group::class);
-        $group2->method('__get')->willReturnMap([['id', 2], ['name', 'name2']]);
+        $group2 = new Group();
+        $group2->id = 2;
+        $group2->name = 'name2';
 
         $groupManager = $this->createMock(GroupManager::class);
         $groupManager->method('getGroups')->with()->willReturn([$group1, $group2]);
@@ -430,11 +432,13 @@ final class ClientsTest extends TestCase
         $connection->expects($this->never())->method('update');
         $connection->expects($this->never())->method('delete');
 
-        $group1 = $this->createStub(Group::class);
-        $group1->method('__get')->willReturnMap([['id', 1], ['name', 'name1']]);
+        $group1 = new Group();
+        $group1->id = 1;
+        $group1->name = 'name1';
 
-        $group2 = $this->createStub(Group::class);
-        $group2->method('__get')->willReturnMap([['id', 2], ['name', 'name2']]);
+        $group2 = new Group();
+        $group2->id = 2;
+        $group2->name = 'name2';
 
         $groupManager = $this->createMock(GroupManager::class);
         $groupManager->method('getGroups')->with()->willReturn([$group1, $group2]);
@@ -488,11 +492,13 @@ final class ClientsTest extends TestCase
         );
         $connection->expects($this->never())->method('delete');
 
-        $group1 = $this->createStub(Group::class);
-        $group1->method('__get')->willReturnMap([['id', 1], ['name', 'name1']]);
+        $group1 = new Group();
+        $group1->id = 1;
+        $group1->name = 'name1';
 
-        $group2 = $this->createStub(Group::class);
-        $group2->method('__get')->willReturnMap([['id', 2], ['name', 'name2']]);
+        $group2 = new Group();
+        $group2->id = 2;
+        $group2->name = 'name2';
 
         $groupManager = $this->createMock(GroupManager::class);
         $groupManager->method('getGroups')->with()->willReturn([$group1, $group2]);
@@ -520,11 +526,13 @@ final class ClientsTest extends TestCase
     #[DataProvider('setGroupMembershipsDeleteProvider')]
     public function testSetGroupMembershipsDelete(Membership $oldMembership)
     {
-        $group1 = $this->createMock(Group::class);
-        $group1->method('__get')->willReturnMap([['id', 1], ['name', 'name1']]);
+        $group1 = new Group();
+        $group1->id = 1;
+        $group1->name = 'name1';
 
-        $group2 = $this->createMock(Group::class);
-        $group2->method('__get')->willReturnMap([['id', 2], ['name', 'name2']]);
+        $group2 = new Group();
+        $group2->id = 2;
+        $group2->name = 'name2';
 
         $connection = $this->createMock(Connection::class);
         $connection->expects($this->never())->method('insert');
@@ -578,14 +586,17 @@ final class ClientsTest extends TestCase
         $connection->shouldNotReceive('update');
         $connection->shouldNotReceive('delete');
 
-        $group1 = $this->createStub(Group::class);
-        $group1->method('__get')->willReturnMap([['id', 1], ['name', 'name1']]);
+        $group1 = new Group();
+        $group1->id = 1;
+        $group1->name = 'name1';
 
-        $group2 = $this->createStub(Group::class);
-        $group2->method('__get')->willReturnMap([['id', 2], ['name', 'name2']]);
+        $group2 = new Group();
+        $group2->id = 2;
+        $group2->name = 'name2';
 
-        $group3 = $this->createStub(Group::class);
-        $group3->method('__get')->willReturnMap([['id', 3], ['name', 'name3']]);
+        $group3 = new Group();
+        $group3->id = 3;
+        $group3->name = 'name3';
 
         $groupManager = $this->createMock(GroupManager::class);
         $groupManager->method('getGroups')->with()->willReturn([$group1, $group2, $group3]);

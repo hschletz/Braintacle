@@ -39,7 +39,7 @@ class AddToGroupFormHandlerTest extends TestCase
         $dataProcessor = $this->createMock(DataProcessor::class);
         $dataProcessor->method('process')->with($parsedBody, get_class($formData))->willReturn($formData);
 
-        $group->method('__get')->with('name')->willReturn('_name');
+        $group->name = '_name';
 
         $groups = $this->createMock(Groups::class);
         $groups->expects($this->once())->method('setSearchResults')->with(

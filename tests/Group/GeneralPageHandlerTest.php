@@ -25,14 +25,12 @@ class GeneralPageHandlerTest extends TestCase
         $groupName = '<groupName>';
         $queryParams = ['name' => $groupName];
 
-        $group = $this->createMock(Group::class);
-        $group->method('__get')->willReturnMap([
-            ['name', $groupName],
-            ['id', 42],
-            ['description', 'groupDescription'],
-            ['creationDate', new DateTime('2025-01-19T11:12:13')],
-            ['dynamicMembersSql', 'groupSql'],
-        ]);
+        $group = new Group();
+        $group->name = $groupName;
+        $group->id = 42;
+        $group->description = 'groupDescription';
+        $group->creationDate = new DateTime('2025-01-19T11:12:13');
+        $group->dynamicMembersSql = 'groupSql';
 
         $requestData = new GroupRequestParameters();
         $requestData->group = $group;

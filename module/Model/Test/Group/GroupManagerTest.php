@@ -30,6 +30,7 @@ use Database\Table\ClientConfig;
 use Database\Table\ClientsAndGroups;
 use Database\Table\GroupInfo;
 use Database\Table\GroupMemberships;
+use DateTime;
 use DateTimeImmutable;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
@@ -38,7 +39,6 @@ use Model\Config;
 use Model\Group\Group;
 use Model\Group\GroupManager;
 use Nada\Database\AbstractDatabase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
 
@@ -49,22 +49,22 @@ class GroupManagerTest extends AbstractGroupTestCase
     public static function getGroupsProvider()
     {
         $group1 = array(
-            'Id' => '1',
-            'Name' => 'name1',
-            'CreationDate' => new \DateTime('2015-02-02 19:01:00'),
-            'Description' => 'description1',
-            'DynamicMembersSql' => 'request1',
-            'CacheExpirationDate' => new \DateTime('2015-02-08 19:35:30'),
-            'CacheCreationDate' => new \DateTime('2015-02-04 20:46:23'),
+            'id' => 1,
+            'name' => 'name1',
+            'creationDate' => new DateTime('2015-02-02 19:01:00'),
+            'description' => 'description1',
+            'dynamicMembersSql' => 'request1',
+            'cacheExpirationDate' => new DateTime('2015-02-08 19:35:30'),
+            'cacheCreationDate' => new DateTime('2015-02-04 20:46:23'),
         );
         $group2 = array(
-            'Id' => '2',
-            'Name' => 'name2',
-            'CreationDate' => new \DateTime('2015-02-02 19:02:00'),
-            'Description' => null,
-            'DynamicMembersSql' => 'request2',
-            'CacheExpirationDate' => new \DateTime('2015-02-08 19:36:30'),
-            'CacheCreationDate' => new \DateTime('2015-02-04 20:46:24'),
+            'id' => 2,
+            'name' => 'name2',
+            'creationDate' => new DateTime('2015-02-02 19:02:00'),
+            'description' => null,
+            'dynamicMembersSql' => 'request2',
+            'cacheExpirationDate' => new DateTime('2015-02-08 19:36:30'),
+            'cacheCreationDate' => new DateTime('2015-02-04 20:46:24'),
         );
         return array(
             [null, null, OverviewColumn::Name, Direction::Descending, [$group2, $group1], 'never'],
@@ -103,7 +103,7 @@ class GroupManagerTest extends AbstractGroupTestCase
         $this->assertContainsOnlyInstancesOf('Model\Group\Group', $groups);
         $this->assertCount(count($expected), $groups);
         foreach ($groups as $index => $group) {
-            $this->assertEquals($expected[$index], $group->getArrayCopy());
+            $this->assertEquals($expected[$index], (array) $group);
         }
     }
 
@@ -127,7 +127,7 @@ class GroupManagerTest extends AbstractGroupTestCase
         $model = new GroupManager($serviceManager);
         $group = $model->getGroup('name2');
         $this->assertInstanceOf('Model\Group\Group', $group);
-        $this->assertEquals('name2', $group['Name']);
+        $this->assertEquals('name2', $group->name);
     }
 
     public function testGetGroupNonExistentGroup()
@@ -294,9 +294,8 @@ class GroupManagerTest extends AbstractGroupTestCase
 
     public function testDeleteGroup()
     {
-        /** @var MockObject|Group */
-        $group = $this->createMock('Model\Group\Group');
-        $group->method('offsetGet')->with('Id')->willReturn(1);
+        $group = new Group();
+        $group->id = 1;
 
         $locks = $this->createMock(Locks::class);
         $locks->method('lock')->with($group)->willReturn(true);
@@ -398,8 +397,8 @@ class GroupManagerTest extends AbstractGroupTestCase
 
     public function testDeleteGroupDatabaseError()
     {
-        /** @var MockObject|Group */
-        $group = $this->createMock('Model\Group\Group');
+        $group = new Group();
+        $group->id = 1;
 
         $clientsAndGroups = $this->createMock(ClientsAndGroups::class);
         $clientsAndGroups->method('delete')->will($this->throwException(new \RuntimeException('database error')));

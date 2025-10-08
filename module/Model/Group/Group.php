@@ -32,50 +32,42 @@ use DateTimeInterface;
  * a query. It is also possible to unconditionally exclude a client from a group
  * regardless of query result.
  *
- * @property int $id
- * @property string $name
- * @property string $description
- * @property DateTimeInterface $creationDate
- * @property string $dynamicMembersSql SQL query for dynamic members, may be empty
- * @property DateTimeInterface $cacheCreationDate Timestamp of last cache update
- * @property DateTimeInterface $cacheExpirationDate Timestamp when cache will expire and get rebuilt
- *
  * @psalm-suppress PossiblyUnusedProperty -- referenced in template
  */
-class Group extends \Model\ClientOrGroup
+class Group
 {
     /**
      * Primary key
      */
-    public int $Id;
+    public int $id;
 
     /**
      * Name
      */
-    public string $Name;
+    public string $name;
 
     /**
      * Description
      */
-    public string $Description;
+    public ?string $description;
 
     /**
      * Timestamp of group creation
      */
-    public DateTimeInterface $CreationDate;
+    public DateTimeInterface $creationDate;
 
     /**
      * SQL query for dynamic members, may be empty
      */
-    public string $DynamicMembersSql;
+    public ?string $dynamicMembersSql;
 
     /**
      * Timestamp of last cache update
      */
-    public DateTimeInterface $CacheCreationDate;
+    public ?DateTimeInterface $cacheCreationDate;
 
     /**
      * Timestamp when cache will expire and get rebuilt
      */
-    public DateTimeInterface $CacheExpirationDate;
+    public ?DateTimeInterface $cacheExpirationDate;
 }
