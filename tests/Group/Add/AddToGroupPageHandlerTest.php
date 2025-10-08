@@ -3,6 +3,7 @@
 namespace Braintacle\Test\Group\Add;
 
 use Braintacle\Group\Add\AddToGroupPageHandler;
+use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Search\SearchOperator;
 use Braintacle\Search\SearchParams;
 use Braintacle\Template\TemplateEngine;
@@ -49,7 +50,7 @@ class AddToGroupPageHandlerTest extends TestCase
         $group2->name = 'group2';
 
         $groupManager = $this->createMock(GroupManager::class);
-        $groupManager->method('getGroups')->with(null, null, 'Name')->willReturn([$group1, $group2]);
+        $groupManager->method('getGroups')->with(null, null, OverviewColumn::Name)->willReturn([$group1, $group2]);
 
         $templateEngine = $this->createTemplateEngine();
 

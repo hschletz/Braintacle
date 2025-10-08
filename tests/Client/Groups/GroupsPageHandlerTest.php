@@ -7,6 +7,7 @@ use Braintacle\Client\ClientRequestParameters;
 use Braintacle\Client\Clients;
 use Braintacle\Client\Groups\GroupsPageHandler;
 use Braintacle\Group\Membership;
+use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Http\RouteHelper;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Template\TemplateLoader;
@@ -54,7 +55,7 @@ class GroupsPageHandlerTest extends TestCase
         $groupManager
             ->expects($this->once())
             ->method('getGroups')
-            ->with(null, null, 'Name')
+            ->with(null, null, OverviewColumn::Name)
             ->willReturn(new ArrayIterator($groups));
 
         $routeHelper = $this->createStub(RouteHelper::class);

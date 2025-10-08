@@ -34,8 +34,8 @@ class OverviewHandler implements RequestHandlerInterface
         $groups = $this->groupManager->getGroups(
             null,
             null,
-            $requestParameters->order->name,
-            $requestParameters->direction->value,
+            $requestParameters->order,
+            $requestParameters->direction,
         );
         $this->response->getBody()->write($this->templateEngine->render('Pages/Group/Overview.latte', [
             'groups' => $groups,

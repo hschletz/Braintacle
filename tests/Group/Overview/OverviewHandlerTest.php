@@ -43,7 +43,10 @@ class OverviewHandlerTest extends TestCase
             ->willReturn($requestParameters);
 
         $groupManager = $this->createMock(GroupManager::class);
-        $groupManager->method('getGroups')->with(null, null, 'Name', 'asc')->willReturn(new ArrayIterator($groups));
+        $groupManager
+            ->method('getGroups')
+            ->with(null, null, OverviewColumn::Name, Direction::Ascending)
+            ->willReturn(new ArrayIterator($groups));
 
         $templateEngine = $this->createTemplateEngine();
 

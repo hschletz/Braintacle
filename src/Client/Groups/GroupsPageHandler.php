@@ -5,6 +5,7 @@ namespace Braintacle\Client\Groups;
 use Braintacle\Client\ClientRequestParameters;
 use Braintacle\Client\Clients;
 use Braintacle\Group\Membership;
+use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Http\RouteHelper;
 use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
@@ -36,7 +37,7 @@ class GroupsPageHandler implements RequestHandlerInterface
 
         $effectiveMemberships = [];
         $formData = [];
-        $groups = $this->groupManager->getGroups(null, null, 'Name');
+        $groups = $this->groupManager->getGroups(null, null, OverviewColumn::Name);
         if (count($groups)) {
             $memberships = $this->clients->getGroupMemberships(
                 $client,

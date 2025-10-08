@@ -22,7 +22,9 @@
 
 namespace Model\Test\Group;
 
+use Braintacle\Direction;
 use Braintacle\Group\Groups;
+use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Locks;
 use Database\Table\ClientConfig;
 use Database\Table\ClientsAndGroups;
@@ -65,11 +67,11 @@ class GroupManagerTest extends AbstractGroupTestCase
             'CacheCreationDate' => new \DateTime('2015-02-04 20:46:24'),
         );
         return array(
-            array(null, null, 'Name', 'desc', array($group2, $group1), 'never'),
+            [null, null, OverviewColumn::Name, Direction::Descending, [$group2, $group1], 'never'],
             array('Id', '2', null, null, array($group2), 'never'),
             array('Name', 'name1', null, null, array($group1), 'never'),
             array('Expired', null, null, null, array($group1), 'never'),
-            array('Member', '3', 'Name', 'asc', array($group1, $group2), 'once'),
+            ['Member', '3', OverviewColumn::Name, Direction::Ascending, [$group1, $group2], 'once'],
             array('Member', '4', null, null, array($group1), 'once'),
         );
     }

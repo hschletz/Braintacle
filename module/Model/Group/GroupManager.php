@@ -22,7 +22,9 @@
 
 namespace Model\Group;
 
+use Braintacle\Direction;
 use Braintacle\Group\Groups;
+use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Locks;
 use Countable;
 use Database\Table\ClientConfig;
@@ -48,12 +50,14 @@ class GroupManager
      *
      * @param string $filter Optional filter to apply (Id|Name|Expired|Member), default: return all groups
      * @param mixed $filterArg Argument for Id, Name and Member filters, ignored otherwise
-     * @param string $order Property to sort by. Default: none
-     * @param string $direction one of [asc|desc]. Default: asc
      * @return iterable<Group>|Countable
      */
-    public function getGroups($filter = null, $filterArg = null, $order = null, $direction = 'asc')
-    {
+    public function getGroups(
+        $filter = null,
+        $filterArg = null,
+        ?OverviewColumn $order = null,
+        ?Direction $direction = Direction::Ascending,
+    ) {
         /** @var GroupInfo */
         $groupInfo = $this->container->get('Database\Table\GroupInfo');
         $select = $groupInfo->getSql()->select();
@@ -101,7 +105,7 @@ class GroupManager
         }
 
         if ($order) {
-            $select->order(array($groupInfo->getHydrator()->extractName($order) => $direction));
+            $select->order([$order->value => $direction->value]);
         }
 
         return $groupInfo->selectWith($select);

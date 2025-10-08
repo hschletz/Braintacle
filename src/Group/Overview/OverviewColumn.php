@@ -5,9 +5,9 @@ namespace Braintacle\Group\Overview;
 /**
  * Sortable columns for the groups overview table.
  */
-enum OverviewColumn
+enum OverviewColumn: string
 {
-    case Name;
-    case CreationDate;
-    case Description;
+    case Name = 'name';
+    case CreationDate = 'lastdate';
+    case Description = 'description';
 }

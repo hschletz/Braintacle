@@ -2,6 +2,7 @@
 
 namespace Braintacle\Group\Add;
 
+use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Search\SearchParams;
 use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
@@ -29,7 +30,7 @@ class AddToGroupPageHandler implements RequestHandlerInterface
         $searchParams = $this->dataProcessor->process($request->getQueryParams(), SearchParams::class);
 
         $this->response->getBody()->write($this->templateEngine->render('Pages/Group/AddToGroup.latte', [
-            'groups' => $this->groupManager->getGroups(null, null, 'Name'),
+            'groups' => $this->groupManager->getGroups(null, null, OverviewColumn::Name),
             'filter' => $searchParams->filter,
             'search' => $searchParams->search,
             'operator' => $searchParams->operator->value,
