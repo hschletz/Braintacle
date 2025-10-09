@@ -30,8 +30,10 @@ use Database\Table\DuplicateSerials;
 use Database\Table\PackageHistory;
 use Database\Table\WindowsInstallations;
 use DateTimeInterface;
+use Model\AbstractModel;
 use Model\Group\GroupManager;
 use Protocol\Message\InventoryRequest;
+use Psr\Container\ContainerInterface;
 use ReturnTypeWillChange;
 
 /**
@@ -70,7 +72,7 @@ use ReturnTypeWillChange;
  *
  * @psalm-suppress PossiblyUnusedProperty -- Referenced in template
  */
-class Client extends \Model\ClientOrGroup
+class Client extends AbstractModel
 {
     /**
      * Value denoting automatic group membership, i.e. from a group query
@@ -236,6 +238,13 @@ class Client extends \Model\ClientOrGroup
      * @deprecated Enumerate all interfaces for a complete list of IP addresses.
      */
     public ?string $ipAddress;
+
+    private ContainerInterface $container;
+
+    public function setContainer(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
 
     #[ReturnTypeWillChange]
     public function offsetGet($key)
