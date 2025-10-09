@@ -23,6 +23,7 @@
 namespace Model\Group;
 
 use Braintacle\Direction;
+use Braintacle\Group\Group;
 use Braintacle\Group\Groups;
 use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Locks;
@@ -115,7 +116,7 @@ class GroupManager
      * Get group with given name.
      *
      * @param string $name Group name
-     * @return \Model\Group\Group
+     * @return Group
      * @throws \RuntimeException if the given group name does not exist
      * @throws \InvalidArgumentException if $name is empty
      */
@@ -183,10 +184,9 @@ class GroupManager
     /**
      * Delete a group
      *
-     * @param \Model\Group\Group $group
      * @throws \Model\Group\RuntimeException if group is locked
      */
-    public function deleteGroup(\Model\Group\Group $group)
+    public function deleteGroup(Group $group)
     {
         /** @var Locks */
         $locks = $this->container->get(Locks::class);

@@ -2,10 +2,10 @@
 
 namespace Braintacle\Test\Group;
 
+use Braintacle\Group\Group;
 use Braintacle\Group\GroupRequestParameters;
 use Braintacle\Group\GroupTransformer;
 use Braintacle\Test\DataProcessorTestTrait;
-use Model\Group\Group;
 use PHPUnit\Framework\TestCase;
 
 class GroupRequestParametersTest extends TestCase

@@ -2,6 +2,7 @@
 
 namespace Braintacle\Test\Group\Packages;
 
+use Braintacle\Group\Group;
 use Braintacle\Group\GroupRequestParameters;
 use Braintacle\Group\Packages\AssignPackagesHandler;
 use Braintacle\Http\RouteHelper;
@@ -9,7 +10,6 @@ use Braintacle\Package\Assignments;
 use Braintacle\Package\AssignPackagesFormData;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Formotron\DataProcessor;
-use Model\Group\Group;
 use PHPUnit\Framework\TestCase;
 
 class AssignPackagesHandlerTest extends TestCase

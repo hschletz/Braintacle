@@ -4,11 +4,11 @@ namespace Braintacle\Test\Group;
 
 use Braintacle\FlashMessages;
 use Braintacle\Group\DeleteHandler;
+use Braintacle\Group\Group;
 use Braintacle\Group\GroupRequestParameters;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Formotron\DataProcessor;
 use Laminas\Translator\TranslatorInterface;
-use Model\Group\Group;
 use Model\Group\GroupManager;
 use Model\Group\RuntimeException as GroupRuntimeException;
 use PHPUnit\Framework\TestCase;

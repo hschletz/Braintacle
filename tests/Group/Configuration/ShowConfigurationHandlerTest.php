@@ -4,6 +4,7 @@ namespace Braintacle\Test\Group\Configuration;
 
 use Braintacle\Configuration\ClientConfig;
 use Braintacle\Group\Configuration\ShowConfigurationHandler;
+use Braintacle\Group\Group;
 use Braintacle\Group\GroupRequestParameters;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Template\TemplateLoader;
@@ -12,7 +13,6 @@ use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
 use DOMXPath;
 use Formotron\DataProcessor;
-use Model\Group\Group;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;

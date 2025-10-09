@@ -2,10 +2,10 @@
 
 namespace Braintacle\Test\Group\Packages;
 
+use Braintacle\Group\Group;
 use Braintacle\Group\GroupTransformer;
 use Braintacle\Group\Packages\RemovePackagesParameters;
 use Braintacle\Test\DataProcessorTestTrait;
-use Model\Group\Group;
 use PHPUnit\Framework\TestCase;
 
 class RemovePackagesParametersTest extends TestCase

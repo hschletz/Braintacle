@@ -3,15 +3,13 @@
 namespace Braintacle\Test\Group;
 
 use Braintacle\Group\GeneralPageHandler;
+use Braintacle\Group\Group;
 use Braintacle\Group\GroupRequestParameters;
-use Braintacle\Template\Function\PathForRouteFunction;
-use Braintacle\Template\Function\TranslateFunction;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
 use DateTime;
 use Formotron\DataProcessor;
-use Model\Group\Group;
 use PHPUnit\Framework\TestCase;
 
 class GeneralPageHandlerTest extends TestCase

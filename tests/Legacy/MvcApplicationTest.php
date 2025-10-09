@@ -3,6 +3,7 @@
 namespace Braintacle\Test\Legacy;
 
 use Braintacle\AppConfig;
+use Braintacle\Group\Group;
 use Braintacle\Http\RouteHelper;
 use Braintacle\Legacy\MvcApplication;
 use Braintacle\Template\Function\AssetUrlFunction;
@@ -27,14 +28,12 @@ use Laminas\Translator\TranslatorInterface;
 use Laminas\View\Resolver\TemplateMapResolver;
 use Library\Application as LegacyApplication;
 use Model\Client\Client;
-use Model\Group\Group;
 use Nada\Database\AbstractDatabase;
 use Nyholm\Psr7\ServerRequest;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;

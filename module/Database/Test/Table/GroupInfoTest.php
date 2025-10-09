@@ -22,12 +22,12 @@
 
 namespace Database\Test\Table;
 
+use Braintacle\Group\Group;
 use Database\Table\Config as ConfigTable;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Hydrator\ObjectPropertyHydrator;
 use Model\Config as ConfigModel;
 use Model\Config;
-use Model\Group\Group;
 use Nada\Database\AbstractDatabase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -99,6 +99,6 @@ class GroupInfoTest extends AbstractTestCase
         $resultSet = $table->getResultSetPrototype();
         $this->assertInstanceOf('Laminas\Db\ResultSet\HydratingResultSet', $resultSet);
         $this->assertSame($hydrator, $resultSet->getHydrator());
-        $this->assertInstanceOf('Model\Group\Group', $resultSet->getObjectPrototype());
+        $this->assertInstanceOf(Group::class, $resultSet->getObjectPrototype());
     }
 }

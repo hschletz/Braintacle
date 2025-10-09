@@ -2,9 +2,9 @@
 
 namespace Braintacle\Test\Group;
 
+use Braintacle\Group\Group;
 use Braintacle\Group\GroupTransformer;
 use Formotron\Transformer;
-use Model\Group\Group;
 use Model\Group\GroupManager;
 use PHPUnit\Framework\TestCase;
 

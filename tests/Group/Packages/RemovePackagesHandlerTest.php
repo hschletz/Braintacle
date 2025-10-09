@@ -2,12 +2,12 @@
 
 namespace Braintacle\Test\Group\Packages;
 
+use Braintacle\Group\Group;
 use Braintacle\Group\Packages\RemovePackagesHandler;
 use Braintacle\Group\Packages\RemovePackagesParameters;
 use Braintacle\Package\Assignments;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Formotron\DataProcessor;
-use Model\Group\Group;
 use PHPUnit\Framework\TestCase;
 
 class RemovePackagesHandlerTest extends TestCase

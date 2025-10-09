@@ -2,6 +2,7 @@
 
 namespace Braintacle\Test\Group\Packages;
 
+use Braintacle\Group\Group;
 use Braintacle\Group\GroupRequestParameters;
 use Braintacle\Group\Packages\ShowPackagesHandler;
 use Braintacle\Package\Assignments;
@@ -10,7 +11,6 @@ use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
 use Formotron\DataProcessor;
-use Model\Group\Group;
 use Model\Package\Assignment;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;

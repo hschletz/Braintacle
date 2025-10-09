@@ -3,6 +3,7 @@
 namespace Braintacle\Test\Group\Add;
 
 use Braintacle\Group\Add\AddToGroupPageHandler;
+use Braintacle\Group\Group;
 use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Search\SearchOperator;
 use Braintacle\Search\SearchParams;
@@ -12,7 +13,6 @@ use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
 use Formotron\DataProcessor;
-use Model\Group\Group;
 use Model\Group\GroupManager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;

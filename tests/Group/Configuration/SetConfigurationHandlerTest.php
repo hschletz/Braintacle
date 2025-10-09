@@ -5,10 +5,10 @@ namespace Braintacle\Test\Group\Configuration;
 use Braintacle\Configuration\ClientConfig;
 use Braintacle\Group\Configuration\GroupConfigurationParameters;
 use Braintacle\Group\Configuration\SetConfigurationHandler;
+use Braintacle\Group\Group;
 use Braintacle\Group\GroupRequestParameters;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Formotron\DataProcessor;
-use Model\Group\Group;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 

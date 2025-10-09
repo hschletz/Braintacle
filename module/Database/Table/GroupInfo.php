@@ -22,9 +22,9 @@
 
 namespace Database\Table;
 
+use Braintacle\Group\Group;
 use Laminas\Hydrator\ObjectPropertyHydrator;
 use Model\Config as ConfigModel;
-use Model\Group\Group;
 use Nada\Database\AbstractDatabase;
 use Psr\Container\ContainerInterface;
 

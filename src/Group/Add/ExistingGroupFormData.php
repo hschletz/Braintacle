@@ -3,13 +3,13 @@
 namespace Braintacle\Group\Add;
 
 use Braintacle\CsrfProcessor;
+use Braintacle\Group\Group;
 use Braintacle\Group\GroupTransformer;
 use Braintacle\Group\Membership;
 use Braintacle\Search\SearchParams;
 use Formotron\Attribute\PreProcess;
 use Formotron\Attribute\Transform;
 use Formotron\Attribute\UseBackingValue;
-use Model\Group\Group;
 
 /**
  * Form data for setting clients on an existing group.

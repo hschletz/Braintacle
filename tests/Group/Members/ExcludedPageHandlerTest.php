@@ -4,6 +4,7 @@ namespace Braintacle\Test\Group\Members;
 
 use ArrayIterator;
 use Braintacle\Direction;
+use Braintacle\Group\Group;
 use Braintacle\Group\Groups;
 use Braintacle\Group\Members\ExcludedColumn;
 use Braintacle\Group\Members\ExcludedPageHandler;
@@ -18,7 +19,6 @@ use DateTime;
 use DOMXPath;
 use Formotron\DataProcessor;
 use Model\Client\Client;
-use Model\Group\Group;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;

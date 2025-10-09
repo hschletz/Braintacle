@@ -3,13 +3,13 @@
 namespace Braintacle\Test\Group\Add;
 
 use Braintacle\Group\Add\ExistingGroupFormData;
+use Braintacle\Group\Group;
 use Braintacle\Group\GroupTransformer;
 use Braintacle\Group\Membership;
 use Braintacle\Search\SearchFilterValidator;
 use Braintacle\Search\SearchOperator;
 use Braintacle\Test\CsrfFormProcessorTestTrait;
 use Braintacle\Transformer\ToBool;
-use Model\Group\Group;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;

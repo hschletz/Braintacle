@@ -22,10 +22,10 @@
 
 namespace Model\Test\Group;
 
+use Braintacle\Group\Group;
 use Database\SchemaManager;
 use Laminas\Db\Adapter\Adapter;
 use Model\Config;
-use Model\Group\Group;
 use Model\Test\AbstractTestCase;
 use Nada\Database\AbstractDatabase;
 use Psr\Container\ContainerInterface;

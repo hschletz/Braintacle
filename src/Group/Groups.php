@@ -18,7 +18,6 @@ use Laminas\Db\Sql\Sql;
 use LogicException;
 use Model\Client\Client;
 use Model\Config;
-use Model\Group\Group;
 use Psr\Clock\ClockInterface;
 use Random\Engine;
 use Random\Randomizer;

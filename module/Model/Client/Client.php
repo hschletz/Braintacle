@@ -22,6 +22,7 @@
 
 namespace Model\Client;
 
+use Braintacle\Group\Group;
 use Braintacle\Group\Membership;
 use Database\Table\AndroidInstallations;
 use Database\Table\DuplicateAssetTags;
@@ -330,7 +331,7 @@ class Client extends \Model\ClientOrGroup
     /**
      * Get groups of which this client is a member
      *
-     * @return \Model\Group\Group[]
+     * @return Group[]
      */
     public function getGroups()
     {

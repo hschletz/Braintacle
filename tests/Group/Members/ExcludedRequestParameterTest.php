@@ -3,11 +3,11 @@
 namespace Braintacle\Test\Group\Members;
 
 use Braintacle\Direction;
+use Braintacle\Group\Group;
 use Braintacle\Group\GroupTransformer;
 use Braintacle\Group\Members\ExcludedColumn;
 use Braintacle\Group\Members\ExcludedRequestParameters;
 use Braintacle\Test\DataProcessorTestTrait;
-use Model\Group\Group;
 use PHPUnit\Framework\TestCase;
 
 class ExcludedRequestParameterTest extends TestCase

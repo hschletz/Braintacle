@@ -23,6 +23,7 @@
 namespace Model\Test\Group;
 
 use Braintacle\Direction;
+use Braintacle\Group\Group;
 use Braintacle\Group\Groups;
 use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Locks;
@@ -36,7 +37,6 @@ use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Mockery;
 use Model\Config;
-use Model\Group\Group;
 use Model\Group\GroupManager;
 use Nada\Database\AbstractDatabase;
 use Psr\Clock\ClockInterface;
@@ -100,7 +100,7 @@ class GroupManagerTest extends AbstractGroupTestCase
 
         /** @var Group[] */
         $groups = iterator_to_array($resultSet);
-        $this->assertContainsOnlyInstancesOf('Model\Group\Group', $groups);
+        $this->assertContainsOnlyInstancesOf(Group::class, $groups);
         $this->assertCount(count($expected), $groups);
         foreach ($groups as $index => $group) {
             $this->assertEquals($expected[$index], (array) $group);
@@ -126,7 +126,7 @@ class GroupManagerTest extends AbstractGroupTestCase
 
         $model = new GroupManager($serviceManager);
         $group = $model->getGroup('name2');
-        $this->assertInstanceOf('Model\Group\Group', $group);
+        $this->assertInstanceOf(Group::class, $group);
         $this->assertEquals('name2', $group->name);
     }
 
@@ -348,7 +348,7 @@ class GroupManagerTest extends AbstractGroupTestCase
 
     public function testDeleteGroupLocked()
     {
-        $group = $this->createMock('Model\Group\Group');
+        $group = $this->createMock(Group::class);
 
         $locks = $this->createMock(Locks::class);
         $locks->method('lock')->with($group)->willReturn(false);
@@ -457,7 +457,7 @@ class GroupManagerTest extends AbstractGroupTestCase
 
     public function testUpdateCache()
     {
-        $group = $this->createMock('Model\Group\Group');
+        $group = $this->createMock(Group::class);
 
         $groups = $this->createMock(Groups::class);
         $groups->expects($this->once())->method('updateMemberships')->with($group, true);

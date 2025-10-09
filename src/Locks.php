@@ -3,15 +3,14 @@
 namespace Braintacle;
 
 use Braintacle\Database\Table;
+use Braintacle\Group\Group;
 use DateInterval;
 use DateTimeImmutable;
-use DateTimeZone;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\Types\Types;
 use Model\Client\Client;
 use Model\Config;
-use Model\Group\Group;
 use Psr\Log\LoggerInterface;
 
 /**

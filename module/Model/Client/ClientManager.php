@@ -22,6 +22,7 @@
 
 namespace Model\Client;
 
+use Braintacle\Group\Group;
 use Database\Table\Clients;
 use Database\Table\WindowsInstallations;
 use Laminas\Db\Adapter\Adapter;
@@ -30,11 +31,9 @@ use Laminas\Db\Sql\Predicate;
 use Laminas\Db\Sql\Sql;
 use Laminas\Http\Client as HttpClient;
 use Model\Config;
-use Model\Group\Group;
 use Model\Package\Assignment;
 use Nada\Database\AbstractDatabase;
 use Psr\Container\ContainerInterface;
-use Throwable;
 
 /**
  * Client manager

@@ -3,10 +3,10 @@
 namespace Braintacle\Package;
 
 use Braintacle\Database\Table;
+use Braintacle\Group\Group;
 use Doctrine\DBAL\Connection;
 use Formotron\DataProcessor;
 use Model\Client\Client;
-use Model\Group\Group;
 use Model\Package\Assignment;
 use Model\Package\PackageManager;
 use Psr\Clock\ClockInterface;

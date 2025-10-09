@@ -5,10 +5,10 @@ namespace Braintacle\Configuration;
 use Braintacle\Client\Configuration\ClientConfigurationParameters;
 use Braintacle\Database\Table;
 use Braintacle\Group\Configuration\GroupConfigurationParameters;
+use Braintacle\Group\Group;
 use Doctrine\DBAL\Connection;
 use Model\Client\Client;
 use Model\Config;
-use Model\Group\Group;
 use Throwable;
 
 /**

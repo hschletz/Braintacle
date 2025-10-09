@@ -3,6 +3,7 @@
 namespace Braintacle\Legacy;
 
 use Braintacle\AppConfig;
+use Braintacle\Group\Group;
 use Braintacle\Http\RouteHelper;
 use Braintacle\Template\Function\AssetUrlFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
@@ -17,7 +18,6 @@ use Laminas\Mvc\MvcEvent;
 use Laminas\Translator\TranslatorInterface;
 use Laminas\View\Model\ViewModel;
 use Model\Client\Client;
-use Model\Group\Group;
 use Nada\Database\AbstractDatabase;
 use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
@@ -34,8 +34,7 @@ class MvcApplication
     public function __construct(
         private Application $application,
         private Container $container,
-    ) {
-    }
+    ) {}
 
     public function configureServices(): void
     {
