@@ -31,7 +31,7 @@ class AddToGroupFormHandler implements RequestHandlerInterface
         if (isset($parsedBody['description'])) {
             $formData = $this->dataProcessor->process($request->getParsedBody(), NewGroupFormData::class);
             $this->groupManager->createGroup($formData->name, $formData->description);
-            $group = $this->groupManager->getGroup($formData->name);
+            $group = $this->groups->getGroup($formData->name);
         } else {
             $formData = $this->dataProcessor->process($request->getParsedBody(), ExistingGroupFormData::class);
             $group = $formData->group;

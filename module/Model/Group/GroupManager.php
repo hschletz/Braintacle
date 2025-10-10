@@ -76,9 +76,6 @@ class GroupManager
             case 'Id':
                 $select->where(array('id' => $filterArg));
                 break;
-            case 'Name':
-                $select->where(array('name' => $filterArg));
-                break;
             case 'Expired':
                 $now = $this->container->get(ClockInterface::class)->now()->getTimestamp();
                 $select->where(
@@ -110,26 +107,6 @@ class GroupManager
         }
 
         return $groupInfo->selectWith($select);
-    }
-
-    /**
-     * Get group with given name.
-     *
-     * @param string $name Group name
-     * @return Group
-     * @throws \RuntimeException if the given group name does not exist
-     * @throws \InvalidArgumentException if $name is empty
-     */
-    public function getGroup($name)
-    {
-        if ($name == '') {
-            throw new \InvalidArgumentException('No group name given');
-        }
-        $result = [...$this->getGroups('Name', $name)];
-        if (!$result) {
-            throw new \RuntimeException('Unknown group name: ' . $name);
-        }
-        return $result[0];
     }
 
     /**

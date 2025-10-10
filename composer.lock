@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "28a9937c972e5bba4b9466e36d5dad6f",
+    "content-hash": "c20597dd634669004c6893196423224b",
     "packages": [
         {
             "name": "brick/varexporter",
@@ -554,16 +554,16 @@
         },
         {
             "name": "hschletz/formotron",
-            "version": "0.2",
+            "version": "0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hschletz/formotron.git",
-                "reference": "1a5cd04d34a064c9f4398951b98a9887a44bf629"
+                "reference": "7dde993959342b7027b64fe4ba670e71dc163a96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hschletz/formotron/zipball/1a5cd04d34a064c9f4398951b98a9887a44bf629",
-                "reference": "1a5cd04d34a064c9f4398951b98a9887a44bf629",
+                "url": "https://api.github.com/repos/hschletz/formotron/zipball/7dde993959342b7027b64fe4ba670e71dc163a96",
+                "reference": "7dde993959342b7027b64fe4ba670e71dc163a96",
                 "shasum": ""
             },
             "require": {
@@ -595,9 +595,9 @@
             "description": "Form processing and validation",
             "support": {
                 "issues": "https://github.com/hschletz/formotron/issues",
-                "source": "https://github.com/hschletz/formotron/tree/release-0.2"
+                "source": "https://github.com/hschletz/formotron/tree/release-0.3"
             },
-            "time": "2025-09-01T18:43:44+00:00"
+            "time": "2025-10-03T15:25:03+00:00"
         },
         {
             "name": "hschletz/nada",

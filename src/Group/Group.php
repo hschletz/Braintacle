@@ -2,7 +2,10 @@
 
 namespace Braintacle\Group;
 
+use Braintacle\KeyMapper\CamelCaseToSnakeCase;
+use Braintacle\Transformer\DateTime;
 use DateTimeInterface;
+use Formotron\Attribute\MapKeys;
 
 /**
  * A group of clients.
@@ -14,6 +17,7 @@ use DateTimeInterface;
  *
  * @psalm-suppress PossiblyUnusedProperty (referenced in template)
  */
+#[MapKeys(CamelCaseToSnakeCase::class)]
 final class Group
 {
     /**
@@ -34,6 +38,7 @@ final class Group
     /**
      * Timestamp of group creation.
      */
+    #[DateTime(DateTime::Database)]
     public DateTimeInterface $creationDate;
 
     /**
@@ -44,10 +49,12 @@ final class Group
     /**
      * Timestamp of last cache update.
      */
+    #[DateTime(DateTime::Epoch)]
     public ?DateTimeInterface $cacheCreationDate;
 
     /**
      * Timestamp when cache will expire and get rebuilt.
      */
+    #[DateTime(DateTime::Epoch)]
     public ?DateTimeInterface $cacheExpirationDate;
 }

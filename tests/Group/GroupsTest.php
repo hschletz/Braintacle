@@ -12,6 +12,7 @@ use Braintacle\Group\Members\ExcludedClient;
 use Braintacle\Group\Members\ExcludedColumn;
 use Braintacle\Group\Members\MembersColumn;
 use Braintacle\Group\Membership;
+use Braintacle\KeyMapper\CamelCaseToSnakeCase;
 use Braintacle\Locks;
 use Braintacle\Search\Search;
 use Braintacle\Search\SearchParams;
@@ -36,11 +37,13 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Clock\ClockInterface;
 use Random\Engine\Xoshiro256StarStar;
+use RuntimeException;
 use Traversable;
 
 #[CoversClass(Groups::class)]
 #[UsesClass(Migration::class)]
 #[UsesClass(Migrations::class)]
+#[UsesClass(CamelCaseToSnakeCase::class)]
 #[UsesClass(DateTime::class)]
 final class GroupsTest extends TestCase
 {
@@ -117,6 +120,61 @@ final class GroupsTest extends TestCase
         ])->getMock();
     }
 
+    public function testGetGroup()
+    {
+        DatabaseConnection::with(function (Connection $connection): void {
+            DatabaseConnection::initializeTable(
+                Table::GroupsMain,
+                ['id', 'name', 'deviceid', 'description', 'lastdate'],
+                [
+                    [1, 'name1', '_SYSTEMGROUP_', 'description1', '2025-10-10 14:49:01'],
+                    [2, 'name2', 'not a group', null, '2025-10-10 14:49:02'],
+                    [3, 'name2', '_SYSTEMGROUP_', 'description2', '2025-10-10 14:49:02'],
+                ],
+            );
+            DatabaseConnection::initializeTable(
+                Table::GroupInfo,
+                ['hardware_id', 'create_time', 'revalidate_from', 'request'],
+                [
+                    [1, 1, 1, 'request1'],
+                    [3, 3, 3, 'request2'],
+                ]
+            );
+
+            $dateTimeTransformer = $this->createStub(DateTimeTransformer::class);
+            $dateTimeTransformer->method('transform')->willReturn(new DateTimeImmutable());
+
+            $dataProcessor = $this->createDataProcessor([DateTimeTransformer::class => $dateTimeTransformer]);
+
+            $groups = $this->createGroups(connection: $connection, dataProcessor: $dataProcessor);
+            $group = $groups->getGroup('name2');
+
+            $this->assertEquals(3, $group->id);
+            $this->assertEquals('name2', $group->name);
+            $this->assertEquals('request2', $group->dynamicMembersSql);
+        });
+    }
+
+    public function testGetGroupNonExistentGroup()
+    {
+        DatabaseConnection::with(function (Connection $connection): void {
+            DatabaseConnection::initializeTable(
+                Table::GroupsMain,
+                ['id', 'name', 'deviceid', 'description', 'lastdate'],
+                [
+                    [1, 'name', 'not a group', null, '2025-10-10 14:49:02'],
+                ],
+            );
+            DatabaseConnection::initializeTable(Table::GroupInfo, [], []);
+
+            $this->expectException(RuntimeException::class);
+            $this->expectExceptionMessage('Unknown group name: name');
+
+            $groups = $this->createGroups(connection: $connection);
+            $groups->getGroup('name');
+        });
+    }
+
     public static function getMembersProvider()
     {
         return [
@@ -148,7 +206,7 @@ final class GroupsTest extends TestCase
     {
         DatabaseConnection::with(function (Connection $connection) use ($order, $direction, $groupId, $expected): void {
             DatabaseConnection::initializeTable(
-                Table::Groups,
+                Table::GroupsMain,
                 ['id', 'deviceid', 'name', 'userid', 'lastdate'],
                 [
                     [1, 'id1', 'name1', 'user1', '2025-03-15T17:11:14'],
@@ -204,7 +262,7 @@ final class GroupsTest extends TestCase
             $expectedInventoryDate = new DateTimeImmutable($inventoryDate);
 
             DatabaseConnection::initializeTable(
-                Table::Groups,
+                Table::GroupsMain,
                 ['id', 'deviceid', 'name', 'userid', 'lastdate'],
                 [
                     [1, 'id1', 'name1', 'user1', '2025-03-15T17:11:14'],

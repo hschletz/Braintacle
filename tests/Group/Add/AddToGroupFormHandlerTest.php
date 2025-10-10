@@ -12,9 +12,6 @@ use Braintacle\Http\RouteHelper;
 use Braintacle\Search\SearchOperator;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Formotron\DataProcessor;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\Mock;
 use Model\Group\GroupManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -22,12 +19,12 @@ use PHPUnit\Framework\TestCase;
 class AddToGroupFormHandlerTest extends TestCase
 {
     use HttpHandlerTestTrait;
-    use MockeryPHPUnitIntegration;
 
     public function runHandler(
         array $parsedBody,
         NewGroupFormData | ExistingGroupFormData $formData,
         MockObject | Group $group,
+        MockObject | Groups $groups,
         GroupManager $groupManager
     ) {
         $formData->filter = '_filter';
@@ -41,7 +38,6 @@ class AddToGroupFormHandlerTest extends TestCase
 
         $group->name = '_name';
 
-        $groups = $this->createMock(Groups::class);
         $groups->expects($this->once())->method('setSearchResults')->with(
             $group,
             $formData,
@@ -71,12 +67,13 @@ class AddToGroupFormHandlerTest extends TestCase
 
         $group = $this->createMock(Group::class);
 
-        /** @var Mock|GroupManager */
-        $groupManager = Mockery::mock(GroupManager::class);
-        $groupManager->shouldReceive('createGroup')->once()->ordered()->with('_name', '_description');
-        $groupManager->shouldReceive('getGroup')->ordered()->with('_name')->andReturn($group);
+        $groups = $this->createMock(Groups::class);
+        $groups->method('getGroup')->with('_name')->willReturn($group);
 
-        $this->runHandler($parsedBody, $formData, $group, $groupManager);
+        $groupManager = $this->createMock(GroupManager::class);
+        $groupManager->expects($this->once())->method('createGroup')->with('_name', '_description');
+
+        $this->runHandler($parsedBody, $formData, $group, $groups, $groupManager);
     }
 
     public function testExistingGroup()
@@ -88,10 +85,13 @@ class AddToGroupFormHandlerTest extends TestCase
         $formData = new ExistingGroupFormData();
         $formData->group = $group;
 
+        $groups = $this->createMock(Groups::class);
+        $groups->expects($this->never())->method('getGroup');
+
         $groupManager = $this->createMock(GroupManager::class);
         $groupManager->expects($this->never())->method('createGroup');
-        $groupManager->expects($this->never())->method('getGroup');
 
-        $this->runHandler($parsedBody, $formData, $group, $groupManager);
+
+        $this->runHandler($parsedBody, $formData, $group, $groups, $groupManager);
     }
 }

@@ -51,9 +51,17 @@ final class Table
     public const GroupMemberships = 'groups_cache';
 
     /**
+     * "groups_view" view.
+     *
+     * This view provides all groups and should be used for any SELECT queries
+     * on groups. It contains data from the "hardware" and "groups" tables.
+     */
+    public const Groups = 'groups_view';
+
+    /**
      * Group usage of "hardware" table.
      */
-    public const Groups = 'hardware';
+    public const GroupsMain = 'hardware';
 
     /**
      * Advisory locks for clients and groups.

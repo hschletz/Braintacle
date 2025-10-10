@@ -13,18 +13,6 @@ use PHPUnit\Framework\TestCase;
 
 final class DateTimeTransformerTest extends TestCase
 {
-    public function testMissingArgs()
-    {
-        $platform = $this->createStub(AbstractPlatform::class);
-
-        $connection = $this->createMock(Connection::class);
-        $connection->method('getDatabasePlatform')->willReturn($platform);
-
-        $this->expectException(AssertionError::class);
-        $transformer = new DateTimeTransformer($connection);
-        $transformer->transform(null, []);
-    }
-
     public function testTooManyArgs()
     {
         $connection = $this->createMock(Connection::class);
@@ -82,5 +70,12 @@ final class DateTimeTransformerTest extends TestCase
             new DateTimeImmutable('2025-03-10T17:35:01'),
             $transformer->transform('10.03.2025 17:35:01', []),
         );
+    }
+
+    public function testNullValue()
+    {
+        $connection = $this->createStub(Connection::class);
+        $transformer = new DateTimeTransformer($connection);
+        $this->assertNull($transformer->transform(null, []));
     }
 }

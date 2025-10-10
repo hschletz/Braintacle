@@ -21,6 +21,7 @@ use Model\Config;
 use Psr\Clock\ClockInterface;
 use Random\Engine;
 use Random\Randomizer;
+use RuntimeException;
 use Throwable;
 
 /**
@@ -44,6 +45,27 @@ final class Groups
         private Sql $sql,
         private ?Engine $engine = null,
     ) {}
+
+    /**
+     * Get group with given name.
+     *
+     * @throws RuntimeException if the given group name does not exist
+     */
+    public function getGroup(string $name): Group
+    {
+        $group = $this->connection
+            ->createQueryBuilder()
+            ->select('*')
+            ->from(Table::Groups)
+            ->where('name = :name')
+            ->setParameter('name', $name)
+            ->fetchAssociative();
+        if (!$group) {
+            throw new RuntimeException('Unknown group name: ' . $name);
+        }
+
+        return $this->dataProcessor->process($group, Group::class);
+    }
 
     /**
      * @return iterable<Member>

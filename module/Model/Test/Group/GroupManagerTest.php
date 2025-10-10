@@ -69,7 +69,6 @@ class GroupManagerTest extends AbstractGroupTestCase
         return array(
             [null, null, OverviewColumn::Name, Direction::Descending, [$group2, $group1], 'never'],
             array('Id', '2', null, null, array($group2), 'never'),
-            array('Name', 'name1', null, null, array($group1), 'never'),
             array('Expired', null, null, null, array($group1), 'never'),
             ['Member', '3', OverviewColumn::Name, Direction::Ascending, [$group1, $group2], 'once'],
             array('Member', '4', null, null, array($group1), 'once'),
@@ -117,37 +116,6 @@ class GroupManagerTest extends AbstractGroupTestCase
 
         $model = new GroupManager($serviceManager);
         $model->getGroups('invalid');
-    }
-
-    public function testGetGroup()
-    {
-        $serviceManager = $this->createMock(ContainerInterface::class);
-        $serviceManager->method('get')->with(GroupInfo::class)->willReturn($this->_groupInfo);
-
-        $model = new GroupManager($serviceManager);
-        $group = $model->getGroup('name2');
-        $this->assertInstanceOf(Group::class, $group);
-        $this->assertEquals('name2', $group->name);
-    }
-
-    public function testGetGroupNonExistentGroup()
-    {
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('Unknown group name: invalid');
-
-        $serviceManager = $this->createMock(ContainerInterface::class);
-        $serviceManager->method('get')->with(GroupInfo::class)->willReturn($this->_groupInfo);
-
-        $model = new GroupManager($serviceManager);
-        $model->getGroup('invalid');
-    }
-
-    public function testGetGroupNoName()
-    {
-        $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage('No group name given');
-        $model = $this->getModel();
-        $model->getGroup('');
     }
 
     public static function createGroupProvider()

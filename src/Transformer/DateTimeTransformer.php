@@ -16,15 +16,20 @@ final class DateTimeTransformer implements Transformer
     public function __construct(private Connection $connection) {}
 
     #[Override]
-    public function transform(mixed $value, array $args): DateTimeImmutable
+    public function transform(mixed $value, array $args): ?DateTimeImmutable
     {
-        assert(is_string($value));
         assert(count($args) <= 1);
         $format = current($args) ?: null;
         if ($format === null) {
             $format = $this->connection->getDatabasePlatform()->getDateTimeFormatString();
         }
         assert(is_string($format));
+
+        if ($value === null) {
+            return null;
+        }
+
+        assert(is_string($value) || (is_int($value) && $format == 'U'));
 
         $result = DateTimeImmutable::createFromFormat($format, $value);
         if (!$result) {

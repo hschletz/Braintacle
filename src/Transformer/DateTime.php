@@ -12,6 +12,9 @@ use Override;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 final class DateTime implements TransformerServiceAttribute
 {
+    public const Database = null;
+    public const Epoch = 'U';
+
     public function __construct(private ?string $format = null) {}
 
     #[Override]
