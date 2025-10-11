@@ -91,6 +91,17 @@ final class Clients
         }
     }
 
+
+    /**
+     * Get IDs of groups of which a client is a member.
+     *
+     * @return int[]
+     */
+    public function getGroupIds(Client $client): array
+    {
+        return array_keys($this->getGroupMemberships($client, Membership::Automatic, Membership::Manual));
+    }
+
     /**
      * Retrieve group memberships.
      *

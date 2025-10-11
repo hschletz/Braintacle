@@ -3,6 +3,7 @@
 namespace Braintacle\Test\Configuration;
 
 use AssertionError;
+use Braintacle\Client\Clients;
 use Braintacle\Client\Configuration\ClientConfigurationParameters;
 use Braintacle\Configuration\ClientConfig;
 use Braintacle\Database\Migration;
@@ -45,10 +46,12 @@ class ClientConfigTest extends TestCase
     ];
 
     private function createClientConfig(
+        ?Clients $clients = null,
         ?Config $config = null,
         ?Connection $connection = null,
     ): ClientConfig {
         return new ClientConfig(
+            $clients ?? $this->createStub(Clients::class),
             $config ?? $this->createStub(Config::class),
             $connection ?? $this->createStub(Connection::class),
         );
@@ -56,10 +59,12 @@ class ClientConfigTest extends TestCase
 
     private function createClientConfigMock(
         array $methods,
+        ?Clients $clients = null,
         ?Config $config = null,
         ?Connection $connection = null,
     ): MockObject | ClientConfig {
         return $this->getMockBuilder(ClientConfig::class)->onlyMethods($methods)->setConstructorArgs([
+            $clients ?? $this->createStub(Clients::class),
             $config ?? $this->createStub(Config::class),
             $connection ?? $this->createStub(Connection::class),
         ])->getMock();
@@ -190,20 +195,20 @@ class ClientConfigTest extends TestCase
         $config = $this->createMock(Config::class);
         $config->method('__get')->willReturnCallback(fn($arg) => ($arg == $globalOption) ? $globalValue : 'ignore');
 
-        $groups = [];
+        $groupIds = [];
         $map = [];
         foreach ($groupValues as $index => $groupValue) {
-            $group = $this->createMock(Group::class);
             $id = $index + 1;
-            $group->id = $id;
             $map[] = [$id, $option, $groupValue];
-            $groups[] = $group;
+            $groupIds[] = $id;
         }
 
         $client = $this->createStub(Client::class);
-        $client->method('getGroups')->willReturn($groups);
 
-        $clientConfig = $this->createClientConfigMock(['getOption'], $config);
+        $clients = $this->createMock(Clients::class);
+        $clients->method('getGroupIds')->with($client)->willReturn($groupIds);
+
+        $clientConfig = $this->createClientConfigMock(['getOption'], clients: $clients, config: $config);
         $clientConfig->method('getOption')->willReturnMap($map);
 
         $defaults = $clientConfig->getClientDefaults($client);
@@ -233,7 +238,7 @@ class ClientConfigTest extends TestCase
             fn($arg) => ($arg == $globalOptionName) ? $globalOptionValue : 'ignore'
         );
 
-        $defaults = $this->createClientConfig($config)->getGlobalDefaults();
+        $defaults = $this->createClientConfig(config: $config)->getGlobalDefaults();
 
         $this->assertSame($expectedValue, $defaults[$option]);
     }
@@ -321,22 +326,26 @@ class ClientConfigTest extends TestCase
         $config = $this->createMock(Config::class);
         $config->method('__get')->with('inventoryInterval')->willReturn($globalValue);
 
-        $groups = [];
+        $groupIds = [];
         $map = [];
         foreach ($groupValues as $index => $groupValue) {
             $id = $index + 1;
-            $group = $this->createMock(Group::class);
-            $group->id = $id;
-            $groups[] = $group;
+            $groupIds[] = $id;
             $map[] = [$id, 'inventoryInterval', $groupValue];
         }
 
         $client = $this->createStub(Client::class);
         $client->id = 42;
-        $client->method('getGroups')->willReturn($groups);
         $map[] = [42, 'inventoryInterval', $clientValue];
 
-        $clientConfig = $this->createClientConfigMock(['getClientDefaults', 'getOption'], $config);
+        $clients = $this->createMock(Clients::class);
+        $clients->method('getGroupIds')->willReturn($groupIds);
+
+        $clientConfig = $this->createClientConfigMock(
+            ['getClientDefaults', 'getOption'],
+            clients: $clients,
+            config: $config,
+        );
         $clientConfig->method('getClientDefaults')->with($client)->willReturn(self::Defaults);
         $clientConfig->method('getOption')->willReturnMap($map);
 
@@ -431,7 +440,7 @@ class ClientConfigTest extends TestCase
             $config = $this->createMock(Config::class);
             $config->method('getDbIdentifier')->with('inventoryInterval')->willReturn('FREQUENCY');
 
-            $clientConfig = $this->createClientConfig($config, $connection);
+            $clientConfig = $this->createClientConfig(config: $config, connection: $connection);
 
             $this->assertSame($expectedValue, $clientConfig->getOption($id, $option));
         });
@@ -681,7 +690,7 @@ class ClientConfigTest extends TestCase
                 $object = $this->createMock($class);
                 $object->id = $id;
 
-                $clientConfig = $this->createClientConfigMock(['getOption'], $config, $connection);
+                $clientConfig = $this->createClientConfigMock(['getOption'], config: $config, connection: $connection);
                 $clientConfig->method('getOption')->with($id, $option)->willReturn($oldValue);
                 $clientConfig->setOption($object, $option, $value);
 
@@ -712,7 +721,7 @@ class ClientConfigTest extends TestCase
         $client = $this->createMock(Client::class);
         $client->id = 10;
 
-        $clientConfig = $this->createClientConfigMock(['getOption'], $config, $connection);
+        $clientConfig = $this->createClientConfigMock(['getOption'], config: $config, connection: $connection);
         $clientConfig->expects($this->once())->method('getOption')->with(10, 'inventoryInterval')->willReturn(23);
 
         $clientConfig->setOption($client, 'inventoryInterval', 23);

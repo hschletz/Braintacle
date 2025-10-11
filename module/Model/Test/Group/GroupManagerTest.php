@@ -41,6 +41,7 @@ use Model\Group\GroupManager;
 use Nada\Database\AbstractDatabase;
 use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
+use Traversable;
 
 class GroupManagerTest extends AbstractGroupTestCase
 {
@@ -67,18 +68,16 @@ class GroupManagerTest extends AbstractGroupTestCase
             'cacheCreationDate' => new DateTime('2015-02-04 20:46:24'),
         );
         return array(
-            [null, null, OverviewColumn::Name, Direction::Descending, [$group2, $group1], 'never'],
-            array('Id', '2', null, null, array($group2), 'never'),
-            array('Expired', null, null, null, array($group1), 'never'),
-            ['Member', '3', OverviewColumn::Name, Direction::Ascending, [$group1, $group2], 'once'],
-            array('Member', '4', null, null, array($group1), 'once'),
+            [null, null, OverviewColumn::Name, Direction::Descending, [$group2, $group1]],
+            ['Id', '2', null, null, [$group2]],
+            ['Expired', null, null, null, [$group1]],
         );
     }
 
     /**
      * @dataProvider getGroupsProvider
      */
-    public function testGetGroups($filter, $filterArg, $order, $direction, $expected, $updateCache)
+    public function testGetGroups($filter, $filterArg, $order, $direction, $expected)
     {
         $clock = $this->createStub(ClockInterface::class);
         $clock->method('now')->willReturn(new DateTimeImmutable('2015-02-08 19:36:29'));
@@ -90,14 +89,12 @@ class GroupManagerTest extends AbstractGroupTestCase
             [Config::class, $this->_config],
         ]);
 
-        /** @psalm-suppress InvalidArgument (Mockery bug) */
-        $model = Mockery::mock(GroupManager::class, [$serviceManager])->makePartial();
-        $model->shouldReceive('updateCache')->$updateCache();
+        $model = new GroupManager($serviceManager);
 
+        /** @var Traversable<Group> */
         $resultSet = $model->getGroups($filter, $filterArg, $order, $direction);
         $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $resultSet);
 
-        /** @var Group[] */
         $groups = iterator_to_array($resultSet);
         $this->assertContainsOnlyInstancesOf(Group::class, $groups);
         $this->assertCount(count($expected), $groups);

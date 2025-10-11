@@ -275,6 +275,19 @@ final class ClientsTest extends TestCase
         });
     }
 
+    public function testGetGroupIds()
+    {
+        $client = $this->createStub(Client::class);
+
+        $clients = $this->createPartialMock(Clients::class, ['getGroupMemberships']);
+        $clients->method('getGroupMemberships')->with($client, Membership::Automatic, Membership::Manual)->willReturn([
+            2 => Membership::Automatic,
+            4 => Membership::Manual
+        ]);
+
+        $this->assertEquals([2, 4], $clients->getGroupIds($client));
+    }
+
     public static function getGroupMembershipsProvider()
     {
         return [

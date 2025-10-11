@@ -26,7 +26,6 @@ use Laminas\Db\ResultSet\AbstractResultSet;
 use Model\Client\Client;
 use Model\Client\CustomFieldManager;
 use Model\Client\CustomFields;
-use Model\Group\GroupManager;
 use Model\Test\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Protocol\Message\InventoryRequest;
@@ -261,23 +260,6 @@ class ClientTest extends AbstractTestCase
         $model->setContainer($serviceManager);
 
         $this->assertSame($result, $model->getItems('type', 'order', 'direction', array('filter' => 'arg')));
-    }
-
-    public function testGetGroups()
-    {
-        $groups = array('group1', 'group2');
-
-        $groupManager = $this->createMock(GroupManager::class);
-        $groupManager->method('getGroups')->with('Member', 42)->willReturn(
-            new \ArrayIterator($groups)
-        );
-        static::$serviceManager->setService(GroupManager::class, $groupManager);
-
-        $model = new Client();
-        $model->setContainer(static::$serviceManager);
-        $model->id = 42;
-
-        $this->assertEquals($groups, $model->getGroups());
     }
 
     public function testSetCustomFields()

@@ -2,6 +2,7 @@
 
 namespace Braintacle\Configuration;
 
+use Braintacle\Client\Clients;
 use Braintacle\Client\Configuration\ClientConfigurationParameters;
 use Braintacle\Database\Table;
 use Braintacle\Group\Configuration\GroupConfigurationParameters;
@@ -33,7 +34,11 @@ final class ClientConfig
     ];
     private const BooleanOptions = ['packageDeployment', 'allowScan', 'scanSnmp'];
 
-    public function __construct(private Config $config, private Connection $connection) {}
+    public function __construct(
+        private Clients $clients,
+        private Config $config,
+        private Connection $connection,
+    ) {}
 
     /**
      * Get configured options for client/group.
@@ -75,11 +80,11 @@ final class ClientConfig
      */
     public function getClientDefaults(Client $client): array
     {
-        $groups = $client->getGroups();
+        $groupIds = $this->clients->getGroupIds($client);
         foreach (self::OptionsWithDefaults as $option) {
             $groupValues = [];
-            foreach ($groups as $group) {
-                $groupValue = $this->getOption($group->id, $option);
+            foreach ($groupIds as $groupId) {
+                $groupValue = $this->getOption($groupId, $option);
                 if ($groupValue !== null) {
                     $groupValues[] = $groupValue;
                 }
@@ -198,8 +203,8 @@ final class ClientConfig
                 } else {
                     // Get smallest value of client and group settings
                     $value = $this->getOption($client->id, 'inventoryInterval');
-                    foreach ($client->getGroups() as $group) {
-                        $groupValue = $this->getOption($group->id, 'inventoryInterval');
+                    foreach ($this->clients->getGroupIds($client) as $groupId) {
+                        $groupValue = $this->getOption($groupId, 'inventoryInterval');
                         if ($value === null || ($groupValue !== null && $groupValue < $value)) {
                             $value = $groupValue;
                         }

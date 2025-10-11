@@ -86,16 +86,6 @@ class GroupManager
                     )
                 );
                 break;
-            case 'Member':
-                $this->updateCache();
-                $select->join('groups_cache', 'groups_cache.group_id = groups.hardware_id', array());
-                $select->where(
-                    array(
-                        'groups_cache.hardware_id' => $filterArg,
-                        new \Laminas\Db\Sql\Predicate\Operator('static', '!=', \Model\Client\Client::MEMBERSHIP_NEVER),
-                    )
-                );
-                break;
             default:
                 throw new \InvalidArgumentException(
                     'Invalid group filter: ' . $filter

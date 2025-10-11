@@ -22,7 +22,6 @@
 
 namespace Model\Client;
 
-use Braintacle\Group\Group;
 use Braintacle\Group\Membership;
 use Database\Table\AndroidInstallations;
 use Database\Table\DuplicateAssetTags;
@@ -31,7 +30,6 @@ use Database\Table\PackageHistory;
 use Database\Table\WindowsInstallations;
 use DateTimeInterface;
 use Model\AbstractModel;
-use Model\Group\GroupManager;
 use Protocol\Message\InventoryRequest;
 use Psr\Container\ContainerInterface;
 use ReturnTypeWillChange;
@@ -337,17 +335,6 @@ class Client extends AbstractModel
         );
     }
 
-    /**
-     * Get groups of which this client is a member
-     *
-     * @return Group[]
-     */
-    public function getGroups()
-    {
-        return iterator_to_array(
-            $this->container->get(GroupManager::class)->getGroups('Member', $this->id)
-        );
-    }
     /**
      * Set values for custom fields
      *
