@@ -45,7 +45,7 @@ final class ClientConfig
     {
         $options = [];
         foreach (self::OptionsWithDefaults as $option) {
-            $value = $this->getOption($object, $option);
+            $value = $this->getOption($object->id, $option);
             if (in_array($option, self::BooleanOptions)) {
                 // These options can only be disabled ($value is 0) or
                 // unconfigured ($value is NULL), in which case the default is
@@ -60,7 +60,7 @@ final class ClientConfig
         }
 
         if ($object instanceof Client) {
-            $options['scanThisNetwork'] = $this->getOption($object, 'scanThisNetwork');
+            $options['scanThisNetwork'] = $this->getOption($object->id, 'scanThisNetwork');
         }
 
         return $options;
@@ -79,7 +79,7 @@ final class ClientConfig
         foreach (self::OptionsWithDefaults as $option) {
             $groupValues = [];
             foreach ($groups as $group) {
-                $groupValue = $this->getOption($group, $option);
+                $groupValue = $this->getOption($group->id, $option);
                 if ($groupValue !== null) {
                     $groupValues[] = $groupValue;
                 }
@@ -197,9 +197,9 @@ final class ClientConfig
                     $value = $globalValue;
                 } else {
                     // Get smallest value of client and group settings
-                    $value = $this->getOption($client, 'inventoryInterval');
+                    $value = $this->getOption($client->id, 'inventoryInterval');
                     foreach ($client->getGroups() as $group) {
-                        $groupValue = $this->getOption($group, 'inventoryInterval');
+                        $groupValue = $this->getOption($group->id, 'inventoryInterval');
                         if ($value === null || ($groupValue !== null && $groupValue < $value)) {
                             $value = $groupValue;
                         }
@@ -212,14 +212,14 @@ final class ClientConfig
             } elseif (in_array($option, self::BooleanOptions)) {
                 // If default is FALSE, return FALSE.
                 // Otherwise override default if explicitly disabled.
-                if ($default && $this->getOption($client, $option) === 0) {
+                if ($default && $this->getOption($client->id, $option) === 0) {
                     $value = false;
                 } else {
                     $value = (bool) $default;
                 }
             } else {
                 // Standard integer values. Client value takes precedence.
-                $value = $this->getOption($client, $option);
+                $value = $this->getOption($client->id, $option);
                 if ($value === null) {
                     $value = $default;
                 }
@@ -246,12 +246,12 @@ final class ClientConfig
     {
         $config = [];
         foreach (self::OptionsWithDefaults as $option) {
-            $value = $this->getOption($client, $option);
+            $value = $this->getOption($client->id, $option);
             if ($value !== null) {
                 $config[$option] = $value;
             }
         }
-        $scanThisNetwork = $this->getOption($client, 'scanThisNetwork');
+        $scanThisNetwork = $this->getOption($client->id, 'scanThisNetwork');
         if ($scanThisNetwork !== null) {
             $config['scanThisNetwork'] = $scanThisNetwork;
         }
@@ -282,7 +282,7 @@ final class ClientConfig
      * these options can only be FALSE (explicitly disabled if enabled on a
      * higher level) or NULL (inherit behavior).
      */
-    public function getOption(Client | Group $object, string $option): int | string | bool | null
+    public function getOption(int $objectId, string $option): int | string | bool | null
     {
         $name = match ($option) {
             'packageDeployment' => 'DOWNLOAD_SWITCH',
@@ -302,7 +302,7 @@ final class ClientConfig
             ->select($column)
             ->from(Table::ClientConfig)
             ->where('hardware_id = :id', 'name = :name')
-            ->setParameter('id', $object->id)
+            ->setParameter('id', $objectId)
             ->setParameter('name', $name);
         if (isset($ivalue)) {
             $select->andWhere('ivalue = :ivalue')->setParameter('ivalue', $ivalue);
@@ -371,7 +371,7 @@ final class ClientConfig
                 }
                 $this->connection->delete(Table::ClientConfig, $condition);
             } else {
-                $oldValue = $this->getOption($object, $option);
+                $oldValue = $this->getOption($object->id, $option);
                 if ($oldValue === null) {
                     // Not set yet, insert new record
                     if ($name == 'IPDISCOVER' or $name == 'DOWNLOAD_SWITCH' or $name == 'SNMP_SWITCH') {
