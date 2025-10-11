@@ -566,7 +566,7 @@ final class GroupsTest extends TestCase
         });
     }
 
-    public static function updateProvider()
+    public static function updateMembershipsProvider()
     {
         return [
             'force update, but no query' => [true, false, null, true, false],
@@ -578,8 +578,8 @@ final class GroupsTest extends TestCase
         ];
     }
 
-    #[DataProvider('updateProvider')]
-    public function testUpdate(
+    #[DataProvider('updateMembershipsProvider')]
+    public function testUpdateMemberships(
         bool $force,
         bool $setSql,
         ?DateTimeInterface $expires,
