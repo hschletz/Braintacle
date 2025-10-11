@@ -24,7 +24,6 @@ namespace Model\Test\Group;
 
 use Braintacle\Direction;
 use Braintacle\Group\Group;
-use Braintacle\Group\Groups;
 use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Locks;
 use Database\Table\ClientConfig;
@@ -70,7 +69,6 @@ class GroupManagerTest extends AbstractGroupTestCase
         return array(
             [null, null, OverviewColumn::Name, Direction::Descending, [$group2, $group1]],
             ['Id', '2', null, null, [$group2]],
-            ['Expired', null, null, null, [$group1]],
         );
     }
 
@@ -418,24 +416,5 @@ class GroupManagerTest extends AbstractGroupTestCase
                 )
             );
         }
-    }
-
-    public function testUpdateCache()
-    {
-        $group = $this->createMock(Group::class);
-
-        $groups = $this->createMock(Groups::class);
-        $groups->expects($this->once())->method('updateMemberships')->with($group, true);
-
-        $container = $this->createMock(ContainerInterface::class);
-        $container->method('get')->with(Groups::class)->willReturn($groups);
-
-        $model = $this
-            ->getMockBuilder(GroupManager::class)
-            ->onlyMethods(['getGroups'])
-            ->setConstructorArgs([$container])
-            ->getMock();
-        $model->method('getGroups')->with('Expired')->willReturn([$group]);
-        $model->updateCache();
     }
 }

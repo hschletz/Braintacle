@@ -76,16 +76,6 @@ class GroupManager
             case 'Id':
                 $select->where(array('id' => $filterArg));
                 break;
-            case 'Expired':
-                $now = $this->container->get(ClockInterface::class)->now()->getTimestamp();
-                $select->where(
-                    new \Laminas\Db\Sql\Predicate\Operator(
-                        'revalidate_from',
-                        '<=',
-                        $now - $this->container->get(Config::class)->groupCacheExpirationInterval
-                    )
-                );
-                break;
             default:
                 throw new \InvalidArgumentException(
                     'Invalid group filter: ' . $filter
@@ -177,18 +167,6 @@ class GroupManager
             }
         } finally {
             $locks->release($group);
-        }
-    }
-
-    /**
-     * Update the membership cache for all expired groups
-     */
-    public function updateCache()
-    {
-        /** @var Groups */
-        $groups = $this->container->get(Groups::class);
-        foreach ($this->getGroups('Expired') as $group) {
-            $groups->updateMemberships($group, force: true);
         }
     }
 }

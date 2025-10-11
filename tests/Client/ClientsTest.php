@@ -328,8 +328,8 @@ final class ClientsTest extends TestCase
             // Start with empty table.
             DatabaseConnection::initializeTable(Table::GroupMemberships, [], []);
 
-            $groupManager = $this->createMock(GroupManager::class);
-            $groupManager->expects($this->once())->method('updateCache')->willReturnCallback(function () {
+            $groups = $this->createMock(Groups::class);
+            $groups->expects($this->once())->method('updateCache')->willReturnCallback(function () {
                 // Initialize table here to ensure that the cache is updated before querying.
                 DatabaseConnection::initializeTable(Table::GroupMemberships, ['hardware_id', 'group_id', 'static'], [
                     [1, 1, 1],
@@ -344,7 +344,7 @@ final class ClientsTest extends TestCase
             $client = $this->createStub(Client::class);
             $client->id = 1;
 
-            $clients = $this->createClients(connection: $connection, groupManager: $groupManager);
+            $clients = $this->createClients(connection: $connection, groups: $groups);
             $memberships = $clients->getGroupMemberships($client, ...$types);
             ksort($memberships);
             $this->assertSame($expected, $memberships);

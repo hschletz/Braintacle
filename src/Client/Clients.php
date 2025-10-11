@@ -126,7 +126,7 @@ final class Clients
             );
         }
 
-        $this->groupManager->updateCache();
+        $this->groups->updateCache();
 
         return array_map(
             fn(int $membership) => Membership::from($membership),

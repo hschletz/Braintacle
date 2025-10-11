@@ -300,4 +300,26 @@ final class Groups
             sprintf('+%d seconds', $this->config->groupCacheExpirationInterval)
         );
     }
+
+    /**
+     * Update the membership cache for all expired groups.
+     */
+    public function updateCache()
+    {
+        $groups = $this->connection
+            ->createQueryBuilder()
+            ->select('*')
+            ->from(Table::Groups)
+            ->where('cache_expiration_date <= :threshold')
+            ->setParameter(
+                'threshold',
+                $this->clock->now()->getTimestamp() - $this->config->groupCacheExpirationInterval,
+            )
+            ->executeQuery()
+            ->iterateAssociative();
+
+        foreach ($this->dataProcessor->iterate($groups, Group::class) as $group) {
+            $this->updateMemberships($group, force: true);
+        }
+    }
 }
