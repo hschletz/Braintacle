@@ -312,17 +312,21 @@ final class ClientsTest extends TestCase
     public function testGetGroupMemberships(array $types, array $expected)
     {
         DatabaseConnection::with(function (Connection $connection) use ($types, $expected): void {
-            DatabaseConnection::initializeTable(Table::GroupMemberships, ['hardware_id', 'group_id', 'static'], [
-                [1, 1, 1],
-                [1, 2, 2],
-                [1, 3, 0],
-                [2, 1, 0],
-                [2, 2, 1],
-                [2, 3, 3],
-            ]);
+            // Start with empty table.
+            DatabaseConnection::initializeTable(Table::GroupMemberships, [], []);
 
             $groupManager = $this->createMock(GroupManager::class);
-            $groupManager->expects($this->once())->method('updateCache');
+            $groupManager->expects($this->once())->method('updateCache')->willReturnCallback(function () {
+                // Initialize table here to ensure that the cache is updated before querying.
+                DatabaseConnection::initializeTable(Table::GroupMemberships, ['hardware_id', 'group_id', 'static'], [
+                    [1, 1, 1],
+                    [1, 2, 2],
+                    [1, 3, 0],
+                    [2, 1, 0],
+                    [2, 2, 1],
+                    [2, 3, 3],
+                ]);
+            });
 
             $client = $this->createStub(Client::class);
             $client->id = 1;
