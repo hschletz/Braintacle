@@ -33,11 +33,12 @@ use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Mockery;
 use Model\Group\GroupManager;
+use Model\Test\AbstractTestCase;
 use Nada\Database\AbstractDatabase;
 use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
 
-class GroupManagerTest extends AbstractGroupTestCase
+class GroupManagerTest extends AbstractTestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -63,7 +64,7 @@ class GroupManagerTest extends AbstractGroupTestCase
             [AbstractDatabase::class, static::$serviceManager->get(AbstractDatabase::class)],
             [Adapter::class, static::$serviceManager->get(Adapter::class)],
             [ClientsAndGroups::class, static::$serviceManager->get(ClientsAndGroups::class)],
-            [GroupInfo::class, $this->_groupInfo],
+            [GroupInfo::class, static::$serviceManager->get(GroupInfo::class)],
         ]);
 
         $model = new GroupManager($serviceManager);
@@ -198,7 +199,7 @@ class GroupManagerTest extends AbstractGroupTestCase
             [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
             [ClientsAndGroups::class, static::$serviceManager->get(ClientsAndGroups::class)],
             [GroupMemberships::class, static::$serviceManager->get(GroupMemberships::class)],
-            [GroupInfo::class, $this->_groupInfo],
+            [GroupInfo::class, static::$serviceManager->get(GroupInfo::class)],
             [Locks::class, $locks],
         ]);
 
@@ -303,7 +304,7 @@ class GroupManagerTest extends AbstractGroupTestCase
             [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
             [GroupMemberships::class, static::$serviceManager->get(GroupMemberships::class)],
             [ClientsAndGroups::class, $clientsAndGroups],
-            [GroupInfo::class, $this->_groupInfo],
+            [GroupInfo::class, static::$serviceManager->get(GroupInfo::class)],
             [Locks::class, $locks],
         ]);
 

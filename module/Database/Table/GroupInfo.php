@@ -22,10 +22,6 @@
 
 namespace Database\Table;
 
-use Braintacle\Group\Group;
-use Laminas\Hydrator\ObjectPropertyHydrator;
-use Model\Config as ConfigModel;
-use Nada\Database\AbstractDatabase;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -40,54 +36,6 @@ class GroupInfo extends \Database\AbstractTable
     public function __construct(ContainerInterface $container)
     {
         $this->table = 'groups';
-        // Hydrator and ResultSet initialization is postponed to initialize()
-        // because they depend on reading from Model\Config which is
-        // inappropriate in a constructor and may not be functional under
-        // certain circumstances (database initialization)
         parent::__construct($container);
-    }
-
-    /** {@inheritdoc} */
-    public function initialize()
-    {
-        $this->_hydrator = new ObjectPropertyHydrator();
-        $this->_hydrator->setNamingStrategy(
-            new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
-                array(
-                    'id' => 'id',
-                    'name' => 'name',
-                    'description' => 'description',
-                    'lastdate' => 'creationDate',
-                    'request' => 'dynamicMembersSql',
-                    'create_time' => 'cacheCreationDate',
-                    'revalidate_from' => 'cacheExpirationDate',
-                )
-            )
-        );
-
-        $dateTimeFormatter = new \Laminas\Hydrator\Strategy\DateTimeFormatterStrategy(
-            $this->container->get(AbstractDatabase::class)->timestampFormatPhp()
-        );
-        $this->_hydrator->addStrategy('creationDate', $dateTimeFormatter);
-        $this->_hydrator->addStrategy('lastdate', $dateTimeFormatter);
-
-        $cacheCreationDateStrategy = new \Database\Hydrator\Strategy\Groups\CacheDate();
-        $this->_hydrator->addStrategy('cacheCreationDate', $cacheCreationDateStrategy);
-        $this->_hydrator->addStrategy('create_time', $cacheCreationDateStrategy);
-
-        $cacheExpirationDateStrategy = new \Database\Hydrator\Strategy\Groups\CacheDate(
-            $this->container->get(ConfigModel::class)->groupCacheExpirationInterval
-        );
-        $this->_hydrator->addStrategy('cacheExpirationDate', $cacheExpirationDateStrategy);
-        $this->_hydrator->addStrategy('revalidate_from', $cacheExpirationDateStrategy);
-
-        $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
-            $this->_hydrator,
-            $this->container->get(Group::class)
-        );
-
-        parent::initialize();
-
-        return; // satisfy parent return type declaration
     }
 }
