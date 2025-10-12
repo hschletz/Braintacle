@@ -8,6 +8,6 @@ namespace Braintacle\Group\Overview;
 enum OverviewColumn: string
 {
     case Name = 'name';
-    case CreationDate = 'lastdate';
+    case CreationDate = 'creation_date';
     case Description = 'description';
 }

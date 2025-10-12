@@ -12,6 +12,7 @@ use Braintacle\Group\Members\ExcludedClient;
 use Braintacle\Group\Members\ExcludedColumn;
 use Braintacle\Group\Members\MembersColumn;
 use Braintacle\Group\Membership;
+use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\KeyMapper\CamelCaseToSnakeCase;
 use Braintacle\Locks;
 use Braintacle\Search\Search;
@@ -176,6 +177,51 @@ final class GroupsTest extends TestCase
 
             $groups = $this->createGroups(connection: $connection);
             $groups->getGroup('name');
+        });
+    }
+
+    public static function getGroupsProvider()
+    {
+        return [
+            [OverviewColumn::Name, Direction::Ascending, ['name1', 'name2']],
+            [OverviewColumn::Name, Direction::Descending, ['name2', 'name1']],
+        ];
+    }
+
+    #[DataProvider('getGroupsProvider')]
+    public function testGetGroups(OverviewColumn $order, Direction $direction, array $expected)
+    {
+        DatabaseConnection::with(function (Connection $connection) use ($order, $direction, $expected) {
+            DatabaseConnection::initializeTable(
+                Table::GroupsMain,
+                ['id', 'name', 'description', 'deviceid', 'lastdate'],
+                [
+                    [1, 'name1', 'description1', '__SYSTEMGROUP__', '2015-02-02 19:01:00'],
+                    [2, 'name2', 'description2', '__SYSTEMGROUP__', '2015-02-02 19:02:00'],
+                ]
+            );
+            DatabaseConnection::initializeTable(
+                Table::GroupInfo,
+                ['hardware_id', 'request', 'create_time', 'revalidate_from'],
+                [
+                    [1, 'request1', 0, 0],
+                    [2, 'request2', 0, 0],
+                ]
+            );
+
+            $dateTimeTransformer = $this->createStub(DateTimeTransformer::class);
+            $dateTimeTransformer->method('transform')->willReturn(new DateTimeImmutable());
+
+            $dataProcessor = $this->createDataProcessor([DateTimeTransformer::class => $dateTimeTransformer]);
+
+            $groups = $this->createGroups(connection: $connection, dataProcessor: $dataProcessor);
+
+            $result = iterator_to_array($groups->getGroups($order, $direction));
+
+            $this->assertCount(2, $result);
+            $this->assertContainsOnlyInstancesOf(Group::class, $result);
+            $this->assertEquals($expected[0], $result[0]->name);
+            $this->assertEquals($expected[1], $result[1]->name);
         });
     }
 

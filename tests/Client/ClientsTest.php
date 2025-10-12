@@ -17,7 +17,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\Client\Client;
 use Model\Client\ItemManager;
-use Model\Group\GroupManager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -35,14 +34,12 @@ final class ClientsTest extends TestCase
     private function createClients(
         ?Connection $connection = null,
         ?ItemManager $itemManager = null,
-        ?GroupManager $groupManager = null,
         ?Groups $groups = null,
         ?Locks $locks = null,
     ): Clients {
         return new Clients(
             $connection ?? $this->createStub(Connection::class),
             $itemManager ?? $this->createStub(ItemManager::class),
-            $groupManager ?? $this->createStub(GroupManager::class),
             $groups ?? $this->createStub(Groups::class),
             $locks ?? $this->createStub(Locks::class),
         );
@@ -52,14 +49,12 @@ final class ClientsTest extends TestCase
         array $methods,
         ?Connection $connection = null,
         ?ItemManager $itemManager = null,
-        ?GroupManager $groupManager = null,
         ?Groups $groups = null,
         ?Locks $locks = null,
     ): MockObject | Clients {
         return $this->getMockBuilder(Clients::class)->onlyMethods($methods)->setConstructorArgs([
             $connection ?? $this->createStub(Connection::class),
             $itemManager ?? $this->createStub(ItemManager::class),
-            $groupManager ?? $this->createStub(GroupManager::class),
             $groups ?? $this->createStub(Groups::class),
             $locks ?? $this->createStub(Locks::class),
         ])->getMock();
@@ -401,15 +396,15 @@ final class ClientsTest extends TestCase
         $group2->id = 2;
         $group2->name = 'name2';
 
-        $groupManager = $this->createMock(GroupManager::class);
-        $groupManager->method('getGroups')->with()->willReturn([$group1, $group2]);
+        $groups = $this->createMock(Groups::class);
+        $groups->method('getGroups')->with()->willReturn([$group1, $group2]);
 
         $client = $this->createStub(Client::class);
 
         $clients = $this->createClientsMock(
             ['getGroupMemberships'],
             connection: $connection,
-            groupManager: $groupManager,
+            groups: $groups,
         );
         $clients->method('getGroupMemberships')->with($client)->willReturn($oldMemberships);
         $clients->setGroupMemberships($client, $newMemberships);
@@ -457,8 +452,8 @@ final class ClientsTest extends TestCase
         $group2->id = 2;
         $group2->name = 'name2';
 
-        $groupManager = $this->createMock(GroupManager::class);
-        $groupManager->method('getGroups')->with()->willReturn([$group1, $group2]);
+        $groups = $this->createMock(Groups::class);
+        $groups->method('getGroups')->with()->willReturn([$group1, $group2]);
 
         $client = $this->createStub(Client::class);
         $client->id = 42;
@@ -466,7 +461,7 @@ final class ClientsTest extends TestCase
         $clients = $this->createClientsMock(
             ['getGroupMemberships'],
             connection: $connection,
-            groupManager: $groupManager,
+            groups: $groups,
         );
         $clients->method('getGroupMemberships')->with($client)->willReturn($oldMemberships);
         $clients->setGroupMemberships($client, ['name1' => $newMembership]);
@@ -517,8 +512,8 @@ final class ClientsTest extends TestCase
         $group2->id = 2;
         $group2->name = 'name2';
 
-        $groupManager = $this->createMock(GroupManager::class);
-        $groupManager->method('getGroups')->with()->willReturn([$group1, $group2]);
+        $groups = $this->createMock(Groups::class);
+        $groups->method('getGroups')->with()->willReturn([$group1, $group2]);
 
         $client = $this->createMock(Client::class);
         $client->id = 42;
@@ -526,7 +521,7 @@ final class ClientsTest extends TestCase
         $clients = $this->createClientsMock(
             ['getGroupMemberships'],
             connection: $connection,
-            groupManager: $groupManager,
+            groups: $groups,
         );
         $clients->method('getGroupMemberships')->with($client)->willReturn([1 => $oldMembership]);
         $clients->setGroupMemberships($client, ['name1' => $newMembership]);
@@ -562,11 +557,10 @@ final class ClientsTest extends TestCase
             ],
         );
 
-        $groupManager = $this->createMock(GroupManager::class);
-        $groupManager->method('getGroups')->with()->willReturn([$group1, $group2]);
 
         $groups = $this->createMock(Groups::class);
         $groups->expects($this->once())->method('updateMemberships')->with($group1, true);
+        $groups->method('getGroups')->with()->willReturn([$group1, $group2]);
 
         $client = $this->createMock(Client::class);
         $client->id = 42;
@@ -574,7 +568,6 @@ final class ClientsTest extends TestCase
         $clients = $this->createClientsMock(
             ['getGroupMemberships'],
             connection: $connection,
-            groupManager: $groupManager,
             groups: $groups,
         );
         $clients->method('getGroupMemberships')->with($client)->willReturn([1 => $oldMembership]);
@@ -615,8 +608,8 @@ final class ClientsTest extends TestCase
         $group3->id = 3;
         $group3->name = 'name3';
 
-        $groupManager = $this->createMock(GroupManager::class);
-        $groupManager->method('getGroups')->with()->willReturn([$group1, $group2, $group3]);
+        $groups = $this->createMock(Groups::class);
+        $groups->method('getGroups')->with()->willReturn([$group1, $group2, $group3]);
 
         $client = $this->createMock(Client::class);
         $client->id = 42;
@@ -624,7 +617,7 @@ final class ClientsTest extends TestCase
         $clients = $this->createClientsMock(
             ['getGroupMemberships'],
             connection: $connection,
-            groupManager: $groupManager,
+            groups: $groups,
         );
         $clients->method('getGroupMemberships')->with($client)->willReturn([2 => Membership::Manual]);
         $clients->setGroupMemberships(

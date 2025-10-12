@@ -22,18 +22,13 @@
 
 namespace Model\Group;
 
-use Braintacle\Direction;
 use Braintacle\Group\Group;
-use Braintacle\Group\Groups;
-use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Locks;
-use Countable;
 use Database\Table\ClientConfig;
 use Database\Table\ClientsAndGroups;
 use Database\Table\GroupInfo;
 use Database\Table\GroupMemberships;
 use Laminas\Db\Adapter\Adapter;
-use Model\Config;
 use Nada\Database\AbstractDatabase;
 use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
@@ -45,49 +40,6 @@ use Throwable;
 class GroupManager
 {
     public function __construct(private ContainerInterface $container) {}
-
-    /**
-     * Return a all groups matching criteria
-     *
-     * @param string $filter Optional filter to apply (Id|Name|Expired|Member), default: return all groups
-     * @param mixed $filterArg Argument for Id, Name and Member filters, ignored otherwise
-     * @return iterable<Group>|Countable
-     */
-    public function getGroups(
-        $filter = null,
-        $filterArg = null,
-        ?OverviewColumn $order = null,
-        ?Direction $direction = Direction::Ascending,
-    ) {
-        /** @var GroupInfo */
-        $groupInfo = $this->container->get('Database\Table\GroupInfo');
-        $select = $groupInfo->getSql()->select();
-        $select->columns(array('request', 'create_time', 'revalidate_from'))
-            ->join(
-                'hardware',
-                'hardware.id = groups.hardware_id',
-                array('id', 'name', 'lastdate', 'description'),
-                \Laminas\Db\Sql\Select::JOIN_INNER
-            );
-
-        switch ($filter) {
-            case null:
-                break;
-            case 'Id':
-                $select->where(array('id' => $filterArg));
-                break;
-            default:
-                throw new \InvalidArgumentException(
-                    'Invalid group filter: ' . $filter
-                );
-        }
-
-        if ($order) {
-            $select->order([$order->value => $direction->value]);
-        }
-
-        return $groupInfo->selectWith($select);
-    }
 
     /**
      * Create a new group

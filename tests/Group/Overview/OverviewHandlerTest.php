@@ -6,6 +6,7 @@ use ArrayIterator;
 use Braintacle\Direction;
 use Braintacle\FlashMessages;
 use Braintacle\Group\Group;
+use Braintacle\Group\Groups;
 use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Group\Overview\OverviewHandler;
 use Braintacle\Group\Overview\OverviewRequestParameters;
@@ -17,7 +18,6 @@ use Braintacle\Test\TemplateTestTrait;
 use DateTime;
 use DOMXPath;
 use Formotron\DataProcessor;
-use Model\Group\GroupManager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +31,7 @@ class OverviewHandlerTest extends TestCase
     use HttpHandlerTestTrait;
     use TemplateTestTrait;
 
-    private function getXpath(array $groups, array $messages): DOMXPath
+    private function getXpath(array $groupObjects, array $messages): DOMXPath
     {
         $queryParams = ['order' => 'name', 'direction', 'asc'];
         $requestParameters = new OverviewRequestParameters();
@@ -42,18 +42,18 @@ class OverviewHandlerTest extends TestCase
             ->with($queryParams, OverviewRequestParameters::class)
             ->willReturn($requestParameters);
 
-        $groupManager = $this->createMock(GroupManager::class);
-        $groupManager
+        $groups = $this->createMock(Groups::class);
+        $groups
             ->method('getGroups')
-            ->with(null, null, OverviewColumn::Name, Direction::Ascending)
-            ->willReturn(new ArrayIterator($groups));
+            ->with(OverviewColumn::Name, Direction::Ascending)
+            ->willReturn(new ArrayIterator($groupObjects));
 
         $templateEngine = $this->createTemplateEngine();
 
         $flashMessages = $this->createMock(FlashMessages::class);
         $flashMessages->method('get')->with(FlashMessages::Success)->willReturn($messages);
 
-        $handler = new OverviewHandler($this->response, $dataProcessor, $groupManager, $templateEngine, $flashMessages);
+        $handler = new OverviewHandler($this->response, $dataProcessor, $groups, $templateEngine, $flashMessages);
         $response = $handler->handle($this->request->withQueryParams($queryParams));
 
         return $this->getXPathFromMessage($response);
@@ -112,7 +112,8 @@ class OverviewHandlerTest extends TestCase
         $dataProcessor = $this->createStub(DataProcessor::class);
         $dataProcessor->method('process')->willReturn($requestParameters);
 
-        $groupManager = $this->createStub(GroupManager::class);
+        $groups = $this->createMock(Groups::class);
+        $groups->expects($this->once())->method('getGroups')->with(OverviewColumn::Description, Direction::Descending);
 
         $templateEngine = $this->createMock(TemplateEngine::class);
         $templateEngine
@@ -130,7 +131,7 @@ class OverviewHandlerTest extends TestCase
 
         $flashMessages = $this->createStub(FlashMessages::class);
 
-        $handler = new OverviewHandler($this->response, $dataProcessor, $groupManager, $templateEngine, $flashMessages);
+        $handler = new OverviewHandler($this->response, $dataProcessor, $groups, $templateEngine, $flashMessages);
         $handler->handle($this->request);
     }
 }

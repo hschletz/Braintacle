@@ -4,6 +4,7 @@ namespace Braintacle\Test\Group\Add;
 
 use Braintacle\Group\Add\AddToGroupPageHandler;
 use Braintacle\Group\Group;
+use Braintacle\Group\Groups;
 use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Search\SearchOperator;
 use Braintacle\Search\SearchParams;
@@ -13,7 +14,6 @@ use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
 use Formotron\DataProcessor;
-use Model\Group\GroupManager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
@@ -49,12 +49,12 @@ class AddToGroupPageHandlerTest extends TestCase
         $group2 = new Group();
         $group2->name = 'group2';
 
-        $groupManager = $this->createMock(GroupManager::class);
-        $groupManager->method('getGroups')->with(null, null, OverviewColumn::Name)->willReturn([$group1, $group2]);
+        $groups = $this->createMock(Groups::class);
+        $groups->method('getGroups')->with(OverviewColumn::Name)->willReturn([$group1, $group2]);
 
         $templateEngine = $this->createTemplateEngine();
 
-        $handler = new AddToGroupPageHandler($this->response, $dataProcessor, $groupManager, $templateEngine);
+        $handler = new AddToGroupPageHandler($this->response, $dataProcessor, $groups, $templateEngine);
         $response = $handler->handle($this->request->withQueryParams($queryParams));
         $xPath = $this->getXPathFromMessage($response);
 

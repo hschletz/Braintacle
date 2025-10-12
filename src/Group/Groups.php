@@ -8,6 +8,7 @@ use Braintacle\Group\Members\ExcludedClient;
 use Braintacle\Group\Members\ExcludedColumn;
 use Braintacle\Group\Members\Member;
 use Braintacle\Group\Members\MembersColumn;
+use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Locks;
 use Braintacle\Search\Search;
 use Braintacle\Search\SearchParams;
@@ -65,6 +66,22 @@ final class Groups
         }
 
         return $this->dataProcessor->process($group, Group::class);
+    }
+
+    /**
+     * @return iterable<Group>
+     */
+    public function getGroups(?OverviewColumn $order = null, ?Direction $direction = Direction::Ascending): iterable
+    {
+        $select = $this->connection->createQueryBuilder()->select('*')->from(Table::Groups);
+        if ($order) {
+            $select->orderBy($order->value, $direction->value);
+        }
+
+        return $this->dataProcessor->iterate(
+            $select->executeQuery()->iterateAssociative(),
+            Group::class
+        );
     }
 
     /**

@@ -3,9 +3,9 @@
 namespace Braintacle\Group\Overview;
 
 use Braintacle\FlashMessages;
+use Braintacle\Group\Groups;
 use Braintacle\Template\TemplateEngine;
 use Formotron\DataProcessor;
-use Model\Group\GroupManager;
 use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -19,7 +19,7 @@ class OverviewHandler implements RequestHandlerInterface
     public function __construct(
         private ResponseInterface $response,
         private DataProcessor $dataProcessor,
-        private GroupManager $groupManager,
+        private Groups $groups,
         private TemplateEngine $templateEngine,
         private FlashMessages $flashMessages,
     ) {}
@@ -31,12 +31,8 @@ class OverviewHandler implements RequestHandlerInterface
             $request->getQueryParams(),
             OverviewRequestParameters::class
         );
-        $groups = $this->groupManager->getGroups(
-            null,
-            null,
-            $requestParameters->order,
-            $requestParameters->direction,
-        );
+        $groups = $this->groups->getGroups($requestParameters->order, $requestParameters->direction);
+
         $this->response->getBody()->write($this->templateEngine->render('Pages/Group/Overview.latte', [
             'groups' => $groups,
             'order' => $requestParameters->order->name,

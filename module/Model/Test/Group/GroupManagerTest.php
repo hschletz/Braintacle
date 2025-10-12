@@ -22,96 +22,24 @@
 
 namespace Model\Test\Group;
 
-use Braintacle\Direction;
 use Braintacle\Group\Group;
-use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Locks;
 use Database\Table\ClientConfig;
 use Database\Table\ClientsAndGroups;
 use Database\Table\GroupInfo;
 use Database\Table\GroupMemberships;
-use DateTime;
 use DateTimeImmutable;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\Driver\ConnectionInterface;
 use Mockery;
-use Model\Config;
 use Model\Group\GroupManager;
 use Nada\Database\AbstractDatabase;
 use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
-use Traversable;
 
 class GroupManagerTest extends AbstractGroupTestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    public static function getGroupsProvider()
-    {
-        $group1 = array(
-            'id' => 1,
-            'name' => 'name1',
-            'creationDate' => new DateTime('2015-02-02 19:01:00'),
-            'description' => 'description1',
-            'dynamicMembersSql' => 'request1',
-            'cacheExpirationDate' => new DateTime('2015-02-08 19:35:30'),
-            'cacheCreationDate' => new DateTime('2015-02-04 20:46:23'),
-        );
-        $group2 = array(
-            'id' => 2,
-            'name' => 'name2',
-            'creationDate' => new DateTime('2015-02-02 19:02:00'),
-            'description' => null,
-            'dynamicMembersSql' => 'request2',
-            'cacheExpirationDate' => new DateTime('2015-02-08 19:36:30'),
-            'cacheCreationDate' => new DateTime('2015-02-04 20:46:24'),
-        );
-        return array(
-            [null, null, OverviewColumn::Name, Direction::Descending, [$group2, $group1]],
-            ['Id', '2', null, null, [$group2]],
-        );
-    }
-
-    /**
-     * @dataProvider getGroupsProvider
-     */
-    public function testGetGroups($filter, $filterArg, $order, $direction, $expected)
-    {
-        $clock = $this->createStub(ClockInterface::class);
-        $clock->method('now')->willReturn(new DateTimeImmutable('2015-02-08 19:36:29'));
-
-        $serviceManager = $this->createMock(ContainerInterface::class);
-        $serviceManager->method('get')->willReturnMap([
-            [GroupInfo::class, $this->_groupInfo],
-            [ClockInterface::class, $clock],
-            [Config::class, $this->_config],
-        ]);
-
-        $model = new GroupManager($serviceManager);
-
-        /** @var Traversable<Group> */
-        $resultSet = $model->getGroups($filter, $filterArg, $order, $direction);
-        $this->assertInstanceOf('Laminas\Db\ResultSet\AbstractResultSet', $resultSet);
-
-        $groups = iterator_to_array($resultSet);
-        $this->assertContainsOnlyInstancesOf(Group::class, $groups);
-        $this->assertCount(count($expected), $groups);
-        foreach ($groups as $index => $group) {
-            $this->assertEquals($expected[$index], (array) $group);
-        }
-    }
-
-    public function testGetGroupsInvalidFilter()
-    {
-        $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid group filter: invalid');
-
-        $serviceManager = $this->createMock(ContainerInterface::class);
-        $serviceManager->method('get')->with(GroupInfo::class)->willReturn($this->_groupInfo);
-
-        $model = new GroupManager($serviceManager);
-        $model->getGroups('invalid');
-    }
 
     public static function createGroupProvider()
     {

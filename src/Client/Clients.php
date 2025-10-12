@@ -10,7 +10,6 @@ use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Model\Client\Client;
 use Model\Client\ItemManager;
-use Model\Group\GroupManager;
 use RuntimeException;
 use Throwable;
 
@@ -22,7 +21,6 @@ final class Clients
     public function __construct(
         private Connection $connection,
         private ItemManager $itemManager,
-        private GroupManager $groupManager,
         private Groups $groups,
         private Locks $locks,
     ) {}
@@ -147,7 +145,7 @@ final class Clients
         // Build lookup tables
         $groupsById = [];
         $groupsByName = [];
-        foreach ($this->groupManager->getGroups() as $group) {
+        foreach ($this->groups->getGroups() as $group) {
             $groupsById[$group->id] = $group;
             $groupsByName[$group->name] = $group;
         }

@@ -7,6 +7,7 @@ use Braintacle\Client\ClientRequestParameters;
 use Braintacle\Client\Clients;
 use Braintacle\Client\Groups\GroupsPageHandler;
 use Braintacle\Group\Group;
+use Braintacle\Group\Groups;
 use Braintacle\Group\Membership;
 use Braintacle\Group\Overview\OverviewColumn;
 use Braintacle\Http\RouteHelper;
@@ -18,7 +19,6 @@ use Braintacle\Test\TemplateTestTrait;
 use DOMXPath;
 use Formotron\DataProcessor;
 use Model\Client\Client;
-use Model\Group\GroupManager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
@@ -32,7 +32,7 @@ class GroupsPageHandlerTest extends TestCase
     use HttpHandlerTestTrait;
     use TemplateTestTrait;
 
-    private function getXpath(array $groups, Clients $clients): DOMXPath
+    private function getXpath(array $groupObjects, Clients $clients): DOMXPath
     {
         $clientId = '42';
         $clientName = 'client_name';
@@ -51,12 +51,12 @@ class GroupsPageHandlerTest extends TestCase
             ->with($routeArguments, ClientRequestParameters::class)
             ->willReturn($requestParameters);
 
-        $groupManager = $this->createMock(GroupManager::class);
-        $groupManager
+        $groups = $this->createMock(Groups::class);
+        $groups
             ->expects($this->once())
             ->method('getGroups')
-            ->with(null, null, OverviewColumn::Name)
-            ->willReturn(new ArrayIterator($groups));
+            ->with(OverviewColumn::Name)
+            ->willReturn(new ArrayIterator($groupObjects));
 
         $routeHelper = $this->createStub(RouteHelper::class);
         $routeHelper->method('getRouteArguments')->willReturn($routeArguments);
@@ -67,7 +67,7 @@ class GroupsPageHandlerTest extends TestCase
             $this->response,
             $routeHelper,
             $dataProcessor,
-            $groupManager,
+            $groups,
             $clients,
             $templateEngine,
         );
