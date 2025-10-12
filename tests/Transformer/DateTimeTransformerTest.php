@@ -78,4 +78,11 @@ final class DateTimeTransformerTest extends TestCase
         $transformer = new DateTimeTransformer($connection);
         $this->assertNull($transformer->transform(null, []));
     }
+
+    public function testZeroEpochBecomesNull()
+    {
+        $connection = $this->createStub(Connection::class);
+        $transformer = new DateTimeTransformer($connection);
+        $this->assertNull($transformer->transform(0, ['U']));
+    }
 }

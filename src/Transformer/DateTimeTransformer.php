@@ -9,7 +9,7 @@ use InvalidArgumentException;
 use Override;
 
 /**
- * Parse input string into DateTimeImmutable using given format (default: use database platform format).
+ * Parse input value into DateTimeImmutable using given format (default: use database platform format).
  */
 final class DateTimeTransformer implements Transformer
 {
@@ -28,8 +28,17 @@ final class DateTimeTransformer implements Transformer
         if ($value === null) {
             return null;
         }
-
-        assert(is_string($value) || (is_int($value) && $format == 'U'));
+        if ($format == 'U') {
+            assert(is_int($value));
+            // 0 will never mean 1970-01-01, but is the result of a bad
+            // definition or faulty conversion. NULL is the appropriate result
+            // in this case.
+            if ($value === 0) {
+                return null;
+            }
+        } else {
+            assert(is_string($value));
+        }
 
         $result = DateTimeImmutable::createFromFormat($format, $value);
         if (!$result) {
