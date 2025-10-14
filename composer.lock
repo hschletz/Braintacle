@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c20597dd634669004c6893196423224b",
+    "content-hash": "544711c3a7ac79cb7d4df42e46228b58",
     "packages": [
         {
             "name": "brick/varexporter",
@@ -3054,107 +3054,6 @@
                 }
             ],
             "time": "2023-11-08T09:30:43+00:00"
-        },
-        {
-            "name": "php-db/phpdb",
-            "version": "3.0.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-db/phpdb",
-                "reference": "96da3f2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-db/phpdb/zipball/96da3f2",
-                "reference": "96da3f2",
-                "shasum": ""
-            },
-            "require": {
-                "laminas/laminas-stdlib": "^3.20.0",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0"
-            },
-            "conflict": {
-                "zendframework/zend-db": "*"
-            },
-            "require-dev": {
-                "laminas/laminas-coding-standard": "^3.0.1",
-                "laminas/laminas-eventmanager": "^3.14.0",
-                "laminas/laminas-hydrator": "^4.16.0",
-                "laminas/laminas-servicemanager": "^3.23.0",
-                "phpunit/phpunit": "^11.5.12",
-                "psalm/plugin-phpunit": "^0.19.2",
-                "rector/rector": "^2.0",
-                "vimeo/psalm": "^6.8.8"
-            },
-            "suggest": {
-                "laminas/laminas-eventmanager": "Laminas\\EventManager component",
-                "laminas/laminas-hydrator": "(^3.2 || ^4.3) Laminas\\Hydrator component for using HydratingResultSets",
-                "laminas/laminas-servicemanager": "Laminas\\ServiceManager component"
-            },
-            "type": "library",
-            "extra": {
-                "laminas": {
-                    "component": "Laminas\\Db",
-                    "config-provider": "Laminas\\Db\\ConfigProvider"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Laminas\\Db\\": "src/",
-                    "CustomRule\\PHPUnit\\": "rector/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "LaminasTest\\Db\\": "test/unit/",
-                    "LaminasIntegrationTest\\Db\\": "test/integration/"
-                }
-            },
-            "scripts": {
-                "check": [
-                    "@cs-check",
-                    "@test"
-                ],
-                "cs-check": [
-                    "phpcs"
-                ],
-                "cs-fix": [
-                    "phpcbf"
-                ],
-                "test": [
-                    "phpunit --colors=always --testsuite \"unit test\""
-                ],
-                "test-coverage": [
-                    "phpunit --colors=always --coverage-clover clover.xml"
-                ],
-                "test-integration": [
-                    "phpunit --colors=always --testsuite \"integration test\""
-                ],
-                "static-analysis": [
-                    "psalm --shepherd --stats"
-                ],
-                "upload-coverage": [
-                    "coveralls -v"
-                ]
-            },
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Database abstraction layer, SQL abstraction, result set abstraction, and RowDataGateway and TableDataGateway implementations",
-            "homepage": "https://laminas.dev",
-            "keywords": [
-                "db",
-                "laminas"
-            ],
-            "support": {
-                "docs": "https://docs.laminas.dev/laminas-db/",
-                "issues": "https://github.com/laminas/laminas-db/issues",
-                "source": "https://github.com/laminas/laminas-db",
-                "rss": "https://github.com/laminas/laminas-db/releases.atom",
-                "chat": "https://laminas.dev/chat",
-                "forum": "https://discourse.laminas.dev"
-            },
-            "time": "2025-05-01T01:35:02+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -7589,9 +7488,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "php-db/phpdb": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

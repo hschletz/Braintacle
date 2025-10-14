@@ -17,16 +17,10 @@
         "psr-4": {
             "Braintacle\\": "src",
             "Braintacle\\Test\\": "tests",
+            "Laminas\\Db\\": "3rdparty/Db",
             "": "module"
         }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "no-api": true,
-            "url": "https://github.com/php-db/phpdb"
-        }
-    ],
     "require": {
         "php-64bit": "^8.2 || ^8.3 | ^8.4",
         "ext-dom": "*",
@@ -65,7 +59,6 @@
         "monolog/monolog": "^3.8",
         "nyholm/psr7": "^1.8",
         "nyholm/psr7-server": "^1.1",
-        "php-db/phpdb": "3.0.x-dev#96da3f2",
         "php-di/php-di": "^7.0",
         "psr/clock": "^1.0",
         "slim/slim": "^4.13",
