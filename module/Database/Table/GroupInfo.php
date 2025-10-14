@@ -32,6 +32,7 @@ class GroupInfo extends \Database\AbstractTable
     /**
      * {@inheritdoc}
      * @codeCoverageIgnore
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function __construct(ContainerInterface $container)
     {

@@ -51,6 +51,7 @@ class SchemaManager
 
     private LoggerInterface $logger;
 
+    /** @psalm-suppress PossiblyUnusedMethod */
     public function __construct(
         private ContainerInterface $container,
     ) {
