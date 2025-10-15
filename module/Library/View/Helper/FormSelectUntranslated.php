@@ -33,6 +33,9 @@ namespace Library\View\Helper;
  * attribute to "select_untranslated" to make it use this helper.
  *
  * @psalm-suppress UnusedClass
+ * @psalm-suppress InvalidExtendClass
+ * @psalm-suppress MethodSignatureMismatch
+ * @phpstan-ignore class.extendsFinalByPhpDoc (class will be replaced)
  */
 class FormSelectUntranslated extends \Laminas\Form\View\Helper\FormSelect
 {

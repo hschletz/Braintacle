@@ -29,6 +29,9 @@ namespace Library\View\Helper;
  * Select elements.
  *
  * @psalm-suppress UnusedClass
+ * @psalm-suppress InvalidExtendClass
+ * @psalm-suppress MethodSignatureMismatch
+ * @phpstan-ignore class.extendsFinalByPhpDoc (class will be replaced)
  */
 class FormSelectSimple extends \Laminas\Form\View\Helper\FormSelect
 {

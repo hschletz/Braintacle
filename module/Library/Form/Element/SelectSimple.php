@@ -29,6 +29,10 @@ namespace Library\Form\Element;
  * accompanied by a view helper (FormSelectSimple) which renders the options
  * without the "value" attribute. The helper is registered with the
  * FormElement helper to render the element correctly.
+ *
+ * @psalm-suppress InvalidExtendClass
+ * @psalm-suppress MethodSignatureMismatch
+ * @phpstan-ignore class.extendsFinalByPhpDoc (class will be replaced)
  */
 class SelectSimple extends \Laminas\Form\Element\Select
 {

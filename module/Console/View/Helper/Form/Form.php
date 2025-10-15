@@ -33,6 +33,9 @@ use Laminas\Form\FormInterface;
  * The render() method proxies to renderForm().
  *
  * @deprecated Render forms via templates
+ * @psalm-suppress InvalidExtendClass
+ * @psalm-suppress MethodSignatureMismatch
+ * @phpstan-ignore class.extendsFinalByPhpDoc (class will be replaced)
  */
 class Form extends \Laminas\Form\View\Helper\Form
 {

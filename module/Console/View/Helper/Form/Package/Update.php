@@ -31,6 +31,8 @@ use Laminas\Form\View\Helper\FormRow;
 
 /**
  * Package update form renderer
+ *
+ * @psalm-suppress MethodSignatureMismatch
  */
 class Update extends Form implements FormHelperInterface
 {

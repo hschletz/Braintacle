@@ -46,6 +46,9 @@ namespace Library\Form\Element;
  *
  * This class reimplements setValue() with a no-op, ignoring submitted form
  * data. The button label must be set via the reimplemented setLabel().
+ *
+ * @psalm-suppress InvalidExtendClass
+ * @phpstan-ignore class.extendsFinalByPhpDoc (class will be replaced)
  */
 class Submit extends \Laminas\Form\Element\Submit
 {
@@ -55,7 +58,10 @@ class Submit extends \Laminas\Form\Element\Submit
         return $this;
     }
 
-    /** {@inheritdoc} */
+    /**
+     * @psalm-suppress InvalidReturnType
+     * @psalm-suppress InvalidReturnStatement
+     */
     public function setLabel($label)
     {
         return parent::setValue($label);
