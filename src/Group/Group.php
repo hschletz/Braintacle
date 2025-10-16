@@ -6,6 +6,7 @@ use Braintacle\KeyMapper\CamelCaseToSnakeCase;
 use Braintacle\Transformer\DateTime;
 use DateTimeInterface;
 use Formotron\Attribute\MapKeys;
+use Formotron\Attribute\Transform;
 
 /**
  * A group of clients.
@@ -55,6 +56,6 @@ final class Group
     /**
      * Timestamp when cache will expire and get rebuilt.
      */
-    #[DateTime(DateTime::Epoch)]
+    #[Transform(CacheExpirationTransformer::class)]
     public ?DateTimeInterface $cacheExpirationDate;
 }

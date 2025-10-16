@@ -4,6 +4,7 @@ namespace Braintacle\Test\Group;
 
 use Braintacle\Database\Migration;
 use Braintacle\Database\Migrations;
+use Braintacle\Group\CacheExpirationTransformer;
 use Braintacle\Group\Group;
 use Braintacle\KeyMapper\CamelCaseToSnakeCase;
 use Braintacle\Test\DatabaseConnection;
@@ -31,7 +32,8 @@ final class GroupTest extends TestCase
         DatabaseConnection::with(function (Connection $connection) {
             $creationDate = '2025-10-10 19:43:26';
             $cacheCreationDate = new DateTimeImmutable('2025-10-10 19:43:27');
-            $cacheExpirationDate = new DateTimeImmutable('2025-10-10 19:43:28');
+            $cacheExpirationDatabase = new DateTimeImmutable('2025-10-10 19:43:28')->getTimestamp();
+            $cacheExpirationTransformed = new DateTimeImmutable('2025-10-10 19:43:58');
             $input = [
                 'id' => 42,
                 'name' => '_name',
@@ -39,8 +41,14 @@ final class GroupTest extends TestCase
                 'creation_date' => $creationDate,
                 'dynamic_members_sql' => 'sql',
                 'cache_creation_date' => $cacheCreationDate->getTimestamp(),
-                'cache_expiration_date' => $cacheExpirationDate->getTimestamp(),
+                'cache_expiration_date' => $cacheExpirationDatabase,
             ];
+
+            $cacheExpiratonTransformer = $this->createMock(CacheExpirationTransformer::class);
+            $cacheExpiratonTransformer
+                ->method('transform', [])
+                ->with($cacheExpirationDatabase)
+                ->willReturn($cacheExpirationTransformed);
 
             $dateTimeTransformer = new DateTimeTransformer($connection);
 
@@ -48,6 +56,7 @@ final class GroupTest extends TestCase
                 $input,
                 Group::class,
                 [
+                    CacheExpirationTransformer::class => $cacheExpiratonTransformer,
                     DateTimeTransformer::class => $dateTimeTransformer,
                 ]
             );
@@ -58,7 +67,7 @@ final class GroupTest extends TestCase
             $this->assertEquals(new DateTimeImmutable($creationDate), $group->creationDate);
             $this->assertEquals('sql', $group->dynamicMembersSql);
             $this->assertEquals($cacheCreationDate, $group->cacheCreationDate);
-            $this->assertEquals($cacheExpirationDate, $group->cacheExpirationDate);
+            $this->assertEquals(30, $group->cacheExpirationDate->getTimestamp() - $cacheExpirationDatabase);
         });
     }
 
@@ -71,9 +80,12 @@ final class GroupTest extends TestCase
                 'description' => null,
                 'creation_date' => '2025-10-10 19:43:26',
                 'dynamic_members_sql' => null,
-                'cache_creation_date' => null,
-                'cache_expiration_date' => null,
+                'cache_creation_date' => 0, // database value cannot be NULL
+                'cache_expiration_date' => 0, // database value cannot be NULL
             ];
+
+            $cacheExpiratonTransformer = $this->createMock(CacheExpirationTransformer::class);
+            $cacheExpiratonTransformer->method('transform')->with(0)->willReturn(null);
 
             $dateTimeTransformer = new DateTimeTransformer($connection);
 
@@ -81,6 +93,7 @@ final class GroupTest extends TestCase
                 $input,
                 Group::class,
                 [
+                    CacheExpirationTransformer::class => $cacheExpiratonTransformer,
                     DateTimeTransformer::class => $dateTimeTransformer,
                 ]
             );

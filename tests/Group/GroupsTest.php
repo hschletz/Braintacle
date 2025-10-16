@@ -6,6 +6,7 @@ use Braintacle\Database\Migration;
 use Braintacle\Database\Migrations;
 use Braintacle\Database\Table;
 use Braintacle\Direction;
+use Braintacle\Group\CacheExpirationTransformer;
 use Braintacle\Group\Group;
 use Braintacle\Group\Groups;
 use Braintacle\Group\Members\ExcludedClient;
@@ -149,7 +150,10 @@ final class GroupsTest extends TestCase
             $dateTimeTransformer = $this->createStub(DateTimeTransformer::class);
             $dateTimeTransformer->method('transform')->willReturn(new DateTimeImmutable());
 
-            $dataProcessor = $this->createDataProcessor([DateTimeTransformer::class => $dateTimeTransformer]);
+            $dataProcessor = $this->createDataProcessor([
+                CacheExpirationTransformer::class => $this->createStub(CacheExpirationTransformer::class),
+                DateTimeTransformer::class => $dateTimeTransformer,
+            ]);
 
             $groups = $this->createGroups(connection: $connection, dataProcessor: $dataProcessor);
             $group = $groups->getGroup('name2');
@@ -212,7 +216,10 @@ final class GroupsTest extends TestCase
             $dateTimeTransformer = $this->createStub(DateTimeTransformer::class);
             $dateTimeTransformer->method('transform')->willReturn(new DateTimeImmutable());
 
-            $dataProcessor = $this->createDataProcessor([DateTimeTransformer::class => $dateTimeTransformer]);
+            $dataProcessor = $this->createDataProcessor([
+                CacheExpirationTransformer::class => $this->createStub(CacheExpirationTransformer::class),
+                DateTimeTransformer::class => $dateTimeTransformer,
+            ]);
 
             $groups = $this->createGroups(connection: $connection, dataProcessor: $dataProcessor);
 
@@ -736,7 +743,10 @@ final class GroupsTest extends TestCase
             $dateTimeTransformer = $this->createStub(DateTimeTransformer::class);
             $dateTimeTransformer->method('transform')->willReturn(new DateTimeImmutable());
 
-            $dataProcessor = $this->createDataProcessor([DateTimeTransformer::class => $dateTimeTransformer]);
+            $dataProcessor = $this->createDataProcessor([
+                CacheExpirationTransformer::class => $this->createStub(CacheExpirationTransformer::class),
+                DateTimeTransformer::class => $dateTimeTransformer,
+            ]);
 
             /**
              * @var Mock | Groups
