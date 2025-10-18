@@ -5,7 +5,6 @@ namespace Braintacle\Group\Add;
 use Braintacle\Group\Groups;
 use Braintacle\Http\RouteHelper;
 use Formotron\DataProcessor;
-use Model\Group\GroupManager;
 use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -19,7 +18,6 @@ class AddToGroupFormHandler implements RequestHandlerInterface
     public function __construct(
         private ResponseInterface $response,
         private DataProcessor $dataProcessor,
-        private GroupManager $groupManager,
         private Groups $groups,
         private RouteHelper $routeHelper,
     ) {}
@@ -30,7 +28,7 @@ class AddToGroupFormHandler implements RequestHandlerInterface
         $parsedBody = $request->getParsedBody();
         if (isset($parsedBody['description'])) {
             $formData = $this->dataProcessor->process($request->getParsedBody(), NewGroupFormData::class);
-            $this->groupManager->createGroup($formData->name, $formData->description);
+            $this->groups->createGroup($formData->name, $formData->description);
             $group = $this->groups->getGroup($formData->name);
         } else {
             $formData = $this->dataProcessor->process($request->getParsedBody(), ExistingGroupFormData::class);

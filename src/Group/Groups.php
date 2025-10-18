@@ -13,7 +13,9 @@ use Braintacle\Locks;
 use Braintacle\Search\Search;
 use Braintacle\Search\SearchParams;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 use Formotron\DataProcessor;
+use InvalidArgumentException;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Sql\Sql;
 use LogicException;
@@ -82,6 +84,52 @@ final class Groups
             $select->executeQuery()->iterateAssociative(),
             Group::class
         );
+    }
+
+    /**
+     * @throws InvalidArgumentException if group name is empty
+     * @throws RuntimeException if a group with the given name already exists
+     **/
+    public function createGroup(string $name, ?string $description)
+    {
+        if ($name == '') {
+            throw new InvalidArgumentException('Group name is empty');
+        }
+
+        $idQuery = $this->connection
+            ->createQueryBuilder()
+            ->select('id')
+            ->from(Table::GroupsMain)
+            ->where('name = :name', "deviceid = '_SYSTEMGROUP_'")
+            ->setParameter('name', $name);
+        if ($idQuery->fetchOne() !== false) {
+            throw new RuntimeException('Group already exists: ' . $name);
+        }
+
+        if ($description == '') {
+            $description = null;
+        }
+        $now = $this->clock->now();
+
+        $this->connection->beginTransaction();
+        try {
+            $this->connection->insert(
+                Table::GroupsMain,
+                [
+                    'name' => $name,
+                    'description' => $description,
+                    'deviceid' => '_SYSTEMGROUP_',
+                    'lastdate' => $now,
+                ],
+                ['lastdate' => Types::DATETIME_IMMUTABLE],
+            );
+            $id = $idQuery->fetchOne();
+            $this->connection->insert(Table::GroupInfo, ['hardware_id' => $id]);
+            $this->connection->commit();
+        } catch (Throwable $throwable) {
+            $this->connection->rollBack();
+            throw $throwable;
+        }
     }
 
     /**

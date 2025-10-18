@@ -24,9 +24,11 @@ use Braintacle\Transformer\DateTime;
 use Braintacle\Transformer\DateTimeTransformer;
 use DateTimeImmutable;
 use DateTimeInterface;
+use DateTimeZone;
 use Doctrine\DBAL\Connection;
 use Exception;
 use Formotron\DataProcessor;
+use InvalidArgumentException;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Sql\Sql;
 use LogicException;
@@ -229,6 +231,216 @@ final class GroupsTest extends TestCase
             $this->assertContainsOnlyInstancesOf(Group::class, $result);
             $this->assertEquals($expected[0], $result[0]->name);
             $this->assertEquals($expected[1], $result[1]->name);
+        });
+    }
+
+    public static function createGroupProvider()
+    {
+        return [
+            'no existing group, description NULL' => [
+                null,
+                [],
+                [],
+                [[
+                    'id' => 1,
+                    'name' => 'name1',
+                    'description' => null,
+                    'creation_date' => 100000,
+                    'cache_creation_date' => 0,
+                    'cache_expiration_date' => 0,
+                    'dynamic_members_sql' => null,
+                ]],
+            ],
+            'existing group, description empty' => [
+                '',
+                [[2, '_SYSTEMGROUP_', 'name2', 200000]],
+                [[2]],
+                [
+                    [
+                        'id' => 1,
+                        'name' => 'name1',
+                        'description' => null,
+                        'creation_date' => 100000,
+                        'cache_creation_date' => 0,
+                        'cache_expiration_date' => 0,
+                        'dynamic_members_sql' => null,
+                    ],
+                    [
+                        'id' => 2,
+                        'name' => 'name2',
+                        'description' => null,
+                        'creation_date' => 200000,
+                        'cache_creation_date' => 0,
+                        'cache_expiration_date' => 0,
+                        'dynamic_members_sql' => null,
+                    ],
+                ],
+            ],
+            'existing client, description non-empty' => [
+                'description',
+                [[2, 'not a group', 'name2', 200000]],
+                [],
+                [
+                    [
+                        'id' => 1,
+                        'name' => 'name1',
+                        'description' => 'description',
+                        'creation_date' => 100000,
+                        'cache_creation_date' => 0,
+                        'cache_expiration_date' => 0,
+                        'dynamic_members_sql' => null,
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    #[DataProvider('createGroupProvider')]
+    public function testCreateGroup(
+        ?string $description,
+        array $initialGroupsMain,
+        array $initialGroupInfo,
+        array $expectedGroups,
+    ) {
+        DatabaseConnection::with(function (Connection $connection) use (
+            $description,
+            $initialGroupsMain,
+            $initialGroupInfo,
+            $expectedGroups,
+        ) {
+            // To work around database-specific formats, timestamps are passed
+            // as Epoch and converted to the appropriate format here.
+            $format = $connection->getDatabasePlatform()->getDateTimeFormatString();
+            array_walk($initialGroupsMain, function (array &$row) use ($format) {
+                $row[3] = DateTimeImmutable::createFromTimestamp($row[3])->format($format);
+            });
+
+            DatabaseConnection::initializeTable(
+                Table::GroupsMain,
+                ['id', 'deviceid', 'name', 'lastdate'],
+                $initialGroupsMain,
+            );
+            DatabaseConnection::initializeTable(Table::GroupInfo, ['hardware_id'], $initialGroupInfo);
+
+            $now = new DateTimeImmutable('@100000');
+
+            $clock = $this->createStub(ClockInterface::class);
+            $clock->method('now')->willReturn($now);
+
+            $groups = $this->createGroups(clock: $clock, connection: $connection);
+            $groups->createGroup('name1', $description);
+
+            $content = $connection
+                ->createQueryBuilder()
+                ->select('*')
+                ->from(Table::Groups)
+                ->orderBy('name')
+                ->fetchAllAssociative();
+
+            // The generated ID is difficult to determine in a portable way. The
+            // first row is expected to contain the created entry (because rows
+            // are sorted by name), so the ID is set to a fixed value for comparison.
+            $content[0]['id'] = 1;
+
+            // Convert timestamps to Epoch for comparison.
+            array_walk($content, function (array &$row) use ($format) {
+                $row['creation_date'] = DateTimeImmutable::createFromFormat(
+                    $format,
+                    $row['creation_date'],
+                    new DateTimeZone('UTC'),
+                )->getTimestamp();
+            });
+
+            $this->assertEquals($expectedGroups, $content);
+        });
+    }
+
+    public function testCreateGroupEmptyName()
+    {
+        DatabaseConnection::with(function (Connection $connection): void {
+            DatabaseConnection::initializeTable(Table::GroupsMain, [], []);
+            DatabaseConnection::initializeTable(Table::GroupInfo, [], []);
+            try {
+                $groups = $this->createGroups();
+                $groups->createGroup('', null);
+                $this->fail('Expected exception was not thrown');
+            } catch (InvalidArgumentException $exception) {
+                $this->assertEquals('Group name is empty', $exception->getMessage());
+            }
+            $this->assertEmpty(
+                $connection->createQueryBuilder()->select('*')->from(Table::Groups)->fetchAllAssociative()
+            );
+        });
+    }
+
+    public function testCreateGroupExists()
+    {
+        DatabaseConnection::with(function (Connection $connection): void {
+            DatabaseConnection::initializeTable(
+                Table::GroupsMain,
+                ['id', 'name', 'deviceid', 'lastdate'],
+                [[1, 'name1', '__SYSTEMGROUP__', '2015-02-02 19:01:00']],
+            );
+            DatabaseConnection::initializeTable(Table::GroupInfo, ['hardware_id'], [[1]]);
+
+            $groups = $this->createGroups();
+            try {
+                $groups->createGroup('name1', null);
+                $this->fail('Expected exception was not thrown');
+            } catch (RuntimeException $exception) {
+                $this->assertEquals('Group already exists: name1', $exception->getMessage());
+            }
+            $this->assertCount(
+                1,
+                $connection->createQueryBuilder()->select('*')->from(Table::Groups)->fetchAllAssociative()
+            );
+        });
+    }
+
+    public function testCreateGroupRollbackOnException()
+    {
+        DatabaseConnection::with(function (Connection $connection): void {
+            DatabaseConnection::initializeTable(Table::GroupsMain, [], []);
+            DatabaseConnection::initializeTable(Table::GroupInfo, [], []);
+
+            $connectionProxy = $this->createMock(Connection::class);
+            $connectionProxy
+                ->method('createQueryBuilder')
+                ->willReturnCallback($connection->createQueryBuilder(...));
+            $connectionProxy
+                ->expects($this->once())
+                ->method('beginTransaction')
+                ->willReturnCallback($connection->beginTransaction(...));
+            $connectionProxy
+                ->expects($this->once())
+                ->method('rollBack')
+                ->willReturnCallback($connection->rollBack(...));
+            $connectionProxy
+                ->expects($this->never())
+                ->method('commit');
+            $connectionProxy
+                ->expects($this->exactly(2))
+                ->method('insert')
+                ->willReturnCallback(
+                    function (string $table, array $data, array $types) use ($connection) {
+                        if ($table == Table::GroupsMain) {
+                            return $connection->insert($table, $data, $types); // First invocation
+                        } else {
+                            throw new Exception('test message'); // Second invocation
+                        }
+                    }
+                );
+
+            $groups = $this->createGroups(connection: $connectionProxy);
+            try {
+                $groups->createGroup('name', null);
+                $this->fail('Expected exception was not thrown');
+            } catch (Exception $exception) {
+                $this->assertEquals('test message', $exception->getMessage());
+            }
+            $this->assertEmpty(
+                $connection->createQueryBuilder()->select('*')->from(Table::GroupsMain)->fetchAllAssociative()
+            );
         });
     }
 

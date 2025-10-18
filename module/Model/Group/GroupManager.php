@@ -29,8 +29,6 @@ use Database\Table\ClientsAndGroups;
 use Database\Table\GroupInfo;
 use Database\Table\GroupMemberships;
 use Laminas\Db\Adapter\Adapter;
-use Nada\Database\AbstractDatabase;
-use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
 use Throwable;
 
@@ -40,55 +38,6 @@ use Throwable;
 class GroupManager
 {
     public function __construct(private ContainerInterface $container) {}
-
-    /**
-     * Create a new group
-     *
-     * @param string $name Group name, must not exist yet.
-     * @param string $description Optional description, default: NULL.
-     * @throws \InvalidArgumentException if group name is empty
-     * @throws \RuntimeException if a group with the given name already exists
-     **/
-    public function createGroup($name, $description = null)
-    {
-        if ($name == '') {
-            throw new \InvalidArgumentException('Group name is empty');
-        }
-
-        $clientsAndGroups = $this->container->get(ClientsAndGroups::class);
-        if ($clientsAndGroups->select(array('name' => $name, 'deviceid' => '_SYSTEMGROUP_'))->count()) {
-            throw new \RuntimeException('Group already exists: ' . $name);
-        }
-
-        if ($description == '') {
-            $description = null;
-        }
-        $now = $this->container->get(ClockInterface::class)->now();
-
-        $connection = $this->container->get(Adapter::class)->getDriver()->getConnection();
-        $connection->beginTransaction();
-        try {
-            $clientsAndGroups->insert(
-                array(
-                    'name' => $name,
-                    'description' => $description,
-                    'deviceid' => '_SYSTEMGROUP_',
-                    'lastdate' => $now->format($this->container->get(AbstractDatabase::class)->timestampFormatPhp()),
-                )
-            );
-            $id = $clientsAndGroups->select(array('name' => $name, 'deviceid' => '_SYSTEMGROUP_'))->current()['id'];
-            $this->container->get(GroupInfo::class)->insert(
-                array(
-                    'hardware_id' => $id,
-                    'create_time' => $now->getTimestamp(),
-                )
-            );
-            $connection->commit();
-        } catch (\Exception $e) {
-            $connection->rollback();
-            throw $e;
-        }
-    }
 
     /**
      * Delete a group
