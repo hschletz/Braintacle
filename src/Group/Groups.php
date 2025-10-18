@@ -133,6 +133,33 @@ final class Groups
     }
 
     /**
+     * @throws RuntimeException if group is locked
+     */
+    public function deleteGroup(Group $group): void
+    {
+        if (! $this->locks->lock($group)) {
+            throw new RuntimeException('Cannot delete group because it is locked');
+        }
+
+        try {
+            $id = $group->id;
+            $this->connection->beginTransaction();
+            try {
+                $this->connection->delete(Table::GroupMemberships, ['group_id' => $id]);
+                $this->connection->delete(Table::ClientConfig, ['hardware_id' => $id]);
+                $this->connection->delete(Table::GroupInfo, ['hardware_id' => $id]);
+                $this->connection->delete(Table::GroupsMain, ['id' => $id]);
+                $this->connection->commit();
+            } catch (Throwable $throwable) {
+                $this->connection->rollBack();
+                throw $throwable;
+            }
+        } finally {
+            $this->locks->release($group);
+        }
+    }
+
+    /**
      * @return iterable<Member>
      */
     public function getMembers(Group $group, MembersColumn $order, Direction $direction)

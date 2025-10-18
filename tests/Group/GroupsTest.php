@@ -444,6 +444,166 @@ final class GroupsTest extends TestCase
         });
     }
 
+    public function testDeleteGroup()
+    {
+        DatabaseConnection::with(function (Connection $connection): void {
+            DatabaseConnection::initializeTable(Table::GroupsMain, ['id', 'deviceid', 'name', 'lastdate'], [
+                [1, '_SYSTEMGROUP_', 'name1', '2025-10-18 16:25:01'],
+                [2, '_SYSTEMGROUP_', 'name2', '2025-10-18 16:25:02'],
+            ]);
+            DatabaseConnection::initializeTable(Table::GroupInfo, ['hardware_id'], [[1], [2]]);
+            DatabaseConnection::initializeTable(Table::GroupMemberships, ['hardware_id', 'group_id'], [
+                [3, 1],
+                [3, 2],
+            ]);
+            DatabaseConnection::initializeTable(Table::ClientConfig, ['hardware_id', 'name', 'ivalue'], [
+                [1, '', 3],
+                [2, '', 3],
+            ]);
+
+            $group = new Group();
+            $group->id = 2;
+
+            $locks = $this->createMock(Locks::class);
+            $locks->method('lock')->with($group)->willReturn(true);
+            $locks->expects($this->once())->method('release')->with($group);
+
+            $groups = $this->createGroups(connection: $connection, locks: $locks);
+            $groups->deleteGroup($group);
+
+            $this->assertEquals(
+                [1],
+                $connection->createQueryBuilder()->select('id')->from(Table::GroupsMain)->fetchFirstColumn()
+            );
+            $this->assertEquals(
+                [1],
+                $connection->createQueryBuilder()->select('hardware_id')->from(Table::GroupInfo)->fetchFirstColumn()
+            );
+            $this->assertEquals(
+                [1],
+                $connection->createQueryBuilder()->select('group_id')->from(Table::GroupMemberships)->fetchFirstColumn()
+            );
+            $this->assertEquals(
+                [1],
+                $connection->createQueryBuilder()->select('hardware_id')->from(Table::ClientConfig)->fetchFirstColumn()
+            );
+        });
+    }
+
+    public function testDeleteGroupLocked()
+    {
+        DatabaseConnection::with(function (Connection $connection): void {
+            DatabaseConnection::initializeTable(Table::GroupsMain, ['id', 'deviceid', 'name', 'lastdate'], [
+                [1, '_SYSTEMGROUP_', 'name1', '2025-10-18 16:25:01'],
+            ]);
+            DatabaseConnection::initializeTable(Table::GroupInfo, ['hardware_id'], [[1]]);
+            DatabaseConnection::initializeTable(Table::GroupMemberships, ['hardware_id', 'group_id'], [[2, 1]]);
+            DatabaseConnection::initializeTable(Table::ClientConfig, ['hardware_id', 'name', 'ivalue'], [
+                [1, '', 2]
+            ]);
+
+            $group = new Group();
+
+            $locks = $this->createMock(Locks::class);
+            $locks->method('lock')->with($group)->willReturn(false);
+
+            $groups = $this->createGroups(connection: $connection, locks: $locks);
+            try {
+                $groups->deleteGroup($group);
+                $this->fail('Expected exception was not thrown');
+            } catch (RuntimeException $exception) {
+                $this->assertEquals('Cannot delete group because it is locked', $exception->getMessage());
+            }
+
+            $this->assertEquals(
+                [1],
+                $connection->createQueryBuilder()->select('id')->from(Table::GroupsMain)->fetchFirstColumn()
+            );
+            $this->assertEquals(
+                [1],
+                $connection->createQueryBuilder()->select('hardware_id')->from(Table::GroupInfo)->fetchFirstColumn()
+            );
+            $this->assertEquals(
+                [1],
+                $connection->createQueryBuilder()->select('group_id')->from(Table::GroupMemberships)->fetchFirstColumn()
+            );
+            $this->assertEquals(
+                [1],
+                $connection->createQueryBuilder()->select('hardware_id')->from(Table::ClientConfig)->fetchFirstColumn()
+            );
+        });
+    }
+
+    public function testDeleteGroupDatabaseError()
+    {
+        DatabaseConnection::with(function (Connection $connection): void {
+            DatabaseConnection::initializeTable(Table::GroupsMain, ['id', 'deviceid', 'name', 'lastdate'], [
+                [1, '_SYSTEMGROUP_', 'name1', '2025-10-18 16:25:01'],
+            ]);
+            DatabaseConnection::initializeTable(Table::GroupInfo, ['hardware_id'], [[1]]);
+            DatabaseConnection::initializeTable(Table::GroupMemberships, ['hardware_id', 'group_id'], [[3, 1]]);
+            DatabaseConnection::initializeTable(Table::ClientConfig, ['hardware_id', 'name', 'ivalue'], [
+                [1, '', 3]
+            ]);
+
+            $group = new Group();
+            $group->id = 1;
+
+            $connectionProxy = $this->createMock(Connection::class);
+            $connectionProxy
+                ->expects($this->once())
+                ->method('beginTransaction')
+                ->willReturnCallback($connection->beginTransaction(...));
+            $connectionProxy
+                ->expects($this->once())
+                ->method('rollBack')
+                ->willReturnCallback($connection->rollBack(...));
+            $connectionProxy
+                ->expects($this->never())
+                ->method('commit');
+            $connectionProxy
+                ->expects($this->exactly(4))
+                ->method('delete')
+                ->willReturnCallback(
+                    function (string $table, array $criteria, array $types) use ($connection) {
+                        if ($table == Table::GroupsMain) {
+                            throw new Exception('test message'); // Final invocation
+                        } else {
+                            return $connection->delete($table, $criteria, $types); // First 3 invocations
+                        }
+                    }
+                );
+
+            $locks = $this->createMock(Locks::class);
+            $locks->method('lock')->with($group)->willReturn(true);
+
+            $groups = $this->createGroups(connection: $connectionProxy, locks: $locks);
+            try {
+                $groups->deleteGroup($group);
+                $this->fail('Expected exception was not thrown');
+            } catch (Exception $exception) {
+                $this->assertEquals('test message', $exception->getMessage());
+            }
+
+            $this->assertEquals(
+                [1],
+                $connection->createQueryBuilder()->select('id')->from(Table::GroupsMain)->fetchFirstColumn()
+            );
+            $this->assertEquals(
+                [1],
+                $connection->createQueryBuilder()->select('hardware_id')->from(Table::GroupInfo)->fetchFirstColumn()
+            );
+            $this->assertEquals(
+                [1],
+                $connection->createQueryBuilder()->select('group_id')->from(Table::GroupMemberships)->fetchFirstColumn()
+            );
+            $this->assertEquals(
+                [1],
+                $connection->createQueryBuilder()->select('hardware_id')->from(Table::ClientConfig)->fetchFirstColumn()
+            );
+        });
+    }
+
     public static function getMembersProvider()
     {
         return [

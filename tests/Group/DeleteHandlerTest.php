@@ -6,11 +6,11 @@ use Braintacle\FlashMessages;
 use Braintacle\Group\DeleteHandler;
 use Braintacle\Group\Group;
 use Braintacle\Group\GroupRequestParameters;
+use Braintacle\Group\Groups;
 use Braintacle\Test\HttpHandlerTestTrait;
+use Exception;
 use Formotron\DataProcessor;
 use Laminas\Translator\TranslatorInterface;
-use Model\Group\GroupManager;
-use Model\Group\RuntimeException as GroupRuntimeException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -18,7 +18,7 @@ class DeleteHandlerTest extends TestCase
 {
     use HttpHandlerTestTrait;
 
-    private function getResponse(GroupManager $groupManager, FlashMessages $flashMessages)
+    private function getResponse(Groups $groups, FlashMessages $flashMessages)
     {
         $groupName = 'groupName';
         $queryParams = ['name' => $groupName];
@@ -35,7 +35,7 @@ class DeleteHandlerTest extends TestCase
         $translator = $this->createStub(TranslatorInterface::class);
         $translator->method('translate')->willReturnCallback(fn($message) => '_' . $message);
 
-        $handler = new DeleteHandler($this->response, $dataProcessor, $groupManager, $flashMessages, $translator);
+        $handler = new DeleteHandler($this->response, $dataProcessor, $groups, $flashMessages, $translator);
 
         return $handler->handle($this->request->withQueryParams($queryParams));
     }
@@ -43,8 +43,8 @@ class DeleteHandlerTest extends TestCase
     public function testSuccess()
     {
 
-        $groupManager = $this->createMock(GroupManager::class);
-        $groupManager->expects($this->once())->method('deleteGroup');
+        $groups = $this->createMock(Groups::class);
+        $groups->expects($this->once())->method('deleteGroup');
 
         $flashMessages = $this->createMock(FlashMessages::class);
         $flashMessages
@@ -52,19 +52,19 @@ class DeleteHandlerTest extends TestCase
             ->method('add')
             ->with(FlashMessages::Success, "_Group 'groupName' was successfully deleted.");
 
-        $response = $this->getResponse($groupManager, $flashMessages);
+        $response = $this->getResponse($groups, $flashMessages);
         $this->assertResponseStatusCode(200, $response);
     }
 
     public function testCatchableError()
     {
-        $groupManager = $this->createStub(GroupManager::class);
-        $groupManager->method('deleteGroup')->willThrowException(new GroupRuntimeException());
+        $groups = $this->createStub(Groups::class);
+        $groups->method('deleteGroup')->willThrowException(new RuntimeException());
 
         $flashMessages = $this->createMock(FlashMessages::class);
         $flashMessages->expects($this->never())->method('add');
 
-        $response = $this->getResponse($groupManager, $flashMessages);
+        $response = $this->getResponse($groups, $flashMessages);
         $this->assertResponseStatusCode(500, $response);
         $this->assertResponseHeaders(['Content-Type' => ['text/plain']], $response);
         $this->assertResponseContent("_Group 'groupName' could not be deleted. Try again later.", $response);
@@ -72,14 +72,13 @@ class DeleteHandlerTest extends TestCase
 
     public function testOtherError()
     {
-        $groupManager = $this->createStub(GroupManager::class);
-        $groupManager->method('deleteGroup')->willThrowException(new RuntimeException('test'));
+        $groups = $this->createStub(Groups::class);
+        $groups->method('deleteGroup')->willThrowException(new Exception('test'));
 
         $flashMessages = $this->createMock(FlashMessages::class);
         $flashMessages->expects($this->never())->method('add');
 
-        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('test');
-        $this->getResponse($groupManager, $flashMessages);
+        $this->getResponse($groups, $flashMessages);
     }
 }
