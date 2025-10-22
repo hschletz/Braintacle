@@ -3,6 +3,7 @@
 namespace Braintacle\Transformer;
 
 use Attribute;
+use DateTimeZone;
 use Formotron\Attribute\TransformerServiceAttribute;
 use Override;
 
@@ -15,7 +16,12 @@ final class DateTime implements TransformerServiceAttribute
     public const Database = null;
     public const Epoch = 'U';
 
-    public function __construct(private ?string $format = null) {}
+    private ?DateTimeZone $timezone;
+
+    public function __construct(private ?string $format = null, ?string $timezone = null)
+    {
+        $this->timezone = ($timezone === null) ? null : new DateTimeZone($timezone);
+    }
 
     #[Override]
     public function getServiceName(): string
@@ -26,6 +32,6 @@ final class DateTime implements TransformerServiceAttribute
     #[Override]
     public function getArguments(): array
     {
-        return [$this->format];
+        return [$this->format, $this->timezone];
     }
 }

@@ -15,17 +15,15 @@ use Formotron\Attribute\UseBackingValue;
  */
 final class Member
 {
-    #[Key('id')]
     public int $id;
 
-    #[Key('name')]
     public string $name;
 
     #[Key('userid')]
     public string $userName;
 
     #[Key('lastdate')]
-    #[DateTime]
+    #[DateTime(timezone: 'UTC')]
     public DateTimeInterface $inventoryDate;
 
     #[Key('static')]

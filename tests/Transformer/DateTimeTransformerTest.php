@@ -6,31 +6,57 @@ use AssertionError;
 use Braintacle\Transformer\DateTimeTransformer;
 use DateTimeImmutable;
 use DateTimeInterface;
+use DateTimeZone;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class DateTimeTransformerTest extends TestCase
 {
-    public function testTooManyArgs()
+    public static function invalidArgumentCountProvider()
     {
-        $connection = $this->createMock(Connection::class);
-        $connection->expects($this->never())->method('getDatabasePlatform');
-
-        $this->expectException(AssertionError::class);
-        $transformer = new DateTimeTransformer($connection);
-        $transformer->transform(null, ['arg1', 'arg2']);
+        return [
+            [[]],
+            [[null]],
+            [[null, null, null]],
+        ];
     }
 
-    public function testArgNotString()
+    #[DataProvider('invalidArgumentCountProvider')]
+    public function testInvalidArgumentCount(array $args)
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection->expects($this->never())->method('getDatabasePlatform');
+
+        $this->expectException(AssertionError::class);
+        $this->expectExceptionMessage('Expected 2 arguments');
+        $transformer = new DateTimeTransformer($connection);
+        $transformer->transform(null, $args);
+    }
+
+    public function testArgsNotList()
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection->expects($this->never())->method('getDatabasePlatform');
+
+        $this->expectException(AssertionError::class);
+        $this->expectExceptionMessage('Expected arguments as list');
+        $transformer = new DateTimeTransformer($connection);
+        $transformer->transform(null, ['foo' => null, 'bar' => null]);
+    }
+
+    public function testFormatNotString()
     {
         $connection = $this->createMock(Connection::class);
         $connection->expects($this->never())->method('getDatabasePlatform');
 
         $this->expectException(AssertionError::class);
         $transformer = new DateTimeTransformer($connection);
-        $transformer->transform(null, [1]);
+
+        /** @psalm-suppress InvalidArgument (intentionally invalid) */
+        $transformer->transform(null, [1, null]);
     }
 
     public function testInvalidValue()
@@ -41,7 +67,7 @@ final class DateTimeTransformerTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("Value 'invalid' cannot be parsed with format 'Y-m-d'");
         $transformer = new DateTimeTransformer($connection);
-        $transformer->transform('invalid', ['Y-m-d']);
+        $transformer->transform('invalid', ['Y-m-d', null]);
     }
 
     public function testExplicitFormat()
@@ -53,7 +79,7 @@ final class DateTimeTransformerTest extends TestCase
         $transformer = new DateTimeTransformer($connection);
         $this->assertEquals(
             new DateTimeImmutable($timestamp),
-            $transformer->transform($timestamp, [DateTimeInterface::ATOM]),
+            $transformer->transform($timestamp, [DateTimeInterface::ATOM, null]),
         );
     }
 
@@ -68,7 +94,7 @@ final class DateTimeTransformerTest extends TestCase
         $transformer = new DateTimeTransformer($connection);
         $this->assertEquals(
             new DateTimeImmutable('2025-03-10T17:35:01'),
-            $transformer->transform('10.03.2025 17:35:01', []),
+            $transformer->transform('10.03.2025 17:35:01', [null, null]),
         );
     }
 
@@ -76,13 +102,53 @@ final class DateTimeTransformerTest extends TestCase
     {
         $connection = $this->createStub(Connection::class);
         $transformer = new DateTimeTransformer($connection);
-        $this->assertNull($transformer->transform(null, []));
+        $this->assertNull($transformer->transform(null, [null, null]));
     }
 
     public function testZeroEpochBecomesNull()
     {
         $connection = $this->createStub(Connection::class);
         $transformer = new DateTimeTransformer($connection);
-        $this->assertNull($transformer->transform(0, ['U']));
+        $this->assertNull($transformer->transform(0, ['U', null]));
+    }
+
+    public function testInvalidTimezone()
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection->expects($this->never())->method('getDatabasePlatform');
+
+        $this->expectException(AssertionError::class);
+        $this->expectExceptionMessage('not a DateTimeZone object');
+        $transformer = new DateTimeTransformer($connection);
+
+        /** @psalm-suppress InvalidArgument (intentionally invalid) */
+        $transformer->transform(null, [null, 'UTC']);
+    }
+
+    public function testDefaultTimezone()
+    {
+        $connection = $this->createStub(Connection::class);
+        $transformer = new DateTimeTransformer($connection);
+        $this->assertEquals(
+            date_default_timezone_get(),
+            $transformer->transform('2025-03-10 17:35:01', ['Y-m-d H:i:s', null])->getTimezone()->getName()
+        );
+    }
+
+    public static function explicitTimezoneProvider()
+    {
+        return [
+            ['UTC'],
+            ['Europe/Berlin'],
+        ];
+    }
+
+    #[DataProvider('explicitTimezoneProvider')]
+    public function testExplicitTimezone(string $timezone)
+    {
+        $connection = $this->createStub(Connection::class);
+        $transformer = new DateTimeTransformer($connection);
+        $timestamp = $transformer->transform('2025-03-10 17:35:01', ['Y-m-d H:i:s', new DateTimeZone($timezone)]);
+        $this->assertEquals($timezone, $timestamp->getTimezone()->getName());
     }
 }

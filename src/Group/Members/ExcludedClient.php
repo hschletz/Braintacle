@@ -8,16 +8,14 @@ use Formotron\Attribute\Key;
 
 final class ExcludedClient
 {
-    #[Key('id')]
     public int $id;
 
-    #[Key('name')]
     public string $name;
 
     #[Key('userid')]
     public string $userName;
 
     #[Key('lastdate')]
-    #[DateTime]
+    #[DateTime(timezone: 'UTC')]
     public DateTimeInterface $inventoryDate;
 }

@@ -3,6 +3,7 @@
 namespace Braintacle\Transformer;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\DBAL\Connection;
 use Formotron\Transformer;
 use InvalidArgumentException;
@@ -10,16 +11,25 @@ use Override;
 
 /**
  * Parse input value into DateTimeImmutable using given format (default: use database platform format).
+ *
+ * This is not extpcted to be used directly, but via the DateTime attribute.
  */
 final class DateTimeTransformer implements Transformer
 {
     public function __construct(private Connection $connection) {}
 
+    /**
+     * @param list{?string, ?DateTimeZone} $args
+     */
     #[Override]
     public function transform(mixed $value, array $args): ?DateTimeImmutable
     {
-        assert(count($args) <= 1);
-        $format = current($args) ?: null;
+        assert(count($args) == 2, 'Expected 2 arguments');
+        assert(array_is_list($args), 'Expected arguments as list');
+
+        [$format, $timezone] = $args;
+        assert($timezone === null || $timezone instanceof DateTimeZone, 'not a DateTimeZone object');
+
         if ($format === null) {
             $format = $this->connection->getDatabasePlatform()->getDateTimeFormatString();
         }
@@ -40,7 +50,7 @@ final class DateTimeTransformer implements Transformer
             assert(is_string($value));
         }
 
-        $result = DateTimeImmutable::createFromFormat($format, $value);
+        $result = DateTimeImmutable::createFromFormat($format, $value, $timezone);
         if (!$result) {
             throw new InvalidArgumentException(
                 sprintf("Value '%s' cannot be parsed with format '%s'", $value, $format)
