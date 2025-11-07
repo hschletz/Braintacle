@@ -2,12 +2,16 @@
 
 namespace Braintacle\Client;
 
+use Braintacle\Client\ClientList\Client as ClientListClient;
+use Braintacle\Client\ClientList\ClientListColumn;
 use Braintacle\Database\Table;
+use Braintacle\Direction;
 use Braintacle\Group\Groups;
 use Braintacle\Group\Membership;
 use Braintacle\Locks;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Formotron\DataProcessor;
 use Model\Client\Client;
 use Model\Client\ItemManager;
 use RuntimeException;
@@ -20,10 +24,27 @@ final class Clients
 {
     public function __construct(
         private Connection $connection,
+        private DataProcessor $dataProcessor,
         private ItemManager $itemManager,
         private Groups $groups,
         private Locks $locks,
     ) {}
+
+    /**
+     * @return iterable<ClientListClient>
+     */
+    public function getClientList(ClientListColumn $order, Direction $direction): iterable
+    {
+        $clients = $this->connection
+            ->createQueryBuilder()
+            ->select('id', 'name', 'userid', 'osname', 'type', 'processors', 'memory', 'lastdate')
+            ->from(Table::Clients)
+            ->orderBy($order->value, $direction->value)
+            ->executeQuery()
+            ->iterateAssociative();
+
+        return $this->dataProcessor->iterate($clients, ClientListClient::class);
+    }
 
     /**
      * @param bool $deleteInterfaces Delete interfaces from scanned interfaces

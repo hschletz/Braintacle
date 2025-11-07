@@ -1,0 +1,38 @@
+{layout ../MainMenu/InventoryMenuLayout.latte}
+{import ../SortableHeader.latte}
+{var $subMenuRoute = clientList}
+
+{block content}
+
+<div class="tableWithCounter">
+    {foreach $clients as $client}
+        {first}
+            <table class="alternating">
+                <tr>
+                    <th>{include sortableHeader, 'Name', translate('Name')}</th>
+                    <th>{include sortableHeader, 'UserName', translate('User')}</th>
+                    <th>{include sortableHeader, 'OsName', translate('Operating system')}</th>
+                    <th>{include sortableHeader, 'Type', translate('Type')}</th>
+                    <th>{include sortableHeader, 'CpuClock', translate('CPU clock')}</th>
+                    <th>{include sortableHeader, 'PhysicalMemory', translate('Memory')}</th>
+                    <th>{include sortableHeader, 'InventoryDate', translate('Last inventory')}</th>
+                </tr>
+        {/first}
+                <tr>
+                    <td>
+                        <a href="{pathForRoute(showClientGeneral, [id: $client->id])}">{$client->name}</a>
+                    </td>
+                    <td>{$client->userName}</td>
+                    <td>{$client->osName|replaceRE: '/^Microsoft /', ''}</td> {* Strip prefix to conserve space *}
+                    <td>{$client->type}</td>
+                    <td class="textright">{$client->cpuClock}</td>
+                    <td class="textright">{$client->physicalMemory}</td>
+                    <td>{$client->inventoryDate|localDate: date: short, time: short}</td>
+                </tr>
+        {last}
+            </table>
+            {var $counter = $iterator->counter}
+        {/last}
+    {/foreach}
+    <p class="textcenter">{translate('Number of clients: %d', $counter ?? 0)}</p>
+</div>

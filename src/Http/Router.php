@@ -55,6 +55,7 @@ class Router
             $group->put('/client/{id}/packages', Client\Packages\ResetPackageHandler::class)->setName('resetPackageOnClient');
             $group->delete('/client/{id}/packages', Client\Packages\RemovePackageHandler::class)->setName('removePackageFromClient');
             $group->get('/client/{id}/software', Client\Software\SoftwarePageHandler::class)->setName('showClientSoftware');
+            $group->get('/clients', Client\ClientList\ClientListPage::class)->setName('clientList');
             $group->get('/duplicates', Duplicates\OverviewHandler::class)->setName('duplicatesList');
             $group->post('/duplicates', Duplicates\MergeDuplicatesHandler::class)->setName('mergeDuplicates');
             $group->post('/duplicates/allow', Duplicates\AllowDuplicatesHandler::class)->setName('allowDuplicates');
@@ -73,6 +74,9 @@ class Router
             $group->get('/software', Software\SoftwarePageHandler::class)->setName('softwarePage');
             $group->post('/software', Software\SoftwareManagementHandler::class)->setName('softwareHandler');
 
+            // Redirect root path, taking base path into account.
+            $group->redirect('/', $group->getRouteCollector()->getRouteParser()->urlFor('clientList'));
+
             // Legacy routes, listed here to provide a name for MVC routes, or
             // to provide an alternative MVC-style URL that is composed by
             // legacy methods.
@@ -80,7 +84,7 @@ class Router
             $group->get('/console/client/customfields', ApplicationBridge::class)->setName('showClientCustomFields');
             $group->get('/console/client/display', ApplicationBridge::class)->setName('showClientDisplay');
             $group->get('/console/client/import', ApplicationBridge::class)->setName('importPage');
-            $group->get('/console/client/index', ApplicationBridge::class)->setName('clientList');
+            $group->get('/console/client/index', ApplicationBridge::class)->setName('clientIndex'); // Legacy page, use clientList if possible
             $group->get('/console/client/misc', ApplicationBridge::class)->setName('showClientMisc');
             $group->get('/console/client/msoffice', ApplicationBridge::class)->setName('showClientMsOffice');
             $group->get('/console/client/network', ApplicationBridge::class)->setName('showClientNetwork');

@@ -2,17 +2,25 @@
 
 namespace Braintacle\Test\Client;
 
+use Braintacle\Client\ClientList\Client as ClientListClient;
+use Braintacle\Client\ClientList\ClientListColumn;
 use Braintacle\Client\Clients;
 use Braintacle\Database\Migration;
 use Braintacle\Database\Migrations;
 use Braintacle\Database\Table;
+use Braintacle\Direction;
 use Braintacle\Group\Group;
 use Braintacle\Group\Groups;
 use Braintacle\Group\Membership;
 use Braintacle\Locks;
 use Braintacle\Test\DatabaseConnection;
+use Braintacle\Test\DataProcessorTestTrait;
+use Braintacle\Transformer\DateTime;
+use Braintacle\Transformer\DateTimeTransformer;
+use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Exception;
+use Formotron\DataProcessor;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\Client\Client;
@@ -27,18 +35,22 @@ use RuntimeException;
 #[CoversClass(Clients::class)]
 #[UsesClass(Migration::class)]
 #[UsesClass(Migrations::class)]
+#[UsesClass(DateTime::class)]
 final class ClientsTest extends TestCase
 {
+    use DataProcessorTestTrait;
     use MockeryPHPUnitIntegration;
 
     private function createClients(
         ?Connection $connection = null,
+        ?DataProcessor $dataProcessor = null,
         ?ItemManager $itemManager = null,
         ?Groups $groups = null,
         ?Locks $locks = null,
     ): Clients {
         return new Clients(
             $connection ?? $this->createStub(Connection::class),
+            $dataProcessor ?? $this->createStub(DataProcessor::class),
             $itemManager ?? $this->createStub(ItemManager::class),
             $groups ?? $this->createStub(Groups::class),
             $locks ?? $this->createStub(Locks::class),
@@ -48,12 +60,14 @@ final class ClientsTest extends TestCase
     private function createClientsMock(
         array $methods,
         ?Connection $connection = null,
+        ?DataProcessor $dataProcessor = null,
         ?ItemManager $itemManager = null,
         ?Groups $groups = null,
         ?Locks $locks = null,
     ): MockObject | Clients {
         return $this->getMockBuilder(Clients::class)->onlyMethods($methods)->setConstructorArgs([
             $connection ?? $this->createStub(Connection::class),
+            $dataProcessor ?? $this->createStub(DataProcessor::class),
             $itemManager ?? $this->createStub(ItemManager::class),
             $groups ?? $this->createStub(Groups::class),
             $locks ?? $this->createStub(Locks::class),
@@ -63,6 +77,48 @@ final class ClientsTest extends TestCase
     private function fetchColumn(Connection $connection, string $table, string $column)
     {
         return $connection->createQueryBuilder()->select($column)->from($table)->orderBy($column)->fetchFirstColumn();
+    }
+
+    public static function getClientListProvider()
+    {
+        return [
+            [Direction::Ascending, [1, 2]],
+            [Direction::Descending, [2, 1]],
+        ];
+    }
+
+    #[DataProvider('getClientListProvider')]
+    public function testGetClientList(Direction $direction, array $expectedIds)
+    {
+        DatabaseConnection::with(function (Connection $connection) use ($direction, $expectedIds): void {
+            DatabaseConnection::initializeTable(
+                Table::ClientTable,
+                ['id', 'deviceid', 'name', 'userid', 'osname', 'processors', 'memory'],
+                [
+                    [1, 'id1', 'name1', 'user1', 'os1', 1111, 2222],
+                    [2, 'id2', 'name2', 'user2', 'os2', 3333, 4444],
+                ]
+            );
+            DatabaseConnection::initializeTable(Table::ClientSystemInfo, ['hardware_id'], [
+                [1],
+                [2],
+            ]);
+
+            $dateTimeTransformer = $this->createStub(DateTimeTransformer::class);
+            $dateTimeTransformer->method('transform')->willReturn(new DateTimeImmutable());
+
+            $dataProcessor = $this->createDataProcessor([DateTimeTransformer::class => $dateTimeTransformer]);
+
+            $clients = $this->createClients(connection: $connection, dataProcessor: $dataProcessor);
+
+            /**
+             * @psalm-suppress UnnecessaryVarAnnotation
+             * @var ClientListClient[]
+             */
+            $clientList = iterator_to_array($clients->getClientList(ClientListColumn::Name, $direction));
+            $this->assertSame($expectedIds[0], $clientList[0]->id);
+            $this->assertSame($expectedIds[1], $clientList[1]->id);
+        });
     }
 
     private function setupDelete()
@@ -180,7 +236,7 @@ final class ClientsTest extends TestCase
             $locks->expects($this->once())->method('lock')->willReturn(true);
             $locks->expects($this->once())->method('release');
 
-            $clients = $this->createClients($connection, $itemManager, locks: $locks);
+            $clients = $this->createClients(connection: $connection, itemManager: $itemManager, locks: $locks);
             $clients->delete($client, deleteInterfaces: false);
 
             $this->assertClientDeleted($connection);
@@ -204,7 +260,7 @@ final class ClientsTest extends TestCase
             $locks->expects($this->once())->method('lock')->willReturn(true);
             $locks->expects($this->once())->method('release');
 
-            $clients = $this->createClients($connection, $itemManager, locks: $locks);
+            $clients = $this->createClients(connection: $connection, itemManager: $itemManager, locks: $locks);
             $clients->delete($client, deleteInterfaces: true);
 
             $this->assertClientDeleted($connection);
@@ -228,7 +284,7 @@ final class ClientsTest extends TestCase
             $locks->expects($this->once())->method('lock')->willReturn(false);
             $locks->expects($this->never())->method('release');
 
-            $clients = $this->createClients($connection, $itemManager, locks: $locks);
+            $clients = $this->createClients(connection: $connection, itemManager: $itemManager, locks: $locks);
             try {
                 $clients->delete($client, deleteInterfaces: true);
                 $this->fail('Expected Exception was not thrown');
@@ -257,7 +313,7 @@ final class ClientsTest extends TestCase
             $locks->expects($this->once())->method('lock')->willReturn(true);
             $locks->expects($this->once())->method('release');
 
-            $clients = $this->createClients($connection, $itemManager, locks: $locks);
+            $clients = $this->createClients(connection: $connection, itemManager: $itemManager, locks: $locks);
             try {
                 $clients->delete($client, deleteInterfaces: true);
                 $this->fail('Expected Exception was not thrown');
