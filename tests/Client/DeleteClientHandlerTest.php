@@ -8,8 +8,8 @@ use Braintacle\Client\DeleteClientHandler;
 use Braintacle\FlashMessages;
 use Braintacle\Http\RouteHelper;
 use Braintacle\Test\HttpHandlerTestTrait;
+use Braintacle\Test\TranslatorStubTrait;
 use Formotron\DataProcessor;
-use Laminas\Translator\TranslatorInterface;
 use Model\Client\Client;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 final class DeleteClientHandlerTest extends TestCase
 {
     use HttpHandlerTestTrait;
+    use TranslatorStubTrait;
 
     public static function handlerProvider()
     {
@@ -53,8 +54,7 @@ final class DeleteClientHandlerTest extends TestCase
         $clients = $this->createMock(Clients::class);
         $clients->expects($this->once())->method('delete')->with($client, $deleteInterfaces);
 
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator->method('translate')->willReturnCallback(fn($message) => '_' . $message);
+        $translator = $this->createTranslatorStub();
 
         $flashMessages = $this->createMock(FlashMessages::class);
         $flashMessages->expects($this->once())->method('add')->with(

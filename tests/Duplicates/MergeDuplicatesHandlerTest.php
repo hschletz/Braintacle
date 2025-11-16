@@ -7,14 +7,15 @@ use Braintacle\CsrfProcessor;
 use Braintacle\Duplicates\MergeDuplicatesHandler;
 use Braintacle\FlashMessages;
 use Braintacle\Test\HttpHandlerTestTrait;
+use Braintacle\Test\TranslatorStubTrait;
 use Console\Form\ShowDuplicates as Validator;
-use Laminas\Translator\TranslatorInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 
 class MergeDuplicatesHandlerTest extends TestCase
 {
     use HttpHandlerTestTrait;
+    use TranslatorStubTrait;
 
     private function getResponse(bool $isValid): ResponseInterface
     {
@@ -37,7 +38,7 @@ class MergeDuplicatesHandlerTest extends TestCase
 
         $duplicates = $this->createMock(Duplicates::class);
         $flashMessages = $this->createMock(FlashMessages::class);
-        $message = 'success message';
+        $message = '_The selected clients have been merged.';
 
         if ($isValid) {
             $duplicates->expects($this->once())->method('merge')->with($clients, $options);
@@ -47,8 +48,7 @@ class MergeDuplicatesHandlerTest extends TestCase
             $flashMessages->expects($this->never())->method('add');
         }
 
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator->method('translate')->with('The selected clients have been merged.')->willReturn($message);
+        $translator = $this->createTranslatorStub();
 
         $handler = new MergeDuplicatesHandler(
             $this->response,

@@ -8,15 +8,16 @@ use Braintacle\Group\Group;
 use Braintacle\Group\GroupRequestParameters;
 use Braintacle\Group\Groups;
 use Braintacle\Test\HttpHandlerTestTrait;
+use Braintacle\Test\TranslatorStubTrait;
 use Exception;
 use Formotron\DataProcessor;
-use Laminas\Translator\TranslatorInterface;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 class DeleteHandlerTest extends TestCase
 {
     use HttpHandlerTestTrait;
+    use TranslatorStubTrait;
 
     private function getResponse(Groups $groups, FlashMessages $flashMessages)
     {
@@ -32,8 +33,7 @@ class DeleteHandlerTest extends TestCase
         $dataProcessor = $this->createMock(DataProcessor::class);
         $dataProcessor->method('process')->with($queryParams)->willReturn($requestParameters);
 
-        $translator = $this->createStub(TranslatorInterface::class);
-        $translator->method('translate')->willReturnCallback(fn($message) => '_' . $message);
+        $translator = $this->createTranslatorStub();
 
         $handler = new DeleteHandler($this->response, $dataProcessor, $groups, $flashMessages, $translator);
 

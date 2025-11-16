@@ -7,15 +7,16 @@ use Braintacle\Duplicates\AllowDuplicatesRequestParameters;
 use Braintacle\Duplicates\Criterion;
 use Braintacle\FlashMessages;
 use Braintacle\Test\HttpHandlerTestTrait;
+use Braintacle\Test\TranslatorStubTrait;
 use Exception;
 use Formotron\DataProcessor;
-use Laminas\Translator\TranslatorInterface;
 use Model\Client\DuplicatesManager;
 use PHPUnit\Framework\TestCase;
 
 class AllowDuplicatesHandlerTest extends TestCase
 {
     use HttpHandlerTestTrait;
+    use TranslatorStubTrait;
 
     public function testSuccess()
     {
@@ -33,10 +34,12 @@ class AllowDuplicatesHandlerTest extends TestCase
         $duplicatesManager->expects($this->once())->method('allow')->with(Criterion::AssetTag, $value);
 
         $flashMessages = $this->createMock(FlashMessages::class);
-        $flashMessages->expects($this->once())->method('add')->with(FlashMessages::Success, '_AT_');
+        $flashMessages
+            ->expects($this->once())
+            ->method('add')
+            ->with(FlashMessages::Success, "_'AT' is no longer considered duplicate.");
 
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator->method('translate')->with("'%s' is no longer considered duplicate.")->willReturn('_%s_');
+        $translator = $this->createTranslatorStub();
 
         $handler = new AllowDuplicatesHandler(
             $this->response,
@@ -65,7 +68,7 @@ class AllowDuplicatesHandlerTest extends TestCase
         $flashMessages = $this->createMock(FlashMessages::class);
         $flashMessages->expects($this->never())->method('add');
 
-        $translator = $this->createStub(TranslatorInterface::class);
+        $translator = $this->createTranslatorStub();
 
         $handler = new AllowDuplicatesHandler(
             $this->response,
