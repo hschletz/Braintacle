@@ -74,7 +74,6 @@ return array(
             'Console\Form\Preferences\Packages' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\Form\Preferences\RawData' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\Form\Preferences\System' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-            'Console\Form\Search' => 'Console\Form\Service\SearchFactory',
         ),
     ),
     'router' => array(

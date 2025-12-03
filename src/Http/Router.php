@@ -7,6 +7,7 @@ use Braintacle\Client;
 use Braintacle\Duplicates;
 use Braintacle\Group;
 use Braintacle\Legacy\ApplicationBridge;
+use Braintacle\Search;
 use Braintacle\Software;
 use Nyholm\Psr7\Response;
 use Psr\Container\ContainerInterface;
@@ -62,6 +63,7 @@ class Router
             $group->get('/duplicates/{criterion}', Duplicates\ManageDuplicatesHandler::class)->setName('manageDuplicates');
             $group->post('/group', Group\Add\AddToGroupFormHandler::class)->setName('addGroup');
             $group->delete('/group', Group\DeleteHandler::class)->setName('deleteGroup');
+            $group->get('/group/add', Group\Add\AddToGroupPageHandler::class)->setName('addGroupPage');
             $group->get('/group/configuration', Group\Configuration\ShowConfigurationHandler::class)->setName('showGroupConfiguration');
             $group->post('/group/configuration', Group\Configuration\SetConfigurationHandler::class)->setName('setGroupConfiguration');
             $group->get('/group/excluded', Group\Members\ExcludedPageHandler::class)->setName('showGroupExcluded');
@@ -71,6 +73,8 @@ class Router
             $group->post('/group/packages', Group\Packages\AssignPackagesHandler::class)->setName('assignPackageToGroup');
             $group->delete('/group/packages', Group\Packages\RemovePackagesHandler::class)->setName('removePackageFromGroup');
             $group->get('/groups', Group\Overview\OverviewHandler::class)->setName('groupList');
+            $group->get('/search', Search\SearchPageHandler::class)->setName('searchPage');
+            $group->get('/search/results', Search\SearchResultsHandler::class)->setName('searchResults');
             $group->get('/software', Software\SoftwarePageHandler::class)->setName('softwarePage');
             $group->post('/software', Software\SoftwareManagementHandler::class)->setName('softwareHandler');
 
@@ -90,12 +94,10 @@ class Router
             $group->get('/console/client/network', ApplicationBridge::class)->setName('showClientNetwork');
             $group->get('/console/client/printers', ApplicationBridge::class)->setName('showClientPrinters');
             $group->get('/console/client/registry', ApplicationBridge::class)->setName('showClientRegistry');
-            $group->get('/console/client/search', ApplicationBridge::class)->setName('searchPage');
             $group->get('/console/client/storage', ApplicationBridge::class)->setName('showClientStorage');
             $group->get('/console/client/system', ApplicationBridge::class)->setName('showClientSystem');
             $group->get('/console/client/virtualmachines', ApplicationBridge::class)->setName('showClientVirtualMachines');
             $group->get('/console/client/windows', ApplicationBridge::class)->setName('showClientWindows');
-            $group->get('/console/group/add/', Group\Add\AddToGroupPageHandler::class)->setName('addGroupPage');
             $group->get('/console/licenses/index', ApplicationBridge::class)->setName('licensesPage');
             $group->get('/console/network/index', ApplicationBridge::class)->setName('networkPage');
             $group->get('/console/package/build', ApplicationBridge::class)->setName('packageBuildPage');

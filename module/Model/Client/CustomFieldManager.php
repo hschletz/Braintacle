@@ -98,7 +98,7 @@ class CustomFieldManager
     /**
      * Get fields
      *
-     * @return array Array with field names as keys, field types as values
+     * @return array<string,string> Array with field names as keys, field types as values
      */
     public function getFields()
     {

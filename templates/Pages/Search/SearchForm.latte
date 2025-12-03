@@ -1,0 +1,75 @@
+{layout ../../Layout.latte}
+{var $mainMenuRoute = 'searchPage'}
+
+{var $operatorsText = [
+    like: translate("Substring match, wildcards '?' and '*' allowed"),
+    eq: translate('Exact match'),
+]}
+{var $operatorsOrdinal = [
+    eq: '=',
+    ne: '!=',
+    lt: '<',
+    le: '<=',
+    ge: '>=',
+    gt: '>',
+]}
+
+{var $filter = $searchParams->filter ?? 'Name'}
+{var $operator = $searchParams->operator->value ?? 'like'}
+{var $filterType = $types[$filter] ?? 'text'}
+
+{block content}
+
+<link rel="stylesheet" href="{assetUrl('css/search_form.css')}">
+<script type="module" src="{assetUrl('js/search_form.js')}"></script>
+<script>
+    const operatorsText = {$operatorsText}
+    const filterTypes = {$types}
+</script>
+
+<form method="get" action="{pathForRoute(searchResults)}" class="form form_search">
+    <label>
+        <span>{translate('Search for')}</span>
+        <select name="filter">
+            <option
+                n:foreach="$filters as $value => $label"
+                value="{$value}"
+                n:attr="selected: $value == $filter"
+            >
+                {$label}
+            </option>
+        </select>
+    </label>
+
+    <label>
+        <span>{translate('Value')}</span>
+        {* Type may be changed when the user selects a different filter. *}
+        <input
+            type="{$filterType}"
+            n:attr="required: $filterType != text"
+            name="search"
+            value="{$searchParams->search ?? ''}"
+        >
+    </label>
+
+    <label>
+        <span>{translate('Operator')}</span>
+        {* Options may be changed when the user selects a different filter. *}
+        <select name="operator">
+            <option
+                n:foreach="$filterType == 'text' ? $operatorsText : $operatorsOrdinal as $value => $label"
+                value="{$value}"
+                n:attr="selected => $value == $operator"
+            >
+                {$label}
+            </option>
+        </select>
+    </label>
+
+    <label>
+        <span>{translate('Invert results')}</span>
+        <input type="checkbox" name="invert" n:attr="checked => $searchParams->invert ?? false">
+    </label>
+
+    <button type="submit">{translate('Search')}</button>
+</form>

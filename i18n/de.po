@@ -95,8 +95,7 @@ msgstr "Hinzufügen"
 msgid "Change"
 msgstr "Ändern"
 
-#: module/Console/Form/CustomFields.php module/Console/Form/Search.php
-#: module/Console/views/console/client/index.php
+#: module/Console/Form/CustomFields.php src/Search/SearchFilters.php
 msgid "Category"
 msgstr "Kategorie"
 
@@ -149,8 +148,7 @@ msgid "Import"
 msgstr "Import"
 
 #: module/Console/Form/ManageRegistryValues.php
-#: module/Console/Form/Package/Build.php module/Console/Form/Search.php
-#: module/Console/Form/Subnet.php
+#: module/Console/Form/Package/Build.php module/Console/Form/Subnet.php
 #: module/Console/views/console/client/display.php
 #: module/Console/views/console/client/index.php
 #: module/Console/views/console/client/misc.php
@@ -159,14 +157,15 @@ msgstr "Import"
 #: module/Console/views/console/client/system.php
 #: module/Console/views/console/client/virtualmachines.php
 #: module/Console/views/console/network/index.php
-#: module/Console/views/console/package/index.php
+#: module/Console/views/console/package/index.php src/Search/SearchFilters.php
 #: templates/Pages/Client/Packages.latte templates/Pages/Client/Software.latte
 #: templates/Pages/ClientList.latte
 #: templates/Pages/Duplicates/ManageDuplicates.latte
 #: templates/Pages/Duplicates/Overview.latte
 #: templates/Pages/Group/AddToGroup.latte templates/Pages/Group/Excluded.latte
 #: templates/Pages/Group/General.latte templates/Pages/Group/Members.latte
-#: templates/Pages/Group/Overview.latte templates/Pages/Software.latte
+#: templates/Pages/Group/Overview.latte
+#: templates/Pages/Search/SearchResults.latte templates/Pages/Software.latte
 msgid "Name"
 msgstr "Name"
 
@@ -574,277 +573,6 @@ msgstr "XML-Daten validieren"
 msgid "Product key (if different)"
 msgstr "Lizenzschlüssel (falls verschieden)"
 
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-#: templates/Pages/Client/General.latte
-#: templates/Pages/Duplicates/ManageDuplicates.latte
-#: templates/Pages/Duplicates/Overview.latte
-msgid "Asset tag"
-msgstr "Asset tag"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Audio device"
-msgstr "Audiogerät"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "BIOS date"
-msgstr "BIOS-Datum"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "BIOS version"
-msgstr "BIOS-Version"
-
-#: module/Console/Form/Search.php
-msgid "CPU clock (MHz)"
-msgstr "CPU-Taktfrequenz (MHz)"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "CPU cores"
-msgstr "CPU-Kerne"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-#: templates/Pages/Client/General.latte
-msgid "CPU type"
-msgstr "CPU Typ"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-#: module/Console/views/console/client/network.php
-msgid "DNS server"
-msgstr "DNS-Server"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-#: module/Console/views/console/client/network.php
-msgid "Default gateway"
-msgstr "Standardgateway"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Display controller"
-msgstr "Display-Controller"
-
-#: module/Console/Form/Search.php
-msgid "Exact match"
-msgstr "Exakte Übereinstimmung"
-
-#: module/Console/Form/Search.php
-msgid "Filesystem free space (MB)"
-msgstr "Dateisystem: freier Speicherplatz (MB)"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Filesystem size (MB)"
-msgstr "Dateisystem: Größe (MB)"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "GPU memory"
-msgstr "GPU-Speicher"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-#: module/Console/views/console/client/network.php
-#: module/Console/views/console/network/edit.php
-#: module/Console/views/console/network/showidentified.php
-#: module/Console/views/console/network/showunknown.php
-msgid "IP address"
-msgstr "IP-Adresse"
-
-#: module/Console/Form/Search.php
-msgid "Invert results"
-msgstr "Ergebnisse invertieren"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-#: templates/Pages/Client/General.latte
-#: templates/Pages/Duplicates/ManageDuplicates.latte
-msgid "Last contact"
-msgstr "Letzter Kontakt"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-#: templates/Pages/ClientList.latte templates/Pages/Group/Excluded.latte
-#: templates/Pages/Group/Members.latte
-msgid "Last inventory"
-msgstr "Letzte Inventarisierung"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-#: module/Console/views/console/client/network.php
-#: module/Console/views/console/network/edit.php
-#: module/Console/views/console/network/showidentified.php
-#: module/Console/views/console/network/showunknown.php
-msgid "MAC address"
-msgstr "MAC-Adresse"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "MS Office product ID"
-msgstr "Microsoft Office-Produkt-ID"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "MS Office product key"
-msgstr "Microsoft Office-Lizenzschlüssel"
-
-#: module/Console/Form/Search.php
-#: module/Console/views/console/client/display.php
-#: module/Console/views/console/client/index.php
-#: module/Console/views/console/client/misc.php
-#: module/Console/views/console/client/system.php
-#: templates/Pages/Client/Bios.latte
-msgid "Manufacturer"
-msgstr "Hersteller"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-#: module/Console/views/console/client/storage.php
-#: templates/Pages/Client/General.latte
-msgid "Model"
-msgstr "Modell"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Modem"
-msgstr "Modem"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Monitor: EDID"
-msgstr "Monitor: EDID"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Monitor: description"
-msgstr "Monitor: Beschreibung"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Monitor: manufacturer"
-msgstr "Monitor: Hersteller"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Monitor: serial"
-msgstr "Monitor: Seriennummer"
-
-#: module/Console/Form/Search.php
-msgid "Network Mask"
-msgstr "Netzmaske"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Network address"
-msgstr "Netzwerkadresse"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "OS architecture"
-msgstr "Betriebssystemarchitektur"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "OS comment"
-msgstr "Kommentar"
-
-#: module/Console/Form/Search.php
-msgid "OS name"
-msgstr "Betriebssystem"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "OS version number"
-msgstr "Betriebssystemversionsnummer"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "OS version string"
-msgstr "Betriebssystemversion"
-
-#: module/Console/Form/Search.php
-msgid "Operator"
-msgstr "Operator"
-
-#: module/Console/Form/Search.php
-msgid "Physical memory"
-msgstr "Arbeitsspeicher"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Port name"
-msgstr "Anschlussname"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Printer driver"
-msgstr "Druckertreiber"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Printer name"
-msgstr "Druckername"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Printer port"
-msgstr "Druckeranschluss"
-
-#: module/Console/Form/Search.php templates/Layout.latte
-msgid "Search"
-msgstr "Suchen"
-
-#: module/Console/Form/Search.php
-msgid "Search for"
-msgstr "Suche nach"
-
-#: module/Console/Form/Search.php
-#: module/Console/views/console/client/display.php
-#: module/Console/views/console/client/index.php
-#: module/Console/views/console/client/storage.php
-#: module/Console/views/console/client/system.php
-#: templates/Pages/Client/General.latte
-#: templates/Pages/Duplicates/ManageDuplicates.latte
-#: templates/Pages/Duplicates/Overview.latte
-msgid "Serial number"
-msgstr "Seriennummer"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Software: Comment"
-msgstr "Software: Kommentar"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Software: Install location"
-msgstr "Software: Installationsort"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Software: Name"
-msgstr "Software: Name"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Software: Publisher"
-msgstr "Software: Herausgeber"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Software: Version"
-msgstr "Software: Version"
-
-#: module/Console/Form/Search.php
-msgid "Substring match, wildcards '?' and '*' allowed"
-msgstr "Teilzeichenfolge, Platzhalter '?' und '*' erlaubt"
-
-#: module/Console/Form/Search.php templates/Pages/Client/General.latte
-msgid "Swap memory"
-msgstr "Auslagerungsspeicher"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "User agent"
-msgstr "User-Agent"
-
-#: module/Console/Form/Search.php
-#, php-format
-msgid "User defined: %s"
-msgstr "Benutzerdefiniert: %s"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "User domain"
-msgstr "Benutzerdomäne"
-
-#: module/Console/Form/Search.php
-msgid "User name"
-msgstr "Benutzername"
-
-#: module/Console/Form/Search.php
-#: module/Console/views/console/client/registry.php
-msgid "Value"
-msgstr "Wert"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Windows product key"
-msgstr "Windows-Lizenzschlüssel"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-msgid "Windows product key (manual)"
-msgstr "Windows-Lizenzschlüssel (manuell)"
-
-#: module/Console/Form/Search.php module/Console/views/console/client/index.php
-#: module/Console/views/console/client/network.php
-msgid "Workgroup"
-msgstr "Arbeitsgruppe"
-
 #: module/Console/Form/ShowDuplicates.php
 msgid "At least 2 different clients have to be selected"
 msgstr "Es müssen mindestens 2 verschiedene Clients ausgewählt werden"
@@ -948,36 +676,87 @@ msgstr "EDID"
 
 #: module/Console/views/console/client/display.php
 #: module/Console/views/console/client/index.php
+#: module/Console/views/console/client/misc.php
+#: module/Console/views/console/client/system.php src/Search/SearchFilters.php
+#: templates/Pages/Client/Bios.latte
+msgid "Manufacturer"
+msgstr "Hersteller"
+
+#: module/Console/views/console/client/display.php
+#: module/Console/views/console/client/index.php
 #: module/Console/views/console/client/virtualmachines.php
 #: templates/Pages/ClientList.latte
 msgid "Memory"
 msgstr "Speicher"
 
+#: module/Console/views/console/client/display.php
+#: module/Console/views/console/client/index.php
+#: module/Console/views/console/client/storage.php
+#: module/Console/views/console/client/system.php src/Search/SearchFilters.php
+#: templates/Pages/Client/General.latte
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+#: templates/Pages/Duplicates/Overview.latte
+msgid "Serial number"
+msgstr "Seriennummer"
+
 #: module/Console/views/console/client/import.php
 msgid "Import locally generated inventory data"
 msgstr "Import lokal erzeugter Inventardaten"
 
-#: module/Console/views/console/client/index.php
-#, php-format
-msgid "%d matches"
-msgstr "%d Treffer"
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+#: templates/Pages/Client/General.latte
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+#: templates/Pages/Duplicates/Overview.latte
+msgid "Asset tag"
+msgstr "Asset tag"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Audio device"
+msgstr "Audiogerät"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "BIOS date"
+msgstr "BIOS-Datum"
 
 #: module/Console/views/console/client/index.php
 msgid "BIOS manufacturer"
 msgstr "BIOS-Hersteller"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "BIOS version"
+msgstr "BIOS-Version"
 
 #: module/Console/views/console/client/index.php
 #: templates/Pages/Client/General.latte templates/Pages/ClientList.latte
 msgid "CPU clock"
 msgstr "CPU Takt"
 
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "CPU cores"
+msgstr "CPU-Kerne"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+#: templates/Pages/Client/General.latte
+msgid "CPU type"
+msgstr "CPU Typ"
+
 #: module/Console/views/console/client/index.php
 msgid "Controller"
 msgstr "Controller"
 
 #: module/Console/views/console/client/index.php
-msgid "Edit filter"
-msgstr "Filter bearbeiten"
+#: module/Console/views/console/client/network.php src/Search/SearchFilters.php
+msgid "DNS server"
+msgstr "DNS-Server"
+
+#: module/Console/views/console/client/index.php
+#: module/Console/views/console/client/network.php src/Search/SearchFilters.php
+msgid "Default gateway"
+msgstr "Standardgateway"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Display controller"
+msgstr "Display-Controller"
 
 #: module/Console/views/console/client/index.php
 msgid "Error code"
@@ -987,9 +766,17 @@ msgstr "Fehlercode"
 msgid "Extension slot"
 msgstr "Erweiterungssteckplatz"
 
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Filesystem size (MB)"
+msgstr "Dateisystem: Größe (MB)"
+
 #: module/Console/views/console/client/index.php
 msgid "Free space (MB)"
 msgstr "Freier Speicherplatz (MB)"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "GPU memory"
+msgstr "GPU-Speicher"
 
 #: module/Console/views/console/client/index.php
 #: templates/Pages/Client/General.latte
@@ -1005,8 +792,77 @@ msgstr "ID-String"
 
 #: module/Console/views/console/client/index.php
 #: module/Console/views/console/client/network.php
+#: module/Console/views/console/network/edit.php
+#: module/Console/views/console/network/showidentified.php
+#: module/Console/views/console/network/showunknown.php
+#: src/Search/SearchFilters.php
+msgid "IP address"
+msgstr "IP-Adresse"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+#: templates/Pages/Client/General.latte
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+msgid "Last contact"
+msgstr "Letzter Kontakt"
+
+#: module/Console/views/console/client/index.php
+#: templates/Pages/ClientList.latte templates/Pages/Group/Excluded.latte
+#: templates/Pages/Group/Members.latte
+#: templates/Pages/Search/SearchResults.latte
+msgid "Last inventory"
+msgstr "Letzte Inventarisierung"
+
+#: module/Console/views/console/client/index.php
+#: module/Console/views/console/client/network.php
+#: module/Console/views/console/network/edit.php
+#: module/Console/views/console/network/showidentified.php
+#: module/Console/views/console/network/showunknown.php
+#: src/Search/SearchFilters.php
+msgid "MAC address"
+msgstr "MAC-Adresse"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "MS Office product ID"
+msgstr "Microsoft Office-Produkt-ID"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "MS Office product key"
+msgstr "Microsoft Office-Lizenzschlüssel"
+
+#: module/Console/views/console/client/index.php
+#: module/Console/views/console/client/storage.php src/Search/SearchFilters.php
+#: templates/Pages/Client/General.latte
+msgid "Model"
+msgstr "Modell"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Modem"
+msgstr "Modem"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Monitor: EDID"
+msgstr "Monitor: EDID"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Monitor: description"
+msgstr "Monitor: Beschreibung"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Monitor: manufacturer"
+msgstr "Monitor: Hersteller"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Monitor: serial"
+msgstr "Monitor: Seriennummer"
+
+#: module/Console/views/console/client/index.php
+#: module/Console/views/console/client/network.php src/Search/SearchFilters.php
 msgid "Netmask"
 msgstr "Netzmaske"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Network address"
+msgstr "Netzwerkadresse"
 
 #: module/Console/views/console/client/index.php
 #: templates/Pages/ClientList.latte templates/Pages/Group/Excluded.latte
@@ -1015,17 +871,64 @@ msgstr "Netzmaske"
 msgid "Number of clients: %d"
 msgstr "Anzahl Clients: %d"
 
-#: module/Console/views/console/client/index.php
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "OS architecture"
+msgstr "Betriebssystemarchitektur"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "OS comment"
+msgstr "Kommentar"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "OS version number"
+msgstr "Betriebssystemversionsnummer"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "OS version string"
+msgstr "Betriebssystemversion"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
 #: templates/Pages/ClientList.latte
 msgid "Operating system"
 msgstr "Betriebssystem"
 
-#: module/Console/views/console/client/index.php
-#: templates/Pages/Group/AddToGroup.latte
-msgid "Save to group"
-msgstr "In Gruppe speichern"
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Port name"
+msgstr "Anschlussname"
 
-#: module/Console/views/console/client/index.php
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Printer driver"
+msgstr "Druckertreiber"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Printer name"
+msgstr "Druckername"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Printer port"
+msgstr "Druckeranschluss"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Software: Comment"
+msgstr "Software: Kommentar"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Software: Install location"
+msgstr "Software: Installationsort"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Software: Name"
+msgstr "Software: Name"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Software: Publisher"
+msgstr "Software: Herausgeber"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Software: Version"
+msgstr "Software: Version"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
 msgid "Swap"
 msgstr "Auslagerungsspeicher"
 
@@ -1038,8 +941,17 @@ msgstr "UUID"
 #: module/Console/views/console/client/index.php
 #: templates/Pages/ClientList.latte templates/Pages/Group/Excluded.latte
 #: templates/Pages/Group/Members.latte
+#: templates/Pages/Search/SearchResults.latte
 msgid "User"
 msgstr "Benutzer"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "User agent"
+msgstr "User-Agent"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "User domain"
+msgstr "Benutzerdomäne"
 
 #: module/Console/views/console/client/index.php
 msgid "Windows company"
@@ -1052,6 +964,19 @@ msgstr "Windows/Besitzer"
 #: module/Console/views/console/client/index.php
 msgid "Windows product ID"
 msgstr "Windows/Produkt-ID"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Windows product key"
+msgstr "Windows-Lizenzschlüssel"
+
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+msgid "Windows product key (manual)"
+msgstr "Windows-Lizenzschlüssel (manuell)"
+
+#: module/Console/views/console/client/index.php
+#: module/Console/views/console/client/network.php src/Search/SearchFilters.php
+msgid "Workgroup"
+msgstr "Arbeitsgruppe"
 
 #: module/Console/views/console/client/misc.php
 msgid "Audio devices"
@@ -1164,6 +1089,11 @@ msgstr "Inventarisierte Werte verwalten"
 #: module/Console/views/console/client/registry.php
 msgid "Registry Keys"
 msgstr "Registry-Schlüssel"
+
+#: module/Console/views/console/client/registry.php
+#: templates/Pages/Search/SearchForm.latte
+msgid "Value"
+msgstr "Wert"
 
 #: module/Console/views/console/client/storage.php
 #: templates/Pages/Group/General.latte templates/Pages/Group/Overview.latte
@@ -1443,6 +1373,31 @@ msgstr "Gruppe '%s' konnte nicht gelöscht werden. Bitte erneut versuchen."
 msgid "Group '%s' was successfully deleted."
 msgstr "Gruppe '%s' wurde erfolgreich gelöscht."
 
+#: src/Search/SearchFilters.php
+msgid "CPU clock (MHz)"
+msgstr "CPU-Taktfrequenz (MHz)"
+
+#: src/Search/SearchFilters.php
+msgid "Filesystem free space (MB)"
+msgstr "Dateisystem: freier Speicherplatz (MB)"
+
+#: src/Search/SearchFilters.php templates/Pages/Client/General.latte
+msgid "Inventory date"
+msgstr "Datum der Inventarinformationen"
+
+#: src/Search/SearchFilters.php
+msgid "Physical memory"
+msgstr "Arbeitsspeicher"
+
+#: src/Search/SearchFilters.php
+#, php-format
+msgid "User defined: %s"
+msgstr "Benutzerdefiniert: %s"
+
+#: src/Search/SearchFilters.php
+msgid "User name"
+msgstr "Benutzername"
+
 #: templates/Forms/AssignPackage.latte
 msgid "Assign"
 msgstr "Zuweisen"
@@ -1503,6 +1458,10 @@ msgstr "Pakete"
 msgid "Preferences"
 msgstr "Einstellungen"
 
+#: templates/Layout.latte templates/Pages/Search/SearchForm.latte
+msgid "Search"
+msgstr "Suchen"
+
 #: templates/MainMenu/InventoryMenuLayout.latte
 msgid "Clients"
 msgstr "Clients"
@@ -1556,10 +1515,6 @@ msgid "Always scan this network"
 msgstr "Dieses Netzwerk immer scannen"
 
 #: templates/Pages/Client/General.latte
-msgid "Inventory date"
-msgstr "Datum der Inventarinformationen"
-
-#: templates/Pages/Client/General.latte
 msgid "Last user logged in"
 msgstr "Letzter angemeldeter Benutzer"
 
@@ -1578,6 +1533,10 @@ msgstr "Vom Agenten entdeckter Arbeitsspeicher"
 #: templates/Pages/Client/General.latte
 msgid "RAM reported by OS"
 msgstr "Arbeitsspeicher lt. Betriebssystem"
+
+#: templates/Pages/Client/General.latte
+msgid "Swap memory"
+msgstr "Auslagerungsspeicher"
 
 #: templates/Pages/Client/General.latte
 msgid "User Agent"
@@ -1761,6 +1720,11 @@ msgid "Exclude search results from a group."
 msgstr "Suchergebnisse aus einer Gruppe ausschließen."
 
 #: templates/Pages/Group/AddToGroup.latte
+#: templates/Pages/Search/SearchResults.latte
+msgid "Save to group"
+msgstr "In Gruppe speichern"
+
+#: templates/Pages/Group/AddToGroup.latte
 msgid "Store in existing group"
 msgstr "In vorhandener Gruppe speichern"
 
@@ -1826,6 +1790,34 @@ msgstr "Bei Braintacle anmelden"
 #: templates/Pages/Login.latte
 msgid "Username"
 msgstr "Benutzername"
+
+#: templates/Pages/Search/SearchForm.latte
+msgid "Exact match"
+msgstr "Exakte Übereinstimmung"
+
+#: templates/Pages/Search/SearchForm.latte
+msgid "Invert results"
+msgstr "Ergebnisse invertieren"
+
+#: templates/Pages/Search/SearchForm.latte
+msgid "Operator"
+msgstr "Operator"
+
+#: templates/Pages/Search/SearchForm.latte
+msgid "Search for"
+msgstr "Suche nach"
+
+#: templates/Pages/Search/SearchForm.latte
+msgid "Substring match, wildcards '?' and '*' allowed"
+msgstr "Teilzeichenfolge, Platzhalter '?' und '*' erlaubt"
+
+#: templates/Pages/Search/SearchResults.latte
+msgid "%d matches"
+msgstr "%d Treffer"
+
+#: templates/Pages/Search/SearchResults.latte
+msgid "Edit filter"
+msgstr "Filter bearbeiten"
 
 #: templates/Pages/Software.latte
 msgid "Accept selected"

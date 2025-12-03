@@ -24,7 +24,6 @@ namespace Console\Controller;
 
 use Braintacle\FlashMessages;
 use Braintacle\Http\RouteHelper;
-use Console\View\Helper\Form\Search;
 use Laminas\Stdlib\RequestInterface;
 use Laminas\Stdlib\ResponseInterface;
 
@@ -114,9 +113,6 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
      *   available)
      * - jumpto: Subpage (action) for the client link (default: general)
      *
-     * This action also acts as a handler for the search form (via GET method),
-     * denoted by the presence of the customSearch parameter.
-     *
      * @return array|\Laminas\Http\Response array(filter, search, operator,
      * invert, columns[], jumpto, isCustomSearch, order, direction) or redirect
      * response in case of invalid search form data
@@ -124,56 +120,30 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
     public function indexAction()
     {
         $params = $this->params();
-        if ($params->fromQuery('customSearch')) {
-            // Submitted from search form
-            $form = $this->_formManager->get('Console\Form\Search');
-            $form->remove('_csrf');
-            $form->setData($params->fromQuery());
-            if ($form->isValid()) {
-                $isCustomSearch = true;
 
-                $data = $form->getData();
-                $filter = $data['filter'];
-                $search = $data['search'];
-                $operator = $data['operator'];
-                $invert = $data['invert'];
+        $filter = $params->fromQuery('filter');
+        $search = $params->fromQuery('search');
+        $invert = $params->fromQuery('invert');
+        $operator = $params->fromQuery('operator');
 
-                // Request minimal column list and add columns for non-equality searches
-                $columns = array('Name', 'UserName', 'InventoryDate');
-                if (($invert or $data['operator'] != 'eq') and !in_array($filter, $columns)) {
-                    $columns[] = $filter;
-                }
-            } else {
-                return $this->redirectToRoute('client', 'search', $params->fromQuery());
+        if (!$filter) {
+            $index = 1;
+            while ($params->fromQuery('filter' . $index)) {
+                $filter[] = $params->fromQuery('filter' . $index);
+                $search[] = $params->fromQuery('search' . $index);
+                $operator[] = $params->fromQuery('operator' . $index);
+                $invert[] = $params->fromQuery('invert' . $index);
+                $index++;
             }
-        } else {
-            // Direct query via URL with optional builtin filter
-            $isCustomSearch = false;
-
-            $filter = $params->fromQuery('filter');
-            $search = $params->fromQuery('search');
-            $invert = $params->fromQuery('invert');
-            $operator = $params->fromQuery('operator');
-
-            if (!$filter) {
-                $index = 1;
-                while ($params->fromQuery('filter' . $index)) {
-                    $filter[] = $params->fromQuery('filter' . $index);
-                    $search[] = $params->fromQuery('search' . $index);
-                    $operator[] = $params->fromQuery('operator' . $index);
-                    $invert[] = $params->fromQuery('invert' . $index);
-                    $index++;
-                }
-            }
-
-            $columns = explode(
-                ',',
-                $params->fromQuery(
-                    'columns',
-                    'Name,UserName,OsName,Type,CpuClock,PhysicalMemory,InventoryDate'
-                )
-            );
         }
+
+        $columns = explode(
+            ',',
+            $params->fromQuery(
+                'columns',
+                'Name,UserName,OsName,Type,CpuClock,PhysicalMemory,InventoryDate'
+            )
+        );
 
         $vars = $this->getOrder('InventoryDate', 'desc');
         $vars['clients'] = $this->_clientManager->getClients(
@@ -198,7 +168,6 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
         $vars['search'] = $search;
         $vars['operator'] = $operator;
         $vars['invert'] = $invert;
-        $vars['isCustomSearch'] = $isCustomSearch;
         $vars['columns'] = $columns;
         $vars['routeHelper'] = $this->routeHelper;
         $vars['successMessages'] = $this->flashMessages->get(FlashMessages::Success);
@@ -360,30 +329,6 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
             'client' => $this->_currentClient,
             'form' => $form
         );
-    }
-
-    /**
-     * Show search form (handled by index action)
-     *
-     * Params (optional): filter, search, operator, invert
-     *
-     * @return \Laminas\View\Model\ViewModel Form template
-     */
-    public function searchAction()
-    {
-        $this->getEvent()->setParam('template', 'MainMenu/SearchMenuLayout.latte');
-
-        $form = $this->_formManager->get('Console\Form\Search');
-        $form->remove('_csrf');
-        $data = $this->params()->fromQuery();
-        if (isset($data['filter'])) {
-            $form->setData($data);
-            $form->isValid(); // Set validation messages
-        }
-        $form->setAttribute('method', 'GET');
-        $form->setAttribute('action', $this->urlFromRoute('client', 'index'));
-
-        return $this->printForm($form, Search::class);
     }
 
     /**

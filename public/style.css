@@ -409,12 +409,11 @@ form.form_package, form.form_search {
     grid-template-columns: [label-start] 40% [label-end element-start] max-content [element-end];
     grid-gap: 2ex;
 }
-.form_package label, .form_search label {
+.form_package label {
     display: contents;
 }
 .label,
-.form_package label span,
-.form_search label span {
+.form_package label span {
     grid-column: label;
     text-align: right;
     align-self: center;
@@ -422,11 +421,7 @@ form.form_package, form.form_search {
 .form_package input,
 .form_package select,
 .form_package .errors,
-.form_package_update fieldset,
-.form_search input,
-.form_search select,
-.form_search .errors
-{
+.form_package_update fieldset {
     grid-column: element;
     justify-self: start;
 }

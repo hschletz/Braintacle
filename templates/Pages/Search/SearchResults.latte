@@ -1,0 +1,48 @@
+{layout ../../MainMenu/SearchMenuLayout.latte}
+{import ../../SortableHeader.latte}
+
+{block content}
+
+<link rel="stylesheet" href="{assetUrl('css/search_results.css')}">
+
+<div class="tableWithCounter">
+    {foreach $clients as $client}
+        {first}
+            <table class="alternating">
+                <tr>
+                    <th>{include sortableHeader, 'Name', translate('Name'), extraQuery: $queryString}</th>
+                    <th>{include sortableHeader, 'UserName', translate('User'), extraQuery: $queryString}</th>
+                    <th>{include sortableHeader, 'InventoryDate', translate('Last inventory'), extraQuery: $queryString}</th>
+                    <th n:ifset="$extraColumn" n:class="$extraType == number ? textright">
+                        {include sortableHeader, $extraColumn, $extraHeader, extraQuery: $queryString}
+                    </th>
+                </tr>
+        {/first}
+                <tr>
+                    <td>
+                        <a href="{pathForRoute(showClientGeneral, [id: $client->id])}">{$client->name}</a>
+                    </td>
+                    <td>{$client->userName}</td>
+                    <td>{$client->inventoryDate|localDate: date: short, time: short}</td>
+                    <td n:ifset="$extraColumn" n:class="$extraType == number ? textright">
+                        {if $extraType == date}
+                            {$client[$extraColumn]|localDate: date: short}
+                        {else}
+                            {$client[$extraColumn]}
+                        {/if}
+                    </td>
+                </tr>
+        {last}
+            </table>
+            {var $counter = $iterator->counter}
+        {/last}
+    {/foreach}
+
+    <div class="textcenter">
+        <p>{translate('%d matches', $counter ?? 0)}</p>
+        <p id="searchResultLinks">
+            <a href="{pathForRoute(searchPage)}?{$queryString}">{translate('Edit filter')}</a>
+            <a href="{pathForRoute(addGroupPage)}?{$queryString}">{translate('Save to group')}</a>
+        </p>
+    </div>
+</div>

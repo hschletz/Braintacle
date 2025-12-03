@@ -131,62 +131,13 @@ $renderCallbacks = array(
 
 foreach ($this->columns as $column) {
     $column = ucfirst($column);
-    if (preg_match('/^(Registry|CustomFields)\.(.+)/', $column, $matches)) {
-        // Extract column header from name
-        $headers[$column] = $matches[2];
-        if ($matches[1] == 'CustomFields') {
-            if ($matches[2] == 'TAG') {
-                $headers[$column] = $this->translate('Category');
-            } else {
-                $renderCallbacks[$column] = function ($view, $client, $property) {
-                    $value = $client[$property];
-                    if ($value instanceof \DateTime) {
-                        $value = $this->dateFormat($value, \IntlDateFormatter::MEDIUM, \IntlDateFormatter::NONE);
-                    }
-                    return $view->escapeHtml($value);
-                };
-            }
-        }
-    } else {
-        $headers[$column] = $allHeaders[$column];
-    }
+    $headers[$column] = $allHeaders[$column];
 }
 
 $filter = $this->filter;
 $count = count($this->clients);
 if ($filter) {
-    $search = $this->search;
-    if ($this->isCustomSearch) {
-        // Display the number of results and links to edit the filter or add it
-        // to a group.
-        if ($search instanceof \DateTime) {
-            $search = $search->format('Y-m-d');
-        }
-        $params = array(
-            'filter' => $filter,
-            'search' => $search,
-            'operator' => $this->operator,
-            'invert' => $this->invert,
-        );
-        $header = sprintf($this->translate('%d matches'), $count)
-            . "<br>\n"
-            . $this->htmlElement(
-                'a',
-                $this->translate('Edit filter'),
-                array('href' => $this->consoleUrl('client', 'search', $params)),
-                true
-            )
-            . "\n&nbsp;&nbsp;&nbsp;\n"
-            . $this->htmlElement(
-                'a',
-                $this->translate('Save to group'),
-                array('href' => $this->consoleUrl('group', 'add', $params)),
-                true
-            );
-    } else {
-        // For fixed filters, print a nicer description.
-        $header = $this->filterDescription($filter, $search, $count);
-    }
+    $header = $this->filterDescription($filter, $this->search, $count);
 } else {
     $header = sprintf(
         $this->translate('Number of clients: %d'),

@@ -26,14 +26,10 @@ use Braintacle\FlashMessages;
 use Braintacle\Http\RouteHelper;
 use Console\Form\Import;
 use Console\Form\ProductKey;
-use Console\Form\Search as SearchForm;
-use Console\Mvc\Controller\Plugin\PrintForm;
 use Console\Test\AbstractControllerTestCase;
-use Console\View\Helper\Form\Search as SearchHelper;
 use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Text;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
-use Laminas\View\Model\ViewModel;
 use Library\Form\Element\Submit;
 use Model\Client\AndroidInstallation;
 use Model\Client\Client;
@@ -143,7 +139,6 @@ class ClientControllerTest extends AbstractControllerTestCase
         $formManager->setService('Console\Form\CustomFields', $this->createMock('Console\Form\CustomFields'));
         $formManager->setService('Console\Form\Import', $this->createMock(Import::class));
         $formManager->setService('Console\Form\ProductKey', $this->createMock('Console\Form\ProductKey'));
-        $formManager->setService('Console\Form\Search', $this->createMock('Console\Form\Search'));
     }
 
     public function testInvalidClient()
@@ -162,9 +157,6 @@ class ClientControllerTest extends AbstractControllerTestCase
 
     public function testIndexActionWithoutParams()
     {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->never())
-            ->method('setData');
         $this->_clientManager->expects($this->once())
             ->method('getClients')
             ->with(
@@ -192,9 +184,6 @@ class ClientControllerTest extends AbstractControllerTestCase
 
     public function testIndexActionWithColumnList()
     {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->never())
-            ->method('setData');
         $this->_clientManager->expects($this->once())
             ->method('getClients')
             ->with(
@@ -243,9 +232,6 @@ class ClientControllerTest extends AbstractControllerTestCase
 
     public function testIndexActionWithValidJumpto()
     {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->never())
-            ->method('setData');
         $this->_clientManager->expects($this->once())->method('getClients')->willReturn($this->_sampleClients);
 
         $this->dispatch('/console/client/index/?jumpto=software');
@@ -258,9 +244,6 @@ class ClientControllerTest extends AbstractControllerTestCase
 
     public function testIndexActionWithInvalidJumpto()
     {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->never())
-            ->method('setData');
         $this->_clientManager->expects($this->once())->method('getClients')->willReturn($this->_sampleClients);
 
         $this->dispatch('/console/client/index/?jumpto=invalid');
@@ -273,9 +256,6 @@ class ClientControllerTest extends AbstractControllerTestCase
 
     public function testIndexActionWithBuiltinSingleFilter()
     {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->never())
-            ->method('setData');
         $this->_clientManager->expects($this->once())
             ->method('getClients')
             ->with(
@@ -300,9 +280,6 @@ class ClientControllerTest extends AbstractControllerTestCase
 
     public function testIndexActionWithBuiltinMultiFilter()
     {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->never())
-            ->method('setData');
         $this->_clientManager->expects($this->once())
             ->method('getClients')
             ->with(
@@ -331,9 +308,6 @@ class ClientControllerTest extends AbstractControllerTestCase
 
     public function testIndexActionWithBuiltinDistinctFilter()
     {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->never())
-            ->method('setData');
         $this->_clientManager->expects($this->once())
             ->method('getClients')
             ->with(
@@ -350,405 +324,6 @@ class ClientControllerTest extends AbstractControllerTestCase
             ->willReturn($this->_sampleClients);
         $this->dispatch('/console/client/index/?filter=Software&search=name&distinct=');
         $this->assertResponseStatusCode(200);
-    }
-
-    public function testIndexActionWithCustomEqualitySearchOnDefaultColumn()
-    {
-        $formData = array(
-            'filter' => 'Name',
-            'search' => 'test',
-            'operator' => 'eq',
-            'invert' => '1',
-            'customSearch' => 'button',
-        );
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->once())
-            ->method('setData')
-            ->with($formData);
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
-        $form->expects($this->once())
-            ->method('getData')
-            ->will($this->returnValue($formData));
-        $this->_clientManager->expects($this->once())
-            ->method('getClients')
-            ->with(
-                array('Name', 'UserName', 'InventoryDate'),
-                'InventoryDate',
-                'desc',
-                'Name',
-                'test',
-                'eq',
-                '1',
-                true,
-                false
-            )
-            ->willReturn($this->_sampleClients);
-        $query = 'filter=Name&search=test&operator=eq&invert=1';
-        $this->dispatch("/console/client/index/?customSearch=button&$query");
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery(
-            '//p[@class="textcenter"][contains(text(), "2 Treffer")]'
-        );
-        $this->assertXpathQuery(
-            "//p[@class='textcenter']/a[@href='/console/client/search/?$query'][text()='Filter bearbeiten']"
-        );
-        $this->assertXpathQuery(
-            "//p[@class='textcenter']/a[@href='/console/group/add/?$query'][text()='In Gruppe speichern']"
-        );
-    }
-
-    public function testIndexActionWithCustomEqualitySearchOnDateColumn()
-    {
-        $date = new \DateTime('2014-05-12');
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->once())
-            ->method('setData')
-            ->with(
-                array(
-                    'filter' => 'InventoryDate',
-                    'search' => '2014-05-12',
-                    'operator' => 'eq',
-                    'invert' => '1',
-                    'customSearch' => 'button',
-                )
-            );
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
-        $form->expects($this->once())
-            ->method('getData')
-            ->will(
-                $this->returnValue(
-                    array(
-                        'filter' => 'InventoryDate',
-                        'search' => $date,
-                        'operator' => 'eq',
-                        'invert' => '1',
-                        'customSearch' => 'button',
-                    )
-                )
-            );
-        $this->_clientManager->expects($this->once())
-            ->method('getClients')
-            ->with(
-                array('Name', 'UserName', 'InventoryDate'),
-                'InventoryDate',
-                'desc',
-                'InventoryDate',
-                $date,
-                'eq',
-                '1',
-                true,
-                false
-            )
-            ->willReturn($this->_sampleClients);
-        $query = 'filter=InventoryDate&search=2014-05-12&operator=eq&invert=1';
-        $this->dispatch("/console/client/index/?customSearch=button&$query");
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery(
-            "//p[@class='textcenter']/a[@href='/console/group/add/?$query'][text()='In Gruppe speichern']"
-        );
-    }
-
-    public function testIndexActionWithCustomEqualitySearchOnNonDefaultColumn()
-    {
-        // Equality search should not add the searched column.
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
-        $form->expects($this->once())
-            ->method('getData')
-            ->will(
-                $this->returnValue(
-                    array(
-                        'filter' => 'CpuType',
-                        'search' => 'value',
-                        'operator' => 'eq',
-                        'invert' => '0',
-                        'customSearch' => 'button',
-                    )
-                )
-            );
-        $this->_clientManager->expects($this->once())
-            ->method('getClients')
-            ->with(
-                array('Name', 'UserName', 'InventoryDate'),
-                'InventoryDate',
-                'desc',
-                'CpuType',
-                'value',
-                'eq',
-                '0',
-                true,
-                false
-            )
-            ->willReturn(array());
-        $query = 'filter=CpuType&search=value&operator=eq&invert=0';
-        $this->dispatch("/console/client/index/?customSearch=button&$query");
-        $this->assertResponseStatusCode(200);
-    }
-
-    public function testIndexActionWithCustomNonEqualitySearchOnNonDefaultColumn()
-    {
-        // Non-equality search should add the searched column.
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
-        $form->expects($this->once())
-            ->method('getData')
-            ->will(
-                $this->returnValue(
-                    array(
-                        'filter' => 'CpuType',
-                        'search' => 'value',
-                        'operator' => 'ne',
-                        'invert' => '0',
-                        'customSearch' => 'button',
-                    )
-                )
-            );
-        $this->_clientManager->expects($this->once())
-            ->method('getClients')
-            ->with(
-                array('Name', 'UserName', 'InventoryDate', 'CpuType'),
-                'InventoryDate',
-                'desc',
-                'CpuType',
-                'value',
-                'ne',
-                '0',
-                true,
-                false
-            )
-            ->willReturn(array());
-        $query = 'filter=CpuType&search=value&operator=ne&invert=0';
-        $this->dispatch("/console/client/index/?customSearch=button&$query");
-        $this->assertResponseStatusCode(200);
-    }
-
-    public function testIndexActionWithCustomInvertedEqualitySearchOnNonDefaultColumn()
-    {
-        // Inverted equality search should add the searched column.
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
-        $form->expects($this->once())
-            ->method('getData')
-            ->will(
-                $this->returnValue(
-                    array(
-                        'filter' => 'CpuType',
-                        'search' => 'value',
-                        'operator' => 'eq',
-                        'invert' => '1',
-                        'customSearch' => 'button',
-                    )
-                )
-            );
-        $this->_clientManager->expects($this->once())
-            ->method('getClients')
-            ->with(
-                array('Name', 'UserName', 'InventoryDate', 'CpuType'),
-                'InventoryDate',
-                'desc',
-                'CpuType',
-                'value',
-                'eq',
-                '1',
-                true,
-                false
-            )
-            ->willReturn(array());
-        $query = 'filter=CpuType&search=value&operator=eq&invert=1';
-        $this->dispatch("/console/client/index/?customSearch=button&$query");
-        $this->assertResponseStatusCode(200);
-    }
-
-    public function testIndexActionWithCustomSearchOnRegistry()
-    {
-        $formData = array(
-            'filter' => 'Registry.value',
-            'search' => 'test',
-            'operator' => 'like',
-            'invert' => '0',
-            'customSearch' => 'button',
-        );
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->once())
-            ->method('setData')
-            ->with($formData);
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
-        $form->expects($this->once())
-            ->method('getData')
-            ->will($this->returnValue($formData));
-        $this->_clientManager->expects($this->once())
-            ->method('getClients')
-            ->with(
-                array('Name', 'UserName', 'InventoryDate', 'Registry.value'),
-                'InventoryDate',
-                'desc',
-                'Registry.value',
-                'test',
-                'like',
-                '0',
-                true,
-                false
-            )
-            ->willReturn($this->_sampleClients);
-        $query = 'filter=Registry.value&search=test&operator=like&invert=0';
-        $this->dispatch("/console/client/index/?customSearch=button&$query");
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//th/a', "value");
-    }
-
-    public function testIndexActionWithCustomSearchOnCustomFieldText()
-    {
-        $formData = array(
-            'filter' => 'CustomFields.customField',
-            'search' => 'test',
-            'operator' => 'like',
-            'invert' => '0',
-            'customSearch' => 'button',
-        );
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->once())
-            ->method('setData')
-            ->with($formData);
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
-        $form->expects($this->once())
-            ->method('getData')
-            ->will($this->returnValue($formData));
-        $this->_clientManager->expects($this->once())
-            ->method('getClients')
-            ->with(
-                array('Name', 'UserName', 'InventoryDate', 'CustomFields.customField'),
-                'InventoryDate',
-                'desc',
-                'CustomFields.customField',
-                'test',
-                'like',
-                '0',
-                true,
-                false
-            )
-            ->willReturn($this->_sampleClients);
-        $query = 'filter=CustomFields.customField&search=test&operator=like&invert=0';
-        $this->dispatch("/console/client/index/?customSearch=button&$query");
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//th/a', "customField");
-        $this->assertXpathQueryContentContains('//tr[2]/td[4]', "\n<custom1>\n");
-        $this->assertXpathQueryContentContains('//tr[3]/td[4]', "\n<custom2>\n");
-    }
-
-    public function testIndexActionWithCustomSearchOnCustomFieldDate()
-    {
-        $formData = array(
-            'filter' => 'CustomFields.customField',
-            'search' => 'test',
-            'operator' => 'like',
-            'invert' => '0',
-            'customSearch' => 'button',
-        );
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->once())
-            ->method('setData')
-            ->with($formData);
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
-        $form->expects($this->once())
-            ->method('getData')
-            ->will($this->returnValue($formData));
-
-        $sampleClients = $this->_sampleClients;
-        $sampleClients[0]['CustomFields.customField'] = new \DateTime('2015-04-11 10:31:00');
-        $sampleClients[1]['CustomFields.customField'] = new \DateTime('2015-04-12 10:32:00');
-        $this->_clientManager->expects($this->once())
-            ->method('getClients')
-            ->with(
-                array('Name', 'UserName', 'InventoryDate', 'CustomFields.customField'),
-                'InventoryDate',
-                'desc',
-                'CustomFields.customField',
-                'test',
-                'like',
-                '0',
-                true,
-                false
-            )
-            ->willReturn($sampleClients);
-        $query = 'filter=CustomFields.customField&search=test&operator=like&invert=0';
-        $this->dispatch("/console/client/index/?customSearch=button&$query");
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//th/a', "customField");
-        $this->assertXpathQueryContentContains('//tr[2]/td[4]', "\n11.04.2015\n");
-        $this->assertXpathQueryContentContains('//tr[3]/td[4]', "\n12.04.2015\n");
-    }
-
-    public function testIndexActionWithCustomSearchOnCategory()
-    {
-        $formData = array(
-            'filter' => 'CustomFields.TAG',
-            'search' => 'test',
-            'operator' => 'like',
-            'invert' => '0',
-            'customSearch' => 'button',
-        );
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->once())
-            ->method('setData')
-            ->with($formData);
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
-        $form->expects($this->once())
-            ->method('getData')
-            ->will($this->returnValue($formData));
-        $this->_clientManager->expects($this->once())
-            ->method('getClients')
-            ->with(
-                array('Name', 'UserName', 'InventoryDate', 'CustomFields.TAG'),
-                'InventoryDate',
-                'desc',
-                'CustomFields.TAG',
-                'test',
-                'like',
-                '0',
-                true,
-                false
-            )
-            ->willReturn($this->_sampleClients);
-        $query = 'filter=CustomFields.TAG&search=test&operator=like&invert=0';
-        $this->dispatch("/console/client/index/?customSearch=button&$query");
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//th/a', "Kategorie");
-        $this->assertXpathQueryContentContains('//tr[2]/td[4]', "\ncategory1\n");
-        $this->assertXpathQueryContentContains('//tr[3]/td[4]', "\ncategory2\n");
-    }
-
-    public function testIndexActionWithInvalidCustomSearch()
-    {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Search');
-        $form->expects($this->once())
-            ->method('setData');
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(false));
-        $form->expects($this->never())
-            ->method('getData');
-        $this->_clientManager->expects($this->never())->method('getClients');
-        $query = 'filter=CpuClock&search=invalid&operator=lt&invert=1';
-        $this->dispatch("/console/client/index/?customSearch=button&$query");
-        $this->assertRedirectTo("/console/client/search/?customSearch=button&$query");
     }
 
     public function testIndexActionMessages()
@@ -1930,72 +1505,6 @@ class ClientControllerTest extends AbstractControllerTestCase
             'Die Informationen wurden aktualisiert.',
             $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
         );
-    }
-
-    public function testSearchActionNoPreset()
-    {
-        $serviceManager = $this->getApplicationServiceLocator();
-
-        $form = $serviceManager->get('FormElementManager')->get(SearchForm::class);
-        $form->expects($this->never())
-            ->method('setData');
-        $form->expects($this->never())
-            ->method('isValid');
-        $form->expects($this->once())
-            ->method('remove')
-            ->with('_csrf');
-        $form->expects($this->exactly(2))
-            ->method('setAttribute')
-            ->with(
-                $this->matchesRegularExpression('#^(method|action)$#'),
-                $this->matchesRegularExpression('#^(GET|/console/client/index/)$#')
-            );
-
-
-        $viewModel = new ViewModel();
-
-        $printForm = $this->createMock(PrintForm::class);
-        $printForm->method('__invoke')->with($form, SearchHelper::class)->willReturn($viewModel);
-
-        $serviceManager->get('ControllerPluginManager')->setService('printForm', $printForm);
-
-        $this->interceptRenderEvent();
-        $this->dispatch('/console/client/search/');
-        $this->assertResponseStatusCode(200);
-        $this->assertMvcResult($viewModel);
-    }
-
-    public function testSearchActionPreset()
-    {
-        $serviceManager = $this->getApplicationServiceLocator();
-
-        $form = $serviceManager->get('FormElementManager')->get(SearchForm::class);
-        $form->expects($this->once())
-            ->method('setData')
-            ->with(['filter' => 'Name', 'search' => 'value']);
-        $form->expects($this->once())
-            ->method('isValid');
-        $form->expects($this->once())
-            ->method('remove')
-            ->with('_csrf');
-        $form->expects($this->exactly(2))
-            ->method('setAttribute')
-            ->with(
-                $this->matchesRegularExpression('#^(method|action)$#'),
-                $this->matchesRegularExpression('#^(GET|/console/client/index/)$#')
-            );
-
-        $viewModel = new ViewModel();
-
-        $printForm = $this->createMock(PrintForm::class);
-        $printForm->method('__invoke')->with($form, SearchHelper::class)->willReturn($viewModel);
-
-        $serviceManager->get('ControllerPluginManager')->setService('printForm', $printForm);
-
-        $this->interceptRenderEvent();
-        $this->dispatch('/console/client/search/?filter=Name&search=value');
-        $this->assertResponseStatusCode(200);
-        $this->assertMvcResult($viewModel);
     }
 
     public function testImportActionGet()

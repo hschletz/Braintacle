@@ -2,7 +2,7 @@
 
 namespace Braintacle\Search;
 
-use Braintacle\Transformer\ToBool;
+use Formotron\Attribute\KeyOnly;
 use Formotron\Attribute\UseBackingValue;
 use Formotron\Attribute\Validate;
 
@@ -14,7 +14,7 @@ class SearchParams
     /**
      * Filter type.
      */
-    #[Validate(SearchFilterValidator::class)]
+    #[Validate(SearchFilters::class)]
     public string $filter;
 
     /**
@@ -31,6 +31,6 @@ class SearchParams
     /**
      * Invert search results, i.e. return clients that don't match search criteria.
      */
-    #[ToBool(trueValue: '1', falseValue: '0')]
+    #[KeyOnly]
     public bool $invert;
 }

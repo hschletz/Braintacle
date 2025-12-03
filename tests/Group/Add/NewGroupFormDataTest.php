@@ -4,10 +4,9 @@ namespace Braintacle\Test\Group\Add;
 
 use Braintacle\Group\Add\NewGroupFormData;
 use Braintacle\Group\Membership;
-use Braintacle\Search\SearchFilterValidator;
+use Braintacle\Search\SearchFilters;
 use Braintacle\Search\SearchOperator;
 use Braintacle\Test\CsrfFormProcessorTestTrait;
-use Braintacle\Transformer\ToBool;
 use Braintacle\Transformer\TrimAndNullify;
 use Braintacle\Validator\AssertStringLength;
 use InvalidArgumentException;
@@ -17,7 +16,6 @@ use PHPUnit\Framework\TestCase;
 
 #[CoversClass(NewGroupFormData::class)]
 #[UsesClass(AssertStringLength::class)]
-#[UsesClass(ToBool::class)]
 #[UsesClass(TrimAndNullify::class)]
 class NewGroupFormDataTest extends TestCase
 {
@@ -26,10 +24,10 @@ class NewGroupFormDataTest extends TestCase
     private function getFormData(
         string $name,
         string $description,
-        ?SearchFilterValidator $searchFilterValidator = null,
+        ?SearchFilters $searchFilters = null,
     ): NewGroupFormData {
         $dataProcessor = $this->createDataProcessor([
-            SearchFilterValidator::class => $searchFilterValidator ?? $this->createStub(SearchFilterValidator::class),
+            SearchFilters::class => $searchFilters ?? $this->createStub(SearchFilters::class),
         ]);
         $formData = $dataProcessor->process([
             'filter' => '_filter',
@@ -96,10 +94,10 @@ class NewGroupFormDataTest extends TestCase
 
     public function testSearchFilterValidator()
     {
-        $searchFilterValidator = $this->createMock(SearchFilterValidator::class);
-        $searchFilterValidator->expects($this->once())->method('validate')->with('_filter', []);
+        $searchFilters = $this->createMock(SearchFilters::class);
+        $searchFilters->expects($this->once())->method('validate')->with('_filter', []);
 
-        $formData = $this->getFormData('name', '', $searchFilterValidator);
+        $formData = $this->getFormData('name', '', $searchFilters);
         $this->assertEquals('_filter', $formData->filter);
     }
 }

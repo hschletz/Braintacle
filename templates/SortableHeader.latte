@@ -1,5 +1,5 @@
 {* Create hyperlink for sortable table headers. Depends on global variables $order and $direction. *}
-{define sortableHeader, string $key, string $label, array $extraParams = []}
+{define sortableHeader, string $key, string $label, array $extraParams = [], ?string $extraQuery = null}
     {var $arrow = ''}
     {if $key == $order}
         {* add arrow indicator to currently sorted column and invert direction for the hyperlink. *}
@@ -14,7 +14,7 @@
         {* use ascending ordering for every other hyperlink. *}
         {var $linkDirection = 'asc'}
     {/if}
-    <a href="?{$extraParams + [order: $key, direction: $linkDirection] | query}">
+    <a href="?{$extraParams + [order: $key, direction: $linkDirection] | query}{$extraQuery ? '&' . $extraQuery : ''}">
         {$label}{$arrow|noescape}
     </a>
 {/define}

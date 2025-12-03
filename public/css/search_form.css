@@ -1,0 +1,23 @@
+form.form_search {
+    margin: 2ex;
+    display: grid;
+    grid-template-columns: [label-start] 40% [label-end element-start] max-content [element-end];
+    grid-gap: 2ex;
+
+    label {
+        display: contents;
+
+        span {
+            grid-column: label;
+            text-align: right;
+            align-self: center;
+        }
+    }
+
+    button,
+    input,
+    select {
+        grid-column: element;
+        justify-self: start;
+    }
+}
