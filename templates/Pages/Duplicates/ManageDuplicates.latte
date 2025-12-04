@@ -13,7 +13,7 @@
     <button n:ifset="$value" type="button" class="linkstyle" data-criterion="{$criterion}">{$value}</button>
 {/define}
 {define mergeOption, string $name, bool $checked, string $label}
-    <label><input type="checkbox" name="mergeOptions[]" value="{$name}" n:attr="checked => $checked == 1">{$label}</label>
+    <label><input type="checkbox" name="mergeOptions[]" value="{$name}" checked={$checked == 1}>{$label}</label>
 {/define}
 
 <ul class="error"></ul>

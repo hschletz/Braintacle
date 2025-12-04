@@ -8,9 +8,9 @@
 {block networks}
     <label>
         <span>{translate('Always scan this network')}</span>
-        <select name="scanThisNetwork" n:attr="disabled: !$networks">
+        <select name="scanThisNetwork" disabled={!$networks}>
             <option></option>
-            <option n:foreach="$networks as $network" n:attr="selected: $values[scanThisNetwork] == $network">{$network}</option>
+            <option n:foreach="$networks as $network" selected={$values[scanThisNetwork] == $network}>{$network}</option>
         </select>
     </label>
 {/block}

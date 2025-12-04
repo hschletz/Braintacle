@@ -12,10 +12,10 @@
             <label>
                 <span>{translate('Filter')}</span>
                 <select name="filter">
-                    <option value="accepted" n:attr="selected => $filter == 'accepted'">{translate('selected for display')}</option>
-                    <option value="ignored" n:attr="selected => $filter == 'ignored'">{translate('ignored for display')}</option>
-                    <option value="new" n:attr="selected => $filter == 'new'">{translate('new or not categorized')}</option>
-                    <option value="all" n:attr="selected => $filter == 'all'">{translate('all')}</option>
+                    <option value="accepted" selected={$filter == accepted}>{translate('selected for display')}</option>
+                    <option value="ignored" selected={$filter == ignored}>{translate('ignored for display')}</option>
+                    <option value="new" selected={$filter == 'new'}>{translate('new or not categorized')}</option>
+                    <option value="all" selected={$filter == all}>{translate('all')}</option>
                 </select>
             </label>
         </div>

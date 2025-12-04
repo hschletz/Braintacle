@@ -8,7 +8,7 @@
         {var $url = pathForRoute($route, [], [id: $client->id])}
     {/try}
     {default $url = pathForRoute($route, [id: $client->id])}
-    <li n:class="$action == $currentAction ? active">
+    <li class={[active: $action == $currentAction]}>
         <a href="{$url}" n:attr="download => $action == export">{$label}</a>
     </li>
 {/define}
@@ -53,7 +53,7 @@
 >
     <p>{translate("Client '%s' will be permanently deleted. Continue?", $client->name)}</p>
     <label>
-        <input type="checkbox" n:attr="checked: (bool) option(defaultDeleteInterfaces)">
+        <input type="checkbox" checked={option(defaultDeleteInterfaces)}>
         {translate('Delete interfaces from network listing')}
     </label>
     {include ../../DialogButtons.latte}

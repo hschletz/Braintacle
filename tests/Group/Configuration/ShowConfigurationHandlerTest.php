@@ -104,14 +104,14 @@ final class ShowConfigurationHandlerTest extends TestCase
     public function testElementValuesDefault()
     {
         $xPath = $this->handleRequest();
-        $this->assertXpathMatches($xPath, '//input[@name="contactInterval"][@value=""]');
-        $this->assertXpathMatches($xPath, '//input[@name="inventoryInterval"][@value=""]');
+        $this->assertXpathMatches($xPath, '//input[@name="contactInterval"][not(@value)]');
+        $this->assertXpathMatches($xPath, '//input[@name="inventoryInterval"][not(@value)]');
         $this->assertXpathMatches($xPath, '//input[@name="packageDeployment"][not(@checked)]');
-        $this->assertXpathMatches($xPath, '//input[@name="downloadPeriodDelay"][@value=""]');
-        $this->assertXpathMatches($xPath, '//input[@name="downloadCycleDelay"][@value=""]');
-        $this->assertXpathMatches($xPath, '//input[@name="downloadFragmentDelay"][@value=""]');
-        $this->assertXpathMatches($xPath, '//input[@name="downloadMaxPriority"][@value=""]');
-        $this->assertXpathMatches($xPath, '//input[@name="downloadTimeout"][@value=""]');
+        $this->assertXpathMatches($xPath, '//input[@name="downloadPeriodDelay"][not(@value)]');
+        $this->assertXpathMatches($xPath, '//input[@name="downloadCycleDelay"][not(@value)]');
+        $this->assertXpathMatches($xPath, '//input[@name="downloadFragmentDelay"][not(@value)]');
+        $this->assertXpathMatches($xPath, '//input[@name="downloadMaxPriority"][not(@value)]');
+        $this->assertXpathMatches($xPath, '//input[@name="downloadTimeout"][not(@value)]');
         $this->assertXpathMatches($xPath, '//input[@name="allowScan"][not(@checked)]');
         $this->assertXpathMatches($xPath, '//input[@name="scanSnmp"][not(@checked)]');
     }

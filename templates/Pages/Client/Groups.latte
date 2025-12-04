@@ -34,7 +34,7 @@
                     <a href="{pathForRoute(showGroupGeneral, [], [name: $group])}">{$group}</a>
                 </legend>
                 <label n:foreach="$types as $type => $label">
-                    <input type="radio" name="groups[{$group}]" value="{$type}" n:attr="checked => $membershipType == $type">
+                    <input type="radio" name="groups[{$group}]" value="{$type}" checked={$membershipType == $type}>
                     {$label}
                 </label>
             </fieldset>

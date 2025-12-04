@@ -30,11 +30,11 @@
     </tr>
     <tr>
         <td class="label">{translate('Serial number')}</td>
-        <td n:class="$client['IsSerialBlacklisted'] ? blacklisted">{$client->serial}</td>
+        <td class={[blacklisted: $client[IsSerialBlacklisted]]}>{$client->serial}</td>
     </tr>
     <tr>
         <td class="label">{translate('Asset tag')}</td>
-        <td n:class="$client['IsAssetTagBlacklisted'] ? blacklisted">{$client->assetTag}</td>
+        <td class={[blacklisted: $client[IsAssetTagBlacklisted]]}>{$client->assetTag}</td>
     </tr>
     <tr>
         <td class="label">{translate('Type')}</td>

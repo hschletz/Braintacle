@@ -13,7 +13,7 @@
                     <th>{include sortableHeader, 'Name', translate('Name'), extraQuery: $queryString}</th>
                     <th>{include sortableHeader, 'UserName', translate('User'), extraQuery: $queryString}</th>
                     <th>{include sortableHeader, 'InventoryDate', translate('Last inventory'), extraQuery: $queryString}</th>
-                    <th n:ifset="$extraColumn" n:class="$extraType == number ? textright">
+                    <th n:ifset="$extraColumn" class={[textright: $extraType == number]}>
                         {include sortableHeader, $extraColumn, $extraHeader, extraQuery: $queryString}
                     </th>
                 </tr>
@@ -24,7 +24,7 @@
                     </td>
                     <td>{$client->userName}</td>
                     <td>{$client->inventoryDate|localDate: date: short, time: short}</td>
-                    <td n:ifset="$extraColumn" n:class="$extraType == number ? textright">
+                    <td n:ifset="$extraColumn" class={[textright: $extraType == number]}>
                         {if $extraType == date}
                             {$client[$extraColumn]|localDate: date: short}
                         {else}

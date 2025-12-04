@@ -1,6 +1,6 @@
 {* Header for Group subpages *}
 {define navigationItem, string $action, string $label, string $route}
-    <li n:class="$action == $currentAction ? active">
+    <li class={[active: $action == $currentAction]}>
         <a href="{pathForRoute($route)}?name={$group->name}">{$label}</a>
     </li>
 {/define}

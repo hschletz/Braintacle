@@ -34,7 +34,7 @@
             <option
                 n:foreach="$filters as $value => $label"
                 value="{$value}"
-                n:attr="selected: $value == $filter"
+                selected={$value == $filter}
             >
                 {$label}
             </option>
@@ -59,7 +59,7 @@
             <option
                 n:foreach="$filterType == 'text' ? $operatorsText : $operatorsOrdinal as $value => $label"
                 value="{$value}"
-                n:attr="selected => $value == $operator"
+                selected={$value == $operator}
             >
                 {$label}
             </option>
@@ -68,7 +68,7 @@
 
     <label>
         <span>{translate('Invert results')}</span>
-        <input type="checkbox" name="invert" n:attr="checked => $searchParams->invert ?? false">
+        <input type="checkbox" name="invert" checked={$searchParams->invert ?? false}>
     </label>
 
     <button type="submit">{translate('Search')}</button>

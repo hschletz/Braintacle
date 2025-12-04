@@ -18,7 +18,7 @@
 {define checkboxRow, string $name, string $label, bool $toggle}
     <label>
         <span>{$label}</span>
-        <input type="checkbox" name="{$name}" n:class="$toggle ? toggle" n:attr="checked: $values[$name]">
+        <input type="checkbox" name="{$name}" class={[toggle: $toggle]} checked={$values[$name]}>
         <span>
             ({$default}: {$defaults[$name] ? $yes : $no}{ifset $effectiveValues}, {$effective}: {$effectiveValues[$name] ? $yes : $no}{/ifset})
         </span>
