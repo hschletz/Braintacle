@@ -9,6 +9,7 @@ use DateInvalidTimeZoneException;
 use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 final class DateTimeTest extends TestCase
@@ -69,7 +70,11 @@ final class DateTimeTest extends TestCase
             public DateTimeInterface $value;
         };
 
-        $this->expectException(DateInvalidTimeZoneException::class);
+        $this->expectException(
+            class_exists(DateInvalidTimeZoneException::class) ?
+                DateInvalidTimeZoneException::class : // PHP 8.3+
+                Exception::class // PHP 8.2
+        );
         $this->processData(['value' => 'datetime value'], get_class($dataObject));
     }
 

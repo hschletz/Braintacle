@@ -89,6 +89,9 @@
         "allow-plugins": {
             "bamarni/composer-bin-plugin": true
         },
+        "platform": {
+            "php": "8.2.29"
+        },
         "sort-packages": true
     },
     "scripts": {

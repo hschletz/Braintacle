@@ -7,7 +7,6 @@ namespace Braintacle\Database\Migrations;
 use Braintacle\Database\Migration;
 use Braintacle\Database\Table;
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Schema\View;
 use Override;
 
 /** @codeCoverageIgnore */
@@ -22,7 +21,7 @@ final class Version20251006125034 extends Migration
     #[Override]
     public function up(Schema $schema): void
     {
-        $view = new View(Table::Groups, '
+        $view = $this->createView(Table::Groups, '
             SELECT
                 id,
                 name,

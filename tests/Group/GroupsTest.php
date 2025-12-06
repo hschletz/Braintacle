@@ -312,7 +312,7 @@ final class GroupsTest extends TestCase
             // as Epoch and converted to the appropriate format here.
             $format = $connection->getDatabasePlatform()->getDateTimeFormatString();
             array_walk($initialGroupsMain, function (array &$row) use ($format) {
-                $row[3] = DateTimeImmutable::createFromTimestamp($row[3])->format($format);
+                $row[3] = DateTimeImmutable::createFromFormat('U', $row[3])->format($format);
             });
 
             DatabaseConnection::initializeTable(

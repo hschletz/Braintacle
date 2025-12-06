@@ -8,6 +8,7 @@ use Doctrine\DBAL\Schema\Name\UnquotedIdentifierFolding;
 use Doctrine\DBAL\Schema\PrimaryKeyConstraint;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Schema\View;
 use Doctrine\Migrations\AbstractMigration;
 use Override;
 
@@ -44,7 +45,7 @@ abstract class Migration extends AbstractMigration
      */
     protected function viewExists(string $name): bool
     {
-        foreach ($this->sm->listViews() as $view) {
+        foreach ($this->sm->introspectViews() as $view) {
             $normalizedName = $view
                 ->getObjectName()
                 ->getUnqualifiedName()
@@ -56,6 +57,11 @@ abstract class Migration extends AbstractMigration
         }
 
         return false;
+    }
+
+    protected function createView(string $name, string $sql): View
+    {
+        return View::editor()->setUnquotedName($name)->setSQL($sql)->create();
     }
 
     /**

@@ -7,7 +7,6 @@ namespace Braintacle\Database\Migrations;
 use Braintacle\Database\Migration;
 use Braintacle\Database\Table;
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Schema\View;
 use Override;
 
 /** @codeCoverageIgnore */
@@ -69,7 +68,7 @@ final class Version20250315135545 extends Migration
                 'hardware_id = id'
             )->where("deviceid != '_SYSTEMGROUP_'");
 
-        $view = new View(Table::Clients, $queryBuilder->getSQL());
+        $view = $this->createView(Table::Clients, $queryBuilder->getSQL());
         $this->sm->createView($view);
     }
 }

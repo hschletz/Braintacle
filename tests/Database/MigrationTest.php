@@ -126,11 +126,11 @@ final class MigrationTest extends TestCase
 
     public function testViewExistsTrue()
     {
-        $view1 = new View('view1', '');
-        $view2 = new View('view2', '');
+        $view1 = View::editor()->setUnquotedName('view1')->setSQL('')->create();
+        $view2 = View::editor()->setUnquotedName('view2')->setSQL('')->create();
 
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
-        $schemaManager->method('listViews')->willReturn([$view1, $view2]);
+        $schemaManager->method('introspectViews')->willReturn([$view1, $view2]);
 
         $connection = $this->createStub(Connection::class);
         $connection->method('createSchemaManager')->willReturn($schemaManager);
@@ -156,6 +156,27 @@ final class MigrationTest extends TestCase
         $migration->up($schema);
     }
 
+    public function testCreateView()
+    {
+        $connection = $this->createStub(Connection::class);
+        $logger = $this->createStub(LoggerInterface::class);
+
+        $migration = new class($connection, $logger) extends Migration
+        {
+            #[Override]
+            public function up(Schema $schema): void
+            {
+                $view = $this->createView('viewName', 'SQL');
+
+                TestCase::assertEquals('viewName', $view->getObjectName()->toString());
+                TestCase::assertEquals('SQL', $view->getSql());
+            }
+        };
+
+        $schema = new Schema();
+        $migration->up($schema);
+    }
+
     public function testCreateTableDefaultEngine()
     {
         $connection = $this->createStub(Connection::class);
@@ -168,7 +189,7 @@ final class MigrationTest extends TestCase
             {
                 $table = $this->createTable($schema, 'tableName', 'a comment');
 
-                TestCase::assertEquals('tableName', $table->getName());
+                TestCase::assertEquals('tableName', $table->getObjectName()->toString());
                 TestCase::assertEquals('a comment', $table->getComment());
                 TestCase::assertEquals('InnoDB', $table->getOption('engine'));
             }
@@ -190,7 +211,7 @@ final class MigrationTest extends TestCase
             {
                 $table = $this->createTable($schema, 'tableName', 'a comment', 'otherEngine');
 
-                TestCase::assertEquals('tableName', $table->getName());
+                TestCase::assertEquals('tableName', $table->getObjectName()->toString());
                 TestCase::assertEquals('a comment', $table->getComment());
                 TestCase::assertEquals('otherEngine', $table->getOption('engine'));
             }
