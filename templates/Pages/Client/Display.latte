@@ -1,0 +1,49 @@
+{layout ClientMenuLayout.latte}
+{block content}
+
+{include Header.latte}
+
+<h2>{translate('Display controllers')}</h2>
+
+{* Assuming that every device has a display controller *}
+<table class="alternating">
+    <tr>
+        <th>{translate('Name')}</th>
+        <th>{translate('Chipset')}</th>
+        <th>{translate('Memory')}</th>
+        <th>{translate('Current resolution')}</th>
+    </tr>
+    <tr n:foreach="$controllers as $controller">
+        <td>{$controller->name}</td>
+        <td>{$controller->chipset}</td>
+        <td>{$controller->memory}&nbsp;MB</td>
+        <td>{$controller->currentResolution}</td>
+    </tr>
+</table>
+
+{* A device may run without a connected display *}
+{foreach $displays as $display}
+    {first}
+        <h2>{translate('Displays')}</h2>
+        <table class="alternating">
+            <tr>
+                <th>{translate('Manufacturer')}</th>
+                <th>{translate('Description')}</th>
+                <th>{translate('Serial number')}</th>
+                <th>{translate('EDID')}</th>
+                <th>{translate('Type')}</th>
+            </tr>
+    {/first}
+
+    <tr>
+        <td>{$display->manufacturer}</td>
+        <td>{$display->description}</td>
+        <td>{$display->serial}</td>
+        <td>{$display->edid}</td>
+        <td>{$display->type}</td>
+    </tr>
+
+    {last}
+        </table>
+    {/last}
+{/foreach}

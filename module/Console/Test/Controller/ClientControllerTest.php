@@ -799,66 +799,6 @@ class ClientControllerTest extends AbstractControllerTestCase
         $this->assertXpathQueryCount('//table[2]//th', 6); // Filesystems
     }
 
-    public function testDisplayActionNoDisplays()
-    {
-        $displayControllers = array(
-            array(
-                'Name' => 'name1',
-                'Chipset' => 'chipset1',
-                'Memory' => 32,
-                'CurrentResolution' => 'resolution1',
-            ),
-            array(
-                'Name' => 'name2',
-                'Chipset' => 'chipset2',
-                'Memory' => null,
-                'CurrentResolution' => 'resolution2',
-            ),
-        );
-
-        $client = new Client();
-        $client->id = 1;
-        $client->name = 'test';
-        $client['Windows'] = null;
-        $client['DisplayController'] = $displayControllers;
-        $client['Display'] = [];
-
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/display/?id=1');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery("//h2[text()='\nDisplay-Controller\n']");
-        $this->assertXpathQueryContentContains('//table/tr[2]/td[3]', "\n32\xC2\xA0MB\n");
-        $this->assertXpathQueryContentContains('//table/tr[3]/td[3]', '');
-        $this->assertNotXpathQuery("//h2[text()='\nDisplays\n']");
-    }
-
-    public function testDisplayActionDisplays()
-    {
-        $display = array(
-            'Id' => 1,
-            'Manufacturer' => 'manufacturer',
-            'Description' => 'description',
-            'Serial' => 'serial',
-            'Edid' => 'EDID',
-            'Type' => 'type',
-        );
-
-        $client = new Client();
-        $client->id = 1;
-        $client->name = 'test';
-        $client['Windows'] = null;
-        $client['DisplayController'] = [];
-        $client['Display'] = [$display];
-
-        $this->_clientManager->method('getClient')->willReturn($client);
-
-        $this->dispatch('/console/client/display/?id=1');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQuery("//h2[text()='\nAnzeigegeräte\n']");
-        $this->assertXpathQueryCount('//th', 5);
-    }
-
     public function testSystemActionUnixNoSlots()
     {
         $controllers = array(

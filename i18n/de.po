@@ -149,7 +149,6 @@ msgstr "Import"
 
 #: module/Console/Form/ManageRegistryValues.php
 #: module/Console/Form/Package/Build.php module/Console/Form/Subnet.php
-#: module/Console/views/console/client/display.php
 #: module/Console/views/console/client/index.php
 #: module/Console/views/console/client/misc.php
 #: module/Console/views/console/client/network.php
@@ -158,8 +157,8 @@ msgstr "Import"
 #: module/Console/views/console/client/virtualmachines.php
 #: module/Console/views/console/network/index.php
 #: module/Console/views/console/package/index.php src/Search/SearchFilters.php
-#: templates/Pages/Client/Packages.latte templates/Pages/Client/Software.latte
-#: templates/Pages/ClientList.latte
+#: templates/Pages/Client/Display.latte templates/Pages/Client/Packages.latte
+#: templates/Pages/Client/Software.latte templates/Pages/ClientList.latte
 #: templates/Pages/Duplicates/ManageDuplicates.latte
 #: templates/Pages/Duplicates/Overview.latte
 #: templates/Pages/Group/AddToGroup.latte templates/Pages/Group/Excluded.latte
@@ -186,14 +185,13 @@ msgid "Values"
 msgstr "Werte"
 
 #: module/Console/Form/NetworkDevice.php
-#: module/Console/views/console/client/display.php
 #: module/Console/views/console/client/misc.php
 #: module/Console/views/console/client/network.php
 #: module/Console/views/console/client/printers.php
 #: module/Console/views/console/client/system.php
 #: module/Console/views/console/network/showidentified.php
-#: templates/Pages/Group/AddToGroup.latte templates/Pages/Group/General.latte
-#: templates/Pages/Group/Overview.latte
+#: templates/Pages/Client/Display.latte templates/Pages/Group/AddToGroup.latte
+#: templates/Pages/Group/General.latte templates/Pages/Group/Overview.latte
 msgid "Description"
 msgstr "Beschreibung"
 
@@ -204,7 +202,6 @@ msgid "OK"
 msgstr "OK"
 
 #: module/Console/Form/NetworkDevice.php
-#: module/Console/views/console/client/display.php
 #: module/Console/views/console/client/index.php
 #: module/Console/views/console/client/misc.php
 #: module/Console/views/console/client/network.php
@@ -213,7 +210,8 @@ msgstr "OK"
 #: module/Console/views/console/client/virtualmachines.php
 #: module/Console/views/console/network/index.php
 #: module/Console/views/console/network/showidentified.php
-#: templates/Pages/Client/General.latte templates/Pages/ClientList.latte
+#: templates/Pages/Client/Display.latte templates/Pages/Client/General.latte
+#: templates/Pages/ClientList.latte
 msgid "Type"
 msgstr "Typ"
 
@@ -654,51 +652,6 @@ msgstr "Bearbeiten"
 msgid "Define fields"
 msgstr "Felder definieren"
 
-#: module/Console/views/console/client/display.php
-msgid "Chipset"
-msgstr "Chipsatz"
-
-#: module/Console/views/console/client/display.php
-msgid "Current resolution"
-msgstr "Gegenwärtige Auflösung"
-
-#: module/Console/views/console/client/display.php
-msgid "Display controllers"
-msgstr "Display-Controller"
-
-#: module/Console/views/console/client/display.php
-msgid "Displays"
-msgstr "Anzeigegeräte"
-
-#: module/Console/views/console/client/display.php
-msgid "EDID"
-msgstr "EDID"
-
-#: module/Console/views/console/client/display.php
-#: module/Console/views/console/client/index.php
-#: module/Console/views/console/client/misc.php
-#: module/Console/views/console/client/system.php src/Search/SearchFilters.php
-#: templates/Pages/Client/Bios.latte
-msgid "Manufacturer"
-msgstr "Hersteller"
-
-#: module/Console/views/console/client/display.php
-#: module/Console/views/console/client/index.php
-#: module/Console/views/console/client/virtualmachines.php
-#: templates/Pages/ClientList.latte
-msgid "Memory"
-msgstr "Speicher"
-
-#: module/Console/views/console/client/display.php
-#: module/Console/views/console/client/index.php
-#: module/Console/views/console/client/storage.php
-#: module/Console/views/console/client/system.php src/Search/SearchFilters.php
-#: templates/Pages/Client/General.latte
-#: templates/Pages/Duplicates/ManageDuplicates.latte
-#: templates/Pages/Duplicates/Overview.latte
-msgid "Serial number"
-msgstr "Seriennummer"
-
 #: module/Console/views/console/client/import.php
 msgid "Import locally generated inventory data"
 msgstr "Import lokal erzeugter Inventardaten"
@@ -830,6 +783,19 @@ msgid "MS Office product key"
 msgstr "Microsoft Office-Lizenzschlüssel"
 
 #: module/Console/views/console/client/index.php
+#: module/Console/views/console/client/misc.php
+#: module/Console/views/console/client/system.php src/Search/SearchFilters.php
+#: templates/Pages/Client/Bios.latte templates/Pages/Client/Display.latte
+msgid "Manufacturer"
+msgstr "Hersteller"
+
+#: module/Console/views/console/client/index.php
+#: module/Console/views/console/client/virtualmachines.php
+#: templates/Pages/Client/Display.latte templates/Pages/ClientList.latte
+msgid "Memory"
+msgstr "Speicher"
+
+#: module/Console/views/console/client/index.php
 #: module/Console/views/console/client/storage.php src/Search/SearchFilters.php
 #: templates/Pages/Client/General.latte
 msgid "Model"
@@ -907,6 +873,15 @@ msgstr "Druckername"
 #: module/Console/views/console/client/index.php src/Search/SearchFilters.php
 msgid "Printer port"
 msgstr "Druckeranschluss"
+
+#: module/Console/views/console/client/index.php
+#: module/Console/views/console/client/storage.php
+#: module/Console/views/console/client/system.php src/Search/SearchFilters.php
+#: templates/Pages/Client/Display.latte templates/Pages/Client/General.latte
+#: templates/Pages/Duplicates/ManageDuplicates.latte
+#: templates/Pages/Duplicates/Overview.latte
+msgid "Serial number"
+msgstr "Seriennummer"
 
 #: module/Console/views/console/client/index.php src/Search/SearchFilters.php
 msgid "Software: Comment"
@@ -1513,6 +1488,26 @@ msgstr "Version"
 #: templates/Pages/Client/Configuration.latte
 msgid "Always scan this network"
 msgstr "Dieses Netzwerk immer scannen"
+
+#: templates/Pages/Client/Display.latte
+msgid "Chipset"
+msgstr "Chipsatz"
+
+#: templates/Pages/Client/Display.latte
+msgid "Current resolution"
+msgstr "Gegenwärtige Auflösung"
+
+#: templates/Pages/Client/Display.latte
+msgid "Display controllers"
+msgstr "Display-Controller"
+
+#: templates/Pages/Client/Display.latte
+msgid "Displays"
+msgstr "Anzeigegeräte"
+
+#: templates/Pages/Client/Display.latte
+msgid "EDID"
+msgstr "EDID"
 
 #: templates/Pages/Client/General.latte
 msgid "Last user logged in"

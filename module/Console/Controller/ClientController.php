@@ -228,16 +228,6 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Information about a client's display controllers and devices
-     *
-     * @return array client
-     */
-    public function displayAction()
-    {
-        return array('client' => $this->_currentClient);
-    }
-
-    /**
      * Information about a client's RAM, controllers and extension slots
      *
      * @return array client
