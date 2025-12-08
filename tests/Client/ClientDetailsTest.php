@@ -3,9 +3,13 @@
 namespace Braintacle\Test\Client;
 
 use Braintacle\Client\ClientDetails;
+use Braintacle\Client\OsType;
+use Model\Client\AndroidInstallation;
 use Model\Client\Client;
 use Model\Client\Item\NetworkInterface;
+use Model\Client\WindowsInstallation;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(ClientDetails::class)]
@@ -37,5 +41,25 @@ final class ClientDetailsTest extends TestCase
             ['192.0.2.0', '198.51.100.0'],
             (new ClientDetails())->getNetworks($client)
         );
+    }
+
+    public static function getOsTypeProvider()
+    {
+        return [
+            [new WindowsInstallation(), null, OsType::Windows],
+            [null, new AndroidInstallation(), OsType::Android],
+            [null, null, OsType::Unix],
+        ];
+    }
+
+    #[DataProvider('getOsTypeProvider')]
+    public function testGetOsType(?WindowsInstallation $windows, ?AndroidInstallation $android, OsType $type)
+    {
+        $client = $this->createStub(Client::class);
+        $client->method('__get')->willReturnMap([
+            ['windows', $windows],
+            ['android', $android],
+        ]);
+        $this->assertEquals($type, (new ClientDetails())->getOsType($client));
     }
 }

@@ -1,0 +1,81 @@
+{layout ClientMenuLayout.latte}
+
+{define size, int $value, ?int $size = null}
+    {if $value}
+        {($value * 1048576)|bytes} {* input in MB *}
+        {if $size}
+            ({($value / $size * 100)|number}%)
+        {/if}
+    {/if}
+{/define}
+
+{block content}
+
+{include Header.latte}
+
+<h2>{translate('Storage devices')}</h2>
+
+<table class="alternating">
+    <tr>
+        <th n:if={$deviceShow[manufacturer]}>{translate('Manufacturer')}</th>
+        <th n:if={$deviceShow[productName]}>{translate('Model')}</th>
+        <th n:if={$deviceShow[type]}>{translate('Type')}</th>
+        <th>{translate('Size')}</th>
+        <th n:if={$deviceShow[device]}>{translate('Device')}</th>
+        <th n:if={$deviceShow[serial]}>{translate('Serial number')}</th>
+        <th n:if={$deviceShow[firmware]}>{translate('Firmware version')}</th>
+    </tr>
+    <tr n:foreach="$devices as $device">
+        <td n:if={$deviceShow[manufacturer]}>{$device->productFamily}</td>
+        <td n:if={$deviceShow[productName]}>{$device->productName}</td>
+        <td n:if={$deviceShow[type]}>
+            {(match ($device->type) {
+                'Fixed hard disk media' => translate('Hard disk'),
+                'External hard disk media' => translate('External media'),
+                'DVD Writer' => translate('DVD writer'),
+                default => $device->type,
+            })}
+        </td>
+        <td>{include size, $device->size}</td>
+        <td n:if={$deviceShow[device]}>{$device->device}</td>
+        <td n:if={$deviceShow[serial]}>{$device->serial}</td>
+        <td n:if={$deviceShow[firmware]}>{$device->firmware}</td>
+    </tr>
+</table>
+
+<h2>{translate('Filesystems')}</h2>
+
+<table class="alternating">
+    <tr>
+        <th n:if={$fsShow[letter]}>{translate('Letter')}</th>
+        <th n:if={$fsShow[label]}>{translate('Label')}</th>
+        <th n:if={$fsShow[type]}>{translate('Type')}</th>
+        <th n:if={$fsShow[mountpoint]}>{translate('Mountpoint')}</th>
+        <th n:if={$fsShow[device]}>{translate('Device')}</th>
+        <th>{translate('Filesystem')}</th>
+        <th n:if={$fsShow[creationDate]}>{translate('Creation date')}</th>
+        <th>{translate('Size')}</th>
+        <th>{translate('Used space')}</th>
+        <th>{translate('Free space')}</th>
+    </tr>
+    <tr n:foreach="$filesystems as $filesystem">
+        <td n:if={$fsShow[letter]}>{$filesystem->letter}</td>
+        <td n:if={$fsShow[label]}>{$filesystem->label}</td>
+        <td n:if={$fsShow[type]}>
+            {(match ($filesystem->type) {
+                'Hard Drive' => translate('Partition'),
+                'Network Drive' => translate('Network'),
+                'Removable Drive' => translate('Removable'),
+                'CD-Rom Drive' => translate('Optical'),
+                default => $filesystem->type,
+            })}
+        </td>
+        <td n:if={$fsShow[mountpoint]}>{$filesystem->mountpoint}</td>
+        <td n:if={$fsShow[device]}>{$filesystem->device}</td>
+        <td>{$filesystem->filesystem}</td>
+        <td n:if={$fsShow[creationDate]}>{$filesystem->creationDate|localDate, date: medium}</td>
+        <td>{include size, $filesystem->size}</td>
+        <td>{include size, $filesystem->usedSpace, $filesystem->size}</td>
+        <td>{include size, $filesystem->freeSpace, $filesystem->size}</td>
+    </tr>
+</table>

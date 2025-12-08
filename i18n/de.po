@@ -205,13 +205,12 @@ msgstr "OK"
 #: module/Console/views/console/client/index.php
 #: module/Console/views/console/client/misc.php
 #: module/Console/views/console/client/network.php
-#: module/Console/views/console/client/storage.php
 #: module/Console/views/console/client/system.php
 #: module/Console/views/console/client/virtualmachines.php
 #: module/Console/views/console/network/index.php
 #: module/Console/views/console/network/showidentified.php
 #: templates/Pages/Client/Display.latte templates/Pages/Client/General.latte
-#: templates/Pages/ClientList.latte
+#: templates/Pages/Client/Storage.latte templates/Pages/ClientList.latte
 msgid "Type"
 msgstr "Typ"
 
@@ -786,6 +785,7 @@ msgstr "Microsoft Office-Lizenzschlüssel"
 #: module/Console/views/console/client/misc.php
 #: module/Console/views/console/client/system.php src/Search/SearchFilters.php
 #: templates/Pages/Client/Bios.latte templates/Pages/Client/Display.latte
+#: templates/Pages/Client/Storage.latte
 msgid "Manufacturer"
 msgstr "Hersteller"
 
@@ -795,9 +795,8 @@ msgstr "Hersteller"
 msgid "Memory"
 msgstr "Speicher"
 
-#: module/Console/views/console/client/index.php
-#: module/Console/views/console/client/storage.php src/Search/SearchFilters.php
-#: templates/Pages/Client/General.latte
+#: module/Console/views/console/client/index.php src/Search/SearchFilters.php
+#: templates/Pages/Client/General.latte templates/Pages/Client/Storage.latte
 msgid "Model"
 msgstr "Modell"
 
@@ -875,9 +874,9 @@ msgid "Printer port"
 msgstr "Druckeranschluss"
 
 #: module/Console/views/console/client/index.php
-#: module/Console/views/console/client/storage.php
 #: module/Console/views/console/client/system.php src/Search/SearchFilters.php
 #: templates/Pages/Client/Display.latte templates/Pages/Client/General.latte
+#: templates/Pages/Client/Storage.latte
 #: templates/Pages/Duplicates/ManageDuplicates.latte
 #: templates/Pages/Duplicates/Overview.latte
 msgid "Serial number"
@@ -1070,74 +1069,6 @@ msgstr "Registry-Schlüssel"
 msgid "Value"
 msgstr "Wert"
 
-#: module/Console/views/console/client/storage.php
-#: templates/Pages/Group/General.latte templates/Pages/Group/Overview.latte
-msgid "Creation date"
-msgstr "Erstellungsdatum"
-
-#: module/Console/views/console/client/storage.php
-msgid "DVD writer"
-msgstr "DVD-Brenner"
-
-#: module/Console/views/console/client/storage.php
-msgid "Device"
-msgstr "Gerät"
-
-#: module/Console/views/console/client/storage.php
-msgid "Filesystem"
-msgstr "Dateisystem"
-
-#: module/Console/views/console/client/storage.php
-msgid "Filesystems"
-msgstr "Dateisysteme"
-
-#: module/Console/views/console/client/storage.php
-msgid "Firmware version"
-msgstr "Firmware-Version"
-
-#: module/Console/views/console/client/storage.php
-msgid "Free space"
-msgstr "Frei"
-
-#: module/Console/views/console/client/storage.php
-msgid "Hard disk"
-msgstr "Festplatte"
-
-#: module/Console/views/console/client/storage.php
-msgid "Label"
-msgstr "Name"
-
-#: module/Console/views/console/client/storage.php
-msgid "Letter"
-msgstr "Buchstabe"
-
-#: module/Console/views/console/client/storage.php
-msgid "Mountpoint"
-msgstr "Mountpoint"
-
-#: module/Console/views/console/client/storage.php
-msgid "Product family"
-msgstr "Produktfamilie"
-
-#: module/Console/views/console/client/storage.php
-msgid "Removable medium"
-msgstr "Wechselmedium"
-
-#: module/Console/views/console/client/storage.php
-#: module/Console/views/console/client/system.php
-#: module/Console/views/console/package/index.php
-#: templates/Pages/Client/Software.latte
-msgid "Size"
-msgstr "Größe"
-
-#: module/Console/views/console/client/storage.php
-msgid "Storage devices"
-msgstr "Speichergeräte"
-
-#: module/Console/views/console/client/storage.php
-msgid "Used space"
-msgstr "Benutzt"
-
 #: module/Console/views/console/client/system.php
 msgid "Caption"
 msgstr "Titel"
@@ -1157,6 +1088,12 @@ msgstr "Erweiterungssteckplätze"
 #: module/Console/views/console/client/system.php
 msgid "Memory slots"
 msgstr "RAM-Steckplätze"
+
+#: module/Console/views/console/client/system.php
+#: module/Console/views/console/package/index.php
+#: templates/Pages/Client/Software.latte templates/Pages/Client/Storage.latte
+msgid "Size"
+msgstr "Größe"
 
 #: module/Console/views/console/client/system.php
 msgid "Slot number"
@@ -1446,7 +1383,7 @@ msgid "Duplicates"
 msgstr "Duplikate"
 
 #: templates/MainMenu/InventoryMenuLayout.latte
-#: templates/Pages/Client/Header.latte
+#: templates/Pages/Client/Header.latte templates/Pages/Client/Storage.latte
 msgid "Network"
 msgstr "Netzwerk"
 
@@ -1657,6 +1594,75 @@ msgstr "Ort"
 #: templates/Pages/Client/Software.latte
 msgid "Publisher"
 msgstr "Herausgeber"
+
+#: templates/Pages/Client/Storage.latte templates/Pages/Group/General.latte
+#: templates/Pages/Group/Overview.latte
+msgid "Creation date"
+msgstr "Erstellungsdatum"
+
+#: templates/Pages/Client/Storage.latte
+msgid "DVD writer"
+msgstr "DVD-Brenner"
+
+#: templates/Pages/Client/Storage.latte
+msgid "Device"
+msgstr "Gerät"
+
+#: templates/Pages/Client/Storage.latte
+msgid "External media"
+msgstr "Externes Speichermedium"
+
+#: templates/Pages/Client/Storage.latte
+msgid "Filesystem"
+msgstr "Dateisystem"
+
+#: templates/Pages/Client/Storage.latte
+msgid "Filesystems"
+msgstr "Dateisysteme"
+
+#: templates/Pages/Client/Storage.latte
+msgid "Firmware version"
+msgstr "Firmware-Version"
+
+#: templates/Pages/Client/Storage.latte
+msgid "Free space"
+msgstr "Frei"
+
+#: templates/Pages/Client/Storage.latte
+msgid "Hard disk"
+msgstr "Festplatte"
+
+#: templates/Pages/Client/Storage.latte
+msgid "Label"
+msgstr "Name"
+
+#: templates/Pages/Client/Storage.latte
+msgid "Letter"
+msgstr "Buchstabe"
+
+#: templates/Pages/Client/Storage.latte
+msgid "Mountpoint"
+msgstr "Mountpoint"
+
+#: templates/Pages/Client/Storage.latte
+msgid "Optical"
+msgstr "Optisch"
+
+#: templates/Pages/Client/Storage.latte
+msgid "Partition"
+msgstr "Partition"
+
+#: templates/Pages/Client/Storage.latte
+msgid "Removable"
+msgstr "Wechselmedium"
+
+#: templates/Pages/Client/Storage.latte
+msgid "Storage devices"
+msgstr "Speichergeräte"
+
+#: templates/Pages/Client/Storage.latte
+msgid "Used space"
+msgstr "Benutzt"
 
 #: templates/Pages/Duplicates/ManageDuplicates.latte
 msgid "Exclude MAC address {} from duplicates search?"

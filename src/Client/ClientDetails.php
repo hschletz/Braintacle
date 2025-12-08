@@ -28,4 +28,15 @@ final class ClientDetails
 
         return $networks;
     }
+
+    public function getOsType(Client $client): OsType
+    {
+        if ($client->windows) {
+            return OsType::Windows;
+        } elseif ($client->android) {
+            return OsType::Android;
+        } else {
+            return OsType::Unix;
+        }
+    }
 }

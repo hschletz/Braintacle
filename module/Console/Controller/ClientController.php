@@ -218,16 +218,6 @@ class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Information about a client's storage devices and filesystems
-     *
-     * @return array client
-     */
-    public function storageAction()
-    {
-        return array('client' => $this->_currentClient);
-    }
-
-    /**
      * Information about a client's RAM, controllers and extension slots
      *
      * @return array client
