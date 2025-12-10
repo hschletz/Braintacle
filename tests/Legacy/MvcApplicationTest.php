@@ -11,6 +11,7 @@ use Braintacle\Template\Function\PathForRouteFunction;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Test\ErrorHandlerTestTrait;
 use Closure;
+use Console\Test\AbstractControllerTestCase;
 use DI\Container;
 use Error;
 use Exception;
@@ -23,7 +24,6 @@ use Laminas\Mvc\Controller\ControllerManager;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Mvc\View\Http\InjectTemplateListener;
 use Laminas\ServiceManager\ServiceManager;
-use Laminas\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 use Laminas\Translator\TranslatorInterface;
 use Laminas\View\Resolver\TemplateMapResolver;
 use Library\Application as LegacyApplication;
@@ -42,7 +42,7 @@ use ReflectionProperty;
 use RuntimeException;
 use Slim\Exception\HttpNotFoundException;
 
-class MvcApplicationTest extends AbstractHttpControllerTestCase
+class MvcApplicationTest extends AbstractControllerTestCase
 {
     use ErrorHandlerTestTrait;
 
@@ -313,7 +313,6 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
             ['test/test' => 'message: <?= $this->message ?>'],
         );
 
-        $this->setTraceError(true);
         $this->dispatch('/console/test/test');
         $this->assertResponseStatusCode(200);
         $this->assertEquals('message: test', $this->getResponse()->getContent());
@@ -331,10 +330,9 @@ class MvcApplicationTest extends AbstractHttpControllerTestCase
             [],
         );
 
-        $this->setTraceError(true);
         $this->dispatch('/console/test/test');
         $this->assertResponseStatusCode(302);
-        $this->assertResponseHeaderContains('Location', '/target');
+        $this->assertRedirectTo('/target');
     }
 
     public function testFrameworkIntegrationDispatchError()
