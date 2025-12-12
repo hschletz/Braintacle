@@ -31,6 +31,10 @@ Upgrading from previous versions:
 
 - Required: Run "braintacle-tool.php database" to update the database.
 
+Misc:
+
+- Added support for PHP 8.5.
+
 
 CHANGES IN VERSION 1.15
 =======================

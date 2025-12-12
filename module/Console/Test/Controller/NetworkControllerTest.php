@@ -494,8 +494,10 @@ class NetworkControllerTest extends AbstractControllerTestCase
 
 
         $type = new SelectSimple('Type');
+        $type->setLabel('Type');
 
         $description = new Text('Description');
+        $description->setLabel('Description');
         $description->setMessages(['message']);
 
         $csrf = new Csrf('_csrf');

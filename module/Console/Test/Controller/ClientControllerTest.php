@@ -403,6 +403,7 @@ class ClientControllerTest extends AbstractControllerTestCase
         $postData = ['key' => 'entered_key'];
 
         $key = new Text('Key');
+        $key->setLabel('Product key (if different)');
         $key->setMessages(['message']);
 
         $csrf = new Csrf('_csrf');
