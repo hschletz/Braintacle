@@ -15,12 +15,9 @@ use Laminas\Mvc\MvcEvent;
 use Laminas\Router\Http\TreeRouteStack;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\RouteStackInterface;
-use Laminas\Stdlib\RequestInterface;
-use Laminas\Stdlib\ResponseInterface;
 use Laminas\Uri\Http as Uri;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
-use Override;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -238,7 +235,6 @@ final class MvcApplicationTest extends TestCase
     public static function invalidRouteProvider()
     {
         return [
-            ['/console/_controller/invalid', 'Invalid action'],
             ['/console/_controller/_action/extra', 'No route matched.'],
             ['/console/invalid/_action', 'Invalid controller name: invalid'],
         ];
@@ -266,18 +262,8 @@ final class MvcApplicationTest extends TestCase
         $application = $this->createStub(Application::class);
         $application->method('getMvcEvent')->willReturn($mvcEvent);
 
-        $controller = new class extends Controller {
-            #[Override]
-            public function dispatch(RequestInterface $request, ?ResponseInterface $response = null)
-            {
-                $routeMatch = $this->getEvent()->getRouteMatch();
-                if ($routeMatch->getParam('action') != '_action') {
-                    $routeMatch->setParam('action', 'not-found');
-                }
-
-                return [];
-            }
-        };
+        $controller = $this->createMock(Controller::class);
+        $controller->expects($this->never())->method('dispatch');
 
         $controllerManager = $this->createStub(ControllerManager::class);
         $controllerManager->method('has')->willReturnCallback(fn($name) => $name == '_controller');

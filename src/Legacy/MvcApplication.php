@@ -13,6 +13,8 @@ use Slim\Exception\HttpNotFoundException;
 
 class MvcApplication
 {
+    public const Psr7Request = 'Psr7Request';
+
     private mixed $previousErrorHandler; // callable, but that cannot be used as property type
 
     public function __construct(
@@ -31,6 +33,7 @@ class MvcApplication
         $this->previousErrorHandler = set_error_handler($this->errorHandler(...), E_USER_DEPRECATED);
         try {
             $mvcEvent = $this->application->getMvcEvent();
+            $mvcEvent->setParam(self::Psr7Request, $request);
 
             $router = $mvcEvent->getRouter();
             $routeMatch = $router->match($mvcEvent->getRequest());
@@ -49,13 +52,9 @@ class MvcApplication
 
             $result = $controller->dispatch($mvcEvent->getRequest());
 
-            $action = $routeMatch->getParam('action');
-            if ($action == 'not-found') {
-                throw new HttpNotFoundException($request, 'Invalid action');
-            }
-
             if (! $result instanceof Response) {
                 if (is_array($result)) {
+                    $action = $routeMatch->getParam('action');
                     $template = "console/$controllerName/$action";
                     $mvcEvent->getResponse()->setContent($this->phpRenderer->render($template, $result));
                 } else {

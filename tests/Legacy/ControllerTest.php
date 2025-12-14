@@ -3,11 +3,15 @@
 namespace Braintacle\Test\Legacy;
 
 use Braintacle\Legacy\Controller;
+use Braintacle\Legacy\MvcApplication;
 use Laminas\Http\Request;
 use Laminas\Mvc\MvcEvent;
+use Laminas\Router\RouteMatch;
 use Override;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Exception\HttpNotFoundException;
 
 #[CoversClass(Controller::class)]
 final class ControllerTest extends TestCase
@@ -40,5 +44,35 @@ final class ControllerTest extends TestCase
         $controller->setEvent($mvcEvent);
 
         $this->assertSame($request, $controller->dispatch($request));
+    }
+
+    public function testOnDispatch()
+    {
+        $mvcEvent = new MvcEvent();
+        $mvcEvent->setRouteMatch(new RouteMatch(['action' => 'test']));
+
+        $controller = new class extends Controller {
+            public function testAction()
+            {
+                return '_result';
+            }
+        };
+        $result = $controller->onDispatch($mvcEvent);
+        $this->assertEquals('_result', $result);
+        $this->assertEquals('_result', $mvcEvent->getResult());
+    }
+
+    public function testOnDispatchInvalidAction()
+    {
+        $mvcEvent = new MvcEvent();
+        $mvcEvent->setRouteMatch(new RouteMatch(['action' => 'test']));
+        $mvcEvent->setParam(MvcApplication::Psr7Request, $this->createStub(ServerRequestInterface::class));
+
+        $controller = new class extends Controller {};
+
+        $this->expectException(HttpNotFoundException::class);
+        $this->expectExceptionMessage('Invalid action');
+
+        $controller->onDispatch($mvcEvent);
     }
 }
