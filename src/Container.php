@@ -7,6 +7,9 @@ use Braintacle\I18n\Translator;
 use Braintacle\Legacy\ClientFactory;
 use Braintacle\Legacy\Database\AdapterFactory;
 use Braintacle\Legacy\Database\DatabaseFactory;
+use Braintacle\Legacy\MvcApplication;
+use Braintacle\Legacy\MvcApplicationFactory;
+use Braintacle\Legacy\ServiceManagerFactory;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Template\TemplateLoader;
 use Composer\InstalledVersions;
@@ -15,10 +18,9 @@ use Doctrine\DBAL\Connection;
 use Laminas\Authentication\AuthenticationServiceInterface;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\AdapterInterface;
-use Laminas\Mvc\Application as MvcApplication;
+use Laminas\ServiceManager\ServiceManager;
 use Laminas\Translator\TranslatorInterface;
 use Laminas\Session\Validator\Csrf;
-use Library\Application;
 use Locale;
 use Model\Client\Client;
 use Model\Operator\AuthenticationService;
@@ -64,8 +66,9 @@ class Container extends DIContainer
                 'Braintacle',
                 [new StreamHandler('php://stderr', LogLevel::WARNING)],
             ),
-            MvcApplication::class => factory(Application::init(...))->parameter('module', 'Console'),
+            MvcApplication::class => factory(MvcApplicationFactory::class),
             ResponseInterface::class => get(Response::class),
+            ServiceManager::class => factory(ServiceManagerFactory::class),
             StorageInterface::class => get(DirectStorage::class),
             TemplateEngine::class => autowire()->constructor(locale: $locale),
             TemplateLoader::class => create(TemplateLoader::class)->constructor($rootPath . 'templates'),

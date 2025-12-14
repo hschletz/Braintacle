@@ -22,17 +22,17 @@
 
 namespace Console\Test;
 
+use Braintacle\Container;
+use Braintacle\Legacy\MvcApplication;
+use Braintacle\Legacy\MvcApplicationFactory;
 use Laminas\Http\PhpEnvironment\Request;
 use Laminas\Http\Response;
-use Laminas\Mvc\Application as MvcApplication;
-use Laminas\Mvc\MvcEvent;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\Parameters;
 use Laminas\Uri\Http as Uri;
-use Laminas\View\Model\ViewModel;
-use Library\Application;
 use Library\Test\InjectServicesTrait;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -45,8 +45,9 @@ abstract class AbstractControllerTestCase extends TestCase
 {
     use InjectServicesTrait;
 
-    protected ?MvcApplication $application;
-    private array $applicationConfig;
+    private ?MvcApplication $application;
+    private ?ServiceManager $serviceManager;
+
 
     /**
      * Set up application config
@@ -54,7 +55,6 @@ abstract class AbstractControllerTestCase extends TestCase
     public function setUp(): void
     {
         $this->reset();
-        $this->applicationConfig = Application::getApplicationConfig('Console');
 
         // Put application in authenticated state
         $auth = $this->createMock('Model\Operator\AuthenticationService');
@@ -62,30 +62,7 @@ abstract class AbstractControllerTestCase extends TestCase
 
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setService('Model\Operator\AuthenticationService', $auth);
-        Application::addAbstractFactories($serviceManager);
         self::injectServices($serviceManager);
-
-        // Prevent the MVC application from applying a layout. Unlike in the
-        // real application, the listener must not be attached to the
-        // MvcEvent::EVENT_RENDER_ERROR. That would break
-        // AbstractHttpControllerTestCase's error handling.
-        $eventManager = $this->getApplication()->getEventManager();
-        $eventManager->attach(MvcEvent::EVENT_RENDER, function (MvcEvent $event) {
-            $result = $event->getResult();
-            if ($result instanceof ViewModel) {
-                $result->setTerminal(true);
-                $event->setViewModel($result);
-            }
-        }, -95);
-
-        // Prevent the MVC application from applying an error template. Unlike
-        // in the real application, assume an exception and throw it.
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function (MvcEvent $event) {
-            throw $event->getParam('exception');
-        }, -10);
-        $eventManager->attach(MvcEvent::EVENT_RENDER_ERROR, function (MvcEvent $event) {
-            throw $event->getParam('exception');
-        }, -10);
     }
 
     public function tearDown(): void
@@ -96,6 +73,7 @@ abstract class AbstractControllerTestCase extends TestCase
     private function reset(): void
     {
         $this->application = null;
+        $this->serviceManager = null;
 
         if (array_key_exists('_SESSION', $GLOBALS)) {
             $_SESSION = [];
@@ -129,41 +107,11 @@ abstract class AbstractControllerTestCase extends TestCase
         );
     }
 
-    /**
-     * Bypass all MvcEvent::EVENT_RENDER listeners.
-     *
-     * This is useful to test the action result directly via assertMvcResult().
-     */
-    protected function interceptRenderEvent(): void
-    {
-        $this->application->getEventManager()->attach(
-            MvcEvent::EVENT_RENDER,
-            function ($event) {
-                $event->stopPropagation(true);
-            },
-            100
-        );
-    }
-
-    /**
-     * Test result of MVC action.
-     */
-    public function assertMvcResult($result)
-    {
-        $this->assertSame(
-            $result,
-            $this->getApplication()->getMvcEvent()->getResult(),
-            'Failed asserting the MVC result.'
-        );
-    }
-
-    private function getApplication()
+    private function getApplication(): MvcApplication
     {
         if (!$this->application) {
-            $this->application = MvcApplication::init($this->applicationConfig);
-
-            $eventManager = $this->application->getEventManager();
-            $this->application->getServiceManager()->get('SendResponseListener')->detach($eventManager);
+            $serviceManager = $this->getApplicationServiceLocator();
+            $this->application = (new MvcApplicationFactory())($serviceManager);
         }
 
         return $this->application;
@@ -171,7 +119,12 @@ abstract class AbstractControllerTestCase extends TestCase
 
     protected function getApplicationServiceLocator(): ServiceManager
     {
-        return $this->getApplication()->getServiceManager();
+        if (!$this->serviceManager) {
+            $this->serviceManager = (new Container())->get(ServiceManager::class);
+            $this->serviceManager->setAllowOverride(true);
+        }
+
+        return $this->serviceManager;
     }
 
     protected function dispatch(string $url, ?string $method = Request::METHOD_GET, ?array $params = [])
@@ -202,12 +155,12 @@ abstract class AbstractControllerTestCase extends TestCase
         $request->setUri($uri);
         $request->setRequestUri($uri->getPath());
 
-        $this->getApplication()->run();
+        $this->getApplication()->run($this->createStub(ServerRequestInterface::class));
     }
 
     protected function getRequest(): Request
     {
-        return $this->getApplication()->getRequest();
+        return $this->getApplication()->getMvcEvent()->getRequest();
     }
 
     protected function getResponse(): Response

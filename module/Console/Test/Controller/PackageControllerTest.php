@@ -31,6 +31,7 @@ use IntlDateFormatter;
 use Laminas\I18n\View\Helper\DateFormat;
 use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\PhpRenderer;
 use Model\Config;
 use Model\Package\PackageManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -320,12 +321,16 @@ class PackageControllerTest extends AbstractControllerTestCase
         $printForm = $this->createMock(PrintForm::class);
         $printForm->method('__invoke')->with($this->_buildForm, Build::class)->willReturn($viewModel);
 
-        $this->getApplicationServiceLocator()->get('ControllerPluginManager')->setService('printForm', $printForm);
+        $renderer = $this->createMock(PhpRenderer::class);
+        $renderer->method('render')->with($viewModel)->willReturn('form');
 
-        $this->interceptRenderEvent();
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->get('ControllerPluginManager')->setService('printForm', $printForm);
+        $serviceManager->setService(PhpRenderer::class, $renderer);
+
         $this->dispatch('/console/package/build');
         $this->assertResponseStatusCode(200);
-        $this->assertMvcResult($viewModel);
+        $this->assertEquals('form', $this->getResponse()->getContent());
     }
 
     public function testBuildActionPostInvalid()
@@ -347,12 +352,16 @@ class PackageControllerTest extends AbstractControllerTestCase
         $printForm = $this->createMock(PrintForm::class);
         $printForm->method('__invoke')->with($this->_buildForm, Build::class)->willReturn($viewModel);
 
-        $this->getApplicationServiceLocator()->get('ControllerPluginManager')->setService('printForm', $printForm);
+        $renderer = $this->createMock(PhpRenderer::class);
+        $renderer->method('render')->with($viewModel)->willReturn('form');
 
-        $this->interceptRenderEvent();
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->get('ControllerPluginManager')->setService('printForm', $printForm);
+        $serviceManager->setService(PhpRenderer::class, $renderer);
+
         $this->dispatch('/console/package/build', 'POST', $postData);
         $this->assertResponseStatusCode(200);
-        $this->assertMvcResult($viewModel);
+        $this->assertEquals('form', $this->getResponse()->getContent());
     }
 
     public function testBuildActionPostValidSuccess()
@@ -568,13 +577,17 @@ class PackageControllerTest extends AbstractControllerTestCase
         $printForm = $this->createMock(PrintForm::class);
         $printForm->method('__invoke')->with($this->_updateForm, Update::class)->willReturn($viewModel);
 
-        $this->getApplicationServiceLocator()->get('ControllerPluginManager')->setService('printForm', $printForm);
+        $renderer = $this->createMock(PhpRenderer::class);
+        $renderer->method('render')->with($viewModel)->willReturn('form');
 
-        $this->interceptRenderEvent();
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->get('ControllerPluginManager')->setService('printForm', $printForm);
+        $serviceManager->setService(PhpRenderer::class, $renderer);
+
         $this->dispatch('/console/package/update/?name=oldName');
 
         $this->assertResponseStatusCode(200);
-        $this->assertMvcResult($viewModel);
+        $this->assertEquals('form', $this->getResponse()->getContent());
     }
 
     public function testUpdateActionPostInvalid()
@@ -596,13 +609,16 @@ class PackageControllerTest extends AbstractControllerTestCase
         $printForm = $this->createMock(PrintForm::class);
         $printForm->method('__invoke')->with($this->_updateForm, Update::class)->willReturn($viewModel);
 
-        $this->getApplicationServiceLocator()->get('ControllerPluginManager')->setService('printForm', $printForm);
+        $renderer = $this->createMock(PhpRenderer::class);
+        $renderer->method('render')->with($viewModel)->willReturn('form');
 
-        $this->interceptRenderEvent();
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->get('ControllerPluginManager')->setService('printForm', $printForm);
+        $serviceManager->setService(PhpRenderer::class, $renderer);
+
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
 
         $this->assertResponseStatusCode(200);
-        $this->assertMvcResult($viewModel);
     }
 
     public function testUpdateActionPostValidBuildSuccess()

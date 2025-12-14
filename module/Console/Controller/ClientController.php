@@ -24,13 +24,14 @@ namespace Console\Controller;
 
 use Braintacle\FlashMessages;
 use Braintacle\Http\RouteHelper;
+use Braintacle\Legacy\Controller;
 use Laminas\Stdlib\RequestInterface;
 use Laminas\Stdlib\ResponseInterface;
 
 /**
  * Controller for all client-related actions.
  */
-class ClientController extends \Laminas\Mvc\Controller\AbstractActionController
+class ClientController extends Controller
 {
     /**
      * Client manager

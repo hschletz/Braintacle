@@ -2,98 +2,27 @@
 
 namespace Braintacle\Legacy;
 
-use Braintacle\AppConfig;
-use Braintacle\Group\Group;
-use Braintacle\Http\RouteHelper;
-use Braintacle\Template\Function\AssetUrlFunction;
-use Braintacle\Template\Function\PathForRouteFunction;
-use Braintacle\Template\TemplateEngine;
-use Closure;
-use DI\Container;
-use Laminas\Db\Adapter\Adapter;
 use Laminas\Http\Response;
-use Laminas\I18n\Translator\TranslatorInterface as I18nTranslatorInterface;
 use Laminas\Mvc\Application;
+use Laminas\Mvc\Controller\ControllerManager;
 use Laminas\Mvc\MvcEvent;
-use Laminas\Translator\TranslatorInterface;
 use Laminas\View\Model\ViewModel;
-use Model\Client\Client;
-use Nada\Database\AbstractDatabase;
-use Psr\Clock\ClockInterface;
-use Psr\Container\ContainerInterface;
+use Laminas\View\Renderer\PhpRenderer;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
-use RuntimeException;
 use Slim\Exception\HttpNotFoundException;
 
 class MvcApplication
 {
-    private ?Closure $previousErrorHandler;
-    private ServerRequestInterface $request;
+    private mixed $previousErrorHandler; // callable, but that cannot be used as property type
 
     public function __construct(
         private Application $application,
-        private Container $container,
+        private ControllerManager $controllerManager,
+        private PhpRenderer $phpRenderer,
     ) {}
-
-    public function configureServices(): void
-    {
-        $serviceManager = $this->application->getServiceManager();
-
-        // Inject Services which are not provided by module's ServiceManager
-        // configuration.
-        $serviceManager->setService(AbstractDatabase::class, $this->container->get(AbstractDatabase::class));
-        $serviceManager->setService(Adapter::class, $this->container->get(Adapter::class));
-        $serviceManager->setService(AppConfig::class, $this->container->get(AppConfig::class));
-        $serviceManager->setService(AssetUrlFunction::class, $this->container->get(AssetUrlFunction::class));
-        $serviceManager->setService(Client::class, $this->container->get(Client::class));
-        $serviceManager->setService(ClockInterface::class, $this->container->get(ClockInterface::class));
-        $serviceManager->setService(ContainerInterface::class, $serviceManager);
-        $serviceManager->setService(Group::class, $this->container->get(Group::class));
-        $serviceManager->setService(I18nTranslatorInterface::class, $this->container->get(I18nTranslator::class));
-        $serviceManager->setService(LoggerInterface::class, $this->container->get(LoggerInterface::class));
-        $serviceManager->setService(PathForRouteFunction::class, $this->container->get(PathForRouteFunction::class));
-        $serviceManager->setService(RouteHelper::class, $this->container->get(RouteHelper::class));
-        $serviceManager->setService(TemplateEngine::class, $this->container->get(TemplateEngine::class));
-        $serviceManager->setService(TranslatorInterface::class, $this->container->get(TranslatorInterface::class));
-    }
-
-    public function configureEvents(): void
-    {
-        // Prevent the MVC application from applying a layout.
-        $eventManager = $this->application->getEventManager();
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $event) {
-            $result = $event->getResult();
-            if ($result instanceof ViewModel) {
-                $result->setTerminal(true);
-                $event->setViewModel($result);
-            }
-        }, -95);
-
-        // Prevent the MVC application from applying an error template.
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $event) {
-            /** @var Response */
-            $response = $event->getResponse();
-            if ($response->getStatusCode() == 404) {
-                // The controller did not provide the requested action.
-                throw new HttpNotFoundException($this->request, 'Invalid action');
-            }
-        }, -85);
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, $this->preventErrorPage(...), -10);
-        $eventManager->attach(MvcEvent::EVENT_RENDER_ERROR, $this->preventErrorPage(...), -10);
-
-        // Prevent the MVC application from generating output.
-        $eventManager->attach(MvcEvent::EVENT_FINISH, function (MvcEvent $event) {
-            $event->stopPropagation();
-        });
-    }
 
     public function run(ServerRequestInterface $request): MvcEvent
     {
-        $this->request = $request;
-        $this->configureServices();
-        $this->configureEvents();
-
         // Application::run() may trigger a warning. This seems to be caused by
         // inconsistent Container interface usage throughout the Laminas code
         // and cannot be fixed here. Suppress the warning via a custom error
@@ -101,31 +30,44 @@ class MvcApplication
         // code, too.
         $this->previousErrorHandler = set_error_handler($this->errorHandler(...), E_USER_DEPRECATED);
         try {
-            $this->application->run();
+            $mvcEvent = $this->application->getMvcEvent();
+
+            $router = $mvcEvent->getRouter();
+            $routeMatch = $router->match($mvcEvent->getRequest());
+            if (!$routeMatch) {
+                throw new HttpNotFoundException($request, 'No route matched.');
+            }
+            $mvcEvent->setRouteMatch($routeMatch);
+            $controllerName = $routeMatch->getParam('controller');
+
+            if (! $this->controllerManager->has($controllerName)) {
+                throw new HttpNotFoundException($request, 'Invalid controller name: ' . $controllerName);
+            }
+            /** @var Controller */
+            $controller = $this->controllerManager->get($controllerName);
+            $controller->setEvent($mvcEvent);
+
+            $result = $controller->dispatch($mvcEvent->getRequest());
+
+            $action = $routeMatch->getParam('action');
+            if ($action == 'not-found') {
+                throw new HttpNotFoundException($request, 'Invalid action');
+            }
+
+            if (! $result instanceof Response) {
+                if (is_array($result)) {
+                    $template = "console/$controllerName/$action";
+                    $mvcEvent->getResponse()->setContent($this->phpRenderer->render($template, $result));
+                } else {
+                    assert($result instanceof ViewModel);
+                    $mvcEvent->getResponse()->setContent($this->phpRenderer->render($result));
+                }
+            }
         } finally {
             restore_error_handler();
         }
 
-        return $this->application->getMvcEvent();
-    }
-
-    /**
-     * Event handler to prevent Laminas framework from setting an error template.
-     */
-    public function preventErrorPage(MvcEvent $event)
-    {
-        $exception = $event->getParam('exception');
-        if ($exception) {
-            throw $exception;
-        }
-        switch ($event->getError()) {
-            case Application::ERROR_CONTROLLER_NOT_FOUND:
-                throw new HttpNotFoundException($this->request, 'Invalid controller name: ' . $event->getController());
-            case Application::ERROR_ROUTER_NO_MATCH:
-                throw new HttpNotFoundException($this->request, 'No route matched.');
-            default:
-                throw new RuntimeException('Unknown error in MVC application.');
-        }
+        return $mvcEvent;
     }
 
     public function errorHandler(int $errno, string $errstr, string $errfile, int $errline): bool
@@ -145,5 +87,10 @@ class MvcApplication
             return false;
             // @codeCoverageIgnoreEnd
         }
+    }
+
+    public function getMvcEvent(): MvcEvent
+    {
+        return $this->application->getMvcEvent();
     }
 }

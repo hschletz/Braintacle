@@ -22,13 +22,14 @@
 
 namespace Console\Controller;
 
+use Braintacle\Legacy\Controller;
 use Laminas\Authentication\AuthenticationServiceInterface;
 use Laminas\Mvc\MvcEvent;
 
 /**
  * Controller for managing Braintacle user accounts
  */
-class AccountsController extends \Laminas\Mvc\Controller\AbstractActionController
+class AccountsController extends Controller
 {
     /**
      * Operator manager

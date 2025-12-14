@@ -22,6 +22,7 @@
 
 namespace Console\Controller;
 
+use Braintacle\Legacy\Controller;
 use Console\View\Helper\Form\Package\Build;
 use Console\View\Helper\Form\Package\Update;
 use Laminas\Mvc\MvcEvent;
@@ -29,7 +30,7 @@ use Laminas\Mvc\MvcEvent;
 /**
  * Controller for all package related actions
  */
-class PackageController extends \Laminas\Mvc\Controller\AbstractActionController
+class PackageController extends Controller
 {
     /**
      * Package manager

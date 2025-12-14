@@ -22,13 +22,14 @@
 
 namespace Console\Controller;
 
+use Braintacle\Legacy\Controller;
 use Laminas\Stdlib\RequestInterface;
 use Laminas\Stdlib\ResponseInterface;
 
 /**
  * Controller for managing preferences
  */
-class PreferencesController extends \Laminas\Mvc\Controller\AbstractActionController
+class PreferencesController extends Controller
 {
     /**
      * Form manager

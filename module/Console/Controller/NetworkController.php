@@ -22,12 +22,13 @@
 
 namespace Console\Controller;
 
+use Braintacle\Legacy\Controller;
 use Laminas\Mvc\MvcEvent;
 
 /**
  * Controller for subnets and IP discovery
  */
-class NetworkController extends \Laminas\Mvc\Controller\AbstractActionController
+class NetworkController extends Controller
 {
     /**
      * DeviceManager prototype
