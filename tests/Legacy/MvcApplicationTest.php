@@ -11,13 +11,18 @@ use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\Controller\ControllerManager;
+use Laminas\Mvc\I18n\Translator;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\Http\TreeRouteStack;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\RouteStackInterface;
 use Laminas\Uri\Http as Uri;
+use Laminas\Validator\AbstractValidator;
+use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -29,6 +34,34 @@ use Slim\Exception\HttpNotFoundException;
 final class MvcApplicationTest extends TestCase
 {
     use ErrorHandlerTestTrait;
+
+    private ?TranslatorInterface $translatorBackup;
+
+    #[Before]
+    public function backupTranslator()
+    {
+        $this->translatorBackup = AbstractValidator::getDefaultTranslator();
+    }
+
+    #[After]
+    public function restoreTranslator()
+    {
+        AbstractValidator::setDefaultTranslator($this->translatorBackup);
+    }
+
+    private function createMvcApplication(
+        ?Application $application = null,
+        ?ControllerManager $controllerManager = null,
+        ?PhpRenderer $phpRenderer = null,
+        ?Translator $translator = null,
+    ): MvcApplication {
+        return new MvcApplication(
+            $application ?? $this->createStub(Application::class),
+            $controllerManager ?? $this->createStub(ControllerManager::class),
+            $phpRenderer ?? $this->createStub(PhpRenderer::class),
+            $translator ?? $this->createStub(Translator::class),
+        );
+    }
 
     private function getMvcEvent(
         MockObject & Controller $controller,
@@ -59,12 +92,35 @@ final class MvcApplicationTest extends TestCase
         $controllerManager->method('has')->with('_controller')->willReturn(true);
         $controllerManager->method('get')->with('_controller')->willReturn($controller);
 
-        $mvcApplication = new MvcApplication($application, $controllerManager, $phpRenderer);
+        $mvcApplication = $this->createMvcApplication($application, $controllerManager, $phpRenderer);
         $returnedEvent = $mvcApplication->run($this->createStub(ServerRequestInterface::class));
 
         $this->assertSame($routeMatch, $mvcEvent->getRouteMatch());
 
         return $returnedEvent;
+    }
+
+    public function testRunInjectsTranslator()
+    {
+        $translator = $this->createStub(Translator::class);
+
+        $application = $this->createStub(Application::class);
+        $application->method('getMvcEvent')->willThrowException(new Exception('Abort early'));
+
+        $mvcApplication = $this->createMvcApplication(
+            application: $application,
+            translator: $translator,
+        );
+
+        try {
+            $mvcApplication->run($this->createStub(ServerRequestInterface::class));
+        } catch (Exception $exception) {
+            if ($exception->getMessage() != 'Abort early') {
+                throw $exception;
+            }
+        }
+
+        $this->assertSame($translator, AbstractValidator::getDefaultTranslator());
     }
 
     public function testRunReturningResponse()
@@ -279,7 +335,7 @@ final class MvcApplicationTest extends TestCase
 
         $phpRenderer = $this->createStub(PhpRenderer::class);
 
-        $mvcApplication = new MvcApplication($application, $controllerManager, $phpRenderer);
+        $mvcApplication = $this->createMvcApplication($application, $controllerManager, $phpRenderer);
 
         $this->expectException(HttpNotFoundException::class);
         $this->expectExceptionMessage($message);
@@ -297,7 +353,7 @@ final class MvcApplicationTest extends TestCase
         $controllerManager = $this->createStub(ControllerManager::class);
         $phpRenderer = $this->createStub(PhpRenderer::class);
 
-        $mvcApplication = new MvcApplication($application, $controllerManager, $phpRenderer);
+        $mvcApplication = $this->createMvcApplication($application, $controllerManager, $phpRenderer);
         $this->assertSame($mvcEvent, $mvcApplication->getMvcEvent());
     }
 }

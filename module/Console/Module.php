@@ -22,12 +22,8 @@
 
 namespace Console;
 
-use Laminas\Form\View\Helper\FormElementErrors;
 use Laminas\ModuleManager\Feature;
-use Laminas\Mvc\I18n\Translator;
 use Laminas\Mvc\MvcEvent;
-use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
-use Laminas\Validator\AbstractValidator;
 
 /**
  * This is the module for the web administration console.
@@ -56,36 +52,7 @@ class Module implements
     public function onBootstrap(\Laminas\EventManager\EventInterface $e)
     {
         $eventManager = $e->getParam('application')->getEventManager();
-        $eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'setTranslators'));
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'forceStrictVars'));
-    }
-
-    /**
-     * Hook to set/disable translators
-     *
-     * This is invoked by the "route" event to avoid invocation of factories
-     * within the bootstrap event which would cause problems for testing.
-     *
-     * @psalm-suppress PossiblyUnusedMethod
-     */
-    public function setTranslators(MvcEvent $e)
-    {
-        $serviceManager = $e->getApplication()->getServiceManager();
-        $helperPluginManager = $serviceManager->get('ViewHelperManager');
-
-        $translator = $serviceManager->get(Translator::class);
-        AbstractValidator::setDefaultTranslator($translator);
-
-        // Disable translations in the FormElementErrors view helper. Otherwise
-        // it would try to translate the already translated messages from the
-        // validators. Translation must be left to the validators because
-        // placeholders in message templates can only be handled there.
-        $helperPluginManager->get(FormElementErrors::class)->setTranslateMessages(false);
-
-        // Disable translations in the FlashMessenger view helper. Messages are
-        // already translated in controllers to enable string formatting with
-        // placeholders.
-        $helperPluginManager->get(FlashMessenger::class)->setTranslatorEnabled(false);
     }
 
     /**

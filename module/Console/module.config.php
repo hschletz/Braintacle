@@ -24,6 +24,9 @@ use Console\Mvc\Controller\Plugin\Service\TranslateFactory;
 use Console\Mvc\Controller\Plugin\Translate;
 use Console\View\Helper\ClientHeader;
 use Console\View\Helper\Service\ClientHeaderFactory;
+use Laminas\Form\View\Helper\FormElementErrors;
+use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
+use Psr\Container\ContainerInterface;
 
 return array(
     'controller_plugins' => array(
@@ -117,6 +120,38 @@ return array(
             'Console\View\Helper\Form\ShowDuplicates' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\View\Helper\Form\Software' => 'Laminas\ServiceManager\Factory\InvokableFactory',
         ),
+        'delegators' => [
+            FlashMessenger::class => [function (
+                ContainerInterface $container,
+                $name,
+                callable $callback,
+            ) {
+                // Disable translations in the FlashMessenger view helper.
+                // Messages are already translated in controllers to enable
+                // string formatting with placeholders.
+                /** @var FlashMessenger */
+                $helper = $callback();
+                $helper->setTranslatorEnabled(false);
+
+                return $helper;
+            }],
+            FormElementErrors::class => [function (
+                ContainerInterface $container,
+                $name,
+                callable $callback,
+            ) {
+                // Disable translations in the FormElementErrors view helper.
+                // Otherwise it would try to translate the already translated
+                // messages from the validators. Translation must be left to the
+                // validators because placeholders in message templates can only
+                // be handled there.
+                /** @var FormElementErrors */
+                $helper = $callback();
+                $helper->setTranslateMessages(false);
+
+                return $helper;
+            }],
+        ],
     ),
     'view_manager' => array(
         'doctype' => 'HTML5',

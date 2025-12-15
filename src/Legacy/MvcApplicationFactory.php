@@ -3,6 +3,7 @@
 namespace Braintacle\Legacy;
 
 use Laminas\Mvc\Controller\ControllerManager;
+use Laminas\Mvc\I18n\Translator;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Renderer\PhpRenderer;
 
@@ -19,6 +20,7 @@ final class MvcApplicationFactory
             $serviceManager->get('Application'),
             $serviceManager->get(ControllerManager::class),
             $serviceManager->get(PhpRenderer::class),
+            $serviceManager->get(Translator::class),
         );
     }
 }

@@ -5,7 +5,9 @@ namespace Braintacle\Legacy;
 use Laminas\Http\Response;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\Controller\ControllerManager;
+use Laminas\Mvc\I18n\Translator;
 use Laminas\Mvc\MvcEvent;
+use Laminas\Validator\AbstractValidator;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,6 +23,7 @@ class MvcApplication
         private Application $application,
         private ControllerManager $controllerManager,
         private PhpRenderer $phpRenderer,
+        private Translator $translator,
     ) {}
 
     public function run(ServerRequestInterface $request): MvcEvent
@@ -32,6 +35,8 @@ class MvcApplication
         // code, too.
         $this->previousErrorHandler = set_error_handler($this->errorHandler(...), E_USER_DEPRECATED);
         try {
+            AbstractValidator::setDefaultTranslator($this->translator);
+
             $mvcEvent = $this->application->getMvcEvent();
             $mvcEvent->setParam(self::Psr7Request, $request);
 
