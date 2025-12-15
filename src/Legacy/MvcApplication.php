@@ -10,6 +10,8 @@ use Laminas\Mvc\MvcEvent;
 use Laminas\Validator\AbstractValidator;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
+use Laminas\View\Variables;
+use LogicException;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
 
@@ -33,7 +35,7 @@ class MvcApplication
         // and cannot be fixed here. Suppress the warning via a custom error
         // handler. suppression via @ would suppress all warnings from our own
         // code, too.
-        $this->previousErrorHandler = set_error_handler($this->errorHandler(...), E_USER_DEPRECATED);
+        $this->previousErrorHandler = set_error_handler($this->errorHandler(...), E_USER_DEPRECATED | E_USER_NOTICE);
         try {
             AbstractValidator::setDefaultTranslator($this->translator);
 
@@ -92,6 +94,14 @@ class MvcApplication
                 $result->setTemplate("console/$controller/$action");
             }
             assert($result instanceof ViewModel);
+            $variables = $result->getVariables();
+            if (! $variables instanceof Variables) {
+                assert(is_array($variables));
+                $variables = new Variables($variables);
+                $result->setVariables($variables, true);
+            }
+            $variables->setStrictVars(true);
+
             $mvcEvent->getResponse()->setContent($this->phpRenderer->render($result));
         }
     }
@@ -99,12 +109,14 @@ class MvcApplication
     public function errorHandler(int $errno, string $errstr, string $errfile, int $errline): bool
     {
         if (
-            str_starts_with(
+            $errno == E_USER_DEPRECATED && str_starts_with(
                 $errstr,
                 'Laminas\ServiceManager\AbstractPluginManager::__construct now expects a '
             )
         ) {
             return true;
+        } elseif ($errno == E_USER_NOTICE && preg_match('/View variable ".+" does not exist/', $errstr)) {
+            throw new LogicException($errstr);
         } elseif ($this->previousErrorHandler) {
             return ($this->previousErrorHandler)($errno, $errstr, $errfile, $errline);
         } else {

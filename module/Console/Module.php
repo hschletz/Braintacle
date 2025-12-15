@@ -23,16 +23,12 @@
 namespace Console;
 
 use Laminas\ModuleManager\Feature;
-use Laminas\Mvc\MvcEvent;
 
 /**
  * This is the module for the web administration console.
  * @codeCoverageIgnore
  */
-class Module implements
-    Feature\InitProviderInterface,
-    Feature\ConfigProviderInterface,
-    Feature\BootstrapListenerInterface
+class Module implements Feature\InitProviderInterface, Feature\ConfigProviderInterface
 {
     /** {@inheritdoc} */
     public function init(\Laminas\ModuleManager\ModuleManagerInterface $manager)
@@ -46,46 +42,6 @@ class Module implements
     public function getConfig()
     {
         return require(__DIR__ . '/module.config.php');
-    }
-
-    /** {@inheritdoc} */
-    public function onBootstrap(\Laminas\EventManager\EventInterface $e)
-    {
-        $eventManager = $e->getParam('application')->getEventManager();
-        $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'forceStrictVars'));
-    }
-
-    /**
-     * Hook to trigger notices on undefined view variables
-     *
-     * This is invoked by the "render" event.
-     *
-     * @param \Laminas\Mvc\MvcEvent $e MVC event
-     *
-     * @psalm-suppress PossiblyUnusedMethod
-     */
-    public function forceStrictVars(\Laminas\EventManager\EventInterface $e)
-    {
-        $this->setStrictVars($e->getViewModel());
-    }
-
-    /**
-     * Set strict vars on a view model recursively
-     *
-     * @param \Laminas\View\Model\ViewModel $model
-     */
-    protected function setStrictVars(\Laminas\View\Model\ViewModel $model)
-    {
-        $vars = $model->getVariables();
-        if (!$vars instanceof \Laminas\View\Variables) {
-            /** @psalm-suppress InvalidArgument if this is called, wo apparently have an array */
-            $vars = new \Laminas\View\Variables($vars);
-        }
-        $vars->setStrictVars(true);
-        $model->setVariables($vars, true);
-        foreach ($model->getChildren() as $child) {
-            $this->setStrictVars($child);
-        }
     }
 
     /**

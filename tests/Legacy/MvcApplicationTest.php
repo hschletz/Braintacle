@@ -21,6 +21,7 @@ use Laminas\Validator\AbstractValidator;
 use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
+use LogicException;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -206,6 +207,33 @@ final class MvcApplicationTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('_content', $response->getContent());
+    }
+
+    public function testRunReportsMissingVariable()
+    {
+        $request = new Request();
+        $result = [];
+
+        $mvcEvent = new MvcEvent();
+        $mvcEvent->setRequest($request);
+
+        $controller = $this->createMock(Controller::class);
+        $controller->method('dispatch')->with($request)->willReturnCallback(function () use ($mvcEvent, $result) {
+            $mvcEvent->setResponse(new Response());
+
+            return $result;
+        });
+
+        $phpRenderer = $this->createMock(PhpRenderer::class);
+        $phpRenderer->method('render')->willReturnCallback(function (ViewModel $viewModel) {
+            /** @psalm-suppress UnusedMethodCall (call should cause an exception) */
+            $viewModel->getVariables()['invalid'];
+        });
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('View variable "invalid" does not exist');
+
+        $this->getMvcEvent($controller, $phpRenderer, $mvcEvent);
     }
 
     public function testRunSuppressesLaminasWarning()
