@@ -106,7 +106,15 @@ final class MvcApplicationTest extends TestCase
         });
 
         $phpRenderer = $this->createMock(PhpRenderer::class);
-        $phpRenderer->method('render')->with('console/_controller/_action', $result)->willReturn('_content');
+        $phpRenderer->method('render')->with(
+            $this->callback(function ($viewModel) {
+                $this->assertInstanceOf(ViewModel::class, $viewModel);
+                $this->assertEquals('console/_controller/_action', $viewModel->getTemplate());
+
+                return true;
+            }),
+            null,
+        )->willReturn('_content');
 
         $returnedMvcEvent = $this->getMvcEvent($controller, $phpRenderer, $mvcEvent);
 

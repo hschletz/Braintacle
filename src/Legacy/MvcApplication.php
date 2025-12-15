@@ -35,38 +35,60 @@ class MvcApplication
             $mvcEvent = $this->application->getMvcEvent();
             $mvcEvent->setParam(self::Psr7Request, $request);
 
-            $router = $mvcEvent->getRouter();
-            $routeMatch = $router->match($mvcEvent->getRequest());
-            if (!$routeMatch) {
-                throw new HttpNotFoundException($request, 'No route matched.');
-            }
-            $mvcEvent->setRouteMatch($routeMatch);
-            $controllerName = $routeMatch->getParam('controller');
-
-            if (! $this->controllerManager->has($controllerName)) {
-                throw new HttpNotFoundException($request, 'Invalid controller name: ' . $controllerName);
-            }
-            /** @var Controller */
-            $controller = $this->controllerManager->get($controllerName);
-            $controller->setEvent($mvcEvent);
-
-            $result = $controller->dispatch($mvcEvent->getRequest());
-
-            if (! $result instanceof Response) {
-                if (is_array($result)) {
-                    $action = $routeMatch->getParam('action');
-                    $template = "console/$controllerName/$action";
-                    $mvcEvent->getResponse()->setContent($this->phpRenderer->render($template, $result));
-                } else {
-                    assert($result instanceof ViewModel);
-                    $mvcEvent->getResponse()->setContent($this->phpRenderer->render($result));
-                }
-            }
+            $this->route($mvcEvent);
+            $this->dispatch($mvcEvent);
+            $this->render($mvcEvent);
         } finally {
             restore_error_handler();
         }
 
         return $mvcEvent;
+    }
+
+    private function route(MvcEvent $mvcEvent): void
+    {
+        $router = $mvcEvent->getRouter();
+        $routeMatch = $router->match($mvcEvent->getRequest());
+        if (!$routeMatch) {
+            throw new HttpNotFoundException($mvcEvent->getParam(self::Psr7Request), 'No route matched.');
+        }
+        $mvcEvent->setRouteMatch($routeMatch);
+    }
+
+    private function dispatch(MvcEvent $mvcEvent): void
+    {
+        $controllerName = $mvcEvent->getRouteMatch()->getParam('controller');
+
+        if (! $this->controllerManager->has($controllerName)) {
+            throw new HttpNotFoundException(
+                $mvcEvent->getParam(self::Psr7Request),
+                'Invalid controller name: ' . $controllerName,
+            );
+        }
+
+        /** @var Controller */
+        $controller = $this->controllerManager->get($controllerName);
+        $controller->setEvent($mvcEvent);
+
+        $result = $controller->dispatch($mvcEvent->getRequest());
+        $mvcEvent->setResult($result);
+    }
+
+    private function render(MvcEvent $mvcEvent): void
+    {
+        $result = $mvcEvent->getResult();
+        if (! $result instanceof Response) {
+            if (is_array($result)) {
+                $routeMatch = $mvcEvent->getRouteMatch();
+                $controller = $routeMatch->getParam('controller');
+                $action = $routeMatch->getParam('action');
+
+                $result = new ViewModel($result);
+                $result->setTemplate("console/$controller/$action");
+            }
+            assert($result instanceof ViewModel);
+            $mvcEvent->getResponse()->setContent($this->phpRenderer->render($result));
+        }
     }
 
     public function errorHandler(int $errno, string $errstr, string $errfile, int $errline): bool
