@@ -2,7 +2,7 @@
 
 namespace Braintacle\Legacy;
 
-use Laminas\Mvc\Controller\ControllerManager;
+use Laminas\Mvc\Controller\PluginManager;
 use Laminas\Mvc\I18n\Translator;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Renderer\PhpRenderer;
@@ -18,7 +18,7 @@ final class MvcApplicationFactory
         // and autowiring would create a new unconfigured instance.
         return new MvcApplication(
             $serviceManager->get('Application'),
-            $serviceManager->get(ControllerManager::class),
+            $serviceManager->get(PluginManager::class),
             $serviceManager->get(PhpRenderer::class),
             $serviceManager->get(Translator::class),
         );

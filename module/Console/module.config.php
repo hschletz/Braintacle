@@ -20,8 +20,14 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Console\Controller\AccountsController;
+use Console\Controller\NetworkController;
+use Console\Controller\PackageController;
 use Console\Mvc\Controller\Plugin\Service\TranslateFactory;
 use Console\Mvc\Controller\Plugin\Translate;
+use Console\Service\AccountsControllerFactory;
+use Console\Service\NetworkControllerFactory;
+use Console\Service\PackageControllerFactory;
 use Console\View\Helper\ClientHeader;
 use Console\View\Helper\Service\ClientHeaderFactory;
 use Laminas\Form\View\Helper\FormElementErrors;
@@ -43,16 +49,6 @@ return array(
             'Console\Mvc\Controller\Plugin\GetOrder' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\Mvc\Controller\Plugin\PrintForm' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             Translate::class => TranslateFactory::class,
-        ),
-    ),
-    'controllers' => array(
-        'factories' => array(
-            'accounts' => 'Console\Service\AccountsControllerFactory',
-            'client' => 'Console\Service\ClientControllerFactory',
-            'licenses' => 'Console\Service\LicensesControllerFactory',
-            'network' => 'Console\Service\NetworkControllerFactory',
-            'package' => 'Console\Service\PackageControllerFactory',
-            'preferences' => 'Console\Service\PreferencesControllerFactory',
         ),
     ),
     'form_elements' => array(
@@ -98,6 +94,13 @@ return array(
             ),
         ),
     ),
+    'service_manager' => [
+        'factories' => [
+            AccountsController::class => AccountsControllerFactory::class,
+            NetworkController::class => NetworkControllerFactory::class,
+            PackageController::class => PackageControllerFactory::class,
+        ],
+    ],
     'view_helpers' => array(
         'aliases' => array(
             'clientHeader' => ClientHeader::class,

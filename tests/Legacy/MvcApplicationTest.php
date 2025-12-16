@@ -5,17 +5,19 @@ namespace Braintacle\Test\Legacy;
 use Braintacle\Legacy\Controller;
 use Braintacle\Legacy\MvcApplication;
 use Braintacle\Test\ErrorHandlerTestTrait;
+use Console\Controller\ClientController;
 use Error;
 use Exception;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Application;
-use Laminas\Mvc\Controller\ControllerManager;
+use Laminas\Mvc\Controller\PluginManager;
 use Laminas\Mvc\I18n\Translator;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\Http\TreeRouteStack;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\RouteStackInterface;
+use Laminas\ServiceManager\ServiceManager;
 use Laminas\Uri\Http as Uri;
 use Laminas\Validator\AbstractValidator;
 use Laminas\Validator\Translator\TranslatorInterface;
@@ -52,13 +54,13 @@ final class MvcApplicationTest extends TestCase
 
     private function createMvcApplication(
         ?Application $application = null,
-        ?ControllerManager $controllerManager = null,
+        ?PluginManager $pluginManager = null,
         ?PhpRenderer $phpRenderer = null,
         ?Translator $translator = null,
     ): MvcApplication {
         return new MvcApplication(
             $application ?? $this->createStub(Application::class),
-            $controllerManager ?? $this->createStub(ControllerManager::class),
+            $pluginManager ?? $this->createStub(PluginManager::class),
             $phpRenderer ?? $this->createStub(PhpRenderer::class),
             $translator ?? $this->createStub(Translator::class),
         );
@@ -78,22 +80,24 @@ final class MvcApplicationTest extends TestCase
             $mvcEvent->setResponse(new Response());
         }
 
-        $routeMatch = new RouteMatch(['controller' => '_controller', 'action' => '_action']);
+        $routeMatch = new RouteMatch(['controller' => 'client', 'action' => '_action']);
 
         $router = $this->createMock(RouteStackInterface::class);
         $router->method('match')->with($mvcEvent->getRequest())->willReturn($routeMatch);
         $mvcEvent->setRouter($router);
 
+        $pluginManager = $this->createMock(PluginManager::class);
+
         $controller->expects($this->once())->method('setEvent')->with($mvcEvent);
+        $controller->expects($this->once())->method('setPluginManager')->with($pluginManager);
+
+        $serviceManager = new ServiceManager(['services' => [ClientController::class => $controller]]);
 
         $application = $this->createStub(Application::class);
         $application->method('getMvcEvent')->willReturn($mvcEvent);
+        $application->method('getServiceManager')->willReturn($serviceManager);
 
-        $controllerManager = $this->createMock(ControllerManager::class);
-        $controllerManager->method('has')->with('_controller')->willReturn(true);
-        $controllerManager->method('get')->with('_controller')->willReturn($controller);
-
-        $mvcApplication = $this->createMvcApplication($application, $controllerManager, $phpRenderer);
+        $mvcApplication = $this->createMvcApplication($application, $pluginManager, $phpRenderer);
         $returnedEvent = $mvcApplication->run($this->createStub(ServerRequestInterface::class));
 
         $this->assertSame($routeMatch, $mvcEvent->getRouteMatch());
@@ -132,7 +136,6 @@ final class MvcApplicationTest extends TestCase
         $mvcEvent = new MvcEvent();
         $mvcEvent->setRequest($request);
 
-
         $controller = $this->createMock(Controller::class);
         $controller->method('dispatch')->with($request)->willReturnCallback(function () use ($mvcEvent, $response) {
             $mvcEvent->setResponse($response); // simulate Redirect controller plugin
@@ -166,7 +169,7 @@ final class MvcApplicationTest extends TestCase
         $phpRenderer->method('render')->with(
             $this->callback(function ($viewModel) {
                 $this->assertInstanceOf(ViewModel::class, $viewModel);
-                $this->assertEquals('console/_controller/_action', $viewModel->getTemplate());
+                $this->assertEquals('console/client/_action', $viewModel->getTemplate());
 
                 return true;
             }),
@@ -327,7 +330,7 @@ final class MvcApplicationTest extends TestCase
     public static function invalidRouteProvider()
     {
         return [
-            ['/console/_controller/_action/extra', 'No route matched.'],
+            ['/console/client/_action/extra', 'No route matched.'],
             ['/console/invalid/_action', 'Invalid controller name: invalid'],
         ];
     }
@@ -351,19 +354,15 @@ final class MvcApplicationTest extends TestCase
             ],
         ]));
 
+        $serviceManager = new ServiceManager();
+
         $application = $this->createStub(Application::class);
         $application->method('getMvcEvent')->willReturn($mvcEvent);
-
-        $controller = $this->createMock(Controller::class);
-        $controller->expects($this->never())->method('dispatch');
-
-        $controllerManager = $this->createStub(ControllerManager::class);
-        $controllerManager->method('has')->willReturnCallback(fn($name) => $name == '_controller');
-        $controllerManager->method('get')->willReturn($controller);
+        $application->method('getServiceManager')->willReturn($serviceManager);
 
         $phpRenderer = $this->createStub(PhpRenderer::class);
 
-        $mvcApplication = $this->createMvcApplication($application, $controllerManager, $phpRenderer);
+        $mvcApplication = $this->createMvcApplication($application, phpRenderer: $phpRenderer);
 
         $this->expectException(HttpNotFoundException::class);
         $this->expectExceptionMessage($message);
@@ -378,10 +377,9 @@ final class MvcApplicationTest extends TestCase
         $application = $this->createStub(Application::class);
         $application->method('getMvcEvent')->willReturn($mvcEvent);
 
-        $controllerManager = $this->createStub(ControllerManager::class);
         $phpRenderer = $this->createStub(PhpRenderer::class);
 
-        $mvcApplication = $this->createMvcApplication($application, $controllerManager, $phpRenderer);
+        $mvcApplication = $this->createMvcApplication($application, phpRenderer: $phpRenderer);
         $this->assertSame($mvcEvent, $mvcApplication->getMvcEvent());
     }
 }

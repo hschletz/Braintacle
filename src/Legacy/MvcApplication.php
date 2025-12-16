@@ -4,7 +4,7 @@ namespace Braintacle\Legacy;
 
 use Laminas\Http\Response;
 use Laminas\Mvc\Application;
-use Laminas\Mvc\Controller\ControllerManager;
+use Laminas\Mvc\Controller\PluginManager;
 use Laminas\Mvc\I18n\Translator;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Validator\AbstractValidator;
@@ -23,7 +23,7 @@ class MvcApplication
 
     public function __construct(
         private Application $application,
-        private ControllerManager $controllerManager,
+        private PluginManager $pluginManager,
         private PhpRenderer $phpRenderer,
         private Translator $translator,
     ) {}
@@ -66,15 +66,23 @@ class MvcApplication
     {
         $controllerName = $mvcEvent->getRouteMatch()->getParam('controller');
 
-        if (! $this->controllerManager->has($controllerName)) {
-            throw new HttpNotFoundException(
+        /** @var Controller */
+        $controller = $this->application->getServiceManager()->get(match ($controllerName) {
+            // Only 1 controller is tested
+            // @codeCoverageIgnoreStart
+            'accounts' => \Console\Controller\AccountsController::class,
+            'client' => \Console\Controller\ClientController::class,
+            'licenses' => \Console\Controller\LicensesController::class,
+            'network' => \Console\Controller\NetworkController::class,
+            'package' => \Console\Controller\PackageController::class,
+            'preferences' => \Console\Controller\PreferencesController::class,
+            // @codeCoverageIgnoreEnd
+            default => throw new HttpNotFoundException(
                 $mvcEvent->getParam(self::Psr7Request),
                 'Invalid controller name: ' . $controllerName,
-            );
-        }
-
-        /** @var Controller */
-        $controller = $this->controllerManager->get($controllerName);
+            ),
+        });
+        $controller->setPluginManager($this->pluginManager);
         $controller->setEvent($mvcEvent);
 
         $result = $controller->dispatch($mvcEvent->getRequest());
