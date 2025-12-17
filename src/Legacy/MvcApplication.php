@@ -85,6 +85,8 @@ class MvcApplication
         $controller->setPluginManager($this->pluginManager);
         $controller->setEvent($mvcEvent);
 
+        $this->pluginManager->setController($controller);
+
         $result = $controller->dispatch($mvcEvent->getRequest());
         $mvcEvent->setResult($result);
     }

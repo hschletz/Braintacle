@@ -160,7 +160,7 @@ class ClientController extends Controller
         );
 
         $jumpto = $params->fromQuery('jumpto');
-        if (!$jumpto || !method_exists($this, static::getMethodFromAction($jumpto))) {
+        if (!$jumpto || !method_exists($this, $this->getMethodFromAction($jumpto))) {
             $jumpto = 'general'; // Default for missing or invalid argument
         }
         $vars['jumpto'] = $jumpto;

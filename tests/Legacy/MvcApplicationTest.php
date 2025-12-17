@@ -87,6 +87,7 @@ final class MvcApplicationTest extends TestCase
         $mvcEvent->setRouter($router);
 
         $pluginManager = $this->createMock(PluginManager::class);
+        $pluginManager->expects($this->once())->method('setController')->with($controller);
 
         $controller->expects($this->once())->method('setEvent')->with($mvcEvent);
         $controller->expects($this->once())->method('setPluginManager')->with($pluginManager);

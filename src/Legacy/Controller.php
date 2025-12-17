@@ -2,9 +2,12 @@
 
 namespace Braintacle\Legacy;
 
-use Laminas\Http\PhpEnvironment\Response;
-use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\EventManager\EventInterface;
+use Laminas\Http\Request;
+use Laminas\Mvc\Controller\PluginManager;
+use Laminas\Mvc\InjectApplicationEventInterface;
 use Laminas\Mvc\MvcEvent;
+use Laminas\Stdlib\DispatchableInterface;
 use Laminas\Stdlib\RequestInterface;
 use Laminas\Stdlib\ResponseInterface;
 use Override;
@@ -13,30 +16,61 @@ use Slim\Exception\HttpNotFoundException;
 /**
  * Base class for MVC controllers.
  */
-abstract class Controller extends AbstractActionController
+abstract class Controller implements DispatchableInterface, InjectApplicationEventInterface
 {
+    private MvcEvent $mvcEvent;
+    private PluginManager $pluginManager;
+    private Request $request;
+
+    public function __call($name, $arguments)
+    {
+        $plugin = $this->pluginManager->get($name);
+        if (is_callable($plugin)) {
+            /** @psalm-suppress InvalidFunctionCall */
+            return $plugin(...$arguments);
+        } else {
+            return $plugin;
+        }
+    }
+
+    #[Override]
+    public function getEvent(): MvcEvent
+    {
+        return $this->mvcEvent;
+    }
+
+    #[Override]
+    public function setEvent(EventInterface $event): void
+    {
+        $this->mvcEvent = $event;
+    }
+
+    public function setPluginManager(PluginManager $pluginManager): void
+    {
+        $this->pluginManager = $pluginManager;
+    }
+
+    public function getRequest(): Request
+    {
+        return $this->request;
+    }
+
     #[Override]
     public function dispatch(RequestInterface $request, ?ResponseInterface $response = null)
     {
-        // Reimplementation that does not dispatch events.
-
         $this->request = $request;
-        $this->response = new Response();
 
         $event = $this->getEvent();
         $event->setName(MvcEvent::EVENT_DISPATCH);
         $event->setRequest($request);
-        $event->setResponse($this->response);
-        $event->setTarget($this);
 
         return $this->onDispatch($event);
     }
 
-    #[Override]
     public function onDispatch(MvcEvent $e)
     {
         $action = $e->getRouteMatch()->getParam('action');
-        $method = $action . 'Action';
+        $method = $this->getMethodFromAction($action);
         if (!method_exists($this, $method)) {
             throw new HttpNotFoundException($e->getParam(MvcApplication::Psr7Request), 'Invalid action');
         }
@@ -45,5 +79,10 @@ abstract class Controller extends AbstractActionController
         $e->setResult($result);
 
         return $result;
+    }
+
+    public function getMethodFromAction(string $action): string
+    {
+        return $action . 'Action';
     }
 }

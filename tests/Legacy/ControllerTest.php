@@ -5,45 +5,75 @@ namespace Braintacle\Test\Legacy;
 use Braintacle\Legacy\Controller;
 use Braintacle\Legacy\MvcApplication;
 use Laminas\Http\Request;
+use Laminas\Mvc\Controller\PluginManager;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\RouteMatch;
-use Override;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
+use stdClass;
 
 #[CoversClass(Controller::class)]
 final class ControllerTest extends TestCase
 {
-    public function testDispatch()
+    public function testPluginCallable()
+    {
+        $pluginManager = $this->createMock(PluginManager::class);
+        $pluginManager->method('get')->with('test')->willReturn(new class {
+            public function __invoke(string $foo, string $bar): string
+            {
+                return $foo . $bar;
+            }
+        });
+
+        $controller = new class extends Controller {};
+        $controller->setPluginManager($pluginManager);
+
+        // @phpstan-ignore method.notFound (magic method)
+        $this->assertEquals('foobar', $controller->test('foo', 'bar'));
+    }
+
+    public function testPluginNotCallable()
+    {
+        $plugin = new stdClass();
+
+        $pluginManager = $this->createMock(PluginManager::class);
+        $pluginManager->method('get')->with('test')->willReturn($plugin);
+
+        $controller = new class extends Controller {};
+        $controller->setPluginManager($pluginManager);
+
+        // @phpstan-ignore method.notFound (magic method)
+        $this->assertSame($plugin, $controller->test());
+    }
+
+    public function testEvent()
     {
         $mvcEvent = new MvcEvent();
-        $mvcEvent->setParam('id', 'testDispatch');
 
+        $controller = new class extends Controller {};
+        $controller->setEvent($mvcEvent);
+        $this->assertSame($mvcEvent, $controller->getEvent());
+    }
+
+    public function testDispatch()
+    {
         $request = new Request();
 
-        $controller = new class extends Controller
-        {
-            #[Override]
-            public function onDispatch(MvcEvent $e)
-            {
-                // Should be the same instance that was passed to dispatch()
-                TestCase::assertEquals('testDispatch', $e->getParam('id'));
+        $controller = $this->createPartialMock(Controller::class, ['getEvent', 'onDispatch']);
+        $controller->method('getEvent')->willReturn(new MvcEvent());
+        $controller->method('onDisPatch')->with($this->callback(
+            function (MvcEvent $mvcEvent) use ($controller, $request): bool {
+                $this->assertEquals(MvcEvent::EVENT_DISPATCH, $mvcEvent->getName());
+                $this->assertSame($request, $mvcEvent->getRequest());
+                $this->assertSame($request, $controller->getRequest());
 
-                // Properties set within dispatch() before this method got invoked
-                TestCase::assertEquals(MvcEvent::EVENT_DISPATCH, $e->getName());
-                TestCase::assertSame($this->request, $e->getRequest());
-                TestCase::assertSame($this->response, $e->getResponse());
-                TestCase::assertSame($this, $e->getTarget());
-
-                // Should be the same instance that was passed to dispatch()
-                return $this->request;
+                return true;
             }
-        };
-        $controller->setEvent($mvcEvent);
+        ))->willReturn('_result');
 
-        $this->assertSame($request, $controller->dispatch($request));
+        $this->assertEquals('_result', $controller->dispatch($request));
     }
 
     public function testOnDispatch()
@@ -74,5 +104,11 @@ final class ControllerTest extends TestCase
         $this->expectExceptionMessage('Invalid action');
 
         $controller->onDispatch($mvcEvent);
+    }
+
+    public function testGetMethodFromAction()
+    {
+        $controller = new class extends Controller {};
+        $this->assertEquals('testAction', $controller->getMethodFromAction('test'));
     }
 }
