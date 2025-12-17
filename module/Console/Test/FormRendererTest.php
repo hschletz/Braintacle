@@ -22,6 +22,9 @@
 
 namespace Console\Test;
 
+use Braintacle\Container;
+use Laminas\ServiceManager\ServiceManager;
+
 /**
  * Form renderer test case
  *
@@ -36,7 +39,7 @@ class FormRendererTest extends \PHPUnit\Framework\TestCase
      */
     protected function createView()
     {
-        $serviceManager = \Library\Application::init('Console')->getServiceManager();
+        $serviceManager = (new Container())->get(ServiceManager::class);
         $view = new \Laminas\View\Renderer\PhpRenderer();
         $view->setHelperPluginManager($serviceManager->get('ViewHelperManager'));
         return $view;

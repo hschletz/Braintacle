@@ -22,6 +22,7 @@
 
 namespace Database\Test\Table;
 
+use Braintacle\Container;
 use Braintacle\Database\ConnectionFactory;
 use Braintacle\Legacy\Database\AdapterFactory;
 use Braintacle\Legacy\Database\DatabaseFactory;
@@ -29,7 +30,6 @@ use Composer\InstalledVersions;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Di\Container\ServiceManager\AutowireFactory;
 use Laminas\ServiceManager\ServiceManager;
-use Library\Application;
 use Nada\Database\AbstractDatabase;
 use Nada\Factory;
 use PHPUnit\DbUnit\Database\Connection;
@@ -102,7 +102,7 @@ abstract class AbstractTestCase extends \PHPUnit\DbUnit\TestCase
             $adapter = (new AdapterFactory($connection))();
 
             // Extend module-generated service manager config with required entries.
-            $config = Application::init('Database')->getServiceManager()->get('config')['service_manager'];
+            $config = (new Container()->get(ServiceManager::class))->get('config')['service_manager'];
             $config['abstract_factories'][] = AutowireFactory::class;
             $config['services'][AbstractDatabase::class] = (new DatabaseFactory(new Factory(), $adapter))();
             $config['services'][Adapter::class] = $adapter;

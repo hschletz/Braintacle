@@ -22,6 +22,8 @@
 
 namespace Console\Test\Form\Preferences;
 
+use Braintacle\Container;
+use Laminas\ServiceManager\ServiceManager;
 use Library\Test\InjectServicesTrait;
 
 /**
@@ -38,7 +40,7 @@ class AbstractFormTest extends \PHPUnit\Framework\TestCase
      */
     protected function createView()
     {
-        $serviceManager = \Library\Application::init('Console')->getServiceManager();
+        $serviceManager = (new Container())->get(ServiceManager::class);
         self::injectServices($serviceManager);
 
         $view = new \Laminas\View\Renderer\PhpRenderer();

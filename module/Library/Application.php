@@ -22,78 +22,8 @@
 
 namespace Library;
 
-use Laminas\Di\Container\ServiceManager\AutowireFactory;
-use Laminas\Filter\FilterPluginManager;
-use Laminas\I18n\Translator\LoaderPluginManager;
-use Laminas\ServiceManager\ServiceManager;
-use Laminas\Validator\ValidatorPluginManager;
-
-/**
- * Bootstrap class for all applications that use the Braintacle API.
- */
 class Application
 {
-    /**
-     * Initialize MVC application
-     *
-     * @param string $module Module that provides the application
-     * @return \Laminas\Mvc\Application
-     * @codeCoverageIgnore
-     */
-    public static function init($module)
-    {
-        $application = \Laminas\Mvc\Application::init(static::getApplicationConfig($module));
-        static::addAbstractFactories($application->getServiceManager());
-        return $application;
-    }
-
-    /**
-     * Add abstract DI factory to given service manager.
-     *
-     * Abstract factories are invoked in the same order in which they get added.
-     * The abstract DI factory should act as a fallback only. It cannot be added
-     * via config because other modules might add another abstract factory after
-     * the DI factory.
-     *
-     * This method must be called after the service manager has been completely
-     * configured.
-     *
-     * @codeCoverageIgnore
-     */
-    public static function addAbstractFactories(ServiceManager $serviceManager)
-    {
-        $serviceManager->addAbstractFactory(AutowireFactory::class);
-        $serviceManager->get(FilterPluginManager::class)->addAbstractFactory(AutowireFactory::class);
-        $serviceManager->get(LoaderPluginManager::class)->addAbstractFactory(AutowireFactory::class);
-        $serviceManager->get(ValidatorPluginManager::class)->addAbstractFactory(AutowireFactory::class);
-        $serviceManager->get('ViewHelperManager')->addAbstractFactory(AutowireFactory::class);
-    }
-
-    /**
-     * Get module config for application initialization
-     *
-     * @param string $module Module to load
-     * @return array
-     */
-    public static function getApplicationConfig($module)
-    {
-        return array(
-            'modules' => array(
-                'Laminas\Filter',
-                'Laminas\Form',
-                'Laminas\I18n',
-                'Laminas\Mvc\I18n',
-                'Laminas\Mvc\Plugin\FlashMessenger',
-                'Laminas\Router',
-                'Laminas\Validator',
-                $module,
-            ),
-            'module_listener_options' => array(
-                'module_paths' => array(static::getPath('module'))
-            )
-        );
-    }
-
     /**
      * Get application directory
      *

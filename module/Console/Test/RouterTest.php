@@ -22,6 +22,9 @@
 
 namespace Console\Test;
 
+use Braintacle\Container;
+use Laminas\ServiceManager\ServiceManager;
+
 /**
  * Tests for the module's router
  */
@@ -32,8 +35,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
      */
     public function testRouter()
     {
-        $application = \Library\Application::init('Console');
-        $router = $application->getServiceManager()->get('HttpRouter');
+        $router = (new Container()->get(ServiceManager::class))->get('HttpRouter');
         $request = new \Laminas\Http\Request();
 
         $matchDefaultDefault = array(

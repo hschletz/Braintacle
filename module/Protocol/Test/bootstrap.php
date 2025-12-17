@@ -20,7 +20,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Braintacle\Container;
+use Laminas\ServiceManager\ServiceManager;
+
 error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
 
-\Library\Application::init('Protocol');
+// Discard service manager instance - once set up, the StaticFilter will be
+// operational.
+(new Container())->get(ServiceManager::class);

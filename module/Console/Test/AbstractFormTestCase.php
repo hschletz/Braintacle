@@ -22,6 +22,8 @@
 
 namespace Console\Test;
 
+use Braintacle\Container;
+use Laminas\ServiceManager\ServiceManager;
 use Laminas\Validator\Translator\TranslatorInterface;
 use Library\Test\InjectServicesTrait;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -111,7 +113,7 @@ abstract class AbstractFormTestCase extends TestCase
      */
     protected function createView()
     {
-        $serviceManager = \Library\Application::init('Console')->getServiceManager();
+        $serviceManager = (new Container())->get(ServiceManager::class);
         self::injectServices($serviceManager);
 
         $view = new \Laminas\View\Renderer\PhpRenderer();

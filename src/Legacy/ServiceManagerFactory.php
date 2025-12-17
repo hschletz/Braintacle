@@ -8,11 +8,15 @@ use Braintacle\Http\RouteHelper;
 use Braintacle\Template\Function\AssetUrlFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
 use Braintacle\Template\TemplateEngine;
+use Composer\InstalledVersions;
 use Laminas\Db\Adapter\Adapter;
+use Laminas\Di\Container\ServiceManager\AutowireFactory;
+use Laminas\Filter\FilterPluginManager;
 use Laminas\I18n\Translator\TranslatorInterface as I18nTranslatorInterface;
+use Laminas\Mvc\Application;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Translator\TranslatorInterface;
-use Library\Application;
+use Laminas\Validator\ValidatorPluginManager;
 use Model\Client\Client;
 use Nada\Database\AbstractDatabase;
 use Psr\Clock\ClockInterface;
@@ -23,7 +27,31 @@ final class ServiceManagerFactory
 {
     public function __invoke(ContainerInterface $container): ServiceManager
     {
-        $serviceManager = Application::init('Console')->getServiceManager();
+        $application = Application::init([
+            'modules' => [
+                'Laminas\Filter',
+                'Laminas\Form',
+                'Laminas\I18n',
+                'Laminas\Mvc\I18n',
+                'Laminas\Mvc\Plugin\FlashMessenger',
+                'Laminas\Router',
+                'Laminas\Validator',
+                'Console',
+            ],
+            'module_listener_options' => [
+                'module_paths' => [InstalledVersions::getRootPackage()['install_path'] . 'module'],
+            ],
+        ]);
+        $serviceManager = $application->getServiceManager();
+
+        // Abstract factories are invoked in the same order in which they get
+        // added. The abstract DI factory should act as a fallback only. It
+        // cannot be added via config because other modules might add another
+        // abstract factory after the DI factory.
+        $serviceManager->addAbstractFactory(AutowireFactory::class);
+        $serviceManager->get(FilterPluginManager::class)->addAbstractFactory(AutowireFactory::class);
+        $serviceManager->get(ValidatorPluginManager::class)->addAbstractFactory(AutowireFactory::class);
+        $serviceManager->get('ViewHelperManager')->addAbstractFactory(AutowireFactory::class);
 
         // Inject Services which are not provided by module's ServiceManager configuration.
         $serviceManager->setService(AbstractDatabase::class, $container->get(AbstractDatabase::class));

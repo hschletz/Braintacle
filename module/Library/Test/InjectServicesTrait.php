@@ -40,6 +40,7 @@ trait InjectServicesTrait
     private static function injectServices(ServiceManager $serviceManager): void
     {
         $rootPath = InstalledVersions::getRootPackage()['install_path'];
+        $serviceManager->setAllowOverride(true);
 
         // Inject empty dummy config. Tests that evaluate config set up their
         // own.

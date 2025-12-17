@@ -22,6 +22,7 @@
 
 namespace Library\Test\View\Helper;
 
+use Braintacle\Container;
 use Library\Test\InjectServicesTrait;
 use Laminas\ServiceManager\ServiceManager;
 use Library\Application;
@@ -50,7 +51,8 @@ abstract class AbstractTestCase extends TestCase
     {
         parent::setUpBeforeClass();
 
-        static::$serviceManager = Application::init('Console')->getServiceManager();
+        static::$serviceManager = (new Container()->get(ServiceManager::class));
+        static::$serviceManager->setAllowOverride(true);
         self::injectServices(static::$serviceManager);
         static::$_helperManager = static::$serviceManager->get('ViewHelperManager');
     }

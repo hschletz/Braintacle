@@ -22,6 +22,7 @@
 
 namespace Library\Test\Mvc\Controller\Plugin;
 
+use Braintacle\Container;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\MvcEvent;
@@ -29,6 +30,7 @@ use Laminas\Router\Http\Segment;
 use Laminas\Router\Http\TreeRouteStack;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\SimpleRouteStack;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Base class for controller plugin tests
@@ -53,9 +55,7 @@ abstract class AbstractTestCase extends \PHPUnit\Framework\TestCase
 
     public static function setUpBeforeClass(): void
     {
-        $module = strtok(get_called_class(), '\\');
-        $application = \Library\Application::init($module);
-        static::$_serviceManager = $application->getServiceManager();
+        static::$_serviceManager = (new Container()->get(ServiceManager::class));
     }
 
     /**
