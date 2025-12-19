@@ -2,6 +2,7 @@
 
 namespace Braintacle\Test\Legacy;
 
+use Braintacle\Legacy\ApplicationService;
 use Braintacle\Legacy\Controller;
 use Braintacle\Legacy\MvcApplication;
 use Braintacle\Test\ErrorHandlerTestTrait;
@@ -10,7 +11,6 @@ use Error;
 use Exception;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
-use Laminas\Mvc\Application;
 use Laminas\Mvc\Controller\PluginManager;
 use Laminas\Mvc\I18n\Translator;
 use Laminas\Mvc\MvcEvent;
@@ -53,13 +53,13 @@ final class MvcApplicationTest extends TestCase
     }
 
     private function createMvcApplication(
-        ?Application $application = null,
+        ?ApplicationService $applicationService = null,
         ?PluginManager $pluginManager = null,
         ?PhpRenderer $phpRenderer = null,
         ?Translator $translator = null,
     ): MvcApplication {
         return new MvcApplication(
-            $application ?? $this->createStub(Application::class),
+            $applicationService ?? $this->createStub(ApplicationService::class),
             $pluginManager ?? $this->createStub(PluginManager::class),
             $phpRenderer ?? $this->createStub(PhpRenderer::class),
             $translator ?? $this->createStub(Translator::class),
@@ -94,11 +94,11 @@ final class MvcApplicationTest extends TestCase
 
         $serviceManager = new ServiceManager(['services' => [ClientController::class => $controller]]);
 
-        $application = $this->createStub(Application::class);
-        $application->method('getMvcEvent')->willReturn($mvcEvent);
-        $application->method('getServiceManager')->willReturn($serviceManager);
+        $applicationService = $this->createStub(ApplicationService::class);
+        $applicationService->method('getMvcEvent')->willReturn($mvcEvent);
+        $applicationService->method('getServiceManager')->willReturn($serviceManager);
 
-        $mvcApplication = $this->createMvcApplication($application, $pluginManager, $phpRenderer);
+        $mvcApplication = $this->createMvcApplication($applicationService, $pluginManager, $phpRenderer);
         $returnedEvent = $mvcApplication->run($this->createStub(ServerRequestInterface::class));
 
         $this->assertSame($routeMatch, $mvcEvent->getRouteMatch());
@@ -110,11 +110,11 @@ final class MvcApplicationTest extends TestCase
     {
         $translator = $this->createStub(Translator::class);
 
-        $application = $this->createStub(Application::class);
-        $application->method('getMvcEvent')->willThrowException(new Exception('Abort early'));
+        $applicationService = $this->createStub(ApplicationService::class);
+        $applicationService->method('getMvcEvent')->willThrowException(new Exception('Abort early'));
 
         $mvcApplication = $this->createMvcApplication(
-            application: $application,
+            applicationService: $applicationService,
             translator: $translator,
         );
 
@@ -357,13 +357,13 @@ final class MvcApplicationTest extends TestCase
 
         $serviceManager = new ServiceManager();
 
-        $application = $this->createStub(Application::class);
-        $application->method('getMvcEvent')->willReturn($mvcEvent);
-        $application->method('getServiceManager')->willReturn($serviceManager);
+        $applicationService = $this->createStub(ApplicationService::class);
+        $applicationService->method('getMvcEvent')->willReturn($mvcEvent);
+        $applicationService->method('getServiceManager')->willReturn($serviceManager);
 
         $phpRenderer = $this->createStub(PhpRenderer::class);
 
-        $mvcApplication = $this->createMvcApplication($application, phpRenderer: $phpRenderer);
+        $mvcApplication = $this->createMvcApplication($applicationService, phpRenderer: $phpRenderer);
 
         $this->expectException(HttpNotFoundException::class);
         $this->expectExceptionMessage($message);
@@ -375,12 +375,12 @@ final class MvcApplicationTest extends TestCase
     {
         $mvcEvent = new MvcEvent();
 
-        $application = $this->createStub(Application::class);
-        $application->method('getMvcEvent')->willReturn($mvcEvent);
+        $applicationService = $this->createStub(ApplicationService::class);
+        $applicationService->method('getMvcEvent')->willReturn($mvcEvent);
 
         $phpRenderer = $this->createStub(PhpRenderer::class);
 
-        $mvcApplication = $this->createMvcApplication($application, phpRenderer: $phpRenderer);
+        $mvcApplication = $this->createMvcApplication($applicationService, phpRenderer: $phpRenderer);
         $this->assertSame($mvcEvent, $mvcApplication->getMvcEvent());
     }
 }

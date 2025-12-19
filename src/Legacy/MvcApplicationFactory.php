@@ -12,10 +12,9 @@ final class MvcApplicationFactory
 {
     public function __invoke(ServiceManager $serviceManager)
     {
-        // Resolve dependencies via the fully configured service manager. Do not
-        // try to autowire the MvcApplication - the service manager knows the
-        // Laminas\Mvc\Application instance only under the name 'Application',
-        // and autowiring would create a new unconfigured instance.
+        // Resolve dependencies via the service manager, not the standard
+        // container. Do not try to autowire the MvcApplication - autowiring is
+        // not set up yet when this factory is invoked.
         return new MvcApplication(
             $serviceManager->get('Application'),
             $serviceManager->get(PluginManager::class),

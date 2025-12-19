@@ -25,7 +25,7 @@ use Psr\Log\LoggerInterface;
 #[CoversClass(ServiceManagerFactory::class)]
 final class ServiceManagerFactoryTest extends TestCase
 {
-    public function testServices()
+    public function testServiceFromMainContainer()
     {
         $services = [
             AbstractDatabase::class => $this->createStub(AbstractDatabase::class),

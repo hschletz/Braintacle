@@ -26,11 +26,14 @@ use Laminas\Di\ConfigInterface;
 use Laminas\Di\Container\ConfigFactory;
 use Laminas\Di\Container\InjectorFactory;
 use Laminas\Di\InjectorInterface;
+use Laminas\Form\View\Helper\FormElement;
 use Laminas\ModuleManager\Feature;
+use Library\Form\Element\SelectSimple;
 use Library\Mvc\Controller\Plugin\RedirectToRoute;
 use Library\Mvc\Controller\Plugin\UrlFromRoute;
 use Library\Mvc\Service\RedirectToRouteFactory;
 use Library\Mvc\Service\UrlFromRouteFactory;
+use Psr\Container\ContainerInterface;
 
 /**
  * The Library module
@@ -87,22 +90,23 @@ class Module implements Feature\ConfigProviderInterface
                     'Library\View\Helper\FormYesNo' => 'Library\View\Helper\Service\FormYesNoFactory',
                     'Library\View\Helper\HtmlElement' => 'Laminas\ServiceManager\Factory\InvokableFactory',
                 ),
+                'delegators' => [
+                    FormElement::class => [
+                        function (
+                            ContainerInterface $container,
+                            $name,
+                            callable $callback,
+                        ) {
+                            /** @var FormElement */
+                            $formElementHelper = $callback();
+                            $formElementHelper->addClass(SelectSimple::class, 'formSelectSimple');
+                            $formElementHelper->addType('select_untranslated', 'formSelectUntranslated');
+                            return $formElementHelper;
+                        },
+                    ],
+                ],
             ),
         );
-    }
-
-    /** @psalm-suppress PossiblyUnusedMethod */
-    public function onBootstrap(\Laminas\EventManager\EventInterface $e)
-    {
-        $serviceManager = $e->getApplication()->getServiceManager();
-
-        // Register form element view helpers
-        $formElementHelper = $serviceManager->get('ViewHelperManager')->get('formElement');
-        $formElementHelper->addClass('Library\Form\Element\SelectSimple', 'formSelectSimple');
-        $formElementHelper->addType('select_untranslated', 'formSelectUntranslated');
-
-        \Laminas\Filter\StaticFilter::setPluginManager($serviceManager->get('FilterManager'));
-        \Laminas\Validator\StaticValidator::setPluginManager($serviceManager->get('ValidatorManager'));
     }
 
     /**

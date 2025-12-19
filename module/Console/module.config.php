@@ -156,11 +156,4 @@ return array(
             }],
         ],
     ),
-    'view_manager' => array(
-        'doctype' => 'HTML5',
-        'template_path_stack' => array(
-            'console' => __DIR__ . '/views',
-        ),
-        'default_template_suffix' => 'php',
-    ),
 );

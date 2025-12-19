@@ -3,7 +3,6 @@
 namespace Braintacle\Legacy;
 
 use Laminas\Http\Response;
-use Laminas\Mvc\Application;
 use Laminas\Mvc\Controller\PluginManager;
 use Laminas\Mvc\I18n\Translator;
 use Laminas\Mvc\MvcEvent;
@@ -15,6 +14,9 @@ use LogicException;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
 
+/**
+ * MVC application runner.
+ */
 class MvcApplication
 {
     public const Psr7Request = 'Psr7Request';
@@ -22,7 +24,7 @@ class MvcApplication
     private mixed $previousErrorHandler; // callable, but that cannot be used as property type
 
     public function __construct(
-        private Application $application,
+        private ApplicationService $application,
         private PluginManager $pluginManager,
         private PhpRenderer $phpRenderer,
         private Translator $translator,
