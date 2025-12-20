@@ -22,6 +22,9 @@
 
 namespace Console\Test\Controller;
 
+use Braintacle\FlashMessages;
+use Braintacle\Legacy\Plugin\FlashMessenger;
+use Braintacle\Legacy\Plugin\FlashMessengerTestTrait;
 use Console\Form\Package\Update as PackageUpdate;
 use Console\Mvc\Controller\Plugin\PrintForm;
 use Console\Test\AbstractControllerTestCase;
@@ -29,7 +32,6 @@ use Console\View\Helper\Form\Package\Build;
 use Console\View\Helper\Form\Package\Update;
 use IntlDateFormatter;
 use Laminas\I18n\View\Helper\DateFormat;
-use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
 use Model\Config;
@@ -41,6 +43,8 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class PackageControllerTest extends AbstractControllerTestCase
 {
+    use FlashMessengerTestTrait;
+
     /**
      * @var MockObject|PackageManager
      */
@@ -114,15 +118,9 @@ class PackageControllerTest extends AbstractControllerTestCase
         $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');
 
         $flashMessenger = $this->createMock(FlashMessenger::class);
-        $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
-        $flashMessenger->method('__call')
-            ->willReturnMap(
-                array(
-                    array('getMessagesFromNamespace', array('packageName'), array()),
-                    array('getSuccessMessages', array(), array()),
-                )
-            );
-        $flashMessenger->expects($this->once())->method('render')->with('error')->willReturn('');
+        $flashMessenger->method('__invoke')->willReturnSelf();
+        $flashMessenger->method('getMessagesFromNamespace')->with('packageName')->willReturn([]);
+        $flashMessenger->method('render')->willReturn('');
         $viewHelperManager->setService('flashMessenger', $flashMessenger);
 
         $dateFormat = $this->createMock(DateFormat::class);
@@ -205,18 +203,12 @@ class PackageControllerTest extends AbstractControllerTestCase
     public function testIndexActionPackageFlashMessages()
     {
         $flashMessenger = $this->createMock(FlashMessenger::class);
-        $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
-        $flashMessenger->method('__call')
-            ->willReturnMap(
-                array(
-                    array('getMessagesFromNamespace', array('packageName'), array('<br>')),
-                    array('getSuccessMessages', array(), array('success')),
-                )
-            );
-        $flashMessenger->expects($this->once())
-            ->method('render')
-            ->with('error')
-            ->willReturn('<ul class="error"><li>error</li></ul>');
+        $flashMessenger->method('__invoke')->willReturnSelf();
+        $flashMessenger->method('getMessagesFromNamespace')->with('packageName')->willReturn(['<br>']);
+        $flashMessenger->method('render')->willReturnMap([
+            ['error', '<ul class="error"><li>error</li></ul>'],
+            ['success', '<ul class="success"><li>success</li></ul>'],
+        ]);
         $this->getApplicationServiceLocator()
             ->get('ViewHelperManager')
             ->setService('flashMessenger', $flashMessenger);
@@ -265,15 +257,9 @@ class PackageControllerTest extends AbstractControllerTestCase
         $this->_packageManager->expects($this->once())->method('getPackages')->willReturn($packages);
 
         $flashMessenger = $this->createMock(FlashMessenger::class);
-        $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
-        $flashMessenger->method('__call')
-            ->willReturnMap(
-                array(
-                    array('getMessagesFromNamespace', array('packageName'), array('name1')),
-                    array('getSuccessMessages', array(), array()),
-                )
-            );
-        $flashMessenger->expects($this->once())->method('render')->with('error')->willReturn('');
+        $flashMessenger->method('__invoke')->willReturnSelf();
+        $flashMessenger->method('getMessagesFromNamespace')->with('packageName')->willReturn(['name1']);
+        $flashMessenger->method('render')->willReturn('');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
         $this->dispatch('/console/package/index/');
@@ -366,6 +352,8 @@ class PackageControllerTest extends AbstractControllerTestCase
 
     public function testBuildActionPostValidSuccess()
     {
+        $this->initFlashMessages();
+
         $postData = array(
             'Name' => 'packageName',
         );
@@ -401,23 +389,19 @@ class PackageControllerTest extends AbstractControllerTestCase
         $this->dispatch('/console/package/build', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');
 
-        $flashMessenger = $this->getControllerPlugin('FlashMessenger');
         $this->assertEquals(
-            ["Paket 'packageName' wurde erfolgreich erstellt."],
-            $flashMessenger->getCurrentSuccessMessages()
-        );
-        $this->assertEquals(
-            array(),
-            $flashMessenger->getCurrentErrorMessages()
-        );
-        $this->assertEquals(
-            array('packageName'),
-            $flashMessenger->getCurrentMessagesFromNamespace('packageName')
+            [
+                FlashMessages::Success => ["Paket 'packageName' wurde erfolgreich erstellt."],
+                'packageName' => ['packageName'],
+            ],
+            $this->flashMessages,
         );
     }
 
     public function testBuildActionPostValidError()
     {
+        $this->initFlashMessages();
+
         $postData = array(
             'Name' => 'packageName',
         );
@@ -458,19 +442,7 @@ class PackageControllerTest extends AbstractControllerTestCase
         $this->dispatch('/console/package/build', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');
 
-        $flashMessenger = $this->getControllerPlugin('FlashMessenger');
-        $this->assertEquals(
-            array(),
-            $flashMessenger->getCurrentSuccessMessages()
-        );
-        $this->assertEquals(
-            array('build error'),
-            $flashMessenger->getCurrentErrorMessages()
-        );
-        $this->assertEquals(
-            array(),
-            $flashMessenger->getCurrentMessagesFromNamespace('packageName')
-        );
+        $this->assertEquals([FlashMessages::Error => ['build error']], $this->flashMessages);
     }
 
     public function testDeleteActionGet()
@@ -490,24 +462,23 @@ class PackageControllerTest extends AbstractControllerTestCase
 
     public function testDeleteActionPostYesSuccess()
     {
+        $this->initFlashMessages();
+
         $this->_packageManager->expects($this->once())->method('deletePackage')->with('Name');
 
         $this->dispatch('/console/package/delete/?name=Name', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/package/index/');
 
-        $flashMessenger = $this->getControllerPlugin('FlashMessenger');
         $this->assertEquals(
-            ["Paket 'Name' wurde erfolgreich gelöscht."],
-            $flashMessenger->getCurrentSuccessMessages()
-        );
-        $this->assertEquals(
-            array(),
-            $flashMessenger->getCurrentErrorMessages()
+            [FlashMessages::Success => ["Paket 'Name' wurde erfolgreich gelöscht."]],
+            $this->flashMessages,
         );
     }
 
     public function testDeleteActionPostYesError()
     {
+        $this->initFlashMessages();
+
         $this->_packageManager->expects($this->once())
             ->method('deletePackage')
             ->with('Name')
@@ -516,15 +487,7 @@ class PackageControllerTest extends AbstractControllerTestCase
         $this->dispatch('/console/package/delete/?name=Name', 'POST', array('yes' => 'Yes'));
         $this->assertRedirectTo('/console/package/index/');
 
-        $flashMessenger = $this->getControllerPlugin('FlashMessenger');
-        $this->assertEquals(
-            array(),
-            $flashMessenger->getCurrentSuccessMessages()
-        );
-        $this->assertEquals(
-            array('delete error'),
-            $flashMessenger->getCurrentErrorMessages()
-        );
+        $this->assertEquals([FlashMessages::Error => ['delete error']], $this->flashMessages);
     }
 
     public function testUpdateActionGet()
@@ -623,6 +586,8 @@ class PackageControllerTest extends AbstractControllerTestCase
 
     public function testUpdateActionPostValidBuildSuccess()
     {
+        $this->initFlashMessages();
+
         $postData = array(
             'Deploy' => array(
                 'Pending' => '1',
@@ -680,24 +645,19 @@ class PackageControllerTest extends AbstractControllerTestCase
 
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');
-
-        $flashMessenger = $this->getControllerPlugin('FlashMessenger');
         $this->assertEquals(
-            ["Paket 'oldName' wurde erfolgreich zu 'newName' geändert."],
-            $flashMessenger->getCurrentSuccessMessages()
-        );
-        $this->assertEquals(
-            array(),
-            $flashMessenger->getCurrentErrorMessages()
-        );
-        $this->assertEquals(
-            array('newName'),
-            $flashMessenger->getCurrentMessagesFromNamespace('packageName')
+            [
+                FlashMessages::Success => ["Paket 'oldName' wurde erfolgreich zu 'newName' geändert."],
+                'packageName' => ['newName'],
+            ],
+            $this->flashMessages,
         );
     }
 
     public function testUpdateActionPostValidUpdateError()
     {
+        $this->initFlashMessages();
+
         $postData = array(
             'Deploy' => array(
                 'Pending' => '1',
@@ -757,23 +717,16 @@ class PackageControllerTest extends AbstractControllerTestCase
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');
 
-        $flashMessenger = $this->getControllerPlugin('FlashMessenger');
         $this->assertEquals(
-            array(),
-            $flashMessenger->getCurrentSuccessMessages()
-        );
-        $this->assertEquals(
-            array("Fehler beim Ändern von Paket 'oldName' zu 'newName': error message"),
-            $flashMessenger->getCurrentErrorMessages()
-        );
-        $this->assertEquals(
-            array(),
-            $flashMessenger->getCurrentMessagesFromNamespace('packageName')
+            [FlashMessages::Error => ["Fehler beim Ändern von Paket 'oldName' zu 'newName': error message"]],
+            $this->flashMessages,
         );
     }
 
     public function testUpdateActionPostValidReconstructionError()
     {
+        $this->initFlashMessages();
+
         $postData = array('Name' => 'newName');
         $this->_updateForm->expects($this->never())
             ->method('setData');
@@ -790,9 +743,6 @@ class PackageControllerTest extends AbstractControllerTestCase
         $this->_packageManager->expects($this->never())->method('updatePackage');
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
         $this->assertRedirectTo('/console/package/index/');
-        $this->assertEquals(
-            array('getPackage() error'),
-            $this->getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
-        );
+        $this->assertEquals([FlashMessages::Error => ['getPackage() error']], $this->flashMessages);
     }
 }

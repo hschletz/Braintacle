@@ -26,16 +26,7 @@ $name = $flashMessenger->getMessagesFromNamespace('packageName');
 $currentPackage = @$name[0];
 
 print $flashMessenger->render('error');
-
-$successMessages = $flashMessenger->getSuccessMessages();
-if ($successMessages) {
-    print $this->htmlList(
-        $successMessages,
-        false,
-        array('class' => 'success'),
-        true
-    );
-}
+print $flashMessenger->render('success');
 
 // Column headers
 $headers = array(

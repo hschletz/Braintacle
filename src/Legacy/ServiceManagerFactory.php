@@ -50,7 +50,6 @@ final class ServiceManagerFactory
         'Laminas\Form',
         'Laminas\I18n',
         'Laminas\Mvc\I18n',
-        'Laminas\Mvc\Plugin\FlashMessenger',
         'Laminas\Router',
         'Laminas\Validator',
         'Console',
@@ -172,6 +171,7 @@ final class ServiceManagerFactory
         // abstract factory after the DI factory.
         $serviceManager->addAbstractFactory(AutowireFactory::class);
         $serviceManager->get(FilterPluginManager::class)->addAbstractFactory(AutowireFactory::class);
+        $serviceManager->get(PluginManager::class)->addAbstractFactory(AutowireFactory::class);
         $serviceManager->get(ValidatorPluginManager::class)->addAbstractFactory(AutowireFactory::class);
         $viewHelperManager->addAbstractFactory(AutowireFactory::class);
 

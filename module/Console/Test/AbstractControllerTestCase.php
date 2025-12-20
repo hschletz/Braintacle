@@ -84,17 +84,6 @@ abstract class AbstractControllerTestCase extends TestCase
     }
 
     /**
-     * Get instance of a controller plugin
-     *
-     * @param string $name Plugin name
-     * @return \Laminas\Mvc\Controller\Plugin\PluginInterface Plugin instance
-     */
-    protected function getControllerPlugin($name)
-    {
-        return $this->getApplicationServiceLocator()->get('ControllerPluginManager')->get($name);
-    }
-
-    /**
      * Replace MvcTranslator service with a dummy translator to allow injecting test messages without warning
      */
     protected function disableTranslator()

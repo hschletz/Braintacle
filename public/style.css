@@ -316,19 +316,16 @@ td.label {
     list-style-type: none;
     margin-bottom: 3ex;
 }
+
 .error {
     color: red;
     text-align: center;
     list-style-type: none;
     margin-bottom: 3ex;
 }
-.info {
-    color: blue;
-    text-align: center;
-    list-style-type: none;
-    margin-bottom: 3ex;
-}
-.success li, .error li, .info li {
+
+.success li,
+.error li {
     margin-bottom: 1ex;
 }
 

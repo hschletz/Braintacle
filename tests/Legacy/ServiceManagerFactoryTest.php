@@ -6,6 +6,7 @@ use Braintacle\AppConfig;
 use Braintacle\Group\Group;
 use Braintacle\Http\RouteHelper;
 use Braintacle\Legacy\I18nTranslator;
+use Braintacle\Legacy\Plugin\FlashMessenger;
 use Braintacle\Legacy\ServiceManagerFactory;
 use Braintacle\Template\Function\AssetUrlFunction;
 use Braintacle\Template\Function\PathForRouteFunction;
@@ -14,6 +15,7 @@ use DI\Container;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\I18n\Translator\TranslatorInterface as I18nTranslatorInterface;
 use Laminas\Translator\TranslatorInterface;
+use Laminas\View\HelperPluginManager;
 use Model\Client\Client;
 use Nada\Database\AbstractDatabase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -25,9 +27,9 @@ use Psr\Log\LoggerInterface;
 #[CoversClass(ServiceManagerFactory::class)]
 final class ServiceManagerFactoryTest extends TestCase
 {
-    public function testServiceFromMainContainer()
+    private function createServiceDefinitions(): array
     {
-        $services = [
+        return [
             AbstractDatabase::class => $this->createStub(AbstractDatabase::class),
             Adapter::class => $this->createStub(Adapter::class),
             AppConfig::class => $this->createStub(AppConfig::class),
@@ -42,6 +44,11 @@ final class ServiceManagerFactoryTest extends TestCase
             TemplateEngine::class => $this->createStub(TemplateEngine::class),
             TranslatorInterface::class => $this->createStub(TranslatorInterface::class),
         ];
+    }
+
+    public function testServiceFromMainContainer()
+    {
+        $services = $this->createServiceDefinitions();
         $container = new Container($services);
         $factory = new ServiceManagerFactory();
         $serviceManager = $factory($container);
@@ -60,5 +67,22 @@ final class ServiceManagerFactoryTest extends TestCase
         $this->assertSame($services[TemplateEngine::class], $serviceManager->get(TemplateEngine::class));
         $this->assertSame($services[TranslatorInterface::class], $serviceManager->get(TranslatorInterface::class));
         $this->assertSame($serviceManager, $serviceManager->get(ContainerInterface::class));
+    }
+
+    public function testFlashMessengerOverridesBuiltinHelper()
+    {
+        $services = $this->createServiceDefinitions();
+        $container = new Container($services);
+        $factory = new ServiceManagerFactory();
+        $serviceManager = $factory($container);
+
+        /** @var HelperPluginManager */
+        $viewHelperManager = $serviceManager->get('ViewHelperManager');
+
+        $flashMessenger = $this->createStub(FlashMessenger::class);
+        /** @psalm-suppress InvalidArgument */
+        $viewHelperManager->setService(FlashMessenger::class, $flashMessenger);
+
+        $this->assertSame($flashMessenger, $viewHelperManager->get('flashMessenger'));
     }
 }

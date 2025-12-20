@@ -24,12 +24,13 @@ namespace Console\Test\Controller;
 
 use Braintacle\FlashMessages;
 use Braintacle\Http\RouteHelper;
+use Braintacle\Legacy\Plugin\FlashMessenger;
+use Braintacle\Legacy\Plugin\FlashMessengerTestTrait;
 use Console\Form\Import;
 use Console\Form\ProductKey;
 use Console\Test\AbstractControllerTestCase;
 use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Text;
-use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Library\Form\Element\Submit;
 use Model\Client\AndroidInstallation;
 use Model\Client\Client;
@@ -45,6 +46,8 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class ClientControllerTest extends AbstractControllerTestCase
 {
+    use FlashMessengerTestTrait;
+
     /**
      * @var MockObject|ClientManager
      */
@@ -125,10 +128,6 @@ class ClientControllerTest extends AbstractControllerTestCase
         $serviceManager->setService('Model\Registry\RegistryManager', $this->_registryManager);
         $serviceManager->setService('Model\SoftwareManager', $this->_softwareManager);
 
-        $flashMessages = $this->createStub(FlashMessages::class);
-        $flashMessages->method('get')->willReturn([]);
-        $serviceManager->setService(FlashMessages::class, $flashMessages);
-
         $routeHelper = $this->createStub(RouteHelper::class);
         $routeHelper->method('getPathForRoute')->willReturnCallback(
             fn($name, $routeArguments) => "{$name}/{$routeArguments['id']}"
@@ -143,15 +142,17 @@ class ClientControllerTest extends AbstractControllerTestCase
 
     public function testInvalidClient()
     {
+        $this->initFlashMessages();
+
         $this->_clientManager->expects($this->once())
             ->method('getClient')
             ->with(42)
             ->will($this->throwException(new \RuntimeException()));
         $this->dispatch('/console/client/general/?id=42');
         $this->assertRedirectTo('/console/client/index/');
-        $this->assertContains(
-            'Der angeforderte Client existiert nicht.',
-            $this->getControllerPlugin('FlashMessenger')->getCurrentErrorMessages()
+        $this->assertEquals(
+            [FlashMessages::Error => ['Der angeforderte Client existiert nicht.']],
+            $this->flashMessages,
         );
     }
 
@@ -1128,7 +1129,7 @@ class ClientControllerTest extends AbstractControllerTestCase
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $flashMessenger = $this->createMock(FlashMessenger::class);
-        $flashMessenger->method('__invoke')->with(null)->willReturnSelf();
+        $flashMessenger->method('__invoke')->willReturnSelf();
         $flashMessenger->expects($this->once())
             ->method('render')
             ->with('success')
@@ -1145,6 +1146,8 @@ class ClientControllerTest extends AbstractControllerTestCase
 
     public function testCustomfieldsActionGet()
     {
+        $this->initFlashMessages();
+
         $data = array('field1' => 'value1', 'field2' => 'value2');
         $customFields = $this->createMock('Model\Client\CustomFields');
         $customFields->expects($this->once())
@@ -1171,7 +1174,7 @@ class ClientControllerTest extends AbstractControllerTestCase
             ->will($this->returnValue('<form></form>'));
         $this->dispatch('/console/client/customfields/?id=1');
         $this->assertResponseStatusCode(200);
-        $this->assertEmpty($this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages());
+        $this->assertEmpty($this->flashMessages);
         $this->assertXpathQueryContentContains(
             '//p/a[@href="/console/preferences/customfields/"]',
             'Felder definieren'
@@ -1181,6 +1184,8 @@ class ClientControllerTest extends AbstractControllerTestCase
 
     public function testCustomfieldsActionPostInvalid()
     {
+        $this->initFlashMessages();
+
         $postData = array(
             '_csrf' => 'csrf',
             'Fields' => array('field1' => 'value1', 'field2' => 'value2')
@@ -1205,7 +1210,7 @@ class ClientControllerTest extends AbstractControllerTestCase
             ->method('render');
         $this->dispatch('/console/client/customfields/?id=1', 'POST', $postData);
         $this->assertResponseStatusCode(200);
-        $this->assertEmpty($this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages());
+        $this->assertEmpty($this->flashMessages);
         $this->assertXpathQueryContentContains(
             '//p/a[@href="/console/preferences/customfields/"]',
             'Felder definieren'
@@ -1214,6 +1219,8 @@ class ClientControllerTest extends AbstractControllerTestCase
 
     public function testCustomfieldsActionPostValid()
     {
+        $this->initFlashMessages();
+
         $postData = array(
             '_csrf' => 'csrf',
             'Fields' => array('field1' => 'value1', 'field2' => 'value2')
@@ -1240,9 +1247,9 @@ class ClientControllerTest extends AbstractControllerTestCase
 
         $this->dispatch('/console/client/customfields/?id=1', 'POST', $postData);
         $this->assertRedirectTo('/console/client/customfields/?id=1');
-        $this->assertContains(
-            'Die Informationen wurden aktualisiert.',
-            $this->getControllerPlugin('FlashMessenger')->getCurrentSuccessMessages()
+        $this->assertEquals(
+            [FlashMessages::Success => ['Die Informationen wurden aktualisiert.']],
+            $this->flashMessages,
         );
     }
 

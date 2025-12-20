@@ -20,6 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+use Braintacle\Legacy\Plugin\FlashMessenger;
 use Console\Controller\AccountsController;
 use Console\Controller\NetworkController;
 use Console\Controller\PackageController;
@@ -31,13 +32,13 @@ use Console\Service\PackageControllerFactory;
 use Console\View\Helper\ClientHeader;
 use Console\View\Helper\Service\ClientHeaderFactory;
 use Laminas\Form\View\Helper\FormElementErrors;
-use Laminas\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger;
 use Psr\Container\ContainerInterface;
 
 return array(
     'controller_plugins' => array(
         'aliases' => array(
             '_' => Translate::class,
+            'flashMessenger' => FlashMessenger::class,
             'GetOrder' => 'Console\Mvc\Controller\Plugin\GetOrder',
             'getOrder' => 'Console\Mvc\Controller\Plugin\GetOrder',
             'PrintForm' => 'Console\Mvc\Controller\Plugin\PrintForm',
@@ -106,6 +107,7 @@ return array(
             'clientHeader' => ClientHeader::class,
             'consoleUrl' => 'Console\View\Helper\ConsoleUrl',
             'filterDescription' => 'Console\View\Helper\FilterDescription',
+            'flashMessenger' => FlashMessenger::class, // bypasses builtin helper
             'table' => 'Console\View\Helper\Table',
             'consoleForm' => 'Console\View\Helper\Form\Form',
             'consoleFormFieldset' => 'Console\View\Helper\Form\Fieldset',
@@ -124,20 +126,6 @@ return array(
             'Console\View\Helper\Form\Software' => 'Laminas\ServiceManager\Factory\InvokableFactory',
         ),
         'delegators' => [
-            FlashMessenger::class => [function (
-                ContainerInterface $container,
-                $name,
-                callable $callback,
-            ) {
-                // Disable translations in the FlashMessenger view helper.
-                // Messages are already translated in controllers to enable
-                // string formatting with placeholders.
-                /** @var FlashMessenger */
-                $helper = $callback();
-                $helper->setTranslatorEnabled(false);
-
-                return $helper;
-            }],
             FormElementErrors::class => [function (
                 ContainerInterface $container,
                 $name,
