@@ -12,7 +12,6 @@ use Exception;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\PluginManager;
-use Laminas\Mvc\I18n\Translator;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\Http\TreeRouteStack;
 use Laminas\Router\RouteMatch;
@@ -56,13 +55,13 @@ final class MvcApplicationTest extends TestCase
         ?ApplicationService $applicationService = null,
         ?PluginManager $pluginManager = null,
         ?PhpRenderer $phpRenderer = null,
-        ?Translator $translator = null,
+        ?TranslatorInterface $translator = null,
     ): MvcApplication {
         return new MvcApplication(
             $applicationService ?? $this->createStub(ApplicationService::class),
             $pluginManager ?? $this->createStub(PluginManager::class),
             $phpRenderer ?? $this->createStub(PhpRenderer::class),
-            $translator ?? $this->createStub(Translator::class),
+            $translator ?? $this->createStub(TranslatorInterface::class),
         );
     }
 
@@ -108,7 +107,7 @@ final class MvcApplicationTest extends TestCase
 
     public function testRunInjectsTranslator()
     {
-        $translator = $this->createStub(Translator::class);
+        $translator = $this->createStub(TranslatorInterface::class);
 
         $applicationService = $this->createStub(ApplicationService::class);
         $applicationService->method('getMvcEvent')->willThrowException(new Exception('Abort early'));

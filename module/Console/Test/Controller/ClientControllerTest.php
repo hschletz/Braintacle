@@ -1136,7 +1136,6 @@ class ClientControllerTest extends AbstractControllerTestCase
             ->willReturn('<ul class="success"><li>successMessage</li></ul>');
         $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
 
-        $this->disableTranslator();
         $this->dispatch('/console/client/customfields/?id=1');
         $this->assertXpathQueryContentContains(
             '//ul[@class="success"]/li',

@@ -24,7 +24,6 @@ use Braintacle\Legacy\Plugin\FlashMessenger;
 use Console\Controller\AccountsController;
 use Console\Controller\NetworkController;
 use Console\Controller\PackageController;
-use Console\Mvc\Controller\Plugin\Service\TranslateFactory;
 use Console\Mvc\Controller\Plugin\Translate;
 use Console\Service\AccountsControllerFactory;
 use Console\Service\NetworkControllerFactory;
@@ -49,7 +48,6 @@ return array(
         'factories' => array(
             'Console\Mvc\Controller\Plugin\GetOrder' => 'Laminas\ServiceManager\Factory\InvokableFactory',
             'Console\Mvc\Controller\Plugin\PrintForm' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-            Translate::class => TranslateFactory::class,
         ),
     ),
     'form_elements' => array(

@@ -83,19 +83,6 @@ abstract class AbstractControllerTestCase extends TestCase
         $_POST = [];
     }
 
-    /**
-     * Replace MvcTranslator service with a dummy translator to allow injecting test messages without warning
-     */
-    protected function disableTranslator()
-    {
-        $serviceManager = $this->getApplicationServiceLocator();
-        $serviceManager->setAllowOverride(true);
-        $serviceManager->setService(
-            'MvcTranslator',
-            new \Laminas\Mvc\I18n\Translator(new \Laminas\I18n\Translator\Translator())
-        );
-    }
-
     private function getApplication(): MvcApplication
     {
         if (!$this->application) {

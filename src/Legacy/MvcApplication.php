@@ -4,9 +4,9 @@ namespace Braintacle\Legacy;
 
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\PluginManager;
-use Laminas\Mvc\I18n\Translator;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Validator\AbstractValidator;
+use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
 use Laminas\View\Variables;
@@ -27,7 +27,7 @@ class MvcApplication
         private ApplicationService $application,
         private PluginManager $pluginManager,
         private PhpRenderer $phpRenderer,
-        private Translator $translator,
+        private TranslatorInterface $translator,
     ) {}
 
     public function run(ServerRequestInterface $request): MvcEvent

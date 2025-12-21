@@ -214,7 +214,7 @@ class PackageControllerTest extends AbstractControllerTestCase
             ->setService('flashMessenger', $flashMessenger);
 
         $this->_packageManager->expects($this->once())->method('getPackages')->willReturn(array());
-        $this->disableTranslator();
+
         $this->dispatch('/console/package/index/');
         $this->assertResponseStatusCode(200);
 

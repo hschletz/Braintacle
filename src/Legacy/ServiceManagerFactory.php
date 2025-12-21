@@ -49,7 +49,6 @@ final class ServiceManagerFactory
         'Laminas\Filter',
         'Laminas\Form',
         'Laminas\I18n',
-        'Laminas\Mvc\I18n',
         'Laminas\Router',
         'Laminas\Validator',
         'Console',
