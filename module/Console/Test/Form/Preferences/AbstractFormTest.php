@@ -23,6 +23,7 @@
 namespace Console\Test\Form\Preferences;
 
 use Braintacle\Container;
+use Laminas\I18n\Translator\Translator;
 use Laminas\ServiceManager\ServiceManager;
 use Library\Test\InjectServicesTrait;
 
@@ -132,7 +133,7 @@ EOT;
 </div>
 
 EOT;
-        $translator = $this->createMock('Laminas\I18n\Translator\Translator');
+        $translator = $this->createMock(Translator::class);
         $translator->method('translate')
             ->willReturnCallback(function ($string) {
                 return "$string-translated";
