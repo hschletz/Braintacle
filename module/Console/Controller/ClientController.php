@@ -90,7 +90,7 @@ class ClientController extends Controller
             } catch (\RuntimeException $e) {
                 // Client does not exist - may happen when URL has become stale.
                 $this->flashMessenger()->addErrorMessage($this->_('The requested client does not exist.'));
-                return $this->redirectToRoute('client', 'index');
+                return $this->redirectToRoute('clientList');
             }
         }
 
@@ -192,8 +192,7 @@ class ClientController extends Controller
                 $data = $form->getData();
                 $this->_softwareManager->setProductKey($this->_currentClient, $data['Key']);
                 return $this->redirectToRoute(
-                    'client',
-                    'windows',
+                    'showClientWindows',
                     array('id' => $this->_currentClient['Id'])
                 );
             }
@@ -298,8 +297,7 @@ class ClientController extends Controller
                 $this->_currentClient->setCustomFields($data['Fields']);
                 $this->flashMessenger()->addSuccessMessage($this->_('The information was successfully updated.'));
                 return $this->redirectToRoute(
-                    'client',
-                    'customfields',
+                    'showClientCustomFields',
                     array('id' => $this->_currentClient['Id'])
                 );
             }
@@ -328,7 +326,7 @@ class ClientController extends Controller
                 $data = $form->getData();
                 try {
                     $this->_clientManager->importFile($data['File']['tmp_name']);
-                    return $this->redirectToRoute('client', 'index');
+                    return $this->redirectToRoute('clientList');
                 } catch (\RuntimeException $e) {
                     $vars['error'] = $e->getMessage();
                 }

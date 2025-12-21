@@ -29,10 +29,6 @@ use Laminas\Di\InjectorInterface;
 use Laminas\Form\View\Helper\FormElement;
 use Laminas\ModuleManager\Feature;
 use Library\Form\Element\SelectSimple;
-use Library\Mvc\Controller\Plugin\RedirectToRoute;
-use Library\Mvc\Controller\Plugin\UrlFromRoute;
-use Library\Mvc\Service\RedirectToRouteFactory;
-use Library\Mvc\Service\UrlFromRouteFactory;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -50,18 +46,6 @@ class Module implements Feature\ConfigProviderInterface
     public function getConfig()
     {
         return array(
-            'controller_plugins' => array(
-                'aliases' => array(
-                    'RedirectToRoute' => 'Library\Mvc\Controller\Plugin\RedirectToRoute',
-                    'redirectToRoute' => 'Library\Mvc\Controller\Plugin\RedirectToRoute',
-                    'UrlFromRoute' => 'Library\Mvc\Controller\Plugin\UrlFromRoute',
-                    'urlFromRoute' => 'Library\Mvc\Controller\Plugin\UrlFromRoute',
-                ),
-                'factories' => array(
-                    RedirectToRoute::class => RedirectToRouteFactory::class,
-                    UrlFromRoute::class => UrlFromRouteFactory::class,
-                )
-            ),
             'service_manager' => array(
                 'factories' => [
                     ConfigInterface::class => ConfigFactory::class,

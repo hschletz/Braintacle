@@ -4,6 +4,7 @@ namespace Braintacle\Test\Legacy;
 
 use Braintacle\Legacy\Controller;
 use Braintacle\Legacy\MvcApplication;
+use Laminas\Http\PhpEnvironment\Response;
 use Laminas\Http\Request;
 use Laminas\Mvc\Controller\PluginManager;
 use Laminas\Mvc\MvcEvent;
@@ -50,11 +51,15 @@ final class ControllerTest extends TestCase
 
     public function testEvent()
     {
+        $response = new Response();
+
         $mvcEvent = new MvcEvent();
+        $mvcEvent->setResponse($response);
 
         $controller = new class extends Controller {};
         $controller->setEvent($mvcEvent);
         $this->assertSame($mvcEvent, $controller->getEvent());
+        $this->assertSame($response, $controller->getResponse());
     }
 
     public function testDispatch()

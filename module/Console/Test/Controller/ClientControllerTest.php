@@ -128,12 +128,6 @@ class ClientControllerTest extends AbstractControllerTestCase
         $serviceManager->setService('Model\Registry\RegistryManager', $this->_registryManager);
         $serviceManager->setService('Model\SoftwareManager', $this->_softwareManager);
 
-        $routeHelper = $this->createStub(RouteHelper::class);
-        $routeHelper->method('getPathForRoute')->willReturnCallback(
-            fn($name, $routeArguments) => "{$name}/{$routeArguments['id']}"
-        );
-        $serviceManager->setService(RouteHelper::class, $routeHelper);
-
         $formManager = $serviceManager->get('FormElementManager');
         $formManager->setService('Console\Form\CustomFields', $this->createMock('Console\Form\CustomFields'));
         $formManager->setService('Console\Form\Import', $this->createMock(Import::class));
@@ -149,7 +143,7 @@ class ClientControllerTest extends AbstractControllerTestCase
             ->with(42)
             ->will($this->throwException(new \RuntimeException()));
         $this->dispatch('/console/client/general/?id=42');
-        $this->assertRedirectTo('/console/client/index/');
+        $this->assertRedirectTo('clientList/');
         $this->assertEquals(
             [FlashMessages::Error => ['Der angeforderte Client existiert nicht.']],
             $this->flashMessages,
@@ -178,7 +172,7 @@ class ClientControllerTest extends AbstractControllerTestCase
         $this->assertXpathQueryCount('//th', 7);
         $this->assertXpathQueryCount('//th[@class="textright"]', 2); // CpuClock and PhysicalMemory
         $this->assertXpathQueryContentContains(
-            '//td/a[@href="showClientGeneral/2"]',
+            '//td/a[@href="showClientGeneral/id=2?"]',
             'name2'
         );
     }
@@ -238,7 +232,7 @@ class ClientControllerTest extends AbstractControllerTestCase
         $this->dispatch('/console/client/index/?jumpto=software');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
-            '//td/a[@href="showClientGeneral/2"]',
+            '//td/a[@href="showClientGeneral/id=2?"]',
             'name2'
         );
     }
@@ -250,7 +244,7 @@ class ClientControllerTest extends AbstractControllerTestCase
         $this->dispatch('/console/client/index/?jumpto=invalid');
         $this->assertResponseStatusCode(200);
         $this->assertXpathQueryContentContains(
-            '//td/a[@href="showClientGeneral/2"]',
+            '//td/a[@href="showClientGeneral/id=2?"]',
             'name2'
         );
     }
@@ -473,7 +467,7 @@ class ClientControllerTest extends AbstractControllerTestCase
             ->with($client, 'entered_key');
 
         $this->dispatch('/console/client/windows/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/client/windows/?id=1');
+        $this->assertRedirectTo('showClientWindows/?id=1');
     }
 
     public function testNetworkActionSettingsOnlyUnix()
@@ -1245,7 +1239,7 @@ class ClientControllerTest extends AbstractControllerTestCase
         $this->_clientManager->method('getClient')->willReturn($client);
 
         $this->dispatch('/console/client/customfields/?id=1', 'POST', $postData);
-        $this->assertRedirectTo('/console/client/customfields/?id=1');
+        $this->assertRedirectTo('showClientCustomFields/?id=1');
         $this->assertEquals(
             [FlashMessages::Success => ['Die Informationen wurden aktualisiert.']],
             $this->flashMessages,
@@ -1362,6 +1356,6 @@ class ClientControllerTest extends AbstractControllerTestCase
             ->with('uploaded_file');
 
         $this->dispatch('/console/client/import/', 'POST', $postData);
-        $this->assertRedirectTo('/console/client/index/');
+        $this->assertRedirectTo('clientList/');
     }
 }

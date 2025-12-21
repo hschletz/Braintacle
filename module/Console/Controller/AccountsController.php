@@ -106,7 +106,7 @@ class AccountsController extends Controller
             if ($form->isValid()) {
                 $data = $form->getData();
                 $this->_operatorManager->createOperator($data, $data['Password']);
-                return $this->redirectToRoute('accounts', 'index');
+                return $this->redirectToRoute('preferencesUsersList');
             }
         }
 
@@ -127,7 +127,7 @@ class AccountsController extends Controller
             if ($form->isValid()) {
                 $data = $form->getData();
                 $this->_operatorManager->updateOperator($data['OriginalId'], $data, $data['Password']);
-                return $this->redirectToRoute('accounts', 'index');
+                return $this->redirectToRoute('preferencesUsersList');
             }
         } else {
             $operator = $this->_operatorManager->getOperator($this->params()->fromQuery('id'));
@@ -152,7 +152,7 @@ class AccountsController extends Controller
             if ($this->params()->fromPost('yes')) {
                 $this->_operatorManager->deleteOperator($id);
             }
-            return $this->redirectToRoute('accounts', 'index');
+            return $this->redirectToRoute('preferencesUsersList');
         } else {
             return array('id' => $id);
         }

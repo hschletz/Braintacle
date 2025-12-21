@@ -387,7 +387,7 @@ class PackageControllerTest extends AbstractControllerTestCase
         $this->_packageManager->expects($this->once())->method('buildPackage')->with($packageData, true);
 
         $this->dispatch('/console/package/build', 'POST', $postData);
-        $this->assertRedirectTo('/console/package/index/');
+        $this->assertRedirectTo('packagesList/');
 
         $this->assertEquals(
             [
@@ -440,7 +440,7 @@ class PackageControllerTest extends AbstractControllerTestCase
             ->willThrowException(new \Model\Package\RuntimeException('build error'));
 
         $this->dispatch('/console/package/build', 'POST', $postData);
-        $this->assertRedirectTo('/console/package/index/');
+        $this->assertRedirectTo('packagesList/');
 
         $this->assertEquals([FlashMessages::Error => ['build error']], $this->flashMessages);
     }
@@ -457,7 +457,7 @@ class PackageControllerTest extends AbstractControllerTestCase
     {
         $this->_packageManager->expects($this->never())->method('deletePackage');
         $this->dispatch('/console/package/delete/?name=Name', 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/package/index/');
+        $this->assertRedirectTo('packagesList/');
     }
 
     public function testDeleteActionPostYesSuccess()
@@ -467,7 +467,7 @@ class PackageControllerTest extends AbstractControllerTestCase
         $this->_packageManager->expects($this->once())->method('deletePackage')->with('Name');
 
         $this->dispatch('/console/package/delete/?name=Name', 'POST', array('yes' => 'Yes'));
-        $this->assertRedirectTo('/console/package/index/');
+        $this->assertRedirectTo('packagesList/');
 
         $this->assertEquals(
             [FlashMessages::Success => ["Paket 'Name' wurde erfolgreich gelöscht."]],
@@ -485,7 +485,7 @@ class PackageControllerTest extends AbstractControllerTestCase
             ->will($this->throwException(new \Model\Package\RuntimeException('delete error')));
 
         $this->dispatch('/console/package/delete/?name=Name', 'POST', array('yes' => 'Yes'));
-        $this->assertRedirectTo('/console/package/index/');
+        $this->assertRedirectTo('packagesList/');
 
         $this->assertEquals([FlashMessages::Error => ['delete error']], $this->flashMessages);
     }
@@ -644,7 +644,7 @@ class PackageControllerTest extends AbstractControllerTestCase
             ->with($oldPackage, $packageData, true, '1', '0', '1', '0', '1');
 
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
-        $this->assertRedirectTo('/console/package/index/');
+        $this->assertRedirectTo('packagesList/');
         $this->assertEquals(
             [
                 FlashMessages::Success => ["Paket 'oldName' wurde erfolgreich zu 'newName' geändert."],
@@ -715,7 +715,7 @@ class PackageControllerTest extends AbstractControllerTestCase
             ->willThrowException(new \Model\Package\RuntimeException('error message'));
 
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
-        $this->assertRedirectTo('/console/package/index/');
+        $this->assertRedirectTo('packagesList/');
 
         $this->assertEquals(
             [FlashMessages::Error => ["Fehler beim Ändern von Paket 'oldName' zu 'newName': error message"]],
@@ -742,7 +742,7 @@ class PackageControllerTest extends AbstractControllerTestCase
             ->will($this->throwException(new \Model\Package\RuntimeException('getPackage() error')));
         $this->_packageManager->expects($this->never())->method('updatePackage');
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);
-        $this->assertRedirectTo('/console/package/index/');
+        $this->assertRedirectTo('packagesList/');
         $this->assertEquals([FlashMessages::Error => ['getPackage() error']], $this->flashMessages);
     }
 }

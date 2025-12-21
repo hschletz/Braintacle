@@ -3,6 +3,7 @@
 namespace Braintacle\Legacy;
 
 use Laminas\EventManager\EventInterface;
+use Laminas\Http\PhpEnvironment\Response;
 use Laminas\Http\Request;
 use Laminas\Mvc\Controller\PluginManager;
 use Laminas\Mvc\InjectApplicationEventInterface;
@@ -53,6 +54,11 @@ abstract class Controller implements DispatchableInterface, InjectApplicationEve
     public function getRequest(): Request
     {
         return $this->request;
+    }
+
+    public function getResponse(): Response
+    {
+        return $this->mvcEvent->getResponse();
     }
 
     #[Override]

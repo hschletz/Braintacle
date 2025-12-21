@@ -93,7 +93,7 @@ class PreferencesControllerTest extends AbstractControllerTestCase
     public function testIndexAction()
     {
         $this->dispatch('/console/preferences/index/');
-        $this->assertRedirectTo('/console/preferences/display/');
+        $this->assertRedirectTo('preferencesDisplayPage/');
     }
 
     public function testDisplayActionGet()
@@ -108,7 +108,7 @@ class PreferencesControllerTest extends AbstractControllerTestCase
 
     public function testDisplayActionPostValid()
     {
-        $this->testUseFormPostValid('display', 'Display');
+        $this->testUseFormPostValid('display', 'Display', 'preferencesDisplayPage/');
     }
 
     public function testInventoryActionGet()
@@ -123,7 +123,7 @@ class PreferencesControllerTest extends AbstractControllerTestCase
 
     public function testInventoryActionPostValid()
     {
-        $this->testUseFormPostValid('inventory', 'Inventory');
+        $this->testUseFormPostValid('inventory', 'Inventory', 'preferencesInventoryPage/');
     }
 
     public function testAgentActionGet()
@@ -138,7 +138,7 @@ class PreferencesControllerTest extends AbstractControllerTestCase
 
     public function testAgentActionPostValid()
     {
-        $this->testUseFormPostValid('agent', 'Agent');
+        $this->testUseFormPostValid('agent', 'Agent', 'preferencesAgentPage/');
     }
 
     public function testPackagesActionGet()
@@ -219,7 +219,7 @@ class PreferencesControllerTest extends AbstractControllerTestCase
                 })
             );
         $this->dispatch("/console/preferences/packages", 'POST', $postData);
-        $this->assertRedirectTo("/console/preferences/packages/");
+        $this->assertRedirectTo("preferencesPackagesPage/");
     }
 
     public function testDownloadActionGet()
@@ -234,7 +234,7 @@ class PreferencesControllerTest extends AbstractControllerTestCase
 
     public function testDownloadActionPostValid()
     {
-        $this->testUseFormPostValid('download', 'Download');
+        $this->testUseFormPostValid('download', 'Download', 'preferencesDownloadPage/');
     }
 
     public function testNetworkscanningActionGet()
@@ -249,7 +249,7 @@ class PreferencesControllerTest extends AbstractControllerTestCase
 
     public function testNetworkscanningActionPostValid()
     {
-        $this->testUseFormPostValid('networkscanning', 'NetworkScanning');
+        $this->testUseFormPostValid('networkscanning', 'NetworkScanning', 'preferencesNetworkScanningPage/');
     }
 
     public function testGroupsActionGet()
@@ -264,7 +264,7 @@ class PreferencesControllerTest extends AbstractControllerTestCase
 
     public function testGroupsActionPostValid()
     {
-        $this->testUseFormPostValid('groups', 'Groups');
+        $this->testUseFormPostValid('groups', 'Groups', 'preferencesGroupsPage/');
     }
 
     public function testRawdataActionGet()
@@ -279,7 +279,7 @@ class PreferencesControllerTest extends AbstractControllerTestCase
 
     public function testRawdataActionPostValid()
     {
-        $this->testUseFormPostValid('rawdata', 'RawData');
+        $this->testUseFormPostValid('rawdata', 'RawData', 'preferencesRawDataPage/');
     }
 
     public function testFiltersActionGet()
@@ -294,7 +294,7 @@ class PreferencesControllerTest extends AbstractControllerTestCase
 
     public function testFiltersActionPostValid()
     {
-        $this->testUseFormPostValid('filters', 'Filters');
+        $this->testUseFormPostValid('filters', 'Filters', 'preferencesFiltersPage/');
     }
 
     public function testSystemActionGet()
@@ -309,7 +309,7 @@ class PreferencesControllerTest extends AbstractControllerTestCase
 
     public function testSystemActionPostValid()
     {
-        $this->testUseFormPostValid('system', 'System');
+        $this->testUseFormPostValid('system', 'System', 'preferencesSystemPage/');
     }
 
     /**
@@ -392,7 +392,7 @@ class PreferencesControllerTest extends AbstractControllerTestCase
      * @param string $action "action" part of URI
      * @param string $formClass Form name without namespace
      */
-    protected function testUseFormPostValid($action, $formClass)
+    protected function testUseFormPostValid($action, $formClass, string $redirectTo)
     {
         $postData = array(
             'Preferences' => array('pref1' => 'value1', 'pref2' => 'value2')
@@ -422,7 +422,7 @@ class PreferencesControllerTest extends AbstractControllerTestCase
                 })
             );
         $this->dispatch("/console/preferences/$action", 'POST', $postData);
-        $this->assertRedirectTo("/console/preferences/$action/");
+        $this->assertRedirectTo($redirectTo);
     }
 
     public function testCustomfieldsActionGet()
@@ -490,7 +490,7 @@ class PreferencesControllerTest extends AbstractControllerTestCase
             ->with('Console\Form\DefineFields')
             ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/customfields', 'POST', $postData);
-        $this->assertRedirectTo('/console/preferences/customfields/');
+        $this->assertRedirectTo('preferencesCustomFieldsPage/');
     }
 
     public function testDeletefieldActionGet()
@@ -505,14 +505,14 @@ class PreferencesControllerTest extends AbstractControllerTestCase
     {
         $this->_customFieldManager->expects($this->never())->method('deleteField');
         $this->dispatch('/console/preferences/deletefield/?name=Name', 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/preferences/customfields/');
+        $this->assertRedirectTo('preferencesCustomFieldsPage/');
     }
 
     public function testDeletefieldActionPostYes()
     {
         $this->_customFieldManager->expects($this->once())->method('deleteField')->with('Name');
         $this->dispatch('/console/preferences/deletefield/?name=Name', 'POST', array('yes' => 'Yes'));
-        $this->assertRedirectTo('/console/preferences/customfields/');
+        $this->assertRedirectTo('preferencesCustomFieldsPage/');
     }
 
     public function testNetworkdevicesActionGet()
@@ -580,7 +580,7 @@ class PreferencesControllerTest extends AbstractControllerTestCase
             ->with('Console\Form\NetworkDeviceTypes')
             ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/networkdevices', 'POST', $postData);
-        $this->assertRedirectTo('/console/network/index/');
+        $this->assertRedirectTo('networkPage/');
     }
 
     public function testDeletedevicetypeActionGet()
@@ -595,14 +595,14 @@ class PreferencesControllerTest extends AbstractControllerTestCase
     {
         $this->_deviceManager->expects($this->never())->method('deleteType');
         $this->dispatch('/console/preferences/deletedevicetype/?name=test', 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/preferences/networkdevices/');
+        $this->assertRedirectTo('preferencesNetworkDevicesPage/');
     }
 
     public function testDeletedevicetypeActionPostYes()
     {
         $this->_deviceManager->expects($this->once())->method('deleteType')->with('test');
         $this->dispatch('/console/preferences/deletedevicetype/?name=test', 'POST', array('yes' => 'Yes'));
-        $this->assertRedirectTo('/console/preferences/networkdevices/');
+        $this->assertRedirectTo('preferencesNetworkDevicesPage/');
     }
 
     public function testRegistryValuesActionGet()
@@ -672,7 +672,7 @@ class PreferencesControllerTest extends AbstractControllerTestCase
             ->with('Console\Form\ManageRegistryValues')
             ->will($this->returnValue($form));
         $this->dispatch('/console/preferences/registryvalues/', 'POST', $postData);
-        $this->assertRedirectTo('/console/preferences/registryvalues/');
+        $this->assertRedirectTo('preferencesRegistryValuesPage/');
     }
 
     public function testDeleteregistryvalueActionGet()
@@ -690,13 +690,13 @@ class PreferencesControllerTest extends AbstractControllerTestCase
     {
         $this->_registryManager->expects($this->never())->method('deleteValueDefinition');
         $this->dispatch('/console/preferences/deleteregistryvalue/?id=1', 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/preferences/registryvalues/');
+        $this->assertRedirectTo('preferencesRegistryValuesPage/');
     }
 
     public function testDeleteregistryvalueActionPostYes()
     {
         $this->_registryManager->expects($this->once())->method('deleteValueDefinition')->with('value_name');
         $this->dispatch('/console/preferences/deleteregistryvalue/?name=value_name', 'POST', array('yes' => 'Yes'));
-        $this->assertRedirectTo('/console/preferences/registryvalues/');
+        $this->assertRedirectTo('preferencesRegistryValuesPage/');
     }
 }

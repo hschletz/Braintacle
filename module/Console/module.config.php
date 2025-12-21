@@ -21,6 +21,7 @@
  */
 
 use Braintacle\Legacy\Plugin\FlashMessenger;
+use Braintacle\Legacy\Plugin\RedirectToRoute;
 use Console\Controller\AccountsController;
 use Console\Controller\NetworkController;
 use Console\Controller\PackageController;
@@ -42,6 +43,7 @@ return array(
             'getOrder' => 'Console\Mvc\Controller\Plugin\GetOrder',
             'PrintForm' => 'Console\Mvc\Controller\Plugin\PrintForm',
             'printForm' => 'Console\Mvc\Controller\Plugin\PrintForm',
+            'redirectToRoute' => RedirectToRoute::class,
             'Translate' => Translate::class,
             'translate' => Translate::class,
         ),

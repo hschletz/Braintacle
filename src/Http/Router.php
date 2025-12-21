@@ -103,14 +103,17 @@ class Router
             $group->get('/console/package/build', ApplicationBridge::class)->setName('packageBuildPage');
             $group->get('/console/package/index', ApplicationBridge::class)->setName('packagesList');
             $group->get('/console/preferences/agent', ApplicationBridge::class)->setName('preferencesAgentPage');
+            $group->get('/console/preferences/customfields', ApplicationBridge::class)->setName('preferencesCustomFieldsPage');
             $group->get('/console/preferences/display', ApplicationBridge::class)->setName('preferencesDisplayPage');
             $group->get('/console/preferences/download', ApplicationBridge::class)->setName('preferencesDownloadPage');
             $group->get('/console/preferences/filters', ApplicationBridge::class)->setName('preferencesFiltersPage');
             $group->get('/console/preferences/groups', ApplicationBridge::class)->setName('preferencesGroupsPage');
             $group->get('/console/preferences/index', ApplicationBridge::class)->setName('preferencesPage');
             $group->get('/console/preferences/inventory', ApplicationBridge::class)->setName('preferencesInventoryPage');
+            $group->get('/console/preferences/networkdevices', ApplicationBridge::class)->setName('preferencesNetworkDevicesPage');
             $group->get('/console/preferences/networkscanning', ApplicationBridge::class)->setName('preferencesNetworkScanningPage');
             $group->get('/console/preferences/packages', ApplicationBridge::class)->setName('preferencesPackagesPage');
+            $group->get('/console/preferences/registryvalues', ApplicationBridge::class)->setName('preferencesRegistryValuesPage');
             $group->get('/console/preferences/rawdata', ApplicationBridge::class)->setName('preferencesRawDataPage');
             $group->get('/console/preferences/system', ApplicationBridge::class)->setName('preferencesSystemPage');
 

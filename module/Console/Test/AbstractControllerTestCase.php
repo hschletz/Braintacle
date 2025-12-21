@@ -23,6 +23,7 @@
 namespace Console\Test;
 
 use Braintacle\Container;
+use Braintacle\Http\RouteHelper;
 use Braintacle\Legacy\MvcApplication;
 use Braintacle\Legacy\MvcApplicationFactory;
 use Laminas\Http\PhpEnvironment\Request;
@@ -130,6 +131,14 @@ abstract class AbstractControllerTestCase extends TestCase
         $request->setPost(new Parameters($post));
         $request->setUri($uri);
         $request->setRequestUri($uri->getPath());
+
+        $routeHelper = $this->createStub(RouteHelper::class);
+        $routeHelper->method('getPathForRoute')->willReturnCallback(
+            function (string $name, array $routeArguments, array $queryParams): string {
+                return $name . '/' . http_build_query($routeArguments) . '?' . http_build_query($queryParams);
+            }
+        );
+        $this->getApplicationServiceLocator()->setService(RouteHelper::class, $routeHelper);
 
         $this->getApplication()->run($this->createStub(ServerRequestInterface::class));
     }

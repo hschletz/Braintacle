@@ -183,7 +183,7 @@ class NetworkController extends Controller
             if ($this->_subnetForm->isValid()) {
                 $data = $this->_subnetForm->getData();
                 $this->_subnetManager->saveSubnet($subnet['Address'], $subnet['Mask'], $data['Name']);
-                return $this->redirectToRoute('network', 'index');
+                return $this->redirectToRoute('networkPage');
             }
         } else {
             $this->_subnetForm->setData(array('Name' => $subnet['Name']));
@@ -207,7 +207,7 @@ class NetworkController extends Controller
         try {
             $device = $this->_deviceManager->getDevice($params->fromQuery('macaddress'));
         } catch (\Model\Network\RuntimeException $e) {
-            return $this->redirectToRoute('network', 'index');
+            return $this->redirectToRoute('networkPage');
         }
         if ($this->getRequest()->isPost()) {
             $this->_deviceForm->setData($params->fromPost());
@@ -218,7 +218,7 @@ class NetworkController extends Controller
                     $data['Type'],
                     $data['Description']
                 );
-                return $this->redirectToRoute('network', 'index');
+                return $this->redirectToRoute('networkPage');
             }
         } else {
             $this->_deviceForm->setData(
@@ -255,6 +255,6 @@ class NetworkController extends Controller
                 $this->_deviceManager->deleteDevice($params->fromQuery('macaddress'));
             }
         }
-        return $this->redirectToRoute('network', 'index');
+        return $this->redirectToRoute('networkPage');
     }
 }

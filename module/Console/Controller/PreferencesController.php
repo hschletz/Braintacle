@@ -98,7 +98,7 @@ class PreferencesController extends Controller
      */
     public function indexAction()
     {
-        return $this->redirectToRoute('preferences', 'display');
+        return $this->redirectToRoute('preferencesDisplayPage');
     }
 
     /**
@@ -207,7 +207,7 @@ class PreferencesController extends Controller
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $form->process();
-                return $this->redirectToRoute('preferences', 'customfields');
+                return $this->redirectToRoute('preferencesCustomFieldsPage');
             }
         }
         return array('form' => $form);
@@ -230,7 +230,7 @@ class PreferencesController extends Controller
             if ($this->params()->fromPost('yes')) {
                 $this->_customFieldManager->deleteField($field);
             }
-            return $this->redirectToRoute('preferences', 'customfields');
+            return $this->redirectToRoute('preferencesCustomFieldsPage');
         } else {
             return array('field' => $field);
         }
@@ -252,7 +252,7 @@ class PreferencesController extends Controller
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $form->process();
-                return $this->redirectToRoute('network', 'index');
+                return $this->redirectToRoute('networkPage');
             }
         }
         return array('form' => $form);
@@ -274,7 +274,7 @@ class PreferencesController extends Controller
             if ($this->params()->fromPost('yes')) {
                 $this->_deviceManager->deleteType($this->params()->fromQuery('name'));
             }
-            return $this->redirectToRoute('preferences', 'networkdevices');
+            return $this->redirectToRoute('preferencesNetworkDevicesPage');
         } else {
             return array('description' => $this->params()->fromQuery('name'));
         }
@@ -294,7 +294,7 @@ class PreferencesController extends Controller
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $form->process();
-                return $this->redirectToRoute('preferences', 'registryvalues');
+                return $this->redirectToRoute('preferencesRegistryValuesPage');
             }
         }
         return array('form' => $form);
@@ -315,7 +315,7 @@ class PreferencesController extends Controller
             if ($this->params()->fromPost('yes')) {
                 $this->_registryManager->deleteValueDefinition($this->params()->fromQuery('name'));
             }
-            return $this->redirectToRoute('preferences', 'registryvalues');
+            return $this->redirectToRoute('preferencesRegistryValuesPage');
         } else {
             return array('name' => $this->params()->fromQuery('name'));
         }
@@ -340,8 +340,18 @@ class PreferencesController extends Controller
                     )
                 );
                 return $this->redirectToRoute(
-                    'preferences',
-                    $this->getEvent()->getRouteMatch()->getParams()['action']
+                    match ($this->getEvent()->getRouteMatch()->getParam('action')) {
+                        'agent' => 'preferencesAgentPage',
+                        'display' => 'preferencesDisplayPage',
+                        'download' => 'preferencesDownloadPage',
+                        'filters' => 'preferencesFiltersPage',
+                        'groups' => 'preferencesGroupsPage',
+                        'inventory' => 'preferencesInventoryPage',
+                        'networkscanning' => 'preferencesNetworkScanningPage',
+                        'packages' => 'preferencesPackagesPage',
+                        'rawdata' => 'preferencesRawDataPage',
+                        'system' => 'preferencesSystemPage',
+                    }
                 );
             }
         } else {

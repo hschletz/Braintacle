@@ -126,7 +126,7 @@ class PackageController extends Controller
                 } catch (\Model\Package\RuntimeException $e) {
                     $flashMessenger->addErrorMessage($e->getMessage());
                 }
-                return $this->redirectToRoute('package', 'index');
+                return $this->redirectToRoute('packagesList');
             }
         } else {
             $this->_buildForm->setData(
@@ -171,7 +171,7 @@ class PackageController extends Controller
                     $flashMessenger->addErrorMessage($e->getMessage());
                 }
             }
-            return $this->redirectToRoute('package', 'index');
+            return $this->redirectToRoute('packagesList');
         } else {
             return array('name' => $name);
         }
@@ -191,7 +191,7 @@ class PackageController extends Controller
             $package = $this->_packageManager->getPackage($oldName);
         } catch (\Model\Package\RuntimeException $e) {
             $this->flashMessenger()->addErrorMessage($e->getMessage());
-            return $this->redirectToRoute('package', 'index');
+            return $this->redirectToRoute('packagesList');
         }
 
         $form = $this->_updateForm;
@@ -230,7 +230,7 @@ class PackageController extends Controller
                         )
                     );
                 }
-                return $this->redirectToRoute('package', 'index');
+                return $this->redirectToRoute('packagesList');
             }
         } else {
             $form->setData(

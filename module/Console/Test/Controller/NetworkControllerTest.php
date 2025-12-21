@@ -384,7 +384,7 @@ class NetworkControllerTest extends AbstractControllerTestCase
             ->method('render');
 
         $this->dispatch('/console/network/properties/?subnet=192.0.2.0&mask=255.255.255.0', 'POST', $postData);
-        $this->assertRedirectTo('/console/network/index/');
+        $this->assertRedirectTo('networkPage/');
     }
 
     public function testPropertiesActionMissingParams()
@@ -542,7 +542,7 @@ class NetworkControllerTest extends AbstractControllerTestCase
             ->method('saveDevice')
             ->with('00:00:5E:00:53:00', 'type', 'description');
         $this->dispatch('/console/network/edit/?macaddress=00:00:5E:00:53:00', 'POST', $postData);
-        $this->assertRedirectTo('/console/network/index/');
+        $this->assertRedirectTo('networkPage/');
     }
 
     public function testEditActionMissingParams()
@@ -552,7 +552,7 @@ class NetworkControllerTest extends AbstractControllerTestCase
             ->with(null)
             ->will($this->throwException(new \Model\Network\RuntimeException()));
         $this->dispatch('/console/network/edit/');
-        $this->assertRedirectTo('/console/network/index/');
+        $this->assertRedirectTo('networkPage/');
     }
 
     public function testDeleteActionGet()
@@ -582,7 +582,7 @@ class NetworkControllerTest extends AbstractControllerTestCase
         $this->_deviceManager->expects($this->never())->method('getDevice');
         $this->_deviceManager->expects($this->never())->method('deleteDevice');
         $this->dispatch('/console/network/delete/?macaddress=00:00:5E:00:53:00', 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/network/index/');
+        $this->assertRedirectTo('networkPage/');
     }
 
     public function testDeleteActionPostYes()
@@ -590,7 +590,7 @@ class NetworkControllerTest extends AbstractControllerTestCase
         $this->_deviceManager->expects($this->never())->method('getDevice');
         $this->_deviceManager->expects($this->once())->method('deleteDevice')->with('00:00:5E:00:53:00');
         $this->dispatch('/console/network/delete/?macaddress=00:00:5E:00:53:00', 'POST', array('yes' => 'Yes'));
-        $this->assertRedirectTo('/console/network/index/');
+        $this->assertRedirectTo('networkPage/');
     }
 
     public function testDeleteActionMissingParams()
@@ -601,6 +601,6 @@ class NetworkControllerTest extends AbstractControllerTestCase
             ->will($this->throwException(new \Model\Network\RuntimeException()));
         $this->_deviceManager->expects($this->never())->method('deleteDevice');
         $this->dispatch('/console/network/delete/');
-        $this->assertRedirectTo('/console/network/index/');
+        $this->assertRedirectTo('networkPage/');
     }
 }

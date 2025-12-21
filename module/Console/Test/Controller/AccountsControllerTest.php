@@ -152,7 +152,7 @@ class AccountsControllerTest extends AbstractControllerTestCase
         $this->_formAccountAdd->expects($this->never())
             ->method('render');
         $this->dispatch('/console/accounts/add/', 'POST', $data);
-        $this->assertRedirectTo('/console/accounts/index/');
+        $this->assertRedirectTo('preferencesUsersList/');
     }
 
     public function testAddActionPostInvalid()
@@ -258,7 +258,7 @@ class AccountsControllerTest extends AbstractControllerTestCase
         $this->_formAccountEdit->expects($this->never())
             ->method('render');
         $this->dispatch('/console/accounts/edit/?id=testId', 'POST', $data);
-        $this->assertRedirectTo('/console/accounts/index/');
+        $this->assertRedirectTo('preferencesUsersList/');
     }
 
     public function testDeleteActionGet()
@@ -277,13 +277,13 @@ class AccountsControllerTest extends AbstractControllerTestCase
     {
         $this->_operatorManager->expects($this->never())->method('deleteOperator');
         $this->dispatch('/console/accounts/delete/?id=testId', 'POST', array('no' => 'No'));
-        $this->assertRedirectTo('/console/accounts/index/');
+        $this->assertRedirectTo('preferencesUsersList/');
     }
 
     public function testDeleteActionPostYes()
     {
         $this->_operatorManager->expects($this->once())->method('deleteOperator')->with('testId');
         $this->dispatch('/console/accounts/delete/?id=testId', 'POST', array('yes' => 'Yes'));
-        $this->assertRedirectTo('/console/accounts/index/');
+        $this->assertRedirectTo('preferencesUsersList/');
     }
 }
