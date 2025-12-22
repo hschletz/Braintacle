@@ -5,16 +5,14 @@ namespace Braintacle\Legacy;
 use Braintacle\Legacy\Plugin\PluginManager;
 use Laminas\Http\PhpEnvironment\Response;
 use Laminas\Http\Request;
-use Laminas\Stdlib\DispatchableInterface;
 use Laminas\Stdlib\RequestInterface;
 use Laminas\Stdlib\ResponseInterface;
-use Override;
 use Slim\Exception\HttpNotFoundException;
 
 /**
  * Base class for MVC controllers.
  */
-abstract class Controller implements DispatchableInterface
+abstract class Controller
 {
     private MvcEvent $mvcEvent;
     private PluginManager $pluginManager;
@@ -51,7 +49,6 @@ abstract class Controller implements DispatchableInterface
         return $this->mvcEvent->getResponse();
     }
 
-    #[Override]
     public function dispatch(RequestInterface $request, ?ResponseInterface $response = null)
     {
         $this->request = $request;
