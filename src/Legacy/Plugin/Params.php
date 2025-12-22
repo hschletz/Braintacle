@@ -3,12 +3,11 @@
 namespace Braintacle\Legacy\Plugin;
 
 use Laminas\Http\Request;
-use Laminas\Mvc\Controller\Plugin\PluginInterface;
 
 /**
  * Replacement for builtin Params plugin.
  */
-final class Params implements PluginInterface
+final class Params
 {
     use ControllerPluginTrait;
 

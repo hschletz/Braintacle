@@ -4,9 +4,8 @@ namespace Braintacle\Legacy\Plugin;
 
 use Braintacle\Http\RouteHelper;
 use Laminas\Http\PhpEnvironment\Response;
-use Laminas\Mvc\Controller\Plugin\PluginInterface;
 
-final class RedirectToRoute implements PluginInterface
+final class RedirectToRoute
 {
     use ControllerPluginTrait;
 

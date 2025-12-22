@@ -3,13 +3,12 @@
 namespace Braintacle\Legacy\Plugin;
 
 use Braintacle\FlashMessages;
-use Laminas\Mvc\Controller\Plugin\PluginInterface;
 use Laminas\View\Helper\EscapeHtml;
 
 /**
  * Drop-in replacement for FlashMessenger controller plugin and view helper.
  */
-final class FlashMessenger implements PluginInterface
+final class FlashMessenger
 {
     use ControllerPluginTrait;
 
