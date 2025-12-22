@@ -2,8 +2,8 @@
 
 namespace Braintacle\Legacy;
 
+use Braintacle\Legacy\Plugin\PluginManager;
 use Laminas\Http\Response;
-use Laminas\Mvc\Controller\PluginManager;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Validator\AbstractValidator;
 use Laminas\Validator\Translator\TranslatorInterface;

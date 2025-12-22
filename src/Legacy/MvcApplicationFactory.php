@@ -2,8 +2,8 @@
 
 namespace Braintacle\Legacy;
 
+use Braintacle\Legacy\Plugin\PluginManager;
 use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\Mvc\Controller\PluginManager;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Renderer\PhpRenderer;
 

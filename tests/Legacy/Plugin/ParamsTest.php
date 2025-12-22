@@ -12,28 +12,17 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(Params::class)]
 final class ParamsTest extends TestCase
 {
-    private function createParams(Request $request): Params
-    {
-        $controller = $this->createStub(Controller::class);
-        $controller->method('getRequest')->willReturn($request);
-
-        $params = new Params();
-        $params->setController($controller);
-
-        return $params;
-    }
-
     public function testController()
     {
         $controller = $this->createStub(Controller::class);
-        $params = new Params();
+        $params = new Params(new Request());
         $params->setController($controller);
         $this->assertSame($controller, $params->getController());
     }
 
     public function testInvoke()
     {
-        $params = new Params();
+        $params = new Params(new Request());
         $this->assertSame($params, $params());
     }
 
@@ -42,7 +31,7 @@ final class ParamsTest extends TestCase
         $request = new Request();
         $request->setQuery(new Parameters(['foo' => 'bar']));
 
-        $params = $this->createParams($request);
+        $params = new Params($request);
 
         $this->assertEquals(['foo' => 'bar'], $params->fromQuery());
         $this->assertEquals('bar', $params->fromQuery('foo'));
@@ -55,7 +44,7 @@ final class ParamsTest extends TestCase
         $request = new Request();
         $request->setPost(new Parameters(['foo' => 'bar']));
 
-        $params = $this->createParams($request);
+        $params = new Params($request);
 
         $this->assertEquals(['foo' => 'bar'], $params->fromPost());
         $this->assertEquals('bar', $params->fromPost('foo'));
@@ -67,7 +56,7 @@ final class ParamsTest extends TestCase
         $request = new Request();
         $request->setFiles(new Parameters(['foo' => 'bar']));
 
-        $params = $this->createParams($request);
+        $params = new Params($request);
 
         $this->assertEquals(['foo' => 'bar'], $params->fromFiles());
     }

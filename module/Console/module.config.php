@@ -21,12 +21,9 @@
  */
 
 use Braintacle\Legacy\Plugin\FlashMessenger;
-use Braintacle\Legacy\Plugin\Params;
-use Braintacle\Legacy\Plugin\RedirectToRoute;
 use Console\Controller\AccountsController;
 use Console\Controller\NetworkController;
 use Console\Controller\PackageController;
-use Console\Mvc\Controller\Plugin\Translate;
 use Console\Service\AccountsControllerFactory;
 use Console\Service\NetworkControllerFactory;
 use Console\Service\PackageControllerFactory;
@@ -36,24 +33,6 @@ use Laminas\Form\View\Helper\FormElementErrors;
 use Psr\Container\ContainerInterface;
 
 return array(
-    'controller_plugins' => array(
-        'aliases' => array(
-            '_' => Translate::class,
-            'flashMessenger' => FlashMessenger::class,
-            'GetOrder' => 'Console\Mvc\Controller\Plugin\GetOrder',
-            'getOrder' => 'Console\Mvc\Controller\Plugin\GetOrder',
-            'params' => Params::class, // bypasses builtin plugin
-            'PrintForm' => 'Console\Mvc\Controller\Plugin\PrintForm',
-            'printForm' => 'Console\Mvc\Controller\Plugin\PrintForm',
-            'redirectToRoute' => RedirectToRoute::class,
-            'Translate' => Translate::class,
-            'translate' => Translate::class,
-        ),
-        'factories' => array(
-            'Console\Mvc\Controller\Plugin\GetOrder' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-            'Console\Mvc\Controller\Plugin\PrintForm' => 'Laminas\ServiceManager\Factory\InvokableFactory',
-        ),
-    ),
     'form_elements' => array(
         'abstract_factories' => array(
             'Console\Form\Service\AccountFactory',

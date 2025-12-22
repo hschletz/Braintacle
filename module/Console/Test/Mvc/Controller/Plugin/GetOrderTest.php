@@ -22,20 +22,29 @@
 
 namespace Console\Test\Mvc\Controller\Plugin;
 
-use Library\Test\Mvc\Controller\Plugin\AbstractTestCase;
+use Braintacle\Legacy\Controller;
+use Console\Mvc\Controller\Plugin\GetOrder;
+use Laminas\Http\Request;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for GetOrder controller plugin
  */
-class GetOrderTest extends AbstractTestCase
+class GetOrderTest extends TestCase
 {
     /**
      * Invoke plugin and test various combinations of request and plugin parameters
      */
     public function testInvoke()
     {
-        $plugin = $this->getPlugin();
-        $request = $this->_controller->getRequest();
+        $request = new Request();
+
+        $controller = $this->createStub(Controller::class);
+        $controller->method('getRequest')->willReturn($request);
+
+        $plugin = new GetOrder();
+        $plugin->setController($controller);
+
         $parameters = new \Laminas\Stdlib\Parameters();
 
         // Defaults only

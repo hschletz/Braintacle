@@ -2,10 +2,10 @@
 
 namespace Braintacle\Legacy;
 
+use Braintacle\Legacy\Plugin\PluginManager;
 use Laminas\EventManager\EventInterface;
 use Laminas\Http\PhpEnvironment\Response;
 use Laminas\Http\Request;
-use Laminas\Mvc\Controller\PluginManager;
 use Laminas\Mvc\InjectApplicationEventInterface;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Stdlib\DispatchableInterface;
@@ -26,12 +26,7 @@ abstract class Controller implements DispatchableInterface, InjectApplicationEve
     public function __call($name, $arguments)
     {
         $plugin = $this->pluginManager->get($name);
-        if (is_callable($plugin)) {
-            /** @psalm-suppress InvalidFunctionCall */
-            return $plugin(...$arguments);
-        } else {
-            return $plugin;
-        }
+        return $plugin(...$arguments);
     }
 
     #[Override]

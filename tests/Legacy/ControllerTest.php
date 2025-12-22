@@ -4,21 +4,20 @@ namespace Braintacle\Test\Legacy;
 
 use Braintacle\Legacy\Controller;
 use Braintacle\Legacy\MvcApplication;
+use Braintacle\Legacy\Plugin\PluginManager;
 use Laminas\Http\PhpEnvironment\Response;
 use Laminas\Http\Request;
-use Laminas\Mvc\Controller\PluginManager;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\RouteMatch;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
-use stdClass;
 
 #[CoversClass(Controller::class)]
 final class ControllerTest extends TestCase
 {
-    public function testPluginCallable()
+    public function testPlugin()
     {
         $pluginManager = $this->createMock(PluginManager::class);
         $pluginManager->method('get')->with('test')->willReturn(new class {
@@ -33,20 +32,6 @@ final class ControllerTest extends TestCase
 
         // @phpstan-ignore method.notFound (magic method)
         $this->assertEquals('foobar', $controller->test('foo', 'bar'));
-    }
-
-    public function testPluginNotCallable()
-    {
-        $plugin = new stdClass();
-
-        $pluginManager = $this->createMock(PluginManager::class);
-        $pluginManager->method('get')->with('test')->willReturn($plugin);
-
-        $controller = new class extends Controller {};
-        $controller->setPluginManager($pluginManager);
-
-        // @phpstan-ignore method.notFound (magic method)
-        $this->assertSame($plugin, $controller->test());
     }
 
     public function testEvent()

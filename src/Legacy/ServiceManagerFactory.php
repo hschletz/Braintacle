@@ -18,8 +18,8 @@ use Laminas\EventManager\SharedEventManagerInterface;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\Http\PhpEnvironment\Request;
 use Laminas\Http\PhpEnvironment\Response;
+use Laminas\Http\Request as HttpRequest;
 use Laminas\I18n\Translator\TranslatorInterface as I18nTranslatorInterface;
-use Laminas\ModuleManager\Feature\ControllerPluginProviderInterface;
 use Laminas\ModuleManager\Feature\ServiceProviderInterface;
 use Laminas\ModuleManager\Feature\ViewHelperProviderInterface;
 use Laminas\ModuleManager\Listener\DefaultListenerAggregate;
@@ -27,7 +27,6 @@ use Laminas\ModuleManager\Listener\ListenerOptions;
 use Laminas\ModuleManager\Listener\ServiceListener;
 use Laminas\ModuleManager\ModuleEvent;
 use Laminas\ModuleManager\ModuleManager;
-use Laminas\Mvc\Controller\PluginManager;
 use Laminas\Router\RouteMatch;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Translator\TranslatorInterface;
@@ -66,8 +65,8 @@ final class ServiceManagerFactory
                 'EventManagerInterface' => EventManager::class,
                 EventManagerInterface::class => 'EventManager',
                 ModuleManager::class => 'ModuleManager',
-                PluginManager::class => 'ControllerPluginManager',
                 'request' => 'Request',
+                HttpRequest::class => 'Request',
                 'response' => 'Response',
                 ServiceListener::class => 'ServiceListener',
                 SharedEventManager::class => 'SharedEventManager',
@@ -83,7 +82,6 @@ final class ServiceManagerFactory
                 ),
                 'config' => fn(ContainerInterface $container) => $container->get('ModuleManager')
                     ->loadModules()->getEvent()->getParam('configListener')->getMergedConfig(false),
-                'ControllerPluginManager' => fn(ContainerInterface $container) => new PluginManager($container),
                 'EventManager' => fn(ContainerInterface $container) => new EventManager(
                     $container->get('SharedEventManager')
                 ),
@@ -170,7 +168,6 @@ final class ServiceManagerFactory
         // abstract factory after the DI factory.
         $serviceManager->addAbstractFactory(AutowireFactory::class);
         $serviceManager->get(FilterPluginManager::class)->addAbstractFactory(AutowireFactory::class);
-        $serviceManager->get(PluginManager::class)->addAbstractFactory(AutowireFactory::class);
         $serviceManager->get(ValidatorPluginManager::class)->addAbstractFactory(AutowireFactory::class);
         $viewHelperManager->addAbstractFactory(AutowireFactory::class);
 
@@ -195,12 +192,6 @@ final class ServiceManagerFactory
             'service_manager',
             ServiceProviderInterface::class,
             'getServiceConfig'
-        );
-        $serviceListener->addServiceManager(
-            'ControllerPluginManager',
-            'controller_plugins',
-            ControllerPluginProviderInterface::class,
-            'getControllerPluginConfig'
         );
         $serviceListener->addServiceManager(
             'ViewHelperManager',

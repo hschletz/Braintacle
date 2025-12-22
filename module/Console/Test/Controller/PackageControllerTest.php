@@ -25,6 +25,8 @@ namespace Console\Test\Controller;
 use Braintacle\FlashMessages;
 use Braintacle\Legacy\Plugin\FlashMessenger;
 use Braintacle\Legacy\Plugin\FlashMessengerTestTrait;
+use Braintacle\Legacy\Plugin\Params;
+use Braintacle\Legacy\Plugin\PluginManager;
 use Console\Form\Package\Update as PackageUpdate;
 use Console\Mvc\Controller\Plugin\PrintForm;
 use Console\Test\AbstractControllerTestCase;
@@ -307,11 +309,14 @@ class PackageControllerTest extends AbstractControllerTestCase
         $printForm = $this->createMock(PrintForm::class);
         $printForm->method('__invoke')->with($this->_buildForm, Build::class)->willReturn($viewModel);
 
+        $pluginManager = $this->createMock(PluginManager::class);
+        $pluginManager->method('get')->with('printForm')->willReturn($printForm);
+
         $renderer = $this->createMock(PhpRenderer::class);
         $renderer->method('render')->with($viewModel)->willReturn('form');
 
         $serviceManager = $this->getApplicationServiceLocator();
-        $serviceManager->get('ControllerPluginManager')->setService('printForm', $printForm);
+        $serviceManager->setService(PluginManager::class, $pluginManager);
         $serviceManager->setService(PhpRenderer::class, $renderer);
 
         $this->dispatch('/console/package/build');
@@ -341,9 +346,18 @@ class PackageControllerTest extends AbstractControllerTestCase
         $renderer = $this->createMock(PhpRenderer::class);
         $renderer->method('render')->with($viewModel)->willReturn('form');
 
+        $pluginManager = $this->createStub(PluginManager::class);
+
         $serviceManager = $this->getApplicationServiceLocator();
-        $serviceManager->get('ControllerPluginManager')->setService('printForm', $printForm);
+        $serviceManager->setService(PluginManager::class, $pluginManager);
         $serviceManager->setService(PhpRenderer::class, $renderer);
+
+        // getRequest() initializes the application, which must happen after the
+        // mock services have been set in the service manager.
+        $pluginManager->method('get')->willReturnMap([
+            ['params', new Params($this->getRequest())],
+            ['printForm', $printForm],
+        ]);
 
         $this->dispatch('/console/package/build', 'POST', $postData);
         $this->assertResponseStatusCode(200);
@@ -543,9 +557,19 @@ class PackageControllerTest extends AbstractControllerTestCase
         $renderer = $this->createMock(PhpRenderer::class);
         $renderer->method('render')->with($viewModel)->willReturn('form');
 
+        $pluginManager = $this->createStub(PluginManager::class);
+
         $serviceManager = $this->getApplicationServiceLocator();
-        $serviceManager->get('ControllerPluginManager')->setService('printForm', $printForm);
+        $serviceManager->setService(PluginManager::class, $pluginManager);
         $serviceManager->setService(PhpRenderer::class, $renderer);
+
+        // getRequest() initializes the application, which must happen after the
+        // mock services have been set in the service manager.
+        $pluginManager->method('get')->willReturnMap([
+            ['params', new Params($this->getRequest())],
+            ['printForm', $printForm],
+        ]);
+
 
         $this->dispatch('/console/package/update/?name=oldName');
 
@@ -572,11 +596,17 @@ class PackageControllerTest extends AbstractControllerTestCase
         $printForm = $this->createMock(PrintForm::class);
         $printForm->method('__invoke')->with($this->_updateForm, Update::class)->willReturn($viewModel);
 
+        $pluginManager = $this->createStub(PluginManager::class);
+        $pluginManager->method('get')->willReturnMap([
+            ['params', new Params($this->getRequest())],
+            ['printForm', $printForm],
+        ]);
+
         $renderer = $this->createMock(PhpRenderer::class);
         $renderer->method('render')->with($viewModel)->willReturn('form');
 
         $serviceManager = $this->getApplicationServiceLocator();
-        $serviceManager->get('ControllerPluginManager')->setService('printForm', $printForm);
+        $serviceManager->setService(PluginManager::class, $pluginManager);
         $serviceManager->setService(PhpRenderer::class, $renderer);
 
         $this->dispatch('/console/package/update/?name=oldName', 'POST', $postData);

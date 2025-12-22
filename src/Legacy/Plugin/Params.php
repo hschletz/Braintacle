@@ -2,6 +2,7 @@
 
 namespace Braintacle\Legacy\Plugin;
 
+use Laminas\Http\Request;
 use Laminas\Mvc\Controller\Plugin\PluginInterface;
 
 /**
@@ -11,6 +12,8 @@ final class Params implements PluginInterface
 {
     use ControllerPluginTrait;
 
+    public function __construct(private Request $request) {}
+
     public function __invoke(): self
     {
         return $this;
@@ -19,23 +22,23 @@ final class Params implements PluginInterface
     public function fromQuery(?string $name = null, ?string $default = null): array|string|null
     {
         if ($name === null) {
-            return $this->controller->getRequest()->getQuery()->toArray();
+            return $this->request->getQuery()->toArray();
         } else {
-            return $this->controller->getRequest()->getQuery($name, $default);
+            return $this->request->getQuery($name, $default);
         }
     }
 
     public function fromPost(?string $name = null): array|string|null
     {
         if ($name === null) {
-            return $this->controller->getRequest()->getPost()->toArray();
+            return $this->request->getPost()->toArray();
         } else {
-            return $this->controller->getRequest()->getPost($name);
+            return $this->request->getPost($name);
         }
     }
 
     public function fromFiles(): array
     {
-        return $this->controller->getRequest()->getFiles()->toArray();
+        return $this->request->getFiles()->toArray();
     }
 }

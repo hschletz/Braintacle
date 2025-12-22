@@ -4,12 +4,12 @@ namespace Console\Test\Mvc\Controller\Plugin;
 
 use Console\Mvc\Controller\Plugin\Translate;
 use Laminas\Translator\TranslatorInterface;
-use Library\Test\Mvc\Controller\Plugin\AbstractTestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for Translate controller plugin
  */
-class TranslateTest extends AbstractTestCase
+class TranslateTest extends TestCase
 {
     public function testInvoke()
     {
