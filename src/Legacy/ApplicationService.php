@@ -4,16 +4,14 @@ namespace Braintacle\Legacy;
 
 use Laminas\Http\Request;
 use Laminas\Http\Response;
-use Laminas\Mvc\ApplicationInterface;
 use Laminas\Router\RouteStackInterface;
 use Laminas\ServiceManager\ServiceManager;
 use LogicException;
-use Override;
 
 /**
  * Stub for the 'Application' service.
  */
-final class ApplicationService implements ApplicationInterface
+final class ApplicationService
 {
     private MvcEvent $mvcEvent;
 
@@ -34,31 +32,26 @@ final class ApplicationService implements ApplicationInterface
         return $this->mvcEvent;
     }
 
-    #[Override]
     public function getServiceManager()
     {
         return $this->serviceManager;
     }
 
-    #[Override]
     public function getRequest()
     {
         return $this->request;
     }
 
-    #[Override]
     public function getResponse()
     {
         return $this->response;
     }
 
-    #[Override]
     public function getEventManager()
     {
         throw new LogicException('This stub implementation does not have an event manager.');
     }
 
-    #[Override]
     public function run()
     {
         throw new LogicException('This stub implementation can not be run.');
