@@ -28,6 +28,8 @@ use Laminas\Stdlib\ResponseInterface;
 
 /**
  * Controller for managing preferences
+ *
+ * @psalm-suppress UnusedClass
  */
 class PreferencesController extends Controller
 {

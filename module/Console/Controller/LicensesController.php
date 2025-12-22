@@ -26,6 +26,8 @@ use Braintacle\Legacy\Controller;
 
 /**
  * Controller for managing software licenses
+ *
+ * @psalm-suppress UnusedClass
  */
 class LicensesController extends Controller
 {

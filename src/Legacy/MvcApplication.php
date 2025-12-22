@@ -63,6 +63,7 @@ class MvcApplication
         $mvcEvent->setRouteMatch($routeMatch);
     }
 
+    /** @psalm-suppress UnusedVariable (Psalm bug on $controllerName) */
     private function dispatch(MvcEvent $mvcEvent): void
     {
         $controllerName = $mvcEvent->getRouteMatch()->getParam('controller');
