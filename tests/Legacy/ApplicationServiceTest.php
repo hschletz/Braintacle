@@ -3,16 +3,18 @@
 namespace Braintacle\Test\Legacy;
 
 use Braintacle\Legacy\ApplicationService;
+use Braintacle\Legacy\MvcEvent;
 use Laminas\Http\PhpEnvironment\Request;
 use Laminas\Http\PhpEnvironment\Response;
-use Laminas\Mvc\MvcEvent;
 use Laminas\Router\RouteStackInterface;
 use Laminas\ServiceManager\ServiceManager;
 use LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(ApplicationService::class)]
+#[UsesClass(MvcEvent::class)]
 final class ApplicationServiceTest extends TestCase
 {
     private function createApplicationService(
@@ -45,9 +47,6 @@ final class ApplicationServiceTest extends TestCase
         $this->assertSame($request, $mvcEvent->getRequest());
         $this->assertSame($response, $mvcEvent->getResponse());
         $this->assertSame($router, $mvcEvent->getRouter());
-        $this->assertSame($applicationService, $mvcEvent->getApplication());
-        $this->assertSame($applicationService, $mvcEvent->getTarget());
-        $this->assertEquals(MvcEvent::EVENT_BOOTSTRAP, $mvcEvent->getName());
     }
 
     public function testGetServiceManager()

@@ -23,9 +23,9 @@
 namespace Console\Controller;
 
 use Braintacle\Legacy\Controller;
+use Braintacle\Legacy\MvcEvent;
 use Console\View\Helper\Form\Package\Build;
 use Console\View\Helper\Form\Package\Update;
-use Laminas\Mvc\MvcEvent;
 
 /**
  * Controller for all package related actions

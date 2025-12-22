@@ -4,17 +4,19 @@ namespace Braintacle\Test\Legacy;
 
 use Braintacle\Legacy\Controller;
 use Braintacle\Legacy\MvcApplication;
+use Braintacle\Legacy\MvcEvent;
 use Braintacle\Legacy\Plugin\PluginManager;
 use Laminas\Http\PhpEnvironment\Response;
 use Laminas\Http\Request;
-use Laminas\Mvc\MvcEvent;
 use Laminas\Router\RouteMatch;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
 
 #[CoversClass(Controller::class)]
+#[UsesClass(MvcEvent::class)]
 final class ControllerTest extends TestCase
 {
     public function testPlugin()
@@ -55,7 +57,6 @@ final class ControllerTest extends TestCase
         $controller->method('getEvent')->willReturn(new MvcEvent());
         $controller->method('onDisPatch')->with($this->callback(
             function (MvcEvent $mvcEvent) use ($controller, $request): bool {
-                $this->assertEquals(MvcEvent::EVENT_DISPATCH, $mvcEvent->getName());
                 $this->assertSame($request, $mvcEvent->getRequest());
                 $this->assertSame($request, $controller->getRequest());
 
@@ -74,12 +75,12 @@ final class ControllerTest extends TestCase
         $controller = new class extends Controller {
             public function testAction()
             {
-                return '_result';
+                return ['foo' => 'bar'];
             }
         };
         $result = $controller->onDispatch($mvcEvent);
-        $this->assertEquals('_result', $result);
-        $this->assertEquals('_result', $mvcEvent->getResult());
+        $this->assertEquals(['foo' => 'bar'], $result);
+        $this->assertEquals(['foo' => 'bar'], $mvcEvent->getResult());
     }
 
     public function testOnDispatchInvalidAction()

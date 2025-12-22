@@ -4,10 +4,10 @@ namespace Braintacle\Test\Legacy;
 
 use Braintacle\Legacy\ApplicationBridge;
 use Braintacle\Legacy\MvcApplication;
+use Braintacle\Legacy\MvcEvent;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Laminas\Http\Response as MvcResponse;
-use Laminas\Mvc\MvcEvent;
 use PHPUnit\Framework\TestCase;
 
 class ApplicationBridgeTest extends TestCase

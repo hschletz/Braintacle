@@ -5,7 +5,6 @@ namespace Braintacle\Legacy;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\ApplicationInterface;
-use Laminas\Mvc\MvcEvent;
 use Laminas\Router\RouteStackInterface;
 use Laminas\ServiceManager\ServiceManager;
 use LogicException;
@@ -25,9 +24,6 @@ final class ApplicationService implements ApplicationInterface
         RouteStackInterface $router,
     ) {
         $this->mvcEvent = new MvcEvent();
-        $this->mvcEvent->setName(MvcEvent::EVENT_BOOTSTRAP);
-        $this->mvcEvent->setTarget($this);
-        $this->mvcEvent->setApplication($this);
         $this->mvcEvent->setRequest($request);
         $this->mvcEvent->setResponse($response);
         $this->mvcEvent->setRouter($router);

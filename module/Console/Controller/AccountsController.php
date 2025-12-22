@@ -23,8 +23,8 @@
 namespace Console\Controller;
 
 use Braintacle\Legacy\Controller;
+use Braintacle\Legacy\MvcEvent;
 use Laminas\Authentication\AuthenticationServiceInterface;
-use Laminas\Mvc\MvcEvent;
 
 /**
  * Controller for managing Braintacle user accounts

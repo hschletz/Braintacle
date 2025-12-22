@@ -23,7 +23,7 @@
 namespace Console\Controller;
 
 use Braintacle\Legacy\Controller;
-use Laminas\Mvc\MvcEvent;
+use Braintacle\Legacy\MvcEvent;
 
 /**
  * Controller for subnets and IP discovery

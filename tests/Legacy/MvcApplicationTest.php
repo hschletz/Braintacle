@@ -5,6 +5,7 @@ namespace Braintacle\Test\Legacy;
 use Braintacle\Legacy\ApplicationService;
 use Braintacle\Legacy\Controller;
 use Braintacle\Legacy\MvcApplication;
+use Braintacle\Legacy\MvcEvent;
 use Braintacle\Legacy\Plugin\PluginManager;
 use Braintacle\Test\ErrorHandlerTestTrait;
 use Console\Controller\ClientController;
@@ -12,7 +13,6 @@ use Error;
 use Exception;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
-use Laminas\Mvc\MvcEvent;
 use Laminas\Router\Http\TreeRouteStack;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\RouteStackInterface;
@@ -27,12 +27,14 @@ use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
 
 #[CoversClass(MvcApplication::class)]
+#[UsesClass(MvcEvent::class)]
 final class MvcApplicationTest extends TestCase
 {
     use ErrorHandlerTestTrait;
@@ -177,8 +179,6 @@ final class MvcApplicationTest extends TestCase
         )->willReturn('_content');
 
         $returnedMvcEvent = $this->getMvcEvent($controller, $phpRenderer, $mvcEvent);
-
-        /** @var Response */
         $response = $returnedMvcEvent->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -204,8 +204,6 @@ final class MvcApplicationTest extends TestCase
         $phpRenderer->method('render')->with($viewModel, null)->willReturn('_content');
 
         $returnedMvcEvent = $this->getMvcEvent($controller, $phpRenderer, $mvcEvent);
-
-        /** @var Response */
         $response = $returnedMvcEvent->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());

@@ -3,11 +3,8 @@
 namespace Braintacle\Legacy;
 
 use Braintacle\Legacy\Plugin\PluginManager;
-use Laminas\EventManager\EventInterface;
 use Laminas\Http\PhpEnvironment\Response;
 use Laminas\Http\Request;
-use Laminas\Mvc\InjectApplicationEventInterface;
-use Laminas\Mvc\MvcEvent;
 use Laminas\Stdlib\DispatchableInterface;
 use Laminas\Stdlib\RequestInterface;
 use Laminas\Stdlib\ResponseInterface;
@@ -17,7 +14,7 @@ use Slim\Exception\HttpNotFoundException;
 /**
  * Base class for MVC controllers.
  */
-abstract class Controller implements DispatchableInterface, InjectApplicationEventInterface
+abstract class Controller implements DispatchableInterface
 {
     private MvcEvent $mvcEvent;
     private PluginManager $pluginManager;
@@ -29,14 +26,12 @@ abstract class Controller implements DispatchableInterface, InjectApplicationEve
         return $plugin(...$arguments);
     }
 
-    #[Override]
     public function getEvent(): MvcEvent
     {
         return $this->mvcEvent;
     }
 
-    #[Override]
-    public function setEvent(EventInterface $event): void
+    public function setEvent(MvcEvent $event): void
     {
         $this->mvcEvent = $event;
     }
@@ -62,7 +57,6 @@ abstract class Controller implements DispatchableInterface, InjectApplicationEve
         $this->request = $request;
 
         $event = $this->getEvent();
-        $event->setName(MvcEvent::EVENT_DISPATCH);
         $event->setRequest($request);
 
         return $this->onDispatch($event);

@@ -14,6 +14,7 @@ use Braintacle\Template\TemplateEngine;
 use Braintacle\Template\TemplateLoader;
 use Composer\InstalledVersions;
 use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Router\RouteMatch;
 use Laminas\ServiceManager\ServiceManager;
 use Latte\Engine;
 use Mockery;
@@ -91,5 +92,7 @@ trait InjectServicesTrait
             new TranslateFunction($translator),
         );
         $serviceManager->setService(TemplateEngine::class, $templateEngine);
+
+        $serviceManager->get('Application')->getMvcEvent()->setRouteMatch(new RouteMatch([]));
     }
 }
