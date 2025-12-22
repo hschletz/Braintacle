@@ -21,6 +21,7 @@
  */
 
 use Braintacle\Legacy\Plugin\FlashMessenger;
+use Braintacle\Legacy\Plugin\Params;
 use Braintacle\Legacy\Plugin\RedirectToRoute;
 use Console\Controller\AccountsController;
 use Console\Controller\NetworkController;
@@ -41,6 +42,7 @@ return array(
             'flashMessenger' => FlashMessenger::class,
             'GetOrder' => 'Console\Mvc\Controller\Plugin\GetOrder',
             'getOrder' => 'Console\Mvc\Controller\Plugin\GetOrder',
+            'params' => Params::class, // bypasses builtin plugin
             'PrintForm' => 'Console\Mvc\Controller\Plugin\PrintForm',
             'printForm' => 'Console\Mvc\Controller\Plugin\PrintForm',
             'redirectToRoute' => RedirectToRoute::class,
