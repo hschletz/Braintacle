@@ -6,14 +6,16 @@
 
 namespace Console\Mvc\Controller\Plugin;
 
-use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Braintacle\Legacy\Plugin\ControllerPluginTrait;
 use Laminas\Translator\TranslatorInterface;
 
 /**
  * Translate string.
  */
-class Translate extends AbstractPlugin
+final class Translate
 {
+    use ControllerPluginTrait;
+
     public function __construct(private TranslatorInterface $translator) {}
 
     public function __invoke(string $message): string

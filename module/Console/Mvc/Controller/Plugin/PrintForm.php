@@ -22,6 +22,7 @@
 
 namespace Console\Mvc\Controller\Plugin;
 
+use Braintacle\Legacy\Plugin\ControllerPluginTrait;
 use Console\Form\Form;
 use Laminas\View\Model\ViewModel;
 
@@ -33,8 +34,10 @@ use Laminas\View\Model\ViewModel;
  * generic template which renders the provided form by using the provided helper
  * or falling back to the form's render() method (deprecated).
  */
-class PrintForm extends \Laminas\Mvc\Controller\Plugin\AbstractPlugin
+final class PrintForm
 {
+    use ControllerPluginTrait;
+
     /**
      * Return view model set up to output given form
      */

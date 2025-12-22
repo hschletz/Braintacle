@@ -22,13 +22,17 @@
 
 namespace Console\Mvc\Controller\Plugin;
 
+use Braintacle\Legacy\Plugin\ControllerPluginTrait;
+
 /**
  * Extract and validate "order" and "direction" URL parameters
  *
  * @psalm-suppress UnusedClass
  */
-class GetOrder extends \Laminas\Mvc\Controller\Plugin\AbstractPlugin
+final class GetOrder
 {
+    use ControllerPluginTrait;
+
     /**
      * Extract and validate "order" and "direction" URL parameters
      *
