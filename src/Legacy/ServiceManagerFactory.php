@@ -27,12 +27,10 @@ use Laminas\ModuleManager\Listener\ListenerOptions;
 use Laminas\ModuleManager\Listener\ServiceListener;
 use Laminas\ModuleManager\ModuleEvent;
 use Laminas\ModuleManager\ModuleManager;
-use Laminas\Router\RouteMatch;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use Laminas\View\Helper\Doctype;
-use Laminas\View\Helper\Url;
 use Laminas\View\HelperPluginManager;
 use Laminas\View\Renderer\PhpRenderer;
 use Laminas\View\Resolver\TemplatePathStack;
@@ -135,21 +133,8 @@ final class ServiceManagerFactory
         $phpRenderer->setResolver($serviceManager->get('ViewResolver'));
         $serviceManager->setService(PhpRenderer::class, $phpRenderer);
 
-        // The Url helper is not registered by default.
-        // @codeCoverageIgnoreStart
-        $urlFactory = function () use ($serviceManager): Url {
-            $helper = new Url();
-            $helper->setRouter($serviceManager->get('HttpRouter'));
-            $match = $serviceManager->get('Application')->getMvcEvent()->getRouteMatch();
-            if ($match instanceof RouteMatch) {
-                $helper->setRouteMatch($match);
-            }
-            return $helper;
-        };
-        $viewHelperManager->setFactory(Url::class, $urlFactory);
-        $viewHelperManager->setFactory('laminasviewhelperurl', $urlFactory);
-
         // The Doctype helper is not registered by default.
+        // @codeCoverageIgnoreStart
         $doctypeFactory = function (): Doctype {
             $helper = new Doctype();
             $helper->setDoctype(Doctype::HTML5);

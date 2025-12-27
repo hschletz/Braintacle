@@ -22,7 +22,9 @@
 
 namespace Console\Test\View\Helper;
 
-use Laminas\View\Helper\Url;
+use Console\View\Helper\ConsoleUrl;
+use Laminas\Http\Request;
+use Laminas\Router\Http\TreeRouteStack;
 use Library\Test\View\Helper\AbstractTestCase;
 
 /**
@@ -30,11 +32,18 @@ use Library\Test\View\Helper\AbstractTestCase;
  */
 class ConsoleUrlTest extends AbstractTestCase
 {
-    protected $_helper;
-
-    public function setUp(): void
+    private function createHelper(?Request $request = null): ConsoleUrl
     {
-        // Inject mock RouteMatch into Url helper which is used by ConsoleUrl
+        $router = TreeRouteStack::factory([
+            'routes' => [
+                'console' => [
+                    'type' => 'segment',
+                    'options' => [
+                        'route' => '/[console[/]][:controller[/][:action[/]]]',
+                    ],
+                ],
+            ],
+        ]);
         $routeMatch = new \Laminas\Router\RouteMatch(
             array(
                 'controller' => 'currentcontroller',
@@ -42,17 +51,14 @@ class ConsoleUrlTest extends AbstractTestCase
             )
         );
 
-        /** @var Url */
-        $urlHelper = $this->getHelper('Url');
-        $urlHelper->setRouteMatch($routeMatch);
-        $this->_helper = new \Console\View\Helper\ConsoleUrl(null, $urlHelper);
+        return new ConsoleUrl($request ?? new Request(), $router, $routeMatch);
     }
 
     public function testDefaultControllerAndAction()
     {
         $this->assertEquals(
             '/console/currentcontroller/currentaction/',
-            $this->_helper->__invoke()
+            $this->createHelper()(),
         );
     }
 
@@ -60,7 +66,7 @@ class ConsoleUrlTest extends AbstractTestCase
     {
         $this->assertEquals(
             '/console/controller/action/',
-            $this->_helper->__invoke('controller', 'action')
+            $this->createHelper()('controller', 'action')
         );
     }
 
@@ -69,7 +75,7 @@ class ConsoleUrlTest extends AbstractTestCase
         $params = array('param1' => 'value1');
         $this->assertEquals(
             '/console/controller/action/?param1=value1',
-            $this->_helper->__invoke('controller', 'action', $params)
+            $this->createHelper()('controller', 'action', $params)
         );
     }
 
@@ -78,7 +84,7 @@ class ConsoleUrlTest extends AbstractTestCase
         $params = array('param1' => 'value1', 'param2' => 'value2');
         $this->assertEquals(
             '/console/controller/action/?param1=value1&param2=value2',
-            $this->_helper->__invoke('controller', 'action', $params)
+            $this->createHelper()('controller', 'action', $params)
         );
     }
 
@@ -87,16 +93,7 @@ class ConsoleUrlTest extends AbstractTestCase
         $params = array('param' => new \Library\MacAddress('00:00:5E:00:53:00'));
         $this->assertEquals(
             '/console/controller/action/?param=00:00:5E:00:53:00',
-            $this->_helper->__invoke('controller', 'action', $params)
-        );
-    }
-
-    public function testInheritParamsWithoutHttpRequest()
-    {
-        $params = array('param1' => 'value1');
-        $this->assertEquals(
-            '/console/controller/action/?param1=value1',
-            $this->_helper->__invoke('controller', 'action', $params, true)
+            $this->createHelper()('controller', 'action', $params)
         );
     }
 
@@ -106,9 +103,7 @@ class ConsoleUrlTest extends AbstractTestCase
         $request = new \Laminas\Http\PhpEnvironment\Request();
         $request->setQuery(new \Laminas\Stdlib\Parameters($requestParams));
 
-        /** @var Url */
-        $urlHelper = $this->getHelper('Url');
-        $helper = new \Console\View\Helper\ConsoleUrl($request, $urlHelper);
+        $helper = $this->createHelper($request);
 
         $params = array();
         $this->assertEquals(

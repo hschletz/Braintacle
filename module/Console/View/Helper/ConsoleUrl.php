@@ -22,6 +22,10 @@
 
 namespace Console\View\Helper;
 
+use Laminas\Http\Request;
+use Laminas\Router\RouteMatch;
+use Laminas\Router\RouteStackInterface;
+
 /**
  * Generate URL to given controller and action
  *
@@ -29,29 +33,11 @@ namespace Console\View\Helper;
  */
 class ConsoleUrl extends \Laminas\View\Helper\AbstractHelper
 {
-    /**
-     * Request
-     * @var mixed
-     */
-    protected $_request;
-
-    /**
-     * Url helper
-     * @var \Laminas\View\Helper\Url
-     */
-    protected $_url;
-
-    /**
-     * Constructor
-     *
-     * @param mixed $request If \Laminas\Http\Request, its query parameters are evaluated (see $inheritParams)
-     * @param \Laminas\View\Helper\Url $url
-     */
-    public function __construct($request, \Laminas\View\Helper\Url $url)
-    {
-        $this->_request = $request;
-        $this->_url = $url;
-    }
+    public function __construct(
+        private Request $request,
+        private RouteStackInterface $router,
+        private RouteMatch $routeMatch,
+    ) {}
 
     /**
      * Generate URL to given controller and action
@@ -72,22 +58,26 @@ class ConsoleUrl extends \Laminas\View\Helper\AbstractHelper
             $route['action'] = $action;
         }
 
-        if ($inheritParams and $this->_request instanceof \Laminas\Http\Request) {
+        if ($inheritParams) {
             // Merge current request parameters (parameters from $params take precedence)
             $params = array_merge(
-                $this->_request->getQuery()->toArray(),
+                $this->request->getQuery()->toArray(),
                 $params
             );
         }
         $options = array();
         if (!empty($params)) {
             // Cast values to string to support values that would otherwise get
-            // ignored by Url helper, like objects implementing __toString()
+            // ignored by http_build_query(), like objects implementing
+            // __toString()
             foreach ($params as $name => $value) {
                 $options['query'][$name] = (string) $value;
             }
         }
 
-        return $this->_url->__invoke('console', $route, $options, true);
+        $route = array_merge($this->routeMatch->getParams(), $route);
+        $options['name'] = 'console';
+
+        return (string) $this->router->assemble($route, $options);
     }
 }

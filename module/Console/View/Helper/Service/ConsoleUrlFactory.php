@@ -22,6 +22,8 @@
 
 namespace Console\View\Helper\Service;
 
+use Braintacle\Legacy\MvcEvent;
+
 /**
  * Factory for ConsoleUrl
  *
@@ -35,9 +37,12 @@ class ConsoleUrlFactory implements \Laminas\ServiceManager\Factory\FactoryInterf
         $requestedName,
         ?array $options = null
     ) {
+        /** @var MvcEvent */
+        $mvcEvent = $container->get('Application')->getMvcEvent();
         return new \Console\View\Helper\ConsoleUrl(
             $container->get('Request'),
-            $container->get('ViewHelperManager')->get('Url')
+            $mvcEvent->getRouter(),
+            $mvcEvent->getRouteMatch(),
         );
     }
 }
