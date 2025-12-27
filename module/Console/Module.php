@@ -22,23 +22,13 @@
 
 namespace Console;
 
-use Laminas\ModuleManager\Feature;
-
 /**
  * This is the module for the web administration console.
  * @codeCoverageIgnore
  */
-class Module implements Feature\InitProviderInterface, Feature\ConfigProviderInterface
+final class Module
 {
-    /** {@inheritdoc} */
-    public function init(\Laminas\ModuleManager\ModuleManagerInterface $manager)
-    {
-        $manager->loadModule('Library');
-        $manager->loadModule('Model');
-        $manager->loadModule('Protocol');
-    }
-
-    /** {@inheritdoc} */
+    /** @psalm-suppress PossiblyUnusedMethod */
     public function getConfig()
     {
         return require(__DIR__ . '/module.config.php');

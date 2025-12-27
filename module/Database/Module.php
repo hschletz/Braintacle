@@ -22,8 +22,6 @@
 
 namespace Database;
 
-use Laminas\ModuleManager\Feature\InitProviderInterface;
-
 /**
  * The Database module
  *
@@ -32,15 +30,8 @@ use Laminas\ModuleManager\Feature\InitProviderInterface;
  *
  * @codeCoverageIgnore
  */
-class Module implements InitProviderInterface
+final class Module
 {
-    /** {@inheritdoc} */
-    public function init(\Laminas\ModuleManager\ModuleManagerInterface $manager)
-    {
-        $manager->loadModule('Library');
-        $manager->loadModule('Model');
-    }
-
     /**
      * Get path to module directory
      *

@@ -112,6 +112,7 @@ abstract class AbstractTestCase extends \PHPUnit\DbUnit\TestCase
         }
 
         $serviceManager = new ServiceManager(self::$serviceManagerConfig);
+        $serviceManager->setAllowOverride(true);
         $serviceManager->setService('config', self::$serviceManagerConfig);
         $serviceManager->setService(ContainerInterface::class, $serviceManager);
 

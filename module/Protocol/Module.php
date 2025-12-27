@@ -22,8 +22,6 @@
 
 namespace Protocol;
 
-use Laminas\ModuleManager\Feature;
-
 /**
  * The Protocol module
  *
@@ -31,19 +29,9 @@ use Laminas\ModuleManager\Feature;
  *
  * @codeCoverageIgnore
  */
-class Module implements
-    Feature\ConfigProviderInterface,
-    Feature\InitProviderInterface
+final class Module
 {
-    /** {@inheritdoc} */
-    public function init(\Laminas\ModuleManager\ModuleManagerInterface $manager)
-    {
-        $manager->loadModule('Database');
-        $manager->loadModule('Library');
-        $manager->loadModule('Model');
-    }
-
-    /** {@inheritdoc} */
+    /** @psalm-suppress PossiblyUnusedMethod */
     public function getConfig()
     {
         return array(

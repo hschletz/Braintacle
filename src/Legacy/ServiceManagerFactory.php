@@ -11,23 +11,14 @@ use Braintacle\Template\TemplateEngine;
 use Composer\InstalledVersions;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Di\Container\ServiceManager\AutowireFactory;
-use Laminas\EventManager\EventManager;
-use Laminas\EventManager\EventManagerInterface;
-use Laminas\EventManager\SharedEventManager;
-use Laminas\EventManager\SharedEventManagerInterface;
 use Laminas\Filter\FilterPluginManager;
+use Laminas\Form\FormElementManager;
 use Laminas\Http\PhpEnvironment\Request;
 use Laminas\Http\PhpEnvironment\Response;
 use Laminas\Http\Request as HttpRequest;
 use Laminas\I18n\Translator\TranslatorInterface as I18nTranslatorInterface;
-use Laminas\ModuleManager\Feature\ServiceProviderInterface;
-use Laminas\ModuleManager\Feature\ViewHelperProviderInterface;
-use Laminas\ModuleManager\Listener\DefaultListenerAggregate;
-use Laminas\ModuleManager\Listener\ListenerOptions;
-use Laminas\ModuleManager\Listener\ServiceListener;
-use Laminas\ModuleManager\ModuleEvent;
-use Laminas\ModuleManager\ModuleManager;
 use Laminas\ServiceManager\ServiceManager;
+use Laminas\Stdlib\ArrayUtils;
 use Laminas\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use Laminas\View\Helper\Doctype;
@@ -48,28 +39,25 @@ final class ServiceManagerFactory
         'Laminas\I18n',
         'Laminas\Router',
         'Laminas\Validator',
+        'Library',
+        'Model',
+        'Protocol',
         'Console',
     ];
 
     public function __invoke(ContainerInterface $container): ServiceManager
     {
         $serviceManager = new ServiceManager();
-        $serviceManager->configure([
+
+        $config = ['service_manager' => [
             'aliases' => [
                 'application' => 'Application',
                 'Config' => 'config',
                 'configuration' => 'config',
                 'Configuration' => 'config',
-                'EventManagerInterface' => EventManager::class,
-                EventManagerInterface::class => 'EventManager',
-                ModuleManager::class => 'ModuleManager',
                 'request' => 'Request',
                 HttpRequest::class => 'Request',
                 'response' => 'Response',
-                ServiceListener::class => 'ServiceListener',
-                SharedEventManager::class => 'SharedEventManager',
-                'SharedEventManagerInterface' => 'SharedEventManager',
-                SharedEventManagerInterface::class => 'SharedEventManager',
             ],
             'factories' => [
                 'Application' => fn(ContainerInterface $container) => new ApplicationService(
@@ -78,14 +66,6 @@ final class ServiceManagerFactory
                     $container->get('Response'),
                     $container->get('Router'),
                 ),
-                'config' => fn(ContainerInterface $container) => $container->get('ModuleManager')
-                    ->loadModules()->getEvent()->getParam('configListener')->getMergedConfig(false),
-                'EventManager' => fn(ContainerInterface $container) => new EventManager(
-                    $container->get('SharedEventManager')
-                ),
-                'ModuleManager' => $this->moduleManagerFactory(...),
-                'ServiceListener' => fn(ContainerInterface $container) => new ServiceListener($container),
-                'SharedEventManager' => static fn() => new SharedEventManager(),
             ],
             'services' => [
                 // standard Laminas services, partially tweaked
@@ -113,10 +93,19 @@ final class ServiceManagerFactory
                 TemplateEngine::class => $container->get(TemplateEngine::class),
                 TranslatorInterface::class => $container->get(TranslatorInterface::class),
             ],
-            'shared' => [
-                'EventManager' => false,
-            ],
-        ]);
+        ]];
+        foreach (self::Modules as $moduleName) {
+            $moduleClass = $moduleName . '\Module';
+            $module = new $moduleClass();
+            $config = ArrayUtils::merge($config, $module->getConfig());
+        };
+
+        $serviceManager->configure($config['service_manager']);
+        $serviceManager->setService('config', $config);
+
+        /** @var FormElementManager */
+        $formElementManager = $serviceManager->get(FormElementManager::class);
+        $formElementManager->configure($config['form_elements']);
 
         // There is a mutual dependency between the ViewHelperManager and the
         // PhpRenderer services. $phpRenderer->setHelperPluginManager() will
@@ -126,6 +115,7 @@ final class ServiceManagerFactory
         // independent of order, do not define factories, but create the
         // instances directly here.
         $viewHelperManager = new HelperPluginManager($serviceManager);
+        $viewHelperManager->configure($config['view_helpers']);
         $serviceManager->setService('ViewHelperManager', $viewHelperManager);
 
         $phpRenderer = new PhpRenderer();
@@ -144,9 +134,6 @@ final class ServiceManagerFactory
         $viewHelperManager->setFactory('laminasviewhelperdoctype', $doctypeFactory);
         // @codeCoverageIgnoreEnd
 
-        // Define services from modules.
-        $serviceManager->get('ModuleManager')->loadModules();
-
         // Abstract factories are invoked in the same order in which they get
         // added. The abstract DI factory should act as a fallback only. It
         // cannot be added via config because other modules might add another
@@ -157,41 +144,5 @@ final class ServiceManagerFactory
         $viewHelperManager->addAbstractFactory(AutowireFactory::class);
 
         return $serviceManager;
-    }
-
-    private function moduleManagerFactory(ContainerInterface $container): ModuleManager
-    {
-        /** @var EventManager */
-        $eventManager = $container->get('EventManager');
-
-        $defaultListeners = new DefaultListenerAggregate(new ListenerOptions([
-            'module_paths' => [InstalledVersions::getRootPackage()['install_path'] . 'module'],
-        ]));
-        $defaultListeners->attach($eventManager);
-
-        /** @var ServiceListener */
-        $serviceListener  = $container->get('ServiceListener');
-        /** @psalm-suppress InvalidCast,InvalidArgument (implementation does not match interface signature) */
-        $serviceListener->addServiceManager(
-            $container,
-            'service_manager',
-            ServiceProviderInterface::class,
-            'getServiceConfig'
-        );
-        $serviceListener->addServiceManager(
-            'ViewHelperManager',
-            'view_helpers',
-            ViewHelperProviderInterface::class,
-            'getViewHelperConfig'
-        );
-        $serviceListener->attach($eventManager);
-
-        $moduleEvent = new ModuleEvent();
-        $moduleEvent->setParam('ServiceManager', $container);
-
-        $moduleManager = new ModuleManager(self::Modules, $eventManager);
-        $moduleManager->setEvent($moduleEvent);
-
-        return $moduleManager;
     }
 }

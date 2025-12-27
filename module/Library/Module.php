@@ -27,7 +27,6 @@ use Laminas\Di\Container\ConfigFactory;
 use Laminas\Di\Container\InjectorFactory;
 use Laminas\Di\InjectorInterface;
 use Laminas\Form\View\Helper\FormElement;
-use Laminas\ModuleManager\Feature;
 use Library\Form\Element\SelectSimple;
 use Psr\Container\ContainerInterface;
 
@@ -40,9 +39,9 @@ use Psr\Container\ContainerInterface;
  *
  * @codeCoverageIgnore
  */
-class Module implements Feature\ConfigProviderInterface
+final class Module
 {
-    /** {@inheritdoc} */
+    /** @psalm-suppress PossiblyUnusedMethod */
     public function getConfig()
     {
         return array(

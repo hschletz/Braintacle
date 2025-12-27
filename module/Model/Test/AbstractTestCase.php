@@ -108,6 +108,7 @@ abstract class AbstractTestCase extends TestCase
     protected static function createServiceManager(): ServiceManager
     {
         $serviceManager = new ServiceManager(self::$serviceManagerConfig);
+        $serviceManager->setAllowOverride(true);
         $serviceManager->setService('config', self::$serviceManagerConfig);
         $serviceManager->setService(ContainerInterface::class, $serviceManager);
 
