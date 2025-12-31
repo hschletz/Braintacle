@@ -54,8 +54,6 @@
         "laminas/laminas-view": "^2.22",
         "latte/latte": "^3.0",
         "monolog/monolog": "^3.8",
-        "nyholm/psr7": "^1.8",
-        "nyholm/psr7-server": "^1.1",
         "php-di/php-di": "^7.0",
         "psr/clock": "^1.0",
         "slim/slim": "^4.13",

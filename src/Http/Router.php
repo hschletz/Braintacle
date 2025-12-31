@@ -9,7 +9,7 @@ use Braintacle\Group;
 use Braintacle\Legacy\ApplicationBridge;
 use Braintacle\Search;
 use Braintacle\Software;
-use Nyholm\Psr7\Response;
+use GuzzleHttp\Psr7\Response;
 use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface;

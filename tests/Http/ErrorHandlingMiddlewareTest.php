@@ -9,8 +9,8 @@ use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
 use Exception;
-use Nyholm\Psr7\ServerRequest;
-use Nyholm\Psr7\UploadedFile;
+use GuzzleHttp\Psr7\ServerRequest;
+use GuzzleHttp\Psr7\UploadedFile;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -115,7 +115,8 @@ class ErrorHandlingMiddlewareTest extends TestCase
         $handler = $this->createStub(RequestHandlerInterface::class);
         $handler->method('handle')->willThrowException(new Exception('exception message'));
 
-        $request = (new ServerRequest('POST', '?foo=bar', serverParams: ['param' => 'value']))
+        $request = (new ServerRequest('POST', '', serverParams: ['param' => 'value']))
+            ->withQueryParams(['foo' => 'bar'])
             ->withParsedBody(['bar' => 'baz'])
             ->withUploadedFiles([new UploadedFile('file', 42, UPLOAD_ERR_OK, 'filename', 'mediatype')]);
         $response = $middleware->process($request, $handler);
