@@ -23,16 +23,13 @@
 namespace Console\Test\Controller;
 
 use Braintacle\FlashMessages;
-use Braintacle\Http\RouteHelper;
 use Braintacle\Legacy\Plugin\FlashMessenger;
 use Braintacle\Legacy\Plugin\FlashMessengerTestTrait;
-use Console\Form\Import;
 use Console\Form\ProductKey;
 use Console\Test\AbstractControllerTestCase;
 use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Text;
 use Library\Form\Element\Submit;
-use Model\Client\AndroidInstallation;
 use Model\Client\Client;
 use Model\Client\ClientManager;
 use Model\Client\WindowsInstallation;
@@ -130,7 +127,6 @@ class ClientControllerTest extends AbstractControllerTestCase
 
         $formManager = $serviceManager->get('FormElementManager');
         $formManager->setService('Console\Form\CustomFields', $this->createMock('Console\Form\CustomFields'));
-        $formManager->setService('Console\Form\Import', $this->createMock(Import::class));
         $formManager->setService('Console\Form\ProductKey', $this->createMock('Console\Form\ProductKey'));
     }
 
@@ -1244,118 +1240,5 @@ class ClientControllerTest extends AbstractControllerTestCase
             [FlashMessages::Success => ['Die Informationen wurden aktualisiert.']],
             $this->flashMessages,
         );
-    }
-
-    public function testImportActionGet()
-    {
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Import');
-        $form->expects($this->never())
-            ->method('isValid');
-        $form->expects($this->never())
-            ->method('setData');
-        $form->expects($this->never())
-            ->method('getData');
-        $form->expects($this->once())
-            ->method('render')
-            ->will($this->returnValue('<form></form>'));
-
-        $this->_clientManager->expects($this->never())->method('importFile');
-
-        $this->dispatch('/console/client/import/');
-        $this->assertResponseStatusCode(200);
-        $this->assertNotXpathQuery('//p[@class="error"]');
-        $this->assertXpathQueryContentContains('//h1', "\nImport lokal erzeugter Inventardaten\n");
-        $this->assertXPathQuery('//form');
-    }
-
-    public function testImportActionPostInvalid()
-    {
-        $postData = array('key' => 'value');
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Import');
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(false));
-        $form->expects($this->once())
-            ->method('setData')
-            ->with($postData);
-        $form->expects($this->never())
-            ->method('getData');
-        $form->expects($this->once())
-            ->method('render');
-
-        $this->_clientManager->expects($this->never())->method('importFile');
-
-        $this->dispatch('/console/client/import/', 'POST', $postData);
-        $this->assertResponseStatusCode(200);
-        $this->assertNotXpathQuery('//p[@class="error"]');
-        $this->assertXpathQueryContentContains('//h1', "\nImport lokal erzeugter Inventardaten\n");
-    }
-
-    public function testImportActionPostValidError()
-    {
-        $fileSpec = array('tmp_name' => 'uploaded_file');
-        $this->getRequest()->getFiles()->set('File', $fileSpec);
-        $postData = array('key' => 'value');
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Import');
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
-        $form->expects($this->once())
-            ->method('setData')
-            ->with(
-                array(
-                    'File' => $fileSpec,
-                    'key' => 'value',
-                )
-            );
-        $form->expects($this->once())
-            ->method('getData')
-            ->will($this->returnValue(array('File' => $fileSpec)));
-        $form->expects($this->once())
-            ->method('render');
-
-        $this->_clientManager->expects($this->once())
-            ->method('importFile')
-            ->with('uploaded_file')
-            ->willThrowException(new \RuntimeException('<error message>'));
-
-        $this->dispatch('/console/client/import/', 'POST', $postData);
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains(
-            '//p[@class="error"]',
-            "\n<error message>\n"
-        );
-        $this->assertXpathQueryContentContains('//h1', "\nImport lokal erzeugter Inventardaten\n");
-    }
-
-    public function testImportActionPostValidSuccess()
-    {
-        $fileSpec = array('tmp_name' => 'uploaded_file');
-        $this->getRequest()->getFiles()->set('File', $fileSpec);
-        $postData = array('key' => 'value');
-        $form = $this->getApplicationServiceLocator()->get('FormElementManager')->get('Console\Form\Import');
-        $form->expects($this->once())
-            ->method('isValid')
-            ->will($this->returnValue(true));
-        $form->expects($this->once())
-            ->method('setData')
-            ->with(
-                array(
-                    'File' => $fileSpec,
-                    'key' => 'value',
-                )
-            );
-        $form->expects($this->once())
-            ->method('getData')
-            ->will($this->returnValue(array('File' => $fileSpec)));
-        $form->expects($this->never())
-            ->method('render');
-
-        $this->_clientManager->expects($this->once())
-            ->method('importFile')
-            ->with('uploaded_file');
-
-        $this->dispatch('/console/client/import/', 'POST', $postData);
-        $this->assertRedirectTo('clientList/');
     }
 }

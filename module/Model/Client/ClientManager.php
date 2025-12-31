@@ -29,8 +29,6 @@ use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Sql\Predicate;
 use Laminas\Db\Sql\Sql;
-use Laminas\Http\Client as HttpClient;
-use Model\Config;
 use Model\Package\Assignment;
 use Nada\Database\AbstractDatabase;
 use Psr\Container\ContainerInterface;
@@ -733,47 +731,5 @@ class ClientManager
         }
 
         return array($tableGateway, $column);
-    }
-
-    /**
-     * Import client from a file (compressed or uncompressed XML)
-     *
-     * @param string $fileName File name
-     * @throws \RuntimeException if server responds with error
-     */
-    public function importFile($fileName)
-    {
-        return $this->importClient(\Library\FileObject::fileGetContents($fileName));
-    }
-
-    /**
-     * Import client
-     *
-     * @param string $data Inventory data (compressed or uncompressed XML)
-     * @throws \RuntimeException if server responds with error
-     */
-    public function importClient($data)
-    {
-        $uri = $this->container->get(Config::class)->communicationServerUri;
-        $httpClient = clone $this->container->get(HttpClient::class);
-        $httpClient->setOptions([
-            'strictredirects' => true, // required for POST requests
-            'useragent' => 'Braintacle_local_upload', // Substring 'local' required for correct server operation
-        ]);
-        $httpClient->setMethod('POST')
-            ->setUri($uri)
-            ->setHeaders(array('Content-Type' => 'application/x-compress'))
-            ->setRawBody($data);
-        $response = $httpClient->send();
-        if (!$response->isSuccess()) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Upload error. Server %s responded with error %d: %s',
-                    $uri,
-                    $response->getStatusCode(),
-                    $response->getReasonPhrase()
-                )
-            );
-        }
     }
 }

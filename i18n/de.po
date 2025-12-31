@@ -139,14 +139,6 @@ msgstr "Text"
 msgid "The name already exists"
 msgstr "Der Name existiert bereits"
 
-#: module/Console/Form/Import.php
-msgid "File (*.ocs, *.xml)"
-msgstr "Datei (*.ocs, *.xml)"
-
-#: module/Console/Form/Import.php templates/MainMenu/InventoryMenuLayout.latte
-msgid "Import"
-msgstr "Import"
-
 #: module/Console/Form/ManageRegistryValues.php
 #: module/Console/Form/Package/Build.php module/Console/Form/Subnet.php
 #: module/Console/views/console/client/index.php
@@ -650,10 +642,6 @@ msgstr "Bearbeiten"
 #: module/Console/views/console/client/customfields.php
 msgid "Define fields"
 msgstr "Felder definieren"
-
-#: module/Console/views/console/client/import.php
-msgid "Import locally generated inventory data"
-msgstr "Import lokal erzeugter Inventardaten"
 
 #: module/Console/views/console/client/index.php src/Search/SearchFilters.php
 #: templates/Pages/Client/General.latte
@@ -1382,6 +1370,10 @@ msgstr "Clients"
 msgid "Duplicates"
 msgstr "Duplikate"
 
+#: templates/MainMenu/InventoryMenuLayout.latte templates/Pages/Import.latte
+msgid "Import"
+msgstr "Import"
+
 #: templates/MainMenu/InventoryMenuLayout.latte
 #: templates/Pages/Client/Header.latte templates/Pages/Client/Storage.latte
 msgid "Network"
@@ -1775,6 +1767,14 @@ msgstr "Keine Gruppen definiert."
 #: templates/Pages/Group/Packages.latte
 msgid "Package '{}' will no longer be assigned to this group. Continue?"
 msgstr "Paket '{}' wird nicht mehr dieser Gruppe zugewiesen sein. Fortfahren?"
+
+#: templates/Pages/Import.latte
+msgid "File (*.ocs, *.xml)"
+msgstr "Datei (*.ocs, *.xml)"
+
+#: templates/Pages/Import.latte
+msgid "Import locally generated inventory data"
+msgstr "Import lokal erzeugter Inventardaten"
 
 #: templates/Pages/Login.latte
 msgid "Invalid username or password"

@@ -1,0 +1,18 @@
+{layout ../MainMenu/InventoryMenuLayout.latte}
+{block content}
+
+<p n:if=$error class="error">{$error}</p>
+
+<h1>{translate('Import locally generated inventory data')}</h1>
+
+<form method="post" enctype="multipart/form-data" class="form">
+    <input type="hidden" name="csrfToken" value="{csrfToken()}">
+    <div class="table">
+        <label>
+            <span>{translate('File (*.ocs, *.xml)')}</span>
+            <input type="file" name="file" required>
+        </label>
+        <span class="cell"></span>
+        <button type="submit">{translate('Import')}</button>
+    </div>
+</form>

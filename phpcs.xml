@@ -27,12 +27,14 @@
         <exclude name="PSR12.Classes.AnonClassDeclaration.SpaceAfterKeyword" />
 
         <!--
-        "Closing brace must be on a line by itself" no longer applies to empty
-        method bodies, but cannot be applied selectively.
+        "Closing brace must be on a line by itself" and "Opening brace of a
+        class must be on the line after the definition" no longer apply to empty
+        class and method bodies, but cannot be applied selectively.
         https://github.com/PHPCSStandards/PHP_CodeSniffer/issues/566
         -->
         <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine" />
         <exclude name="Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore" />
+        <exclude name="PSR2.Classes.ClassDeclaration.OpenBraceNewLine" />
     </rule>
 
     <!-- Relax some rules for legacy code. -->

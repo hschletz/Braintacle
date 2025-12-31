@@ -137,15 +137,6 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: module/Console/Form/Import.php
-msgid "File (*.ocs, *.xml)"
-msgstr ""
-
-#: module/Console/Form/Import.php
-#: templates/MainMenu/InventoryMenuLayout.latte
-msgid "Import"
-msgstr ""
-
 #: module/Console/Form/ManageRegistryValues.php
 msgid "Values"
 msgstr ""
@@ -661,10 +652,6 @@ msgstr ""
 
 #: module/Console/views/console/client/customfields.php
 msgid "Define fields"
-msgstr ""
-
-#: module/Console/views/console/client/import.php
-msgid "Import locally generated inventory data"
 msgstr ""
 
 #: module/Console/views/console/client/index.php
@@ -1459,6 +1446,11 @@ msgstr ""
 msgid "Duplicates"
 msgstr ""
 
+#: templates/MainMenu/InventoryMenuLayout.latte
+#: templates/Pages/Import.latte
+msgid "Import"
+msgstr ""
+
 #: templates/MainMenu/PackagesMenuLayout.latte
 msgid "Overview"
 msgstr ""
@@ -1843,6 +1835,14 @@ msgstr ""
 
 #: templates/Pages/Group/Packages.latte
 msgid "Package '{}' will no longer be assigned to this group. Continue?"
+msgstr ""
+
+#: templates/Pages/Import.latte
+msgid "Import locally generated inventory data"
+msgstr ""
+
+#: templates/Pages/Import.latte
+msgid "File (*.ocs, *.xml)"
 msgstr ""
 
 #: templates/Pages/Login.latte

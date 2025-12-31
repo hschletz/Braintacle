@@ -22,8 +22,7 @@
 
 namespace Tools\Test\Controller;
 
-use Model\Client\ClientManager;
-use PHPUnit\Framework\MockObject\MockObject;
+use Braintacle\Client\Import\Importer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -32,16 +31,15 @@ class ImportTest extends \PHPUnit\Framework\TestCase
 {
     public function testInvoke()
     {
-        /** @var ClientManager|MockObject */
-        $clientManager = $this->createMock(ClientManager::class);
-        $clientManager->expects($this->once())->method('importFile')->with('input file');
+        $importer = $this->createMock(Importer::class);
+        $importer->expects($this->once())->method('importFile')->with('input file');
 
         $input = $this->createMock(InputInterface::class);
         $input->method('getArgument')->with('filename')->willReturn('input file');
 
         $output = $this->createStub(OutputInterface::class);
 
-        $controller = new \Tools\Controller\Import($clientManager);
+        $controller = new \Tools\Controller\Import($importer);
         $this->assertSame(Command::SUCCESS, $controller($input, $output));
     }
 }

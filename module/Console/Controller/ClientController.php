@@ -309,29 +309,4 @@ class ClientController extends Controller
             'form' => $form
         );
     }
-
-    /**
-     * Import client via file upload
-     *
-     * @return array|\Laminas\Http\Response array(form [, uri, response]) or redirect response
-     */
-    public function importAction()
-    {
-        $this->getEvent()->setParam('subMenuRoute', 'importPage');
-        $form = $this->_formManager->get('Console\Form\Import');
-        $vars = array('form' => $form);
-        if ($this->getRequest()->isPost()) {
-            $form->setData($this->params()->fromFiles() + $this->params()->fromPost());
-            if ($form->isValid()) {
-                $data = $form->getData();
-                try {
-                    $this->_clientManager->importFile($data['File']['tmp_name']);
-                    return $this->redirectToRoute('clientList');
-                } catch (\RuntimeException $e) {
-                    $vars['error'] = $e->getMessage();
-                }
-            }
-        }
-        return $vars;
-    }
 }

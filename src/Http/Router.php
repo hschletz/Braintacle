@@ -43,6 +43,8 @@ class Router
 
         // All other routes get LoginMiddleware.
         $app->group('', function (RouteCollectorProxyInterface $group) {
+            $group->get('/client/import', Client\Import\ImportPage::class)->setName('importPage');
+            $group->post('/client/import', Client\Import\ImportHandler::class)->setName('importHandler');
             $group->get('/client/{id}/bios', Client\SubPage\Bios::class)->setName('showClientBios');
             $group->get('/client/{id}/configuration', Client\Configuration\ShowConfigurationHandler::class)->setName('showClientConfiguration');
             $group->post('/client/{id}/configuration', Client\Configuration\SetConfigurationHandler::class)->setName('setClientConfiguration');
@@ -88,7 +90,6 @@ class Router
             // legacy methods.
             $group->get('/console/accounts/index', ApplicationBridge::class)->setName('preferencesUsersList');
             $group->get('/console/client/customfields', ApplicationBridge::class)->setName('showClientCustomFields');
-            $group->get('/console/client/import', ApplicationBridge::class)->setName('importPage');
             $group->get('/console/client/index', ApplicationBridge::class)->setName('clientIndex'); // Legacy page, use clientList if possible
             $group->get('/console/client/misc', ApplicationBridge::class)->setName('showClientMisc');
             $group->get('/console/client/msoffice', ApplicationBridge::class)->setName('showClientMsOffice');

@@ -27,15 +27,12 @@ use Database\Table\CustomFields;
 use Database\Table\RegistryData;
 use Database\Table\WindowsInstallations;
 use Laminas\Db\Adapter\Adapter;
-use Laminas\Http\Client as HttpClient;
 use Model\Client\ClientManager;
 use Model\Client\CustomFieldManager;
 use Model\Client\ItemManager;
-use Model\Config;
 use Model\Test\AbstractTestCase;
 use Nada\Column\AbstractColumn as Column;
 use Nada\Database\AbstractDatabase;
-use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
 
@@ -952,86 +949,5 @@ class ClientManagerTest extends AbstractTestCase
         $model = $this->createPartialMock(ClientManager::class, ['getClients']);
         $model->method('getClients')->with(null, null, null, 'Id', 42)->willReturn($resultSet);
         $model->getClient(42);
-    }
-
-    public function testImportFile()
-    {
-        $content = "testUploadFile\nline1\nline2\n";
-        $root = vfsstream::setup('root');
-        $url = vfsStream::newFile('test.txt')->withContent($content)->at($root)->url();
-        $model = $this->createPartialMock(ClientManager::class, ['importClient']);
-        $model->expects($this->once())
-            ->method('importClient')
-            ->with($content)
-            ->willReturn('response');
-        $this->assertEquals('response', $model->importFile($url));
-    }
-
-    public function testImportClientSuccess()
-    {
-        $uri = 'http://example.net/server';
-        $content = "testUploadFile\nline1\nline2\n";
-
-        $response = $this->createStub(\Laminas\Http\Response::class);
-        $response->method('isSuccess')->willReturn(true);
-
-        $httpClient = $this->createMock(\Laminas\Http\Client::class);
-        $httpClient->expects($this->once())->method('setOptions')->with([
-            'strictredirects' => true, // required for POST requests
-            'useragent' => 'Braintacle_local_upload', // Substring 'local' required for correct server operation
-        ])->willReturnSelf();
-        $httpClient->expects($this->once())->method('setMethod')->with('POST')->willReturnSelf();
-        $httpClient->expects($this->once())->method('setUri')->with($uri)->willReturnSelf();
-        $httpClient->expects($this->once())
-            ->method('setHeaders')
-            ->with(['Content-Type' => 'application/x-compress'])
-            ->willReturnSelf();
-        $httpClient->expects($this->once())->method('setRawBody')->with($content)->willReturnSelf();
-        $httpClient->expects($this->once())->method('send')->willReturn($response);
-
-        $config = $this->createMock('Model\Config');
-        $config->method('__get')->with('communicationServerUri')->willReturn($uri);
-
-        $serviceLocator = $this->createMock(ContainerInterface::class);
-        $serviceLocator->method('get')->willReturnMap([
-            [Config::class, $config],
-            [HttpClient::class, $httpClient],
-        ]);
-
-        $model = new ClientManager($serviceLocator);
-        $model->importClient($content);
-    }
-
-    public function testImportClientHttpError()
-    {
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage(
-            "Upload error. Server http://example.net/server responded with error 418: I'm a teapot"
-        );
-
-        $response = $this->createStub(\Laminas\Http\Response::class);
-        $response->method('isSuccess')->willReturn(false);
-        $response->method('getStatusCode')->willReturn(418);
-        $response->method('getReasonPhrase')->willReturn("I'm a teapot");
-
-        $httpClient = $this->createStub(\Laminas\Http\Client::class);
-        $httpClient->method('setOptions')->willReturnSelf();
-        $httpClient->method('setMethod')->willReturnSelf();
-        $httpClient->method('setUri')->willReturnSelf();
-        $httpClient->method('setHeaders')->willReturnSelf();
-        $httpClient->method('setRawBody')->willReturnSelf();
-        $httpClient->method('send')->willReturn($response);
-
-        $config = $this->createMock('Model\Config');
-        $config->method('__get')->with('communicationServerUri')->willReturn('http://example.net/server');
-
-        $serviceLocator = $this->createMock(ContainerInterface::class);
-        $serviceLocator->method('get')->willReturnMap([
-            [Config::class, $config],
-            [HttpClient::class, $httpClient]
-        ]);
-
-        $model = new ClientManager($serviceLocator);
-        $model->importClient('content');
     }
 }

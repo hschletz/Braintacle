@@ -22,7 +22,7 @@
 
 namespace Tools\Controller;
 
-use Model\Client\ClientManager;
+use Braintacle\Client\Import\Importer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -32,17 +32,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Import implements ControllerInterface
 {
-    protected $clientManager;
-
-    public function __construct(ClientManager $clientManager)
-    {
-        $this->clientManager = $clientManager;
-    }
+    public function __construct(private Importer $importer) {}
 
     public function __invoke(InputInterface $input, OutputInterface $output)
     {
         $filename = $input->getArgument('filename');
-        $this->clientManager->importFile($filename);
+        $this->importer->importFile($filename);
 
         return Command::SUCCESS;
     }
