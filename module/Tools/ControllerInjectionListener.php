@@ -3,7 +3,7 @@
 /**
  * Listener for injection of the controller service
  *
- * Copyright (C) 2011-2025 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2026 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -46,9 +46,7 @@ use Tools\Controller;
  */
 class ControllerInjectionListener
 {
-    public function __construct(private ContainerInterface $container)
-    {
-    }
+    public function __construct(private ContainerInterface $container) {}
 
     public function __invoke(ConsoleCommandEvent $event)
     {

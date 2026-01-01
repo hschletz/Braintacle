@@ -3,7 +3,7 @@
 /**
  * Filesystem
  *
- * Copyright (C) 2011-2025 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2026 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -36,6 +36,4 @@ namespace Model\Client\Item;
  * @property integer $UsedSpace Used space in MB
  * @property \DateTime $CreationDate Date of filesystem creation (UNIX only)
  */
-class Filesystem extends \Model\AbstractModel
-{
-}
+class Filesystem extends \Model\AbstractModel {}

@@ -3,7 +3,7 @@
 /**
  * Tests for Model\Client\ItemManager
  *
- * Copyright (C) 2011-2025 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2026 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -105,7 +105,12 @@ class ItemManagerTest extends AbstractTestCase
             array('Cpu', array('Client' => 3), 'id', 'asc', array('type3a', 'type3b'), 'Type'),
             array('Cpu', array('Client' => 4), 'Manufacturer', 'desc', array('type4b', 'type4a'), 'Type'),
             array(
-                'Cpu', null, null, 'something', array('type1', 'type2', 'type3a', 'type3b', 'type4a', 'type4b'), 'Type'
+                'Cpu',
+                null,
+                null,
+                'something',
+                array('type1', 'type2', 'type3a', 'type3b', 'type4a', 'type4b'),
+                'Type'
             ),
             array('cpu', array('Client' => 2), null, null, array('type2'), 'Type'),
             array('cpu', array('Client' => 3), 'Type', 'asc', array(2, 1), 'NumCores'),

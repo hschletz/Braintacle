@@ -3,7 +3,7 @@
 /**
  * Tests for Model\Client\ClientManager
  *
- * Copyright (C) 2011-2025 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2026 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -234,114 +234,394 @@ class ClientManagerTest extends AbstractTestCase
             ),
             // String filters on "hardware" table with various operators
             array(
-                array('Id'), 'Id', 'asc', 'CpuType', 'cpu_type3', 'eq', true, false, $client124
+                array('Id'),
+                'Id',
+                'asc',
+                'CpuType',
+                'cpu_type3',
+                'eq',
+                true,
+                false,
+                $client124
             ),
             array(
-                array('Id'), 'Id', 'asc', 'DnsServer', '192.0.2.3', 'eq', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'DnsServer',
+                '192.0.2.3',
+                'eq',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'DefaultGateway', '192.0.2.4', 'eq', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'DefaultGateway',
+                '192.0.2.4',
+                'eq',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'Name', 'name2', 'eq', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'Name',
+                'name2',
+                'eq',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'UserAgent', 'user_agent2', 'eq', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'UserAgent',
+                'user_agent2',
+                'eq',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'OsName', 'os_name2', 'eq', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'OsName',
+                'os_name2',
+                'eq',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'OsVersionNumber', 'OS?version.*ber2', 'like', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'OsVersionNumber',
+                'OS?version.*ber2',
+                'like',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'OsVersionString', 'version.string', 'like', true, false, $client124
+                array('Id'),
+                'Id',
+                'asc',
+                'OsVersionString',
+                'version.string',
+                'like',
+                true,
+                false,
+                $client124
             ),
             array(
-                array('Id'), 'Id', 'asc', 'OsComment', 'os_comment2', 'eq', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'OsComment',
+                'os_comment2',
+                'eq',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'UserName', 'user_name2', 'eq', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'UserName',
+                'user_name2',
+                'eq',
+                false,
+                false,
+                $client2
             ),
             // String filters on "bios" table with various operators
             array(
-                array('Id'), 'Id', 'asc', 'AssetTag', 'asset_tag2', 'eq', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'AssetTag',
+                'asset_tag2',
+                'eq',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'BiosDate', 'bios.date', 'like', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'BiosDate',
+                'bios.date',
+                'like',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'BiosVersion', 'bios_version1', 'eq', true, false, $client234
+                array('Id'),
+                'Id',
+                'asc',
+                'BiosVersion',
+                'bios_version1',
+                'eq',
+                true,
+                false,
+                $client234
             ),
             array(
-                array('Id'), 'Id', 'asc', 'Manufacturer', 'manufacturer.', 'like', true, false, $client234
+                array('Id'),
+                'Id',
+                'asc',
+                'Manufacturer',
+                'manufacturer.',
+                'like',
+                true,
+                false,
+                $client234
             ),
             array(
-                array('Id'), 'Id', 'asc', 'ProductName', 'product_name2', 'eq', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'ProductName',
+                'product_name2',
+                'eq',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'Serial', 'serial2', 'eq', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'Serial',
+                'serial2',
+                'eq',
+                false,
+                false,
+                $client2
             ),
             // String filters on "clients" table with various operators
             array(
-                array('Id'), 'Id', 'asc', 'CpuClock', 2222, 'eq', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'CpuClock',
+                2222,
+                'eq',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'CpuClock', 3333, 'ne', false, false, $client12
+                array('Id'),
+                'Id',
+                'asc',
+                'CpuClock',
+                3333,
+                'ne',
+                false,
+                false,
+                $client12
             ),
             array(
-                array('Id'), 'Id', 'asc', 'CpuClock', 2223, 'lt', false, false, $client12
+                array('Id'),
+                'Id',
+                'asc',
+                'CpuClock',
+                2223,
+                'lt',
+                false,
+                false,
+                $client12
             ),
             array(
-                array('Id'), 'Id', 'asc', 'CpuClock', 2222, 'le', false, false, $client12
+                array('Id'),
+                'Id',
+                'asc',
+                'CpuClock',
+                2222,
+                'le',
+                false,
+                false,
+                $client12
             ),
             array(
-                array('Id'), 'Id', 'asc', 'CpuCores', 2, 'gt', false, false, $client3
+                array('Id'),
+                'Id',
+                'asc',
+                'CpuCores',
+                2,
+                'gt',
+                false,
+                false,
+                $client3
             ),
             array(
-                array('Id'), 'Id', 'asc', 'PhysicalMemory', 2000, 'ge', false, false, $client23
+                array('Id'),
+                'Id',
+                'asc',
+                'PhysicalMemory',
+                2000,
+                'ge',
+                false,
+                false,
+                $client23
             ),
             array(
-                array('Id'), 'Id', 'asc', 'SwapMemory', 200, 'le', true, false, $client34
+                array('Id'),
+                'Id',
+                'asc',
+                'SwapMemory',
+                200,
+                'le',
+                true,
+                false,
+                $client34
             ),
             // Date filters on "clients" table with various operators.
             // The "InventoryDate" operand exists twice with different time of
             // day which should be ignored.
             array(
-                array('Id'), 'Id', 'asc', 'InventoryDate', '2015-08-11', 'eq', false, false, $client23
+                array('Id'),
+                'Id',
+                'asc',
+                'InventoryDate',
+                '2015-08-11',
+                'eq',
+                false,
+                false,
+                $client23
             ),
             array(
-                array('Id'), 'Id', 'asc', 'InventoryDate', '2015-08-11', 'ne', false, false, $client1
+                array('Id'),
+                'Id',
+                'asc',
+                'InventoryDate',
+                '2015-08-11',
+                'ne',
+                false,
+                false,
+                $client1
             ),
             array(
-                array('Id'), 'Id', 'asc', 'InventoryDate', '2015-08-11', 'lt', false, false, $client1
+                array('Id'),
+                'Id',
+                'asc',
+                'InventoryDate',
+                '2015-08-11',
+                'lt',
+                false,
+                false,
+                $client1
             ),
             array(
-                array('Id'), 'Id', 'asc', 'InventoryDate', '2015-08-11', 'le', false, false, $client123
+                array('Id'),
+                'Id',
+                'asc',
+                'InventoryDate',
+                '2015-08-11',
+                'le',
+                false,
+                false,
+                $client123
             ),
             array(
-                array('Id'), 'Id', 'asc', 'InventoryDate', '2015-08-11', 'gt', false, false, array()
+                array('Id'),
+                'Id',
+                'asc',
+                'InventoryDate',
+                '2015-08-11',
+                'gt',
+                false,
+                false,
+                array()
             ),
             array(
-                array('Id'), 'Id', 'asc', 'InventoryDate', '2015-08-11', 'ge', false, false, $client23
+                array('Id'),
+                'Id',
+                'asc',
+                'InventoryDate',
+                '2015-08-11',
+                'ge',
+                false,
+                false,
+                $client23
             ),
             array(
-                array('Id'), 'Id', 'asc', 'LastContactDate', '2015-08-12', 'lt', false, false, $client12
+                array('Id'),
+                'Id',
+                'asc',
+                'LastContactDate',
+                '2015-08-12',
+                'lt',
+                false,
+                false,
+                $client12
             ),
             array(
-                array('Id'), 'Id', 'asc', 'LastContactDate', '2015-08-11', 'le', false, false, $client12
+                array('Id'),
+                'Id',
+                'asc',
+                'LastContactDate',
+                '2015-08-11',
+                'le',
+                false,
+                false,
+                $client12
             ),
             array(
-                array('Id'), 'Id', 'asc', 'LastContactDate', '2015-08-10', 'gt', false, false, $client23
+                array('Id'),
+                'Id',
+                'asc',
+                'LastContactDate',
+                '2015-08-10',
+                'gt',
+                false,
+                false,
+                $client23
             ),
             array(
-                array('Id'), 'Id', 'asc', 'LastContactDate', '2015-08-11', 'ge', false, false, $client23
+                array('Id'),
+                'Id',
+                'asc',
+                'LastContactDate',
+                '2015-08-11',
+                'ge',
+                false,
+                false,
+                $client23
             ),
             array(
-                array('Id'), 'Id', 'asc', 'InventoryDate', '2015-08-11', 'eq', true, false, $client14
+                array('Id'),
+                'Id',
+                'asc',
+                'InventoryDate',
+                '2015-08-11',
+                'eq',
+                true,
+                false,
+                $client14
             ),
             array(
-                array('Id'), 'Id', 'asc', 'InventoryDate', '2015-08-11', 'ne', true, false, $client234
+                array('Id'),
+                'Id',
+                'asc',
+                'InventoryDate',
+                '2015-08-11',
+                'ne',
+                true,
+                false,
+                $client234
             ),
             array(
                 array('Id'),
@@ -356,46 +636,150 @@ class ClientManagerTest extends AbstractTestCase
             ),
             // Package filters
             array(
-                array('Id'), 'Id', 'asc', 'PackagePending', 'package1', null, null, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'PackagePending',
+                'package1',
+                null,
+                null,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'PackageRunning', 'package2', null, null, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'PackageRunning',
+                'package2',
+                null,
+                null,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'PackageSuccess', 'package3', null, null, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'PackageSuccess',
+                'package3',
+                null,
+                null,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'PackageError', 'package4', null, null, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'PackageError',
+                'package4',
+                null,
+                null,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'PackageSuccess', 'package5', null, null, false, array()
+                array('Id'),
+                'Id',
+                'asc',
+                'PackageSuccess',
+                'package5',
+                null,
+                null,
+                false,
+                array()
             ),
             array(
-                array('Id'), 'Id', 'asc', 'PackageSuccess', 'package6', null, null, false, array()
+                array('Id'),
+                'Id',
+                'asc',
+                'PackageSuccess',
+                'package6',
+                null,
+                null,
+                false,
+                array()
             ),
             // "Software" filter
             array(
-                array('Id'), 'Id', 'asc', 'Software', 'name2', null, null, false, $client12
+                array('Id'),
+                'Id',
+                'asc',
+                'Software',
+                'name2',
+                null,
+                null,
+                false,
+                $client12
             ),
             // Numeric filesystem filters
             array(
-                array('Id'), 'Id', 'asc', 'Filesystem.Size', '1000', 'gt', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'Filesystem.Size',
+                '1000',
+                'gt',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'Filesystem.FreeSpace', '200', 'lt', true, false, $client23
+                array('Id'),
+                'Id',
+                'asc',
+                'Filesystem.FreeSpace',
+                '200',
+                'lt',
+                true,
+                false,
+                $client23
             ),
             // Custom field filters
             array(
-                array('Id'), 'Id', 'asc', 'CustomFields.type_text', '2', 'like', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'CustomFields.type_text',
+                '2',
+                'like',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'CustomFields.type_clob', 'clob2', 'eq', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'CustomFields.type_clob',
+                'clob2',
+                'eq',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'CustomFields.type_integer', 1, 'gt', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'CustomFields.type_integer',
+                1,
+                'gt',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'CustomFields.type_float', 2.2, 'lt', false, false, $client1
+                array('Id'),
+                'Id',
+                'asc',
+                'CustomFields.type_float',
+                2.2,
+                'lt',
+                false,
+                false,
+                $client1
             ),
             array(
                 array('Id'),
@@ -479,16 +863,48 @@ class ClientManagerTest extends AbstractTestCase
             ),
             // Registry data
             array(
-                array('Id'), 'Id', 'asc', 'Registry.value 1', 'content1_2', 'eq', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'Registry.value 1',
+                'content1_2',
+                'eq',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'Registry.value 1', '2', 'like', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'Registry.value 1',
+                '2',
+                'like',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'Registry.value 1', '2', 'like', true, false, $client1
+                array('Id'),
+                'Id',
+                'asc',
+                'Registry.value 1',
+                '2',
+                'like',
+                true,
+                false,
+                $client1
             ),
             array(
-                array('Id'), 'Id', 'asc', 'Registry.value 3', '2', 'like', false, false, array()
+                array('Id'),
+                'Id',
+                'asc',
+                'Registry.value 3',
+                '2',
+                'like',
+                false,
+                false,
+                array()
             ),
             array(
                 array('Id'),
@@ -508,20 +924,60 @@ class ClientManagerTest extends AbstractTestCase
             // Use Filesystem and Software model to ensure that they are
             // properly handled despite some special, similarly named filters.
             array(
-                array('Id'), 'Id', 'asc', 'Filesystem.Filesystem', '2', 'like', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'Filesystem.Filesystem',
+                '2',
+                'like',
+                false,
+                false,
+                $client2
             ),
             array(
-                array('Id'), 'Id', 'asc', 'Filesystem.Filesystem', '1', 'like', true, false, $client23
+                array('Id'),
+                'Id',
+                'asc',
+                'Filesystem.Filesystem',
+                '1',
+                'like',
+                true,
+                false,
+                $client23
             ),
             array(
-                array('Id'), 'Id', 'asc', 'Software.Name', '1', 'like', false, false, $client23
+                array('Id'),
+                'Id',
+                'asc',
+                'Software.Name',
+                '1',
+                'like',
+                false,
+                false,
+                $client23
             ),
             array(
-                array('Id'), 'Id', 'asc', 'Software.Name', '1', 'like', true, false, array_merge($client12, $client2)
+                array('Id'),
+                'Id',
+                'asc',
+                'Software.Name',
+                '1',
+                'like',
+                true,
+                false,
+                array_merge($client12, $client2)
             ),
             // Windows filters
             array(
-                array('Id'), 'Id', 'asc', 'Windows.ProductId', '2', 'like', false, false, $client2
+                array('Id'),
+                'Id',
+                'asc',
+                'Windows.ProductId',
+                '2',
+                'like',
+                false,
+                false,
+                $client2
             ),
             array(
                 array('Id'),
@@ -539,7 +995,15 @@ class ClientManagerTest extends AbstractTestCase
             ),
             // Single filter as array
             array(
-                array('Id'), 'Id', 'asc', array('CpuCores'), array(1), array('gt'), array(false), false, $client23
+                array('Id'),
+                'Id',
+                'asc',
+                array('CpuCores'),
+                array(1),
+                array('gt'),
+                array(false),
+                false,
+                $client23
             ),
             // Multiple filters
             array(
@@ -567,10 +1031,26 @@ class ClientManagerTest extends AbstractTestCase
             ),
             // Add search column (different invocations of filter method), column not present yet
             array(
-                array('Id'), 'Id', 'asc', 'Name', 'name2', 'eq', false, true, array(array('id' => 2, 'name' => 'name2'))
+                array('Id'),
+                'Id',
+                'asc',
+                'Name',
+                'name2',
+                'eq',
+                false,
+                true,
+                array(array('id' => 2, 'name' => 'name2'))
             ),
             array(
-                array('Id'), 'Id', 'asc', 'CpuCores', 2, 'eq', false, true, array(array('id' => 2, 'processorn' => 2))
+                array('Id'),
+                'Id',
+                'asc',
+                'CpuCores',
+                2,
+                'eq',
+                false,
+                true,
+                array(array('id' => 2, 'processorn' => 2))
             ),
             array(
                 array('Id'),

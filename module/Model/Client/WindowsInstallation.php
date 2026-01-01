@@ -3,7 +3,7 @@
 /**
  * Information about a client's windows installation
  *
- * Copyright (C) 2011-2025 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2026 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -34,6 +34,4 @@ namespace Model\Client;
  * @property string $ManualProductKey Manually overridden product key (entered in Braintacle console)
  * @property string $CpuArchitecture CPU architecture (may be different from physical CPU's capabilities)
  */
-class WindowsInstallation extends \Model\AbstractModel
-{
-}
+class WindowsInstallation extends \Model\AbstractModel {}

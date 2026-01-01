@@ -3,7 +3,7 @@
 /**
  * Exception thrown by RegistryManager on runtime errors
  *
- * Copyright (C) 2011-2025 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2026 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -25,6 +25,4 @@ namespace Model\Registry;
 /**
  * Exception thrown by RegistryManager on runtime errors
  */
-class RuntimeException extends \RuntimeException
-{
-}
+class RuntimeException extends \RuntimeException {}

@@ -3,7 +3,7 @@
 /**
  * Network interface
  *
- * Copyright (C) 2011-2025 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2026 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -38,6 +38,4 @@ namespace Model\Client\Item;
  * @property string $type needs further processing to be useful
  * @property string $typeMib needs further processing to be useful
  */
-class NetworkInterface extends \Model\AbstractModel
-{
-}
+class NetworkInterface extends \Model\AbstractModel {}

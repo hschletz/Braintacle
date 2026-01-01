@@ -3,7 +3,7 @@
 /**
  * Virtual machine hosted on a client
  *
- * Copyright (C) 2011-2025 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2026 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -33,6 +33,4 @@ namespace Model\Client\Item;
  * @property integer $NumCpus Number of guest CPUs (unreliable)
  * @property integer $GuestMemory Guest RAM in MB (unreliable)
  */
-class VirtualMachine extends \Model\AbstractModel
-{
-}
+class VirtualMachine extends \Model\AbstractModel {}

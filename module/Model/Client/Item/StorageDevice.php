@@ -3,7 +3,7 @@
 /**
  * Storage device (hard disk, optical drive, USB storage...)
  *
- * Copyright (C) 2011-2025 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2026 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -33,6 +33,4 @@ namespace Model\Client\Item;
  * @property string $Serial Serial number (Windows/UNIX)
  * @property string $Firmware Firmware version (Windows/UNIX)
  */
-class StorageDevice extends \Model\AbstractModel
-{
-}
+class StorageDevice extends \Model\AbstractModel {}

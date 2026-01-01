@@ -3,7 +3,7 @@
 /**
  * Audio device
  *
- * Copyright (C) 2011-2025 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2026 Holger Schletz <holger.schletz@web.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -29,6 +29,4 @@ namespace Model\Client\Item;
  * @property string $Name
  * @property string $Description
  */
-class AudioDevice extends \Model\AbstractModel
-{
-}
+class AudioDevice extends \Model\AbstractModel {}
