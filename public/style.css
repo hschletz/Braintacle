@@ -232,10 +232,6 @@ td,th {
     padding: .3ex .5em .3ex .5em;
 }
 
-tr.highlight {
-    font-weight: bold;
-}
-
 th {
     text-align: left;
 }
@@ -295,18 +291,6 @@ td.label {
     vertical-align: top;
     font-weight: bold;
     white-space: nowrap;
-}
-
-.package_running, .package_error {
-    color: red;
-}
-
-.package_success {
-    color: green;
-}
-
-.package_pending {
-    color: blue;
 }
 
 /* FlashMessenger output */

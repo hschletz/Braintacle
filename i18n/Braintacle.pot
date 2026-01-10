@@ -114,8 +114,8 @@ msgstr ""
 
 #: module/Console/Form/DefineFields.php
 #: module/Console/views/console/network/edit.php
-#: module/Console/views/console/package/index.php
 #: templates/Pages/Client/Bios.latte
+#: templates/Pages/Package/PackageList.latte
 msgid "Date"
 msgstr ""
 
@@ -131,9 +131,9 @@ msgstr ""
 #: module/Console/views/console/accounts/index.php
 #: module/Console/views/console/network/showidentified.php
 #: module/Console/views/console/network/showunknown.php
-#: module/Console/views/console/package/index.php
 #: templates/Pages/Client/Header.latte
 #: templates/Pages/Group/Header.latte
+#: templates/Pages/Package/PackageList.latte
 msgid "Delete"
 msgstr ""
 
@@ -151,7 +151,6 @@ msgstr ""
 #: module/Console/views/console/client/system.php
 #: module/Console/views/console/client/virtualmachines.php
 #: module/Console/views/console/network/index.php
-#: module/Console/views/console/package/index.php
 #: src/Search/SearchFilters.php
 #: templates/Pages/Client/Display.latte
 #: templates/Pages/Client/Packages.latte
@@ -164,6 +163,7 @@ msgstr ""
 #: templates/Pages/Group/General.latte
 #: templates/Pages/Group/Members.latte
 #: templates/Pages/Group/Overview.latte
+#: templates/Pages/Package/PackageList.latte
 #: templates/Pages/Search/SearchResults.latte
 #: templates/Pages/Software.latte
 msgid "Name"
@@ -219,7 +219,7 @@ msgid "OK"
 msgstr ""
 
 #: module/Console/Form/Package/Build.php
-#: module/Console/views/console/package/index.php
+#: templates/Pages/Package/PackageList.latte
 msgid "Platform"
 msgstr ""
 
@@ -293,28 +293,28 @@ msgstr ""
 
 #: module/Console/Form/Package/Update.php
 #: module/Console/Form/Preferences/Packages.php
-#: module/Console/views/console/package/index.php
 #: templates/Pages/Client/Packages.latte
+#: templates/Pages/Package/PackageList.latte
 msgid "Pending"
 msgstr ""
 
 #: module/Console/Form/Package/Update.php
 #: module/Console/Form/Preferences/Packages.php
-#: module/Console/views/console/package/index.php
 #: templates/Pages/Client/Packages.latte
+#: templates/Pages/Package/PackageList.latte
 msgid "Running"
 msgstr ""
 
 #: module/Console/Form/Package/Update.php
 #: module/Console/Form/Preferences/Packages.php
-#: module/Console/views/console/package/index.php
 #: templates/Pages/Client/Packages.latte
+#: templates/Pages/Package/PackageList.latte
 msgid "Success"
 msgstr ""
 
 #: module/Console/Form/Package/Update.php
 #: module/Console/Form/Preferences/Packages.php
-#: module/Console/views/console/package/index.php
+#: templates/Pages/Package/PackageList.latte
 msgid "Error"
 msgstr ""
 
@@ -1125,9 +1125,9 @@ msgid "Slot number"
 msgstr ""
 
 #: module/Console/views/console/client/system.php
-#: module/Console/views/console/package/index.php
 #: templates/Pages/Client/Software.latte
 #: templates/Pages/Client/Storage.latte
+#: templates/Pages/Package/PackageList.latte
 msgid "Size"
 msgstr ""
 

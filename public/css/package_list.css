@@ -1,0 +1,12 @@
+.package_running,
+.package_error {
+    color: red;
+}
+
+.package_success {
+    color: green;
+}
+
+.package_pending {
+    color: blue;
+}

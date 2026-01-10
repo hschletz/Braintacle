@@ -84,24 +84,6 @@ class PackageController extends Controller
     }
 
     /**
-     * Show package overview
-     *
-     * @return array array(packages), array(sorting)
-     */
-    public function indexAction()
-    {
-        $this->getEvent()->setParam('subMenuRoute', 'packagesList');
-        $sorting = $this->getOrder('Name');
-        return array(
-            'packages' => $this->_packageManager->getPackages(
-                $sorting['order'],
-                $sorting['direction']
-            ),
-            'sorting' => $sorting,
-        );
-    }
-
-    /**
      * Build a new package.
      *
      * @return \Laminas\View\Model\ViewModel|\Laminas\Http\Response form template or redirect response
@@ -122,7 +104,6 @@ class PackageController extends Controller
                     $flashMessenger->addSuccessMessage(
                         sprintf($this->_("Package '%s' was successfully created."), $data['Name'])
                     );
-                    $flashMessenger->addMessage($data['Name'], 'packageName');
                 } catch (\Model\Package\RuntimeException $e) {
                     $flashMessenger->addErrorMessage($e->getMessage());
                 }

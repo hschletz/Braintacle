@@ -23,7 +23,6 @@
 namespace Console\Test\Controller;
 
 use Braintacle\FlashMessages;
-use Braintacle\Legacy\Plugin\FlashMessenger;
 use Braintacle\Legacy\Plugin\FlashMessengerTestTrait;
 use Braintacle\Legacy\Plugin\Params;
 use Braintacle\Legacy\Plugin\PluginManager;
@@ -32,8 +31,6 @@ use Console\Mvc\Controller\Plugin\PrintForm;
 use Console\Test\AbstractControllerTestCase;
 use Console\View\Helper\Form\Package\Build;
 use Console\View\Helper\Form\Package\Update;
-use IntlDateFormatter;
-use Laminas\I18n\View\Helper\DateFormat;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
 use Model\Config;
@@ -85,195 +82,6 @@ class PackageControllerTest extends AbstractControllerTestCase
         $formManager = $serviceManager->get('FormElementManager');
         $formManager->setService('Console\Form\Package\Build', $this->_buildForm);
         $formManager->setService('Console\Form\Package\Update', $this->_updateForm);
-    }
-
-    public function testIndexActionPackageList()
-    {
-        $timestamp1 = new \DateTime('2014-03-29 20:03:45');
-        $timestamp2 = new \DateTime('2014-03-29 20:15:43');
-        $packages = array(
-            array(
-                'Name' => 'name1',
-                'Comment' => 'comment1',
-                'Timestamp' => $timestamp1,
-                'Size' => 12345678,
-                'Platform' => 'platform',
-                'NumPending' => 1,
-                'NumRunning' => 2,
-                'NumSuccess' => 3,
-                'NumError' => 4,
-            ),
-            array(
-                'Name' => 'name2',
-                'Comment' => '',
-                'Timestamp' => $timestamp2,
-                'Size' => 87654321,
-                'Platform' => 'platform',
-                'NumPending' => 0,
-                'NumRunning' => 0,
-                'NumSuccess' => 0,
-                'NumError' => 0,
-            ),
-        );
-        $this->_packageManager->expects($this->once())->method('getPackages')->willReturn($packages);
-
-        $viewHelperManager = $this->getApplicationServiceLocator()->get('ViewHelperManager');
-
-        $flashMessenger = $this->createMock(FlashMessenger::class);
-        $flashMessenger->method('__invoke')->willReturnSelf();
-        $flashMessenger->method('getMessagesFromNamespace')->with('packageName')->willReturn([]);
-        $flashMessenger->method('render')->willReturn('');
-        $viewHelperManager->setService('flashMessenger', $flashMessenger);
-
-        $dateFormat = $this->createMock(DateFormat::class);
-        $dateFormat->method('__invoke')->willReturnMap([
-            [$timestamp1, IntlDateFormatter::SHORT, IntlDateFormatter::SHORT, null, null, 'date1'],
-            [$timestamp2, IntlDateFormatter::SHORT, IntlDateFormatter::SHORT, null, null, 'date2'],
-        ]);
-        $viewHelperManager->setService('dateFormat', $dateFormat);
-
-        $this->dispatch('/console/package/index/');
-
-        $this->assertResponseStatusCode(200);
-
-        // Name column
-        $this->assertXpathQueryContentContains(
-            '//td/a[@href="/console/package/update/?name=name1"][@title="comment1"]',
-            'name1'
-        );
-        $this->assertXpathQueryContentContains(
-            '//td/a[@href="/console/package/update/?name=name2"][not(@title)]',
-            'name2'
-        );
-
-        // Timestamp column
-        $this->assertXpathQueryContentContains(
-            '//td',
-            "\ndate1\n"
-        );
-
-        // Size column
-        $this->assertXpathQueryContentContains(
-            '//td[@class="textright"]',
-            "\n11,8\xC2\xA0MB\n" // UTF-8 representation of &nbsp;
-        );
-
-        // Platform column
-        $this->assertXpathQueryCount(
-            "//td[text()='\nPlatform\n']",
-            2
-        );
-
-        // Hyperlinks and classes for Num* columns
-        $query = '//td[@class="textright"]/a[@href="/console/client/index/' .
-            '?columns=Name,UserName,LastContactDate,InventoryDate&jumpto=software&filter=%s&search=%s' .
-            '"][@class="%s"]';
-
-        $this->assertXpathQueryContentContains(
-            sprintf($query, 'PackagePending', 'name1', 'package_pending'),
-            '1'
-        );
-        $this->assertXpathQueryContentContains(
-            sprintf($query, 'PackageRunning', 'name1', 'package_running'),
-            '2'
-        );
-        $this->assertXpathQueryContentContains(
-            sprintf($query, 'PackageSuccess', 'name1', 'package_success'),
-            '3'
-        );
-        $this->assertXpathQueryContentContains(
-            sprintf($query, 'PackageError', 'name1', 'package_error'),
-            '4'
-        );
-
-        // Num* columns with '0' content
-        $this->assertXpathQueryCount(
-            "//td[@class='textright'][text()='\n0\n']",
-            4
-        );
-
-        // 'Delete' column
-        $this->assertXpathQueryContentContains(
-            '//td/a[@href="/console/package/delete/?name=name1"]',
-            'Löschen'
-        );
-
-        // No flash messages
-        $this->assertNotXpathQuery('//ul');
-    }
-
-    public function testIndexActionPackageFlashMessages()
-    {
-        $flashMessenger = $this->createMock(FlashMessenger::class);
-        $flashMessenger->method('__invoke')->willReturnSelf();
-        $flashMessenger->method('getMessagesFromNamespace')->with('packageName')->willReturn(['<br>']);
-        $flashMessenger->method('render')->willReturnMap([
-            ['error', '<ul class="error"><li>error</li></ul>'],
-            ['success', '<ul class="success"><li>success</li></ul>'],
-        ]);
-        $this->getApplicationServiceLocator()
-            ->get('ViewHelperManager')
-            ->setService('flashMessenger', $flashMessenger);
-
-        $this->_packageManager->expects($this->once())->method('getPackages')->willReturn(array());
-
-        $this->dispatch('/console/package/index/');
-        $this->assertResponseStatusCode(200);
-
-        $this->assertXpathQueryContentContains(
-            '//ul[@class="error"]/li',
-            'error'
-        );
-        $this->assertXpathQueryContentContains(
-            '//ul[@class="success"]/li',
-            'success'
-        );
-    }
-
-    public function testIndexActionPackageHighlightCurrentPackage()
-    {
-        $packages = array(
-            array(
-                'Name' => 'name1',
-                'Comment' => 'comment1',
-                'Timestamp' => new \DateTime('2014-03-29 20:03:45'),
-                'Size' => 12345678,
-                'Platform' => 'platform',
-                'NumPending' => 1,
-                'NumRunning' => 2,
-                'NumSuccess' => 3,
-                'NumError' => 4,
-            ),
-            array(
-                'Name' => 'name2',
-                'Comment' => '',
-                'Timestamp' => new \DateTime('2014-03-29 20:15:43'),
-                'Size' => 87654321,
-                'Platform' => 'platform',
-                'NumPending' => 0,
-                'NumRunning' => 0,
-                'NumSuccess' => 0,
-                'NumError' => 0,
-            ),
-        );
-        $this->_packageManager->expects($this->once())->method('getPackages')->willReturn($packages);
-
-        $flashMessenger = $this->createMock(FlashMessenger::class);
-        $flashMessenger->method('__invoke')->willReturnSelf();
-        $flashMessenger->method('getMessagesFromNamespace')->with('packageName')->willReturn(['name1']);
-        $flashMessenger->method('render')->willReturn('');
-        $this->getApplicationServiceLocator()->get('ViewHelperManager')->setService('flashMessenger', $flashMessenger);
-
-        $this->dispatch('/console/package/index/');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryCount(
-            '//tr[@class="highlight"]',
-            1
-        );
-        $this->assertXpathQueryContentContains(
-            '//tr[@class="highlight"]/td/a',
-            'name1'
-        );
     }
 
     public function testBuildActionGet()
@@ -404,10 +212,7 @@ class PackageControllerTest extends AbstractControllerTestCase
         $this->assertRedirectTo('packagesList/');
 
         $this->assertEquals(
-            [
-                FlashMessages::Success => ["Paket 'packageName' wurde erfolgreich erstellt."],
-                'packageName' => ['packageName'],
-            ],
+            [FlashMessages::Success => ["Paket 'packageName' wurde erfolgreich erstellt."]],
             $this->flashMessages,
         );
     }

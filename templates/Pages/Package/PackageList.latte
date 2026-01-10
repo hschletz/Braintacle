@@ -1,0 +1,65 @@
+{layout '../../MainMenu/PackagesMenuLayout.latte'}
+{import ../../SortableHeader.latte}
+{var $subMenuRoute = packagesList}
+
+{define counterCell, int $counter, string $name, string $filter, string $class}
+    {var $queryParams = [
+        columns: 'Name,UserName,LastContactDate,InventoryDate',
+        jumpto: software,
+        filter: $filter,
+        search: $name,
+    ]}
+    <td class="textright">
+        {if $counter}
+            <a href={pathForRoute(clientIndex, queryParams: $queryParams)} class={$class}>{$counter}</a>
+        {else}
+            {$counter}
+        {/if}
+    </td>
+{/define}
+
+{block content}
+
+<link rel="stylesheet" href={assetUrl('css/package_list.css')}>
+
+<ul n:ifcontent class="error">
+    <li n:foreach="$errorMessages as $message">{$message}</li>
+</ul>
+<ul n:ifcontent class="success">
+    <li n:foreach="$successMessages as $message">{$message}</li>
+</ul>
+
+{if}
+    <table class="alternating">
+        <tr>
+            <th>{include sortableHeader, 'Name', translate('Name')}</th>
+            <th>{include sortableHeader, 'Timestamp', translate('Date')}</th>
+            <th class="textright">{include sortableHeader, 'Size', translate('Size')}</th>
+            <th>{include sortableHeader, 'Platform', translate('Platform')}</th>
+            <th class="textright">{include sortableHeader, 'NumPending', translate('Pending')}</th>
+            <th class="textright">{include sortableHeader, 'NumRunning', translate('Running')}</th>
+            <th class="textright">{include sortableHeader, 'NumSuccess', translate('Success')}</th>
+            <th class="textright">{include sortableHeader, 'NumError', translate('Error')}</th>
+            <th></th>
+        </tr>
+        <tr n:foreach={$packages as $package}>
+            <td>
+                <a href={pathForRoute(packageUpdatePage, queryParams: [name: $package->name])} title={$package->comment}>
+                    {$package->name}
+                </a>
+            </td>
+            <td>{$package->timestamp|localDate: date: medium, time: short}</td>
+            <td class="textright">{$package->size|bytes: 0}</td>
+            <td>{$package->platform|firstUpper}</td>
+            {include counterCell, $package->numPending, $package->name, PackagePending, package_pending}
+            {include counterCell, $package->numRunning, $package->name, PackageRunning, package_running}
+            {include counterCell, $package->numSuccess, $package->name, PackageSuccess, package_success}
+            {include counterCell, $package->numError, $package->name, PackageError, package_error}
+            <td>
+                <a href={pathForRoute(packageDeletePage, queryParams: [name: $package->name])}>
+                    {translate('Delete')}
+                </a>
+            </td>
+        </tr>
+    </table>
+{/if isset($package)}
