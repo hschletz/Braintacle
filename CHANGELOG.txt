@@ -6,6 +6,16 @@ without any warranty.
 ====================================================================
 
 
+CHANGES IN VERSION 2.1
+=======================
+
+Server:
+
+- The server can now run on any webserver through a CGI interface.
+
+- The server can now be configured to log to STDERR.
+
+
 CHANGES IN VERSION 2.0
 =======================
 

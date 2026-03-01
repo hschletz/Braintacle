@@ -88,6 +88,10 @@ use Apache::Ocsinventory::Server::Constants;
 
 use if $ENV{'OCS_OPT_LOGPATH'} eq 'syslog', 'Sys::Syslog';
 
+# The Apache configuration for mod_perl preloads Apache::DBI which provides the
+# DBI module. When not running under mod_perl, the module is loaded here.
+use if !exists $ENV{MOD_PERL}, 'DBI';
+
 sub _get_sys_options{
 
   return 0 if $ENV{OCS_OPT_OPTIONS_NOT_OVERLOADED};
@@ -333,6 +337,14 @@ sub _log{
         $comment ? $comment : ''
     );
     closelog();
+    return;
+  } elsif ($ENV{OCS_OPT_LOGPATH} eq 'stderr') {
+    print STDERR 
+        "$code;$DeviceID;$ipaddress;", 
+        &_get_http_header('User-agent', $Apache::Ocsinventory::CURRENT_CONTEXT{'APACHE_OBJECT'}),
+        ";$phase;",
+        $comment // '',
+        "\n";
     return;
   }
 

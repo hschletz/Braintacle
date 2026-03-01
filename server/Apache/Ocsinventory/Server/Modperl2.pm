@@ -39,25 +39,28 @@ our @EXPORT = qw/
   _send_http_headers
 /;
 
-# mod-perl2
-############
-use Apache2::Connection (); 
-use Apache2::SubRequest (); 
-use Apache2::Access (); 
-use Apache2::RequestIO (); 
-use Apache2::RequestUtil ();
-use Apache2::RequestRec (); 
-use Apache2::ServerUtil (); 
-use Apache2::Log; 
-use APR::Table (); 
-use Apache2::Const -compile => qw(OK HTTP_FORBIDDEN SERVER_ERROR HTTP_BAD_REQUEST HTTP_METHOD_NOT_ALLOWED);
+# Load modules only if running under mod_perl. They may not exist otherwise and
+# are not needed.
+if (exists $ENV{MOD_PERL}) {
+    require Apache2::Connection; 
+    require Apache2::SubRequest; 
+    require Apache2::Access; 
+    require Apache2::RequestIO; 
+    require Apache2::RequestUtil;
+    require Apache2::RequestRec; 
+    require Apache2::ServerUtil; 
+    require Apache2::Log;
+    'Apache2::log'->import;
+    require APR::Table; 
+}
 
-# retrieve apache constants
-use constant APACHE_SERVER_ERROR => Apache2::Const::SERVER_ERROR;
-use constant APACHE_FORBIDDEN => Apache2::Const::HTTP_FORBIDDEN;
-use constant APACHE_METHOD_NOT_ALLOWED => Apache2::Const::HTTP_METHOD_NOT_ALLOWED;
-use constant APACHE_OK => Apache2::Const::OK;
-use constant APACHE_BAD_REQUEST => Apache2::Const::HTTP_BAD_REQUEST;
+# Cannot import constants from Apache2::Const because that module may not exist
+# when not running under mod_perl. Define constants manually.
+use constant APACHE_OK => 0;
+use constant APACHE_BAD_REQUEST => 400;
+use constant APACHE_FORBIDDEN => 403;
+use constant APACHE_METHOD_NOT_ALLOWED => 405;
+use constant APACHE_SERVER_ERROR => 500;
 
 # Wrappers
 sub _set_http_header{
