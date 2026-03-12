@@ -23,10 +23,8 @@
 use Braintacle\Legacy\Plugin\FlashMessenger;
 use Console\Controller\AccountsController;
 use Console\Controller\NetworkController;
-use Console\Controller\PackageController;
 use Console\Service\AccountsControllerFactory;
 use Console\Service\NetworkControllerFactory;
-use Console\Service\PackageControllerFactory;
 use Console\View\Helper\ClientHeader;
 use Console\View\Helper\Service\ClientHeaderFactory;
 use Laminas\Form\View\Helper\FormElementErrors;
@@ -36,7 +34,6 @@ return array(
     'form_elements' => array(
         'abstract_factories' => array(
             'Console\Form\Service\AccountFactory',
-            'Console\Form\Service\PackageFactory',
         ),
         'factories' => array(
             'Console\Form\CustomFields' => 'Console\Form\Service\CustomFieldsFactory',
@@ -80,7 +77,6 @@ return array(
         'factories' => [
             AccountsController::class => AccountsControllerFactory::class,
             NetworkController::class => NetworkControllerFactory::class,
-            PackageController::class => PackageControllerFactory::class,
         ],
     ],
     'view_helpers' => array(

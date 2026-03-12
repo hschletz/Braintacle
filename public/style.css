@@ -390,21 +390,11 @@ form.form_package, form.form_search {
     grid-template-columns: [label-start] 40% [label-end element-start] max-content [element-end];
     grid-gap: 2ex;
 }
-.form_package label {
-    display: contents;
-}
-.label,
-.form_package label span {
+
+.label {
     grid-column: label;
     text-align: right;
     align-self: center;
-}
-.form_package input,
-.form_package select,
-.form_package .errors,
-.form_package_update fieldset {
-    grid-column: element;
-    justify-self: start;
 }
 
 /* Rules for individual forms */
@@ -477,27 +467,6 @@ form.form_package, form.form_search {
 }
 .form_package_assign button {
     margin-left: 0;
-}
-
-.form_package_update .label {
-    grid-column: label;
-    text-align: right;
-}
-.form_package_update legend {
-    display: none;
-}
-.form_package_update fieldset {
-    grid-column: element;
-    width: 100%;
-    box-sizing: border-box;
-}
-.form_package_update fieldset label {
-    display: block;
-    margin: 1ex 0 1ex 0;
-    width: max-content;
-}
-.form_package_update fieldset input {
-    margin-right: .5em;
 }
 
 /* The following rules are for forms still using the deprecated render() method. */

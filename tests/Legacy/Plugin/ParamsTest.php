@@ -50,14 +50,4 @@ final class ParamsTest extends TestCase
         $this->assertEquals('bar', $params->fromPost('foo'));
         $this->assertNull($params->fromPost('foobar'));
     }
-
-    public function testFromFiles()
-    {
-        $request = new Request();
-        $request->setFiles(new Parameters(['foo' => 'bar']));
-
-        $params = new Params($request);
-
-        $this->assertEquals(['foo' => 'bar'], $params->fromFiles());
-    }
 }

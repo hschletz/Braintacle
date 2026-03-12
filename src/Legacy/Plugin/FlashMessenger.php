@@ -22,11 +22,6 @@ final class FlashMessenger
         return $this;
     }
 
-    public function addMessage(string $message, string $namespace): void
-    {
-        $this->flashMessages->add($namespace, $message);
-    }
-
     public function addErrorMessage(string $message): void
     {
         $this->flashMessages->add(FlashMessages::Error, $message);

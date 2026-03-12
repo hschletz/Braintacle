@@ -36,14 +36,6 @@ final class FlashMessengerTest extends TestCase
         $this->assertSame($flashMessenger, $flashMessenger());
     }
 
-    public function testAddMessage()
-    {
-        $flashMessages = $this->createMock(FlashMessages::class);
-        $flashMessages->expects($this->once())->method('add')->with('custom', 'message');
-
-        $this->createFlashMessenger(flashMessages: $flashMessages)->addMessage('message', 'custom');
-    }
-
     public function testAddErrorMessage()
     {
         $flashMessages = $this->createMock(FlashMessages::class);

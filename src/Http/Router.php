@@ -78,6 +78,8 @@ class Router
             $group->post('/group/packages', Group\Packages\AssignPackagesHandler::class)->setName('assignPackageToGroup');
             $group->delete('/group/packages', Group\Packages\RemovePackagesHandler::class)->setName('removePackageFromGroup');
             $group->get('/groups', Group\Overview\OverviewHandler::class)->setName('groupList');
+            $group->get('/package', Package\Build\BuildPage::class)->setName('packageBuildPage');
+            $group->post('/package', Package\Build\BuildHandler::class)->setName('packageBuildPage');
             $group->get('/packages', Package\PackageList\PackageListPage::class)->setName('packagesList');
             $group->get('/search', Search\SearchPageHandler::class)->setName('searchPage');
             $group->get('/search/results', Search\SearchResultsHandler::class)->setName('searchResults');
@@ -103,9 +105,7 @@ class Router
             $group->get('/console/client/windows', ApplicationBridge::class)->setName('showClientWindows');
             $group->get('/console/licenses/index', ApplicationBridge::class)->setName('licensesPage');
             $group->get('/console/network/index', ApplicationBridge::class)->setName('networkPage');
-            $group->get('/console/package/build', ApplicationBridge::class)->setName('packageBuildPage');
             $group->get('/console/package/delete', ApplicationBridge::class)->setName('packageDeletePage');
-            $group->get('/console/package/update', ApplicationBridge::class)->setName('packageUpdatePage');
             $group->get('/console/preferences/agent', ApplicationBridge::class)->setName('preferencesAgentPage');
             $group->get('/console/preferences/customfields', ApplicationBridge::class)->setName('preferencesCustomFieldsPage');
             $group->get('/console/preferences/display', ApplicationBridge::class)->setName('preferencesDisplayPage');

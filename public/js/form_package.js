@@ -2,71 +2,70 @@
  * Package builder form.
  */
 
- // Checkboxes are accompanied by a hidden input field with the same name. The
- // form DOM has a RadioNodeList containing both. The checkbox is at index 1.
+const form = document.querySelector('form.form_package')
+const platform = form['platform']
+const action = form['action']
+const actionParam = form['actionParam']
+const file = form['file']
+const warn = form['warn']
+const warnMessage = form['warnMessage']
+const warnCountdown = form['warnCountdown']
+const warnAllowAbort = form['warnAllowAbort']
+const warnAllowDelay = form['warnAllowDelay']
+const postInstMessage = form['postInstMessage']
 
-for (const form of document.querySelectorAll('form.form_package')) {
-    form.Platform.addEventListener('change', event => { changePlatform(event.target) })
-    form.DeployAction.addEventListener('change', event => { changeParam(event.target) })
-    form.Warn[1].addEventListener('change', event => { toggleWarn(event.target) })
+platform.addEventListener('change', changePlatform)
+action.addEventListener('change', changeAction)
+warn.addEventListener('change', toggleWarn)
 
-    changePlatform(form.Platform)
-    toggleWarn(form.Warn[1])
-}
+changePlatform()
+toggleWarn()
 
 /**
  * Hide/display notification elements which have no effect on non-Windows
  * platforms.
  */
-function changePlatform(platform)
-{
-    const form = platform.form
+function changePlatform() {
     if (platform.value == 'windows') {
-        display(form.Warn, true)
-        display(form.PostInstMessage, true)
-        toggleWarn(form.Warn[1])
+        display(warn, true)
+        display(postInstMessage, true)
+        toggleWarn()
     } else {
-        display(form.Warn, false)
-        display(form.WarnMessage, false)
-        display(form.WarnCountdown, false)
-        display(form.WarnAllowAbort, false)
-        display(form.WarnAllowDelay, false)
-        display(form.PostInstMessage, false)
+        display(warn, false)
+        display(warnMessage, false)
+        display(warnCountdown, false)
+        display(warnAllowAbort, false)
+        display(warnAllowDelay, false)
+        display(postInstMessage, false)
     }
 }
 
-/**
- * Change label of parameter input field according to selected action.
- */
-function changeParam(deployAction)
-{
-    const actionParam = deployAction.form.ActionParam
-    const labels = JSON.parse(actionParam.getAttribute('data-labels'))
-    const label = labels[deployAction.value]
+function changeAction() {
+    // actionParamLabels is defined in template.
+    const label = actionParamLabels[action.value == 'store' ? 'store' : 'launchExecute']
     const element = actionParam.parentNode.querySelector('span')
-    element.textContent = label;
+    element.textContent = label
+
+    file.required = (action.value != 'execute')
 }
 
 /**
- * Hide or display Warn* fields according to checked state of Warn element.
+ * Hide or display warn* fields according to checked state of Warn element.
  */
-function toggleWarn(warn)
-{
-    const form = warn.form
-    const checked = warn.checked && form.Platform.value == 'windows'
-    display(form.WarnMessage, checked)
-    display(form.WarnCountdown, checked)
-    display(form.WarnAllowAbort, checked)
-    display(form.WarnAllowDelay, checked)
+function toggleWarn() {
+    const checked = warn.checked && platform.value == 'windows'
+    display(warnMessage, checked)
+    display(warnCountdown, checked)
+    display(warnAllowAbort, checked)
+    display(warnAllowDelay, checked)
 }
 
 /**
  * Hide or display a block element.
  */
-function display(element, display)
-{
+function display(element, display) {
     if (element instanceof RadioNodeList) {
         element = element[1]
     }
-    element.parentNode.style.display = display ? 'contents' : 'none';
+    element.parentNode.style.display = display ? 'contents' : 'none'
 }

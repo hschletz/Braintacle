@@ -44,7 +44,7 @@
         </tr>
         <tr n:foreach={$packages as $package}>
             <td>
-                <a href={pathForRoute(packageUpdatePage, queryParams: [name: $package->name])} title={$package->comment}>
+                <a href={pathForRoute(packageBuildPage, queryParams: [updateFrom: $package->name])} title={$package->comment}>
                     {$package->name}
                 </a>
             </td>

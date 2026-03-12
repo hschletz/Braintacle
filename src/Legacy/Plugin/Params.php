@@ -35,9 +35,4 @@ final class Params
             return $this->request->getPost($name);
         }
     }
-
-    public function fromFiles(): array
-    {
-        return $this->request->getFiles()->toArray();
-    }
 }

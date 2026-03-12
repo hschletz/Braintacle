@@ -88,8 +88,8 @@ final class PackageListPageTest extends TestCase
 
         $xPath = $this->getXpath(packages: [$package1, $package2]);
 
-        $this->assertXpathMatches($xPath, '//td/a[@href="packageUpdatePage/?name=name1"][@title="comment1"]');
-        $this->assertXpathMatches($xPath, '//td/a[@href="packageUpdatePage/?name=name2"][not(@title)]');
+        $this->assertXpathMatches($xPath, '//td/a[@href="packageBuildPage/?updateFrom=name1"][@title="comment1"]');
+        $this->assertXpathMatches($xPath, '//td/a[@href="packageBuildPage/?updateFrom=name2"][not(@title)]');
         $this->assertXpathMatches($xPath, '//td[text()="29.03.2014, 20:03"]');
         $this->assertXpathMatches($xPath, '//td[@class="textright"][text()="12 MB"]');
         $this->assertXpathCount(2, $xPath, '//td[text()="Platform"]');

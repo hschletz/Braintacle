@@ -1,0 +1,54 @@
+form.form_package {
+    margin: 2ex;
+    display: grid;
+    grid-template-columns: [label-start] 40% [label-end element-start] max-content [element-end];
+    grid-gap: 2ex;
+
+    label {
+        display: contents;
+
+        span {
+            grid-column: label;
+            text-align: right;
+            align-self: center;
+        }
+    }
+
+    input,
+    button,
+    select,
+    fieldset,
+    .error {
+        grid-column: element;
+        justify-self: start;
+    }
+
+    input[type=number] {
+        width: 6em;
+    }
+
+    .label {
+        grid-column: label;
+        text-align: right;
+    }
+
+    fieldset {
+        grid-column: element;
+        width: 100%;
+        box-sizing: border-box;
+
+        legend {
+            display: none;
+        }
+
+        label {
+            display: block;
+            margin: 1ex 0 1ex 0;
+            width: max-content;
+        }
+
+        input {
+            margin-right: .5em;
+        }
+    }
+}

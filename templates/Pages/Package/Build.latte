@@ -1,0 +1,123 @@
+{* Package build/update form. *}
+
+{layout ../../MainMenu/PackagesMenuLayout.latte}
+{var $subMenuRoute = packageBuildPage}
+
+{var $actionParamLabels = [
+    launchExecute: translate('Command line'),
+    store: translate('Target path'),
+]}
+
+{block content}
+
+<script>
+    const actionParamLabels = {$actionParamLabels}
+</script>
+<script type="module" src="{assetUrl('js/form_package.js')}"></script>
+
+<link rel="stylesheet" href="{assetUrl('css/package_form.css')}">
+
+<form method="post" enctype="multipart/form-data" class="form form_package">
+    {if $isUpdate}
+        <div class="label">{translate('Deploy to clients which have existing package assigned')}</div>
+        <fieldset name="Deploy">
+            <legend>{translate('Deploy to clients which have existing package assigned')}</legend>
+            <div>
+                <label>
+                    <input type="checkbox" name="deployPending" checked={$deployPending ?? false}>
+                    <span>{translate('Pending')}</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="deployRunning" checked={$deployRunning ?? false}>
+                    <span>{translate('Running')}</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="deploySuccess" checked={$deploySuccess ?? false}>
+                    <span>{translate('Success')}</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="deployError" checked={$deployError ?? false}>
+                    <span>{translate('Error')}</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="deployGroups" checked={$deployGroups ?? false}>
+                    <span>{translate('Groups')}</span>
+                </label>
+            </div>
+        </fieldset>
+    {/if}
+
+    <input type="hidden" name="csrfToken" value="{csrfToken()}">
+
+    <label>
+        <span>{translate('Name')}</span>
+        <input type="text" name="name" value={$name ?? null} autofocus required>
+        <span n:ifcontent class="error">{$errors->nameExistsMessage ?? null}</span>
+    </label>
+    <label>
+        <span>{translate('Comment')}</span>
+        <textarea name="comment">{$comment ?? null}</textarea>
+    </label>
+    <label>
+        <span>{translate('Platform')}</span>
+        <select name="platform">
+            <option value="windows" selected={$platform == windows}>Windows</option>
+            <option value="linux" selected={$platform == linux}>Linux</option>
+            <option value="mac" selected={$platform == mac}>MacOS</option>
+        </select>
+    </label>
+    <label>
+        <span>{translate('Action')}</span>
+        <select name="action">
+            <option value="launch" selected={$action == launch}>{translate('Download package, execute command, retrieve result')}</option>
+            <option value="execute" selected={$action == execute}>{translate('Optionally download package, execute command')}</option>
+            <option value="store" selected={$action == store}>{translate('Just download package to target path')}</option>
+        </select>
+    </label>
+    <label>
+        <span>
+            {* Initial label, later changed by JS depending on chosen action *}
+            {$actionParamLabels[$action == store ? store : launchExecute]}
+        </span>
+        <input type="text" name="actionParam" value="{$actionParam}" required>
+    </label>
+    <label>
+        <span>{translate('File')}</span>
+        <input type="file" name="file" required={$action != execute}>
+    </label>
+    <label>
+        <span>{translate('Priority (0: exclusive, 10: lowest)')}</span>
+        <input type="number" name="priority" min="0" max="10" required value="{$priority}">
+    </label>
+    <label>
+        <span>{translate('Maximum fragment size (kB)')}</span>
+        <input type="number" name="maxFragmentSize" min="0" value="{$maxFragmentSize}">
+    </label>
+    <label>
+        <span>{translate('Warn user')}</span>
+        <input type="checkbox" name="warn" checked={$warn ?? false}>
+    </label>
+    <label>
+        <span>{translate('Message')}</span>
+        <textarea name="warnMessage">{$warnMessage}</textarea>
+        <span n:ifcontent class="error">{$errors->warnMessageInvalidMessage ?? null}</span>
+    </label>
+    <label>
+        <span>{translate('Countdown (seconds)')}</span>
+        <input type="number" name="warnCountdown" min="1" value="{$warnCountdown}">
+    </label>
+    <label>
+        <span>{translate('Allow abort by user')}</span>
+        <input type="checkbox" name="warnAllowAbort" checked={$warnAllowAbort ?? false}>
+    </label>
+    <label>
+        <span>{translate('Allow delay by user')}</span>
+        <input type="checkbox" name="warnAllowDelay" checked={$warnAllowDelay ?? false}>
+    </label>
+    <label>
+        <span>{translate('Post-installation message')}</span>
+        <textarea name="postInstMessage">{$postInstMessage}</textarea>
+        <span n:ifcontent class="error">{$errors->postInstMessageInvalidMessage ?? null}</span>
+    </label>
+    <button type="submit">{translate('Build')}</button>
+</form>

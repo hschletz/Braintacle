@@ -21,28 +21,12 @@ msgstr "Der angeforderte Client existiert nicht."
 
 #: module/Console/Controller/PackageController.php
 #, php-format
-msgid "Error changing Package '%1$s' to '%2$s': %3$s"
-msgstr "Fehler beim Ändern von Paket '%1$s' zu '%2$s': %3$s"
-
-#: module/Console/Controller/PackageController.php
-#, php-format
-msgid "Package '%1$s' was successfully changed to '%2$s'."
-msgstr "Paket '%1$s' wurde erfolgreich zu '%2$s' geändert."
-
-#: module/Console/Controller/PackageController.php
-#, php-format
-msgid "Package '%s' was successfully created."
-msgstr "Paket '%s' wurde erfolgreich erstellt."
-
-#: module/Console/Controller/PackageController.php
-#, php-format
 msgid "Package '%s' was successfully deleted."
 msgstr "Paket '%s' wurde erfolgreich gelöscht."
 
 #: module/Console/Form/Account/AbstractForm.php
-#: module/Console/Form/Package/Build.php
 #: module/Console/views/console/client/misc.php
-#: templates/Pages/Client/General.latte
+#: templates/Pages/Client/General.latte templates/Pages/Package/Build.latte
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -138,8 +122,7 @@ msgstr "Text"
 msgid "The name already exists"
 msgstr "Der Name existiert bereits"
 
-#: module/Console/Form/ManageRegistryValues.php
-#: module/Console/Form/Package/Build.php module/Console/Form/Subnet.php
+#: module/Console/Form/ManageRegistryValues.php module/Console/Form/Subnet.php
 #: module/Console/views/console/client/index.php
 #: module/Console/views/console/client/misc.php
 #: module/Console/views/console/client/network.php
@@ -153,7 +136,7 @@ msgstr "Der Name existiert bereits"
 #: templates/Pages/Duplicates/Overview.latte
 #: templates/Pages/Group/AddToGroup.latte templates/Pages/Group/Excluded.latte
 #: templates/Pages/Group/General.latte templates/Pages/Group/Members.latte
-#: templates/Pages/Group/Overview.latte
+#: templates/Pages/Group/Overview.latte templates/Pages/Package/Build.latte
 #: templates/Pages/Package/PackageList.latte
 #: templates/Pages/Search/SearchResults.latte templates/Pages/Software.latte
 msgid "Name"
@@ -204,113 +187,6 @@ msgstr "OK"
 #: templates/Pages/Client/Storage.latte templates/Pages/ClientList.latte
 msgid "Type"
 msgstr "Typ"
-
-#: module/Console/Form/Package/Build.php
-msgid "Action"
-msgstr "Aktion"
-
-#: module/Console/Form/Package/Build.php
-msgid "Allow abort by user"
-msgstr "Erlaube Abbruch durch Benutzer"
-
-#: module/Console/Form/Package/Build.php
-msgid "Allow delay by user"
-msgstr "Erlaube Aufschub durch Benutzer"
-
-#: module/Console/Form/Package/Build.php
-#: templates/MainMenu/PackagesMenuLayout.latte
-msgid "Build"
-msgstr "Erstellen"
-
-#: module/Console/Form/Package/Build.php
-msgid "Countdown (seconds)"
-msgstr "Countdown (Sekunden)"
-
-#: module/Console/Form/Package/Build.php
-#: module/Console/Form/Preferences/Packages.php
-msgid "Download package, execute command, retrieve result"
-msgstr "Paket herunterladen, Befehl ausführen, Ergebnis ermitteln"
-
-#: module/Console/Form/Package/Build.php
-msgid "File"
-msgstr "Datei"
-
-#: module/Console/Form/Package/Build.php
-#: module/Console/Form/Preferences/Packages.php
-msgid "Just download package to target path"
-msgstr "Nur Paket in Zielpfad herunterladen"
-
-#: module/Console/Form/Package/Build.php
-msgid "Maximum fragment size (kB)"
-msgstr "Maximale Fragmentgröße (kB)"
-
-#: module/Console/Form/Package/Build.php
-msgid "Message"
-msgstr "Nachricht"
-
-#: module/Console/Form/Package/Build.php
-msgid "Message must not contain double quotes."
-msgstr "Meldung darf keine doppelten Anführungszeichen enthalten."
-
-#: module/Console/Form/Package/Build.php
-#: module/Console/Form/Preferences/Packages.php
-msgid "Optionally download package, execute command"
-msgstr "Optional Paket herunterladen, Befehl ausführen"
-
-#: module/Console/Form/Package/Build.php
-#: templates/Pages/Package/PackageList.latte
-msgid "Platform"
-msgstr "Plattform"
-
-#: module/Console/Form/Package/Build.php
-msgid "Post-installation message"
-msgstr "Nachricht nach Installation"
-
-#: module/Console/Form/Package/Build.php
-msgid "Priority (0: exclusive, 10: lowest)"
-msgstr "Priorität (0: exklusiv, 10: niedrigste)"
-
-#: module/Console/Form/Package/Build.php
-msgid "Warn user"
-msgstr "Benutzer warnen"
-
-#: module/Console/Form/Package/Update.php
-msgid "Deploy to clients which have existing package assigned"
-msgstr "Auf Clients installieren, denen das exisierende Paket zugewiesen ist"
-
-#: module/Console/Form/Package/Update.php
-#: module/Console/Form/Preferences/Packages.php
-#: templates/Pages/Package/PackageList.latte
-msgid "Error"
-msgstr "Fehler"
-
-#: module/Console/Form/Package/Update.php
-#: module/Console/Form/Preferences/Packages.php templates/Layout.latte
-#: templates/MainMenu/PreferencesMenuLayout.latte
-#: templates/Pages/Client/Header.latte
-msgid "Groups"
-msgstr "Gruppen"
-
-#: module/Console/Form/Package/Update.php
-#: module/Console/Form/Preferences/Packages.php
-#: templates/Pages/Client/Packages.latte
-#: templates/Pages/Package/PackageList.latte
-msgid "Pending"
-msgstr "Ausstehend"
-
-#: module/Console/Form/Package/Update.php
-#: module/Console/Form/Preferences/Packages.php
-#: templates/Pages/Client/Packages.latte
-#: templates/Pages/Package/PackageList.latte
-msgid "Running"
-msgstr "Laufend"
-
-#: module/Console/Form/Package/Update.php
-#: module/Console/Form/Preferences/Packages.php
-#: templates/Pages/Client/Packages.latte
-#: templates/Pages/Package/PackageList.latte
-msgid "Success"
-msgstr "Erfolg"
 
 #: module/Console/Form/Preferences/AbstractForm.php
 msgid "Set"
@@ -498,6 +374,51 @@ msgid "Defaults for deploying updated packages"
 msgstr "Vorgaben für Zuweisung aktualisierter Pakete"
 
 #: module/Console/Form/Preferences/Packages.php
+#: templates/Pages/Package/Build.latte
+msgid "Download package, execute command, retrieve result"
+msgstr "Paket herunterladen, Befehl ausführen, Ergebnis ermitteln"
+
+#: module/Console/Form/Preferences/Packages.php
+#: templates/Pages/Package/Build.latte
+#: templates/Pages/Package/PackageList.latte
+msgid "Error"
+msgstr "Fehler"
+
+#: module/Console/Form/Preferences/Packages.php templates/Layout.latte
+#: templates/MainMenu/PreferencesMenuLayout.latte
+#: templates/Pages/Client/Header.latte templates/Pages/Package/Build.latte
+msgid "Groups"
+msgstr "Gruppen"
+
+#: module/Console/Form/Preferences/Packages.php
+#: templates/Pages/Package/Build.latte
+msgid "Just download package to target path"
+msgstr "Nur Paket in Zielpfad herunterladen"
+
+#: module/Console/Form/Preferences/Packages.php
+#: templates/Pages/Package/Build.latte
+msgid "Optionally download package, execute command"
+msgstr "Optional Paket herunterladen, Befehl ausführen"
+
+#: module/Console/Form/Preferences/Packages.php
+#: templates/Pages/Client/Packages.latte templates/Pages/Package/Build.latte
+#: templates/Pages/Package/PackageList.latte
+msgid "Pending"
+msgstr "Ausstehend"
+
+#: module/Console/Form/Preferences/Packages.php
+#: templates/Pages/Client/Packages.latte templates/Pages/Package/Build.latte
+#: templates/Pages/Package/PackageList.latte
+msgid "Running"
+msgstr "Laufend"
+
+#: module/Console/Form/Preferences/Packages.php
+#: templates/Pages/Client/Packages.latte templates/Pages/Package/Build.latte
+#: templates/Pages/Package/PackageList.latte
+msgid "Success"
+msgstr "Erfolg"
+
+#: module/Console/Form/Preferences/Packages.php
 msgid "Warn user by default"
 msgstr "Vorgabe für 'Benutzer warnen'"
 
@@ -605,14 +526,6 @@ msgstr "%1$d Clients mit erfolgreich installiertem Paket '%2$s'"
 #, php-format
 msgid "The post_max_size value of %s has been exceeded."
 msgstr "Der Wert für post_max_size (%s) wurde überschritten."
-
-#: module/Console/View/Helper/Form/Package/Build.php
-msgid "Command line"
-msgstr "Befehlszeile"
-
-#: module/Console/View/Helper/Form/Package/Build.php
-msgid "Target path"
-msgstr "Zielpfad"
 
 #: module/Console/views/console/accounts/add.php
 msgid "Create new account"
@@ -1272,6 +1185,29 @@ msgstr "Gruppe '%s' konnte nicht gelöscht werden. Bitte erneut versuchen."
 msgid "Group '%s' was successfully deleted."
 msgstr "Gruppe '%s' wurde erfolgreich gelöscht."
 
+#: src/Package/Build/BuildHandler.php
+#, php-format
+msgid "Error changing Package '%1$s' to '%2$s': %3$s"
+msgstr "Fehler beim Ändern von Paket '%1$s' zu '%2$s': %3$s"
+
+#: src/Package/Build/BuildHandler.php
+#, php-format
+msgid "Package '%1$s' was successfully changed to '%2$s'."
+msgstr "Paket '%1$s' wurde erfolgreich zu '%2$s' geändert."
+
+#: src/Package/Build/BuildHandler.php
+#, php-format
+msgid "Package '%s' was successfully created."
+msgstr "Paket '%s' wurde erfolgreich erstellt."
+
+#: src/Package/Build/FormValidator.php
+msgid "A package with this name already exists."
+msgstr "Ein Paket mit diesem Namen existiert bereits."
+
+#: src/Package/Build/FormValidator.php
+msgid "Message must not contain double quotes."
+msgstr "Meldung darf keine doppelten Anführungszeichen enthalten."
+
 #: src/Search/SearchFilters.php
 msgid "CPU clock (MHz)"
 msgstr "CPU-Taktfrequenz (MHz)"
@@ -1382,6 +1318,11 @@ msgstr "Netzwerk"
 #: templates/Pages/Client/Header.latte
 msgid "Software"
 msgstr "Software"
+
+#: templates/MainMenu/PackagesMenuLayout.latte
+#: templates/Pages/Package/Build.latte
+msgid "Build"
+msgstr "Erstellen"
 
 #: templates/MainMenu/PackagesMenuLayout.latte
 msgid "Overview"
@@ -1790,6 +1731,63 @@ msgstr "Bei Braintacle anmelden"
 #: templates/Pages/Login.latte
 msgid "Username"
 msgstr "Benutzername"
+
+#: templates/Pages/Package/Build.latte
+msgid "Action"
+msgstr "Aktion"
+
+#: templates/Pages/Package/Build.latte
+msgid "Allow abort by user"
+msgstr "Erlaube Abbruch durch Benutzer"
+
+#: templates/Pages/Package/Build.latte
+msgid "Allow delay by user"
+msgstr "Erlaube Aufschub durch Benutzer"
+
+#: templates/Pages/Package/Build.latte
+msgid "Command line"
+msgstr "Befehlszeile"
+
+#: templates/Pages/Package/Build.latte
+msgid "Countdown (seconds)"
+msgstr "Countdown (Sekunden)"
+
+#: templates/Pages/Package/Build.latte
+msgid "Deploy to clients which have existing package assigned"
+msgstr "Auf Clients installieren, denen das exisierende Paket zugewiesen ist"
+
+#: templates/Pages/Package/Build.latte
+msgid "File"
+msgstr "Datei"
+
+#: templates/Pages/Package/Build.latte
+msgid "Maximum fragment size (kB)"
+msgstr "Maximale Fragmentgröße (kB)"
+
+#: templates/Pages/Package/Build.latte
+msgid "Message"
+msgstr "Nachricht"
+
+#: templates/Pages/Package/Build.latte
+#: templates/Pages/Package/PackageList.latte
+msgid "Platform"
+msgstr "Plattform"
+
+#: templates/Pages/Package/Build.latte
+msgid "Post-installation message"
+msgstr "Nachricht nach Installation"
+
+#: templates/Pages/Package/Build.latte
+msgid "Priority (0: exclusive, 10: lowest)"
+msgstr "Priorität (0: exklusiv, 10: niedrigste)"
+
+#: templates/Pages/Package/Build.latte
+msgid "Target path"
+msgstr "Zielpfad"
+
+#: templates/Pages/Package/Build.latte
+msgid "Warn user"
+msgstr "Benutzer warnen"
 
 #: templates/Pages/Search/SearchForm.latte
 msgid "Exact match"
