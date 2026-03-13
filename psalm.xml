@@ -44,6 +44,8 @@
         </PossiblyUnusedMethod>
         <UnusedClass>
             <errorLevel type="suppress">
+                <!-- Controller classes are never referenced directly. -->
+                <directory name="module/Console/Controller" />
                 <!-- Test classes are never referenced directly. -->
                 <directory name="module/*/Test" />
                 <directory name="tests" />
