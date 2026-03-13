@@ -13,9 +13,6 @@ use Laminas\Db\Adapter\Adapter;
 use Laminas\Di\Container\ServiceManager\AutowireFactory;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\Form\FormElementManager;
-use Laminas\Http\PhpEnvironment\Request;
-use Laminas\Http\PhpEnvironment\Response;
-use Laminas\Http\Request as HttpRequest;
 use Laminas\I18n\Translator\TranslatorInterface as I18nTranslatorInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ArrayUtils;
@@ -56,7 +53,7 @@ final class ServiceManagerFactory
                 'configuration' => 'config',
                 'Configuration' => 'config',
                 'request' => 'Request',
-                HttpRequest::class => 'Request',
+                Request::class => 'Request',
                 'response' => 'Response',
             ],
             'factories' => [
@@ -70,7 +67,7 @@ final class ServiceManagerFactory
             'services' => [
                 // standard Laminas services, partially tweaked
                 'ApplicationConfig' => ['modules' => self::Modules],
-                'Request' => new Request(false),
+                'Request' => new Request(),
                 'Response' => new Response(),
                 ServiceManager::class => $serviceManager,
                 'ViewResolver' => new TemplatePathStack([

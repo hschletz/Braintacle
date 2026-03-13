@@ -3,8 +3,6 @@
 namespace Braintacle\Legacy;
 
 use Braintacle\Legacy\Plugin\PluginManager;
-use Laminas\Http\PhpEnvironment\Response;
-use Laminas\Http\Request;
 use Laminas\Stdlib\RequestInterface;
 use Laminas\Stdlib\ResponseInterface;
 use Slim\Exception\HttpNotFoundException;

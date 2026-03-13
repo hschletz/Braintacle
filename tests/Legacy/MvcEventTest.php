@@ -3,8 +3,8 @@
 namespace Braintacle\Test\Legacy;
 
 use Braintacle\Legacy\MvcEvent;
-use Laminas\Http\Request;
-use Laminas\Http\Response;
+use Braintacle\Legacy\Request;
+use Braintacle\Legacy\Response;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\RouteStackInterface;
 use PHPUnit\Framework\Attributes\CoversClass;

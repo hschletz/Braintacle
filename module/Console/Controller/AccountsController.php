@@ -24,6 +24,7 @@ namespace Console\Controller;
 
 use Braintacle\Legacy\Controller;
 use Braintacle\Legacy\MvcEvent;
+use Braintacle\Legacy\Response;
 use Laminas\Authentication\AuthenticationServiceInterface;
 
 /**
@@ -95,7 +96,7 @@ class AccountsController extends Controller
     /**
      * Create account
      *
-     * @return array|\Laminas\Http\Response Array (form) or redirect response
+     * @return array|Response Array (form) or redirect response
      */
     public function addAction()
     {
@@ -116,7 +117,7 @@ class AccountsController extends Controller
     /**
      * Edit account
      *
-     * @return array|\Laminas\Http\Response Array (form) or redirect response
+     * @return array|Response Array (form) or redirect response
      */
     public function editAction()
     {
@@ -142,7 +143,7 @@ class AccountsController extends Controller
     /**
      * Delete account
      *
-     * @return array|\Laminas\Http\Response Array (id) or redirect response
+     * @return array|Response Array (id) or redirect response
      */
     public function deleteAction()
     {

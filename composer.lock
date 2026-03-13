@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "45c3474924acd7cf14346d0ffba4a434",
+    "content-hash": "249b746e38bc197c8397a115b2be4964",
     "packages": [
         {
             "name": "doctrine/dbal",
@@ -1382,71 +1382,6 @@
             "time": "2026-01-12T14:20:53+00:00"
         },
         {
-            "name": "laminas/laminas-http",
-            "version": "2.23.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-http.git",
-                "reference": "9462fc84330d25b23383823831380abb33907fdd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-http/zipball/9462fc84330d25b23383823831380abb33907fdd",
-                "reference": "9462fc84330d25b23383823831380abb33907fdd",
-                "shasum": ""
-            },
-            "require": {
-                "laminas/laminas-loader": "^2.10",
-                "laminas/laminas-stdlib": "^3.6",
-                "laminas/laminas-uri": "^2.14",
-                "laminas/laminas-validator": "^2.15 || ^3.0",
-                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0"
-            },
-            "conflict": {
-                "zendframework/zend-http": "*"
-            },
-            "require-dev": {
-                "ext-curl": "*",
-                "laminas/laminas-coding-standard": "^3.0.1",
-                "phpunit/phpunit": "^10.5.38"
-            },
-            "suggest": {
-                "paragonie/certainty": "For automated management of cacert.pem"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Laminas\\Http\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Provides an easy interface for performing Hyper-Text Transfer Protocol (HTTP) requests",
-            "homepage": "https://laminas.dev",
-            "keywords": [
-                "http",
-                "http client",
-                "laminas"
-            ],
-            "support": {
-                "chat": "https://laminas.dev/chat",
-                "docs": "https://docs.laminas.dev/laminas-http/",
-                "forum": "https://discourse.laminas.dev",
-                "issues": "https://github.com/laminas/laminas-http/issues",
-                "rss": "https://github.com/laminas/laminas-http/releases.atom",
-                "source": "https://github.com/laminas/laminas-http"
-            },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "time": "2025-12-05T11:02:08+00:00"
-        },
-        {
             "name": "laminas/laminas-hydrator",
             "version": "4.18.0",
             "source": {
@@ -1806,63 +1741,6 @@
             ],
             "abandoned": true,
             "time": "2026-01-23T11:10:11+00:00"
-        },
-        {
-            "name": "laminas/laminas-loader",
-            "version": "2.12.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-loader.git",
-                "reference": "ec8cee33fb254ee4d9c8e8908c870e5c797e1272"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-loader/zipball/ec8cee33fb254ee4d9c8e8908c870e5c797e1272",
-                "reference": "ec8cee33fb254ee4d9c8e8908c870e5c797e1272",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.0.0"
-            },
-            "conflict": {
-                "zendframework/zend-loader": "*"
-            },
-            "require-dev": {
-                "laminas/laminas-coding-standard": "~2.4.0",
-                "phpunit/phpunit": "~9.5.25"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Laminas\\Loader\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Autoloading and plugin loading strategies",
-            "homepage": "https://laminas.dev",
-            "keywords": [
-                "laminas",
-                "loader"
-            ],
-            "support": {
-                "chat": "https://laminas.dev/chat",
-                "docs": "https://docs.laminas.dev/laminas-loader/",
-                "forum": "https://discourse.laminas.dev",
-                "issues": "https://github.com/laminas/laminas-loader/issues",
-                "rss": "https://github.com/laminas/laminas-loader/releases.atom",
-                "source": "https://github.com/laminas/laminas-loader"
-            },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "abandoned": true,
-            "time": "2025-12-30T11:30:39+00:00"
         },
         {
             "name": "laminas/laminas-router",

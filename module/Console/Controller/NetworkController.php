@@ -24,6 +24,7 @@ namespace Console\Controller;
 
 use Braintacle\Legacy\Controller;
 use Braintacle\Legacy\MvcEvent;
+use Braintacle\Legacy\Response;
 
 /**
  * Controller for subnets and IP discovery
@@ -168,7 +169,7 @@ class NetworkController extends Controller
      *
      * Query params: subnet, mask
      *
-     * @return array|\Laminas\Http\Response array(subnet, form) or redirect response
+     * @return array|Response array(subnet, form) or redirect response
      */
     public function propertiesAction()
     {
@@ -199,7 +200,7 @@ class NetworkController extends Controller
      *
      * Query params: macaddress
      *
-     * @return array|\Laminas\Http\Response array(device, form) or redirect response
+     * @return array|Response array(device, form) or redirect response
      */
     public function editAction()
     {
@@ -239,7 +240,7 @@ class NetworkController extends Controller
      *
      * Query params: macaddress
      *
-     * @return array|\Laminas\Http\Response array(device) or redirect response
+     * @return array|Response array(device) or redirect response
      */
     public function deleteAction()
     {

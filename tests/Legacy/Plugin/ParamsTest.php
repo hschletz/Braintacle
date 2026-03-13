@@ -4,12 +4,14 @@ namespace Braintacle\Test\Legacy\Plugin;
 
 use Braintacle\Legacy\Controller;
 use Braintacle\Legacy\Plugin\Params;
-use Laminas\Http\Request;
+use Braintacle\Legacy\Request;
 use Laminas\Stdlib\Parameters;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(Params::class)]
+#[UsesClass(Request::class)]
 final class ParamsTest extends TestCase
 {
     public function testController()

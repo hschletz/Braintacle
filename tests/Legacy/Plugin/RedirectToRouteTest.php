@@ -5,11 +5,13 @@ namespace Braintacle\Test\Legacy\Plugin;
 use Braintacle\Http\RouteHelper;
 use Braintacle\Legacy\Controller;
 use Braintacle\Legacy\Plugin\RedirectToRoute;
-use Laminas\Http\PhpEnvironment\Response;
+use Braintacle\Legacy\Response;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(RedirectToRoute::class)]
+#[UsesClass(Response::class)]
 final class RedirectToRouteTest extends TestCase
 {
     public function testInvoke()
@@ -25,6 +27,6 @@ final class RedirectToRouteTest extends TestCase
         $response = $redirectToRoute('path', ['foo' => 'bar']);
 
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('path?foo=bar', $response->getHeaders()->get('Location')->getFieldValue());
+        $this->assertEquals('path?foo=bar', $response->getHeaders()['Location']);
     }
 }

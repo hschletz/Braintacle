@@ -2,8 +2,6 @@
 
 namespace Braintacle\Legacy;
 
-use Laminas\Http\Request;
-use Laminas\Http\Response;
 use Laminas\Router\RouteStackInterface;
 use Laminas\ServiceManager\ServiceManager;
 use LogicException;

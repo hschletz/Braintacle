@@ -23,8 +23,8 @@
 namespace Console\Test\Mvc\Controller\Plugin;
 
 use Braintacle\Legacy\Controller;
+use Braintacle\Legacy\Request;
 use Console\Mvc\Controller\Plugin\GetOrder;
-use Laminas\Http\Request;
 use PHPUnit\Framework\TestCase;
 
 /**

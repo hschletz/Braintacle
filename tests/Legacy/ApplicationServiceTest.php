@@ -4,8 +4,8 @@ namespace Braintacle\Test\Legacy;
 
 use Braintacle\Legacy\ApplicationService;
 use Braintacle\Legacy\MvcEvent;
-use Laminas\Http\PhpEnvironment\Request;
-use Laminas\Http\PhpEnvironment\Response;
+use Braintacle\Legacy\Request;
+use Braintacle\Legacy\Response;
 use Laminas\Router\RouteStackInterface;
 use Laminas\ServiceManager\ServiceManager;
 use LogicException;

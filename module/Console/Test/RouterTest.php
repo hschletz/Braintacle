@@ -23,6 +23,7 @@
 namespace Console\Test;
 
 use Braintacle\Container;
+use Braintacle\Legacy\Request;
 use Laminas\ServiceManager\ServiceManager;
 
 /**
@@ -36,7 +37,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     public function testRouter()
     {
         $router = (new Container()->get(ServiceManager::class))->get('HttpRouter');
-        $request = new \Laminas\Http\Request();
+        $request = new Request();
 
         $matchDefaultDefault = array(
             'controller' => 'client',

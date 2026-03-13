@@ -22,8 +22,8 @@
 
 namespace Console\Test\View\Helper;
 
+use Braintacle\Legacy\Request;
 use Console\View\Helper\ConsoleUrl;
-use Laminas\Http\Request;
 use Laminas\Router\Http\TreeRouteStack;
 use Library\Test\View\Helper\AbstractTestCase;
 
@@ -100,7 +100,7 @@ class ConsoleUrlTest extends AbstractTestCase
     public function testInheritRequestParams()
     {
         $requestParams = array('param1' => 'requestValue1');
-        $request = new \Laminas\Http\PhpEnvironment\Request();
+        $request = new Request();
         $request->setQuery(new \Laminas\Stdlib\Parameters($requestParams));
 
         $helper = $this->createHelper($request);

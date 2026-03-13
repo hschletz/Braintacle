@@ -3,7 +3,7 @@
 namespace Braintacle\Legacy\Plugin;
 
 use Braintacle\Http\RouteHelper;
-use Laminas\Http\PhpEnvironment\Response;
+use Braintacle\Legacy\Response;
 
 final class RedirectToRoute
 {
@@ -15,7 +15,7 @@ final class RedirectToRoute
     {
         $response = $this->controller->getResponse();
         $response->setStatusCode(302);
-        $response->getHeaders()->addHeaderLine(
+        $response->setHeader(
             'Location',
             $this->routeHelper->getPathForRoute($routeName, queryParams: $queryParams),
         );

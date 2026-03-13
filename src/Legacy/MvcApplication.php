@@ -3,7 +3,7 @@
 namespace Braintacle\Legacy;
 
 use Braintacle\Legacy\Plugin\PluginManager;
-use Laminas\Http\Response;
+use Laminas\Stdlib\Parameters;
 use Laminas\Validator\AbstractValidator;
 use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\View\Model\ViewModel;
@@ -43,6 +43,7 @@ class MvcApplication
             $mvcEvent = $this->application->getMvcEvent();
             $mvcEvent->setParam(self::Psr7Request, $request);
 
+            $this->setupRequest($mvcEvent, $request);
             $this->route($mvcEvent);
             $this->dispatch($mvcEvent);
             $this->render($mvcEvent);
@@ -51,6 +52,15 @@ class MvcApplication
         }
 
         return $mvcEvent;
+    }
+
+    private function setupRequest(MvcEvent $mvcEvent, ServerRequestInterface $psr7Request): void
+    {
+        $mvcRequest = $mvcEvent->getRequest();
+        $mvcRequest->setMethod($psr7Request->getMethod());
+        $mvcRequest->setUri($psr7Request->getUri());
+        $mvcRequest->setQuery(new Parameters($psr7Request->getQueryParams()));
+        $mvcRequest->setPost(new Parameters($psr7Request->getParsedBody()));
     }
 
     private function route(MvcEvent $mvcEvent): void

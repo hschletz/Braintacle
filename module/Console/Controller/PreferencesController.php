@@ -23,6 +23,7 @@
 namespace Console\Controller;
 
 use Braintacle\Legacy\Controller;
+use Braintacle\Legacy\Response;
 use Laminas\Stdlib\RequestInterface;
 use Laminas\Stdlib\ResponseInterface;
 
@@ -96,7 +97,7 @@ class PreferencesController extends Controller
     /**
      * Redirect to first page
      *
-     * @return \Laminas\Http\Response redirect response
+     * @return Response redirect response
      */
     public function indexAction()
     {
@@ -219,7 +220,7 @@ class PreferencesController extends Controller
      * Delete a custom field definition
      *
      * URL parameter: 'name'
-     * @return array|\Laminas\Http\Response array(field) or redirect response
+     * @return array|Response array(field) or redirect response
      */
     public function deletefieldAction()
     {
@@ -241,7 +242,7 @@ class PreferencesController extends Controller
     /**
      * Provide form to manage network device types
      *
-     * @return array|\Laminas\Http\Response Array(form) or redirect response
+     * @return array|Response Array(form) or redirect response
      */
     public function networkdevicesAction()
     {
@@ -264,7 +265,7 @@ class PreferencesController extends Controller
      * Delete a network device type definition
      *
      * URL parameter: 'name'
-     * @return array|\Laminas\Http\Response Array(description) or redirect response
+     * @return array|Response Array(description) or redirect response
      */
     public function deletedevicetypeAction()
     {
@@ -285,7 +286,7 @@ class PreferencesController extends Controller
     /**
      * Provide form to manage inventoried registry values
      *
-     * @return array|\Laminas\Http\Response Array(form) or redirect response
+     * @return array|Response Array(form) or redirect response
      */
     public function registryvaluesAction()
     {
@@ -307,7 +308,7 @@ class PreferencesController extends Controller
      *
      * URL parameter: name
      *
-     * @return array|\Laminas\Http\Response Array(name) or redirect response
+     * @return array|Response Array(name) or redirect response
      */
     public function deleteregistryvalueAction()
     {

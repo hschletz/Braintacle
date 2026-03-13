@@ -22,7 +22,7 @@
 
 namespace Console\View\Helper;
 
-use Laminas\Http\Request;
+use Braintacle\Legacy\Request;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\RouteStackInterface;
 

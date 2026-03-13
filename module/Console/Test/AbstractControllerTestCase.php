@@ -26,14 +26,13 @@ use Braintacle\Container;
 use Braintacle\Http\RouteHelper;
 use Braintacle\Legacy\MvcApplication;
 use Braintacle\Legacy\MvcApplicationFactory;
-use Laminas\Http\PhpEnvironment\Request;
-use Laminas\Http\Response;
+use Braintacle\Legacy\Request;
+use Braintacle\Legacy\Response;
+use GuzzleHttp\Psr7\ServerRequest;
 use Laminas\ServiceManager\ServiceManager;
-use Laminas\Stdlib\Parameters;
 use Laminas\Uri\Http as Uri;
 use Library\Test\InjectServicesTrait;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -108,9 +107,8 @@ abstract class AbstractControllerTestCase extends TestCase
     {
         assert($method == Request::METHOD_GET || $method == Request::METHOD_POST);
 
-        $request = $this->getRequest();
-        $query = $request->getQuery()->toArray();
-        $post = $request->getPost()->toArray();
+        $query = [];
+        $post = [];
         $uri = new Uri($url);
 
         $queryString = $uri->getQuery();
@@ -126,12 +124,6 @@ abstract class AbstractControllerTestCase extends TestCase
             }
         }
 
-        $request->setMethod($method);
-        $request->setQuery(new Parameters($query));
-        $request->setPost(new Parameters($post));
-        $request->setUri($uri);
-        $request->setRequestUri($uri->getPath());
-
         $routeHelper = $this->createStub(RouteHelper::class);
         $routeHelper->method('getPathForRoute')->willReturnCallback(
             function (string $name, array $routeArguments, array $queryParams): string {
@@ -140,12 +132,7 @@ abstract class AbstractControllerTestCase extends TestCase
         );
         $this->getApplicationServiceLocator()->setService(RouteHelper::class, $routeHelper);
 
-        $this->getApplication()->run($this->createStub(ServerRequestInterface::class));
-    }
-
-    protected function getRequest(): Request
-    {
-        return $this->getApplication()->getMvcEvent()->getRequest();
+        $this->getApplication()->run(new ServerRequest($method, $url)->withQueryParams($query)->withParsedBody($post));
     }
 
     protected function getResponse(): Response
@@ -160,9 +147,12 @@ abstract class AbstractControllerTestCase extends TestCase
 
     protected function assertRedirectTo(string $url): void
     {
-        $responseHeader = $this->getResponse()->getHeaders()->get('Location');
-        $this->assertNotEmpty($responseHeader);
-        $this->assertEquals($url, $responseHeader->getFieldValue());
+        // getPathForRoute() stub appends '?' for empty query params, which will
+        // show up in the Location header. Append one if not already present.
+        if (!str_contains($url, '?')) {
+            $url .= '?';
+        }
+        $this->assertEquals($url, $this->getResponse()->getHeaders()['Location']);
     }
 
     protected function assertQuery(string $path): void

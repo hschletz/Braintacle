@@ -2,8 +2,6 @@
 
 namespace Braintacle\Legacy;
 
-use Laminas\Http\Request;
-use Laminas\Http\Response;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\RouteStackInterface;
 use Laminas\View\Model\ViewModel;

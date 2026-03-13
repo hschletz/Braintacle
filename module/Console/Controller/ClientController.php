@@ -25,6 +25,7 @@ namespace Console\Controller;
 use Braintacle\FlashMessages;
 use Braintacle\Http\RouteHelper;
 use Braintacle\Legacy\Controller;
+use Braintacle\Legacy\Response;
 use Laminas\Stdlib\RequestInterface;
 use Laminas\Stdlib\ResponseInterface;
 
@@ -114,7 +115,7 @@ class ClientController extends Controller
      *   available)
      * - jumpto: Subpage (action) for the client link (default: general)
      *
-     * @return array|\Laminas\Http\Response array(filter, search, operator,
+     * @return array|Response array(filter, search, operator,
      * invert, columns[], jumpto, isCustomSearch, order, direction) or redirect
      * response in case of invalid search form data
      */
@@ -284,7 +285,7 @@ class ClientController extends Controller
     /**
      * Display/edit custom fields
      *
-     * @return array|\Laminas\Http\Response [client, form (Console\Form\CustomFields) or redirect response]
+     * @return array|Response [client, form (Console\Form\CustomFields) or redirect response]
      */
     public function customfieldsAction()
     {

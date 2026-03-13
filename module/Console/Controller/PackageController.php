@@ -24,6 +24,7 @@ namespace Console\Controller;
 
 use Braintacle\Legacy\Controller;
 use Braintacle\Legacy\MvcEvent;
+use Braintacle\Legacy\Response;
 
 /**
  * Controller for all package related actions
@@ -54,7 +55,7 @@ class PackageController extends Controller
      *
      * Query params: name
      *
-     * @return array|\Laminas\Http\Response array(name) or redirect response
+     * @return array|Response array(name) or redirect response
      */
     public function deleteAction()
     {

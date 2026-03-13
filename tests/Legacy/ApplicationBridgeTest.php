@@ -5,9 +5,9 @@ namespace Braintacle\Test\Legacy;
 use Braintacle\Legacy\ApplicationBridge;
 use Braintacle\Legacy\MvcApplication;
 use Braintacle\Legacy\MvcEvent;
+use Braintacle\Legacy\Response as MvcResponse;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Test\HttpHandlerTestTrait;
-use Laminas\Http\Response as MvcResponse;
 use PHPUnit\Framework\TestCase;
 
 class ApplicationBridgeTest extends TestCase
@@ -18,11 +18,8 @@ class ApplicationBridgeTest extends TestCase
     {
         $mvcResponse = new MvcResponse();
         $mvcResponse->setStatusCode(418);
-        $mvcResponse->getHeaders()->addHeaders([
-            'X-Header1: header1',
-            'X-Header2: header2a',
-            'X-Header2: header2b',
-        ]);
+        $mvcResponse->setHeader('X-Header1', 'header1');
+        $mvcResponse->setHeader('X-Header2', 'header2');
 
         $mvcEvent = new MvcEvent();
         $mvcEvent->setResponse($mvcResponse);
@@ -38,7 +35,7 @@ class ApplicationBridgeTest extends TestCase
         $this->assertResponseStatusCode(418, $response);
         $this->assertResponseHeaders([
             'X-Header1' => ['header1'],
-            'X-Header2' => ['header2a', 'header2b'],
+            'X-Header2' => ['header2'],
         ], $response);
     }
 

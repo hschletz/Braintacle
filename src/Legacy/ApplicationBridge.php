@@ -3,8 +3,6 @@
 namespace Braintacle\Legacy;
 
 use Braintacle\Template\TemplateEngine;
-use Laminas\Http\Header\HeaderInterface;
-use Laminas\Http\Response;
 use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -29,9 +27,8 @@ class ApplicationBridge implements RequestHandlerInterface
 
         // Generate PSR-7 response from MVC response.
         $response = $this->response->withStatus($mvcResponse->getStatusCode());
-        /** @var HeaderInterface $header */
-        foreach ($mvcResponse->getHeaders() as $header) {
-            $response = $response->withAddedHeader($header->getFieldName(), $header->getFieldValue());
+        foreach ($mvcResponse->getHeaders() as $name => $value) {
+            $response = $response->withHeader($name, $value);
         }
 
         $template = $mvcEvent->getParam('template');

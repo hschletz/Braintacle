@@ -7,17 +7,17 @@ use Braintacle\Legacy\Controller;
 use Braintacle\Legacy\MvcApplication;
 use Braintacle\Legacy\MvcEvent;
 use Braintacle\Legacy\Plugin\PluginManager;
+use Braintacle\Legacy\Request;
+use Braintacle\Legacy\Response;
 use Braintacle\Test\ErrorHandlerTestTrait;
 use Console\Controller\ClientController;
 use Error;
 use Exception;
-use Laminas\Http\Request;
-use Laminas\Http\Response;
+use GuzzleHttp\Psr7\ServerRequest;
 use Laminas\Router\Http\TreeRouteStack;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\RouteStackInterface;
 use Laminas\ServiceManager\ServiceManager;
-use Laminas\Uri\Http as Uri;
 use Laminas\Validator\AbstractValidator;
 use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\View\Model\ViewModel;
@@ -35,6 +35,8 @@ use Slim\Exception\HttpNotFoundException;
 
 #[CoversClass(MvcApplication::class)]
 #[UsesClass(MvcEvent::class)]
+#[UsesClass(Request::class)]
+#[UsesClass(Response::class)]
 final class MvcApplicationTest extends TestCase
 {
     use ErrorHandlerTestTrait;
@@ -336,11 +338,8 @@ final class MvcApplicationTest extends TestCase
     #[DataProvider('invalidRouteProvider')]
     public function testFrameworkIntegrationInvalidRoute(string $route, string $message)
     {
-        $request = new Request();
-        $request->setUri(new Uri($route));
-
         $mvcEvent = new MvcEvent();
-        $mvcEvent->setRequest($request);
+        $mvcEvent->setRequest(new Request());
         $mvcEvent->setRouter(TreeRouteStack::factory([
             'routes' => [
                 'console' => [
@@ -365,7 +364,7 @@ final class MvcApplicationTest extends TestCase
         $this->expectException(HttpNotFoundException::class);
         $this->expectExceptionMessage($message);
 
-        $mvcApplication->run($this->createStub(ServerRequestInterface::class));
+        $mvcApplication->run(new ServerRequest(Request::METHOD_GET, $route));
     }
 
     public function testGetMvcEvent()

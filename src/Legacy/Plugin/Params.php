@@ -2,7 +2,7 @@
 
 namespace Braintacle\Legacy\Plugin;
 
-use Laminas\Http\Request;
+use Braintacle\Legacy\Request;
 
 /**
  * Replacement for builtin Params plugin.
@@ -23,6 +23,7 @@ final class Params
         if ($name === null) {
             return $this->request->getQuery()->toArray();
         } else {
+            /** @var ?string */
             return $this->request->getQuery($name, $default);
         }
     }
@@ -32,6 +33,7 @@ final class Params
         if ($name === null) {
             return $this->request->getPost()->toArray();
         } else {
+            /** @var ?string */
             return $this->request->getPost($name);
         }
     }
