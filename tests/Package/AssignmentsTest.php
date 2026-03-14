@@ -25,6 +25,7 @@ use Model\Package\Package;
 use Model\Package\PackageManager;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Clock\ClockInterface;
@@ -38,6 +39,23 @@ class AssignmentsTest extends TestCase
 {
     use DataProcessorTestTrait;
     use MockeryPHPUnitIntegration;
+
+    private const UpdatedPackage = 1415958319;
+    private const UpdateTimestamp = 'Sun Feb 08 14:17:29 2015';
+    private const UpdateAssignmentsFixture = [
+        [1, 'DOWNLOAD', self::UpdatedPackage, null, 'Mon Dec 01 11:07:17 2014'], // pending
+        [1, 'DOWNLOAD_FORCE', self::UpdatedPackage, '1', null], // Deleted on update
+        [1, 'DOWNLOAD_SWITCH', 1, null, null], // Not a package status, not affected
+        [1, 'OTHER', self::UpdatedPackage, null, null], // Not affected
+        [2, 'DOWNLOAD', self::UpdatedPackage, 'NOTIFIED', 'Mon Dec 01 11:07:17 2014'],
+        [2, 'DOWNLOAD', 1415958320, null, 'Mon Dec 01 11:07:17 2014'],
+        [2, 'DOWNLOAD_FORCE', 1415958320, '1', null],
+        [2, 'DOWNLOAD_POSTCMD', self::UpdatedPackage, 'SHUTDOWN', null], // Deleted on update
+        [2, 'DOWNLOAD_SCHEDULE', self::UpdatedPackage, '2014/07/15 02:45', null], // Deleted on update
+        [3, 'DOWNLOAD', self::UpdatedPackage, 'SUCCESS', 'Mon Dec 01 11:07:17 2014'],
+        [4, 'DOWNLOAD', self::UpdatedPackage, 'ERROR', 'Mon Dec 01 11:07:17 2014'],
+        [5, 'DOWNLOAD', self::UpdatedPackage, null, 'Mon Dec 01 11:07:17 2014'], // Group
+    ];
 
     private function createAssignments(
         ?Connection $connection = null,
@@ -395,6 +413,194 @@ class AssignmentsTest extends TestCase
                     $connection->fetchAllNumeric('SELECT hardware_id, name, ivalue FROM devices')
                 );
             }
+        });
+    }
+
+    private function setupForUpdateAssignments()
+    {
+        DatabaseConnection::initializeTable(
+            Table::ClientConfig,
+            ['hardware_id', 'name', 'ivalue', 'tvalue', 'comments'],
+            self::UpdateAssignmentsFixture,
+        );
+    }
+
+    public function testUpdateAssignmentsNoActionRequired()
+    {
+        DatabaseConnection::with(function (Connection $connection) {
+            $this->setupForUpdateAssignments();
+
+            $this->createAssignments(connection: $connection)->updateAssignments(
+                self::UpdatedPackage,
+                3,
+                false,
+                false,
+                false,
+                false,
+                false
+            );
+
+            $result = $connection->fetchAllNumeric(
+                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
+            );
+            $this->assertEquals(self::UpdateAssignmentsFixture, $result);
+        });
+    }
+
+    public function testUpdateAssignmentsNoMatch()
+    {
+        DatabaseConnection::with(function (Connection $connection) {
+            $this->setupForUpdateAssignments();
+
+            $clock = $this->createStub(ClockInterface::class);
+            $clock->method('now')->willReturn(new DateTimeImmutable());
+
+            $this->createAssignments(connection: $connection, clock: $clock)->updateAssignments(
+                1415958320,
+                3,
+                false,
+                true,
+                false,
+                false,
+                false
+            );
+
+            $result = $connection->fetchAllNumeric(
+                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
+            );
+            $this->assertEquals(self::UpdateAssignmentsFixture, $result);
+        });
+    }
+
+    #[TestWith([true, true, true, true, true, [ // Update all clients (no filters required)
+        [1, 'DOWNLOAD', 3, null, self::UpdateTimestamp],
+        [1, 'DOWNLOAD_SWITCH', 1, null, null],
+        [1, 'OTHER', self::UpdatedPackage, null, null],
+        [2, 'DOWNLOAD', 3, null, self::UpdateTimestamp],
+        [2, 'DOWNLOAD', 1415958320, null, 'Mon Dec 01 11:07:17 2014'],
+        [2, 'DOWNLOAD_FORCE', 1415958320, '1', null],
+        [3, 'DOWNLOAD', 3, null, self::UpdateTimestamp],
+        [4, 'DOWNLOAD', 3, null, self::UpdateTimestamp],
+        [5, 'DOWNLOAD', 3, null, self::UpdateTimestamp],
+    ]])]
+    #[TestWith([true, false, false, false, false, [ // Update "pending"
+        [1, 'DOWNLOAD', 3, null, self::UpdateTimestamp],
+        [1, 'DOWNLOAD_SWITCH', 1, null, null],
+        [1, 'OTHER', self::UpdatedPackage, null, null],
+        [2, 'DOWNLOAD', self::UpdatedPackage, 'NOTIFIED', 'Mon Dec 01 11:07:17 2014'],
+        [2, 'DOWNLOAD', 1415958320, null, 'Mon Dec 01 11:07:17 2014'],
+        [2, 'DOWNLOAD_FORCE', 1415958320, '1', null],
+        [2, 'DOWNLOAD_POSTCMD', self::UpdatedPackage, 'SHUTDOWN', null],
+        [2, 'DOWNLOAD_SCHEDULE', self::UpdatedPackage, '2014/07/15 02:45', null],
+        [3, 'DOWNLOAD', self::UpdatedPackage, 'SUCCESS', 'Mon Dec 01 11:07:17 2014'],
+        [4, 'DOWNLOAD', self::UpdatedPackage, 'ERROR', 'Mon Dec 01 11:07:17 2014'],
+        [5, 'DOWNLOAD', self::UpdatedPackage, null, 'Mon Dec 01 11:07:17 2014'],
+    ]])]
+    #[TestWith([false, true, false, false, false, [ // Update "running"
+        [1, 'DOWNLOAD', self::UpdatedPackage, null, 'Mon Dec 01 11:07:17 2014'],
+        [1, 'DOWNLOAD_FORCE', self::UpdatedPackage, '1', null],
+        [1, 'DOWNLOAD_SWITCH', 1, null, null],
+        [1, 'OTHER', self::UpdatedPackage, null, null],
+        [2, 'DOWNLOAD', 3, null, self::UpdateTimestamp],
+        [2, 'DOWNLOAD', 1415958320, null, 'Mon Dec 01 11:07:17 2014'],
+        [2, 'DOWNLOAD_FORCE', 1415958320, '1', null],
+        [3, 'DOWNLOAD', self::UpdatedPackage, 'SUCCESS', 'Mon Dec 01 11:07:17 2014'],
+        [4, 'DOWNLOAD', self::UpdatedPackage, 'ERROR', 'Mon Dec 01 11:07:17 2014'],
+        [5, 'DOWNLOAD', self::UpdatedPackage, null, 'Mon Dec 01 11:07:17 2014'],
+    ]])]
+    #[TestWith([false, false, true, false, false, [ // Update "success"
+        [1, 'DOWNLOAD', self::UpdatedPackage, null, 'Mon Dec 01 11:07:17 2014'],
+        [1, 'DOWNLOAD_FORCE', self::UpdatedPackage, '1', null],
+        [1, 'DOWNLOAD_SWITCH', 1, null, null],
+        [1, 'OTHER', self::UpdatedPackage, null, null],
+        [2, 'DOWNLOAD', self::UpdatedPackage, 'NOTIFIED', 'Mon Dec 01 11:07:17 2014'],
+        [2, 'DOWNLOAD', 1415958320, null, 'Mon Dec 01 11:07:17 2014'],
+        [2, 'DOWNLOAD_FORCE', 1415958320, '1', null],
+        [2, 'DOWNLOAD_POSTCMD', self::UpdatedPackage, 'SHUTDOWN', null],
+        [2, 'DOWNLOAD_SCHEDULE', self::UpdatedPackage, '2014/07/15 02:45', null],
+        [3, 'DOWNLOAD', 3, null, self::UpdateTimestamp],
+        [4, 'DOWNLOAD', self::UpdatedPackage, 'ERROR', 'Mon Dec 01 11:07:17 2014'],
+        [5, 'DOWNLOAD', self::UpdatedPackage, null, 'Mon Dec 01 11:07:17 2014'],
+    ]])]
+    #[TestWith([false, false, false, true, false, [ // Update "error"
+        [1, 'DOWNLOAD', self::UpdatedPackage, null, 'Mon Dec 01 11:07:17 2014'],
+        [1, 'DOWNLOAD_FORCE', self::UpdatedPackage, '1', null],
+        [1, 'DOWNLOAD_SWITCH', 1, null, null],
+        [1, 'OTHER', self::UpdatedPackage, null, null],
+        [2, 'DOWNLOAD', self::UpdatedPackage, 'NOTIFIED', 'Mon Dec 01 11:07:17 2014'],
+        [2, 'DOWNLOAD', 1415958320, null, 'Mon Dec 01 11:07:17 2014'],
+        [2, 'DOWNLOAD_FORCE', 1415958320, '1', null],
+        [2, 'DOWNLOAD_POSTCMD', self::UpdatedPackage, 'SHUTDOWN', null],
+        [2, 'DOWNLOAD_SCHEDULE', self::UpdatedPackage, '2014/07/15 02:45', null],
+        [3, 'DOWNLOAD', self::UpdatedPackage, 'SUCCESS', 'Mon Dec 01 11:07:17 2014'],
+        [4, 'DOWNLOAD', 3, null, self::UpdateTimestamp],
+        [5, 'DOWNLOAD', self::UpdatedPackage, null, 'Mon Dec 01 11:07:17 2014'],
+    ]])]
+    #[TestWith([false, false, false, false, true, [ // Update groups
+        [1, 'DOWNLOAD', self::UpdatedPackage, null, 'Mon Dec 01 11:07:17 2014'],
+        [1, 'DOWNLOAD_FORCE', self::UpdatedPackage, '1', null],
+        [1, 'DOWNLOAD_SWITCH', 1, null, null],
+        [1, 'OTHER', self::UpdatedPackage, null, null],
+        [2, 'DOWNLOAD', self::UpdatedPackage, 'NOTIFIED', 'Mon Dec 01 11:07:17 2014'],
+        [2, 'DOWNLOAD', 1415958320, null, 'Mon Dec 01 11:07:17 2014'],
+        [2, 'DOWNLOAD_FORCE', 1415958320, '1', null],
+        [2, 'DOWNLOAD_POSTCMD', self::UpdatedPackage, 'SHUTDOWN', null],
+        [2, 'DOWNLOAD_SCHEDULE', self::UpdatedPackage, '2014/07/15 02:45', null],
+        [3, 'DOWNLOAD', self::UpdatedPackage, 'SUCCESS', 'Mon Dec 01 11:07:17 2014'],
+        [4, 'DOWNLOAD', self::UpdatedPackage, 'ERROR', 'Mon Dec 01 11:07:17 2014'],
+        [5, 'DOWNLOAD', 3, null, self::UpdateTimestamp],
+    ]])]
+    #[TestWith([true, false, true, true, false, [ // Update combined
+        [1, 'DOWNLOAD', 3, null, self::UpdateTimestamp],
+        [1, 'DOWNLOAD_SWITCH', 1, null, null],
+        [1, 'OTHER', self::UpdatedPackage, null, null],
+        [2, 'DOWNLOAD', self::UpdatedPackage, 'NOTIFIED', 'Mon Dec 01 11:07:17 2014'],
+        [2, 'DOWNLOAD', 1415958320, null, 'Mon Dec 01 11:07:17 2014'],
+        [2, 'DOWNLOAD_FORCE', 1415958320, '1', null],
+        [2, 'DOWNLOAD_POSTCMD', self::UpdatedPackage, 'SHUTDOWN', null],
+        [2, 'DOWNLOAD_SCHEDULE', self::UpdatedPackage, '2014/07/15 02:45', null],
+        [3, 'DOWNLOAD', 3, null, self::UpdateTimestamp],
+        [4, 'DOWNLOAD', 3, null, self::UpdateTimestamp],
+        [5, 'DOWNLOAD', self::UpdatedPackage, null, 'Mon Dec 01 11:07:17 2014'],
+    ]])]
+    public function testUpdateAssignments(
+        bool $deployPending,
+        bool $deployRunning,
+        bool $deploySuccess,
+        bool $deployError,
+        bool $deployGroups,
+        array $expectedResult,
+    ) {
+        DatabaseConnection::with(function (Connection $connection) use (
+            $deployPending,
+            $deployRunning,
+            $deploySuccess,
+            $deployError,
+            $deployGroups,
+            $expectedResult,
+        ) {
+            $this->setupForUpdateAssignments();
+            DatabaseConnection::initializeTable('groups', ['hardware_id'], [
+                [5],
+            ]);
+
+            $clock = $this->createStub(ClockInterface::class);
+            $clock->method('now')->willReturn(new DateTimeImmutable(self::UpdateTimestamp));
+
+            $this->createAssignments(connection: $connection, clock: $clock)->updateAssignments(
+                self::UpdatedPackage,
+                3,
+                $deployPending,
+                $deployRunning,
+                $deploySuccess,
+                $deployError,
+                $deployGroups
+            );
+
+            $result = $connection->fetchAllNumeric(
+                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
+            );
+            $this->assertEquals($expectedResult, $result);
         });
     }
 }

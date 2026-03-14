@@ -3,6 +3,7 @@
 namespace Braintacle\Package\Build;
 
 use Braintacle\Package\Action;
+use Braintacle\Package\Assignments;
 use Braintacle\Package\Package;
 use Braintacle\Package\PackageUpdate;
 use LogicException;
@@ -15,31 +16,13 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 final class Builder
 {
-    public function __construct(private PackageManager $packageManager, private Filesystem $filesystem) {}
+    public function __construct(
+        private PackageManager $packageManager,
+        private Assignments $assignments,
+        private Filesystem $filesystem,
+    ) {}
 
     public function build(Package $package, UploadedFileInterface $uploadedFile): void
-    {
-        $buildData = $this->prepare($package, $uploadedFile);
-        $this->packageManager->buildPackage($buildData, true);
-    }
-
-    public function update(PackageUpdate $package, UploadedFileInterface $uploadedFile, string $oldPackageName): void
-    {
-        $oldPackage = $this->packageManager->getPackage($oldPackageName);
-        $buildData = $this->prepare($package, $uploadedFile);
-        $this->packageManager->updatePackage(
-            $oldPackage,
-            $buildData,
-            true,
-            $package->deployPending,
-            $package->deployRunning,
-            $package->deploySuccess,
-            $package->deployError,
-            $package->deployGroups,
-        );
-    }
-
-    private function prepare(Package $package, UploadedFileInterface $uploadedFile): array
     {
         $buildData = $package->toArray();
 
@@ -64,6 +47,25 @@ final class Builder
             $buildData['FileLocation'] = $fileName;
         }
 
-        return $buildData;
+        $this->packageManager->buildPackage($buildData, true);
+    }
+
+    public function update(PackageUpdate $package, UploadedFileInterface $uploadedFile, string $oldPackageName): void
+    {
+        $this->build($package, $uploadedFile);
+
+        $newPackage = $this->packageManager->getPackage($package->name);
+        $oldPackage = $this->packageManager->getPackage($oldPackageName);
+
+        $this->assignments->updateAssignments(
+            $oldPackage->id,
+            $newPackage->id,
+            $package->deployPending,
+            $package->deployRunning,
+            $package->deploySuccess,
+            $package->deployError,
+            $package->deployGroups,
+        );
+        $this->packageManager->deletePackage($oldPackageName);
     }
 }

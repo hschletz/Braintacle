@@ -23,16 +23,11 @@
 namespace Model\Test\Package;
 
 use Database\Table\ClientConfig;
-use Database\Table\GroupInfo;
 use Database\Table\Packages;
-use DateTimeImmutable;
-use Model\Package\Package;
 use Model\Package\PackageBuilder;
 use Model\Package\PackageManager;
 use Model\Package\Storage\StorageInterface;
 use Model\Test\AbstractTestCase;
-use PHPUnit\Framework\MockObject\Stub;
-use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -244,138 +239,5 @@ class PackageManagerTest extends AbstractTestCase
         $this->expectExceptionMessage("Package 'invalid' does not exist");
         $model = $this->getModel();
         $model->deletePackage('invalid');
-    }
-
-    public function testUpdatePackage()
-    {
-        $newPackageData = array('Name' => 'new_name');
-
-        $newPackage = $this->createMock('Model\Package\Package');
-        $newPackage->method('offsetGet')->with('Id')->willReturn('new_id');
-
-        /** @var Stub|Package */
-        $package = $this->createStub(Package::class);
-        $package->method('offsetGet')->willReturnMap([['Id', 'old_id'], ['Name', 'old_name']]);
-
-        $model = $this->createPartialMock(
-            PackageManager::class,
-            ['buildPackage', 'getPackage', 'updateAssignments', 'deletePackage']
-        );
-        $model->expects($this->once())->method('buildPackage')->with($newPackageData, true);
-        $model->method('getPackage')->with('new_name')->willReturn($newPackage);
-        $model->expects($this->once())->method('updateAssignments')->with('old_id', 'new_id', 'p', 'r', 's', 'e', 'g');
-        $model->expects($this->once())->method('deletePackage')->with('old_name');
-
-        /** @psalm-suppress InvalidArgument test with unambiguous string arguments instead of bool */
-        $model->updatePackage($package, $newPackageData, true, 'p', 'r', 's', 'e', 'g');
-    }
-
-    public function testUpdateAssignmentsNoActionRequired()
-    {
-        $this->getModel()->updateAssignments(1415958319, 3, false, false, false, false, false);
-
-        $this->assertTablesEqual(
-            $this->loadDataSet()->getTable('devices'),
-            $this->getConnection()->createQueryTable(
-                'devices',
-                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
-            )
-        );
-    }
-
-    public function testUpdateAssignmentsNoMatch()
-    {
-        $clock = $this->createStub(ClockInterface::class);
-        $clock->method('now')->willReturn(new DateTimeImmutable());
-        static::$serviceManager->setService(ClockInterface::class, $clock);
-
-        $model = new PackageManager(static::$serviceManager);
-        $model->updateAssignments(1415958320, 3, false, true, false, false, false);
-
-        $this->assertTablesEqual(
-            $this->loadDataSet()->getTable('devices'),
-            $this->getConnection()->createQueryTable(
-                'devices',
-                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
-            )
-        );
-    }
-
-    public static function updateAssignmentsProvider()
-    {
-        return array(
-            array('UpdateNoFilters', true, true, true, true, true),
-            array('UpdatePending', true, false, false, false, false),
-            array('UpdateRunning', false, true, false, false, false),
-            array('UpdateSuccess', false, false, true, false, false),
-            array('UpdateError', false, false, false, true, false),
-            array('UpdateGroups', false, false, false, false, true),
-            array('UpdateCombined', true, false, true, true, false),
-        );
-    }
-
-    /**
-     * Test updateAssignments() with various filters
-     * @dataProvider updateAssignmentsProvider
-     */
-    public function testUpdateAssignments(
-        $datasetName,
-        $deployPending,
-        $deployRunning,
-        $deploySuccess,
-        $deployError,
-        $deployGroups
-    ) {
-        $clock = $this->createStub(ClockInterface::class);
-        $clock->method('now')->willReturn(new DateTimeImmutable('2015-02-08 14:17:29'));
-
-        $serviceManager = $this->createMock(ContainerInterface::class);
-        $serviceManager->method('get')->willReturnMap([
-            [ClockInterface::class, $clock],
-            [ClientConfig::class, static::$serviceManager->get(ClientConfig::class)],
-            [GroupInfo::class, static::$serviceManager->get(GroupInfo::class)],
-        ]);
-
-        $model = new PackageManager($serviceManager);
-        $model->updateAssignments(
-            1415958319,
-            3,
-            $deployPending,
-            $deployRunning,
-            $deploySuccess,
-            $deployError,
-            $deployGroups
-        );
-
-        $dataset = $this->loadDataSet($datasetName);
-        $this->assertTablesEqual(
-            $dataset->getTable('devices'),
-            $this->getConnection()->createQueryTable(
-                'devices',
-                'SELECT hardware_id, name, ivalue, tvalue, comments FROM devices ORDER BY hardware_id, name, ivalue'
-            )
-        );
-    }
-
-    public function testUpdateAssignmentsException()
-    {
-        $this->expectException('Model\Package\RuntimeException');
-        $this->expectExceptionMessage('database error');
-
-        $clientConfig = $this->createMock('Database\Table\ClientConfig');
-        $clientConfig->method('getSql')->will($this->throwException(new \RuntimeException('database error')));
-
-        $clock = $this->createStub(ClockInterface::class);
-        $clock->method('now')->willReturn(new DateTimeImmutable());
-
-        $serviceManager = $this->createMock(ContainerInterface::class);
-        $serviceManager->method('get')->willReturnMap([
-            [ClientConfig::class, $clientConfig],
-            [GroupInfo::class, static::$serviceManager->get(GroupInfo::class)],
-            [ClockInterface::class, $clock],
-        ]);
-
-        $model = new PackageManager($serviceManager);
-        $model->updateAssignments(1, 2, true, true, true, true, true);
     }
 }

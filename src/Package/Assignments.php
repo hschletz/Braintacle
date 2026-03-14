@@ -5,6 +5,8 @@ namespace Braintacle\Package;
 use Braintacle\Database\Table;
 use Braintacle\Group\Group;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
+use Doctrine\DBAL\Query\Expression\CompositeExpression;
 use Formotron\DataProcessor;
 use Model\Client\Client;
 use Model\Package\Assignment;
@@ -190,5 +192,97 @@ final class Assignments
             $this->connection->rollBack();
             throw $throwable;
         }
+    }
+
+    /**
+     * Update package assignments.
+     *
+     * Sets a new package on existing assignments. Updated assignments have
+     * their status reset to "pending" and their options (force, schedule,
+     * post cmd) removed.
+     */
+    public function updateAssignments(
+        int $oldPackageId,
+        int $newPackageId,
+        bool $deployPending,
+        bool $deployRunning,
+        bool $deploySuccess,
+        bool $deployError,
+        bool $deployGroups
+    ): void {
+        if (!($deployPending || $deployRunning || $deploySuccess || $deployError || $deployGroups)) {
+            return; // nothing to do
+        }
+
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $expr = $queryBuilder->expr();
+        $where = CompositeExpression::and(
+            $expr->eq(self::PackageId, ':oldId'),
+            $expr->eq(self::Action, ':download'),
+        );
+        $params = [
+            'oldId' => $oldPackageId,
+            'newId' => $newPackageId,
+            'download' => self::ActionDownload,
+            'downloadSwitch' => 'DOWNLOAD_SWITCH',
+            'downloadPattern' => 'DOWNLOAD_%',
+            'timestamp' => $this->clock->now()->format(Assignment::DATEFORMAT),
+            'pending' => Assignment::PENDING,
+        ];
+
+        // Additional filters are only necessary if not all conditions are set
+        if (!($deployPending && $deployRunning && $deploySuccess && $deployError && $deployGroups)) {
+            $groups = $this->connection->createQueryBuilder()->select('hardware_id')->from(Table::GroupInfo);
+            $filters = [];
+            if ($deployPending) {
+                $filters[] = CompositeExpression::and(
+                    $expr->isNull(self::Status),
+                    $expr->notIn(self::Target, $groups),
+                );
+            }
+            if ($deployRunning) {
+                $filters[] = $expr->eq(self::Status, ':running');
+                $params['running'] = Assignment::RUNNING;
+            }
+            if ($deploySuccess) {
+                $filters[] = $expr->eq(self::Status, ':success');
+                $params['success'] = Assignment::SUCCESS;
+            }
+            if ($deployError) {
+                $filters[] = $expr->like(self::Status, ':error');
+                $params['error'] = Assignment::ERROR_PREFIX . '%';
+            }
+            if ($deployGroups) {
+                $filters[] = $expr->in(self::Target, $groups);
+            }
+            // @phpstan-ignore arguments.count (initial condition guarantees at least 1 argument)
+            $where = $where->with(CompositeExpression::or(...$filters));
+        }
+
+        // Remove DOWNLOAD_* options from updated assignments
+        $subquery = $this->connection->createQueryBuilder()
+            ->select(self::Target)
+            ->from(Table::ClientConfig)
+            ->where($where);
+        $this->connection->createQueryBuilder()
+            ->delete(Table::ClientConfig)
+            ->where(
+                $expr->eq(self::PackageId, ':oldId'),
+                $expr->neq(self::Action, ':downloadSwitch'),
+                $expr->like(self::Action, ':downloadPattern'),
+                $expr->in(self::Target, $subquery),
+            )
+            ->setParameters($params)
+            ->executeStatement();
+
+        // Update package ID and reset status
+        $this->connection->createQueryBuilder()
+            ->update(Table::ClientConfig)
+            ->set(self::PackageId, ':newId')
+            ->set(self::Status, ':pending')
+            ->set(self::Timestamp, ':timestamp')
+            ->where($where)
+            ->setParameters($params)
+            ->executeStatement();
     }
 }
