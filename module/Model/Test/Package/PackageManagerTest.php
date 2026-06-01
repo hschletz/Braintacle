@@ -24,7 +24,6 @@ namespace Model\Test\Package;
 
 use Database\Table\ClientConfig;
 use Database\Table\Packages;
-use Model\Package\PackageBuilder;
 use Model\Package\PackageManager;
 use Model\Package\Storage\StorageInterface;
 use Model\Test\AbstractTestCase;
@@ -180,20 +179,6 @@ class PackageManagerTest extends AbstractTestCase
         $model = $this->getModel();
         static::$serviceManager->get('Database\Table\Packages')->delete(true);
         $this->assertEquals(array(), $model->getAllNames());
-    }
-
-    public function testBuildPackage()
-    {
-        $data = ['Name' => 'test'];
-
-        $packageBuilder = $this->createMock(PackageBuilder::class);
-        $packageBuilder->expects($this->once())->method('buildPackage')->with($data, true);
-
-        $serviceManager = $this->createMock(ContainerInterface::class);
-        $serviceManager->method('get')->with(PackageBuilder::class)->willReturn($packageBuilder);
-
-        $model = new PackageManager($serviceManager);
-        $model->buildPackage($data, true);
     }
 
     public function testDelete()

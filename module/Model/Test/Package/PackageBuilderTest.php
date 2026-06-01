@@ -26,7 +26,6 @@ use Database\Table\Packages;
 use InvalidArgumentException;
 use Laminas\Hydrator\HydratorInterface;
 use Library\ArchiveManager;
-use Mockery;
 use Model\Package\Package;
 use Model\Package\PackageBuilder;
 use Model\Package\PackageManager;
@@ -34,187 +33,14 @@ use Model\Package\RuntimeException;
 use Model\Package\Storage\Direct;
 use Model\Package\Storage\StorageInterface;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 use ZipArchive;
 
-class PackageBuilderTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
+final class PackageBuilderTest extends TestCase
 {
     public function getDataSet()
     {
         return new \PHPUnit\DbUnit\DataSet\DefaultDataSet();
-    }
-
-    public function testBuildPackagePackageExists()
-    {
-        $packageManager = Mockery::mock(PackageManager::class);
-        $packageManager->shouldNotReceive('deletePackage');
-
-        $archiveManager = Mockery::mock(ArchiveManager::class);
-        $storage = Mockery::mock(StorageInterface::class);
-        $packagesTable = Mockery::mock(Packages::class);
-
-        /** @psalm-suppress InvalidArgument (Mockery bug) */
-        $model = Mockery::mock(
-            PackageBuilder::class,
-            [$packageManager, $archiveManager, $storage, $packagesTable]
-        )->makePartial();
-        $model->shouldReceive('checkName')->andThrow(new RuntimeException('package exists'));
-        $model->shouldNotReceive('prepareStorage');
-        $model->shouldNotReceive('autoArchive');
-        $model->shouldNotReceive('writeToStorage');
-        $model->shouldNotReceive('writeToDatabase');
-
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage("package exists");
-
-        $model->buildPackage(['Name' => 'name'], false);
-    }
-
-    public function testBuildPackageWithoutFile()
-    {
-        $inputDataForMethod = [
-            'Name' => 'name',
-            'Platform' => 'platform',
-            'FileLocation' => '',
-        ];
-        $InputDataForPrepareStorage = $inputDataForMethod + ['Id' => '42'];
-        $inputDataForWriteToStorage = $InputDataForPrepareStorage + [
-            'HashType' => 'hash_type',
-            'Size' => 0,
-            'Hash' => null,
-        ];
-        $inputDataForWriteToDatabase = $inputDataForWriteToStorage + ['NumFragments' => 0];
-
-        $file = '';
-
-        $packageManager = Mockery::mock(PackageManager::class);
-        $packageManager->shouldNotReceive('deletePackage');
-
-        $archiveManager = Mockery::mock(ArchiveManager::class);
-        $storage = Mockery::mock(StorageInterface::class);
-        $packagesTable = Mockery::mock(Packages::class);
-
-        /** @psalm-suppress InvalidArgument (Mockery bug) */
-        $model = Mockery::mock(
-            PackageBuilder::class,
-            [$packageManager, $archiveManager, $storage, $packagesTable]
-        )->makePartial();
-        $model->shouldReceive('checkName');
-        $model->shouldReceive('generateId')->andReturn(42);
-        $model->shouldReceive('prepareStorage')->with($InputDataForPrepareStorage)->andReturn('source');
-        $model->shouldReceive('autoArchive')->with($InputDataForPrepareStorage, 'source', true)->andReturn($file);
-        $model->shouldReceive('getHashType')->with('platform')->andReturn('hash_type');
-        $model->shouldNotReceive('getFileHash');
-        $model->shouldReceive('writeToStorage')->with($inputDataForWriteToStorage, $file, true)->andReturn(0);
-        $model->shouldReceive('writeToDatabase')->once()->with($inputDataForWriteToDatabase);
-
-        $model->buildPackage($inputDataForMethod, true);
-    }
-
-    public function testBuildPackageWithFile()
-    {
-        $inputDataForMethod = [
-            'Name' => 'name',
-            'Platform' => 'platform',
-            'FileLocation' => '/location',
-        ];
-        $InputDataForPrepareStorage = $inputDataForMethod + ['Id' => '42'];
-        $inputDataForWriteToStorage = $InputDataForPrepareStorage + [
-            'HashType' => 'hash_type',
-            'Size' => 7,
-            'Hash' => 'hash',
-        ];
-        $inputDataForWriteToDatabase = $inputDataForWriteToStorage + ['NumFragments' => '5'];
-
-        $file = vfsStream::newFile('archive')->withContent('content')->at(vfsStream::setup('root'))->url();
-
-        $packageManager = Mockery::mock(PackageManager::class);
-        $packageManager->shouldNotReceive('deletePackage');
-
-        $archiveManager = Mockery::mock(ArchiveManager::class);
-        $storage = Mockery::mock(StorageInterface::class);
-        $packagesTable = Mockery::mock(Packages::class);
-
-        /** @psalm-suppress InvalidArgument (Mockery bug) */
-        $model = Mockery::mock(
-            PackageBuilder::class,
-            [$packageManager, $archiveManager, $storage, $packagesTable]
-        )->makePartial();
-        $model->shouldReceive('checkName');
-        $model->shouldReceive('generateId')->andReturn(42);
-        $model->shouldReceive('prepareStorage')->with($InputDataForPrepareStorage)->andReturn('source');
-        $model->shouldReceive('autoArchive')->with($InputDataForPrepareStorage, 'source', true)->andReturn($file);
-        $model->shouldReceive('getHashType')->with('platform')->andReturn('hash_type');
-        $model->shouldReceive('getFileHash')->with($file, 'hash_type')->andReturn('hash');
-        $model->shouldReceive('writeToStorage')->with($inputDataForWriteToStorage, $file, true)->andReturn(5);
-        $model->shouldReceive('writeToDatabase')->once()->with($inputDataForWriteToDatabase);
-
-        $model->buildPackage($inputDataForMethod, true);
-    }
-
-    public function testBuildPackageFileError()
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('No such file or directory:');
-
-        $inputData = [
-            'Name' => 'name',
-            'Platform' => 'platform',
-            'FileLocation' => '/location',
-        ];
-        $intermediateData = $inputData + ['Id' => '42'];
-
-        $file = vfsStream::setup('root')->url() . '/invalid';
-
-        $packageManager = Mockery::mock(PackageManager::class);
-        $packageManager->shouldReceive('deletePackage')->once()->with('name');
-
-        $archiveManager = Mockery::mock(ArchiveManager::class);
-        $storage = Mockery::mock(StorageInterface::class);
-        $packagesTable = Mockery::mock(Packages::class);
-
-        /** @psalm-suppress InvalidArgument (Mockery bug) */
-        $model = Mockery::mock(
-            PackageBuilder::class,
-            [$packageManager, $archiveManager, $storage, $packagesTable]
-        )->makePartial();
-        $model->shouldReceive('checkName');
-        $model->shouldReceive('generateId')->andReturn(42);
-        $model->shouldReceive('prepareStorage')->with($intermediateData)->andReturn('source');
-        $model->shouldReceive('autoArchive')->with($intermediateData, 'source', true)->andReturn($file);
-        $model->shouldReceive('getHashType');
-        $model->shouldNotReceive('getFileHash');
-        $model->shouldNotReceive('writeToStorage');
-        $model->shouldNotReceive('writeToDatabase');
-
-        $model->buildPackage($inputData, true);
-    }
-
-    public function testBuildPackageDeleteError()
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('original message');
-
-        $inputData = ['Name' => 'name'];
-
-        $exception = new RuntimeException('original message');
-        $exception2 = new \RuntimeException('delete failed');
-
-        $packageManager = Mockery::mock(PackageManager::class);
-        $packageManager->shouldReceive('deletePackage')->once()->with('name')->andThrow($exception2);
-
-        $archiveManager = Mockery::mock(ArchiveManager::class);
-        $storage = Mockery::mock(StorageInterface::class);
-        $packagesTable = Mockery::mock(Packages::class);
-
-        /** @psalm-suppress InvalidArgument (Mockery bug) */
-        $model = Mockery::mock(
-            PackageBuilder::class,
-            [$packageManager, $archiveManager, $storage, $packagesTable]
-        )->makePartial();
-        $model->shouldReceive('checkName');
-        $model->shouldReceive('generateId')->andThrow($exception);
-
-        $model->buildPackage($inputData, true);
     }
 
     public function testCheckNameOk()

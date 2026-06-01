@@ -155,18 +155,6 @@ class PackageManager
     }
 
     /**
-     * Build a package
-     *
-     * @param array $data Package data
-     * @param bool $deleteSource Delete source file as soon as possible
-     * @throws RuntimeException if a package with the requested name already exists or an error occurs
-     */
-    public function buildPackage(array $data, bool $deleteSource): void
-    {
-        $this->container->get(PackageBuilder::class)->buildPackage($data, $deleteSource);
-    }
-
-    /**
      * Delete a package
      *
      * @param string $name Package name

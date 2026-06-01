@@ -7,9 +7,10 @@ use Braintacle\Package\Assignments;
 use Braintacle\Package\Package;
 use Braintacle\Package\PackageUpdate;
 use LogicException;
+use Model\Package\PackageBuilder;
 use Model\Package\PackageManager;
-use Psr\Http\Message\UploadedFileInterface;
-use Symfony\Component\Filesystem\Filesystem;
+use Model\Package\RuntimeException as PackageRuntimeException;
+use Throwable;
 
 /**
  * Package builder.
@@ -18,41 +19,46 @@ final class Builder
 {
     public function __construct(
         private PackageManager $packageManager,
+        private PackageBuilder $packageBuilder,
         private Assignments $assignments,
-        private Filesystem $filesystem,
     ) {}
 
-    public function build(Package $package, UploadedFileInterface $uploadedFile): void
+    public function build(Package $package, ?SourceFile $sourceFile, bool $deleteSource): void
     {
-        $buildData = $package->toArray();
+        $this->packageBuilder->checkName($package->name);
 
-        if ($uploadedFile->getError() == UPLOAD_ERR_NO_FILE) {
-            if ($package->action == Action::Execute) {
-                // No file is OK for this action. The legacy builder requires an
-                // empty string in that case.
-                $buildData['FileLocation'] = '';
+        try {
+            $buildData = $package->toArray();
+            $buildData['Id'] = $this->packageBuilder->generateId();
+            $buildData['HashType'] = $this->packageBuilder->getHashType($package->platform->value);
+
+            if ($sourceFile) {
+                $buildData = $this->prepareFile($buildData, $sourceFile, $deleteSource);
             } else {
-                throw new LogicException('Missing file');
+                if ($package->action != Action::Execute) {
+                    throw new LogicException('Missing file');
+                }
+                // Missing file is OK for the Execute action. The legacy code
+                // requires an empty string in that case.
+                $buildData['FileLocation'] = '';
+                $buildData['Size'] = 0;
+                $buildData['Hash'] = null;
             }
-        } else {
-            $buildData['FileName'] = $uploadedFile->getClientFilename();
-
-            // The legacy builder does not support streams and requires a
-            // filename. To get the filename from an UploadedFileInterface
-            // object, the file has to be moved to an explicitly provided path.
-            // Use a temporary file within the upload directory (effectively
-            // just a rename operation) to avoid unnecessary copies.
-            $fileName = $this->filesystem->tempnam(ini_get('upload_tmp_dir'), 'braintacle_upload_');
-            $uploadedFile->moveTo($fileName);
-            $buildData['FileLocation'] = $fileName;
+            $this->write($buildData, $deleteSource);
+        } catch (Throwable $throwable) {
+            try {
+                $this->packageManager->deletePackage($package->name);
+            } catch (Throwable) {
+                // Ignore error (package may not exist at this point or only
+                // partially) and return original exception instead
+            }
+            throw new PackageRuntimeException($throwable->getMessage(), previous: $throwable);
         }
-
-        $this->packageManager->buildPackage($buildData, true);
     }
 
-    public function update(PackageUpdate $package, UploadedFileInterface $uploadedFile, string $oldPackageName): void
+    public function update(PackageUpdate $package, ?SourceFile $sourceFile, string $oldPackageName): void
     {
-        $this->build($package, $uploadedFile);
+        $this->build($package, $sourceFile, true);
 
         $newPackage = $this->packageManager->getPackage($package->name);
         $oldPackage = $this->packageManager->getPackage($oldPackageName);
@@ -67,5 +73,31 @@ final class Builder
             $package->deployGroups,
         );
         $this->packageManager->deletePackage($oldPackageName);
+    }
+
+    public function prepareFile(array $buildData, SourceFile $sourceFile, bool $deleteSource): array
+    {
+        $buildData['FileName'] = $sourceFile->name;
+        $buildData['FileLocation'] = $sourceFile->path;
+        $archive = $this->packageBuilder->autoArchive(
+            $buildData,
+            $this->packageBuilder->prepareStorage($buildData),
+            $deleteSource,
+        );
+        $buildData['Archive'] = $archive;
+        $buildData['Size'] = filesize($archive);
+        $buildData['Hash'] = $this->packageBuilder->getFileHash($archive, $buildData['HashType']);
+
+        return $buildData;
+    }
+
+    public function write(array $buildData, bool $deleteSource): void
+    {
+        $buildData['NumFragments'] = $this->packageBuilder->writeToStorage(
+            $buildData,
+            $buildData['Archive'] ?? '',
+            $deleteSource,
+        );
+        $this->packageBuilder->writeToDatabase($buildData);
     }
 }

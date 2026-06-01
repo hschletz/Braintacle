@@ -6,6 +6,8 @@ use Braintacle\Http\RouteHelper;
 use Braintacle\Legacy\Plugin\FlashMessenger;
 use Braintacle\Package\Build\Builder;
 use Braintacle\Package\Build\BuildHandler;
+use Braintacle\Package\Build\SourceFile;
+use Braintacle\Package\Build\SourceFileFactory;
 use Braintacle\Package\Build\ValidationErrors;
 use Braintacle\Package\Package;
 use Braintacle\Package\PackageUpdate;
@@ -42,6 +44,7 @@ final class BuildHandlerTest extends TestCase
 
     private function createHandler(
         ?DataProcessor $dataProcessor = null,
+        ?SourceFileFactory $sourceFileFactory = null,
         ?TranslatorInterface $translator = null,
         ?Builder $builder = null,
         ?FlashMessenger $flashMessenger = null,
@@ -50,6 +53,7 @@ final class BuildHandlerTest extends TestCase
     ): BuildHandler {
         return new BuildHandler(
             $this->response,
+            $sourceFileFactory ?? $this->createStub(SourceFileFactory::class),
             $dataProcessor ?? $this->createStub(DataProcessor::class),
             $translator ?? $this->createStub(TranslatorInterface::class),
             $builder ?? $this->createStub(Builder::class),
@@ -251,10 +255,19 @@ final class BuildHandlerTest extends TestCase
         );
     }
 
-    #[TestWith([[], false, false, "_Package 'package_name' was successfully created."])]
-    #[TestWith([[], false, true, 'error message'])]
+    #[TestWith([[], true, false, false, "_Package 'package_name' was successfully created."])]
+    #[TestWith([[], false, false, false, "_Package 'package_name' was successfully created."])]
+    #[TestWith([[], true, false, true, 'error message'])]
     #[TestWith([
         ['updateFrom' => 'oldPackage'],
+        true,
+        true,
+        false,
+        "_Package 'oldPackage' was successfully changed to 'package_name'.",
+    ])]
+    #[TestWith([
+        ['updateFrom' => 'oldPackage'],
+        false,
         true,
         false,
         "_Package 'oldPackage' was successfully changed to 'package_name'.",
@@ -263,14 +276,19 @@ final class BuildHandlerTest extends TestCase
         ['updateFrom' => 'oldPackage'],
         true,
         true,
+        true,
         "_Error changing Package 'oldPackage' to 'package_name': error message",
     ])]
-    public function testBuilder(array $queryParams, bool $isUpdate, bool $throw, string $message)
+    public function testBuilder(array $queryParams, bool $fileUploaded, bool $isUpdate, bool $throw, string $message)
     {
         $package = $this->createStub($isUpdate ? PackageUpdate::class : Package::class);
         $package->name = 'package_name';
 
-        $file = $this->createStub(UploadedFileInterface::class);
+        $uploadedFile = $this->createStub(UploadedFileInterface::class);
+        $sourceFile = $fileUploaded ? $this->createStub(SourceFile::class) : null;
+
+        $sourceFileFactory = $this->createMock(SourceFileFactory::class);
+        $sourceFileFactory->method('fromUploadedFile')->with($uploadedFile)->willReturn($sourceFile);
 
         $dataProcessor = $this->createStub(DataProcessor::class);
         $dataProcessor->method('process')->willReturn($package);
@@ -281,9 +299,15 @@ final class BuildHandlerTest extends TestCase
         $builder = $this->createMock(Builder::class);
         if ($isUpdate) {
             $builder->expects($this->never())->method('build');
-            $invocationMocker = $builder->expects($this->once())->method('update')->with($package, $file, 'oldPackage');
+            $invocationMocker = $builder
+                ->expects($this->once())
+                ->method('update')
+                ->with($package, $sourceFile, 'oldPackage');
         } else {
-            $invocationMocker = $builder->expects($this->once())->method('build')->with($package, $file);
+            $invocationMocker = $builder
+                ->expects($this->once())
+                ->method('build')
+                ->with($package, $sourceFile, true);
             $builder->expects($this->never())->method('update');
         }
         if ($throw) {
@@ -303,13 +327,14 @@ final class BuildHandlerTest extends TestCase
         $routeHelper->method('getPathForRoute')->with('packagesList')->willReturn('redirectTo');
 
         $handler = $this->createHandler(
+            sourceFileFactory: $sourceFileFactory,
             dataProcessor: $dataProcessor,
             translator: $translator,
             builder: $builder,
             flashMessenger: $flashMessenger,
             routeHelper: $routeHelper,
         );
-        $response = $this->getResponse($handler, $queryParams);
+        $response = $this->getResponse($handler, $queryParams, ['file' => $uploadedFile]);
 
         $this->assertResponseStatusCode(302, $response);
         $this->assertResponseHeaders(['Location' => ['redirectTo']], $response);

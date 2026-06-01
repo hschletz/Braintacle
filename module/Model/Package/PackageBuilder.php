@@ -26,7 +26,6 @@ use Database\Table\Packages;
 use InvalidArgumentException;
 use Library\ArchiveManager;
 use Model\Package\Storage\StorageInterface;
-use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 use Throwable;
 
@@ -50,45 +49,6 @@ class PackageBuilder
         $this->archiveManager = $archiveManager;
         $this->storage = $storage;
         $this->packagesTable = $packagesTable;
-    }
-
-    /**
-     * Build a package
-     *
-     * @param array $data Package data
-     * @param bool $deleteSource Delete source file as soon as possible
-     * @throws RuntimeException if a package with the requested name already exists or an error occurs
-     *
-     * @psalm-suppress PossiblyUnusedMethod
-     */
-    public function buildPackage(array $data, bool $deleteSource): void
-    {
-        $this->checkName($data['Name']);
-        try {
-            $data['Id'] = $this->generateId();
-            $file = $this->autoArchive($data, $this->prepareStorage($data), $deleteSource);
-
-            $data['HashType'] = $this->getHashType($data['Platform']);
-            if ($data['FileLocation']) {
-                $fileinfo = new SplFileInfo($file);
-                $data['Size'] = $fileinfo->getSize();
-                $data['Hash'] = $this->getFileHash($file, $data['HashType']);
-            } else {
-                $data['Size'] = 0;
-                $data['Hash'] = null;
-            }
-
-            $data['NumFragments'] = $this->writeToStorage($data, $file, $deleteSource);
-            $this->writeToDatabase($data);
-        } catch (Throwable $t) {
-            try {
-                $this->packageManager->deletePackage($data['Name']);
-            } catch (Throwable $t2) {
-                // Ignore error (package does probably not exist at this point)
-                // and return original exception instead
-            }
-            throw new RuntimeException($t->getMessage(), (int) $t->getCode(), $t);
-        }
     }
 
     /**

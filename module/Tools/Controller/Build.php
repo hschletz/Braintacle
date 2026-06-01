@@ -22,8 +22,12 @@
 
 namespace Tools\Controller;
 
+use Braintacle\Package\Action;
+use Braintacle\Package\Build\Builder;
+use Braintacle\Package\Build\SourceFileFactory;
+use Braintacle\Package\Package;
+use Braintacle\Package\Platform;
 use Model\Config;
-use Model\Package\PackageManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -33,40 +37,33 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Build implements ControllerInterface
 {
-    protected $config;
-    protected $packageManager;
-
-    public function __construct(Config $config, PackageManager $packageManager)
-    {
-        $this->config = $config;
-        $this->packageManager = $packageManager;
-    }
+    public function __construct(
+        private Config $config,
+        private SourceFileFactory $sourceFileFactory,
+        private Builder $builder,
+    ) {}
 
     public function __invoke(InputInterface $input, OutputInterface $output)
     {
-        $name = $input->getArgument('name');
-        $file = $input->getArgument('file');
+        $package = new Package();
+        $package->name = $input->getArgument('name');
+        $package->comment = null;
+        $package->platform = Platform::from($this->config->defaultPlatform);
+        $package->action = Action::from($this->config->defaultAction);
+        $package->actionParam = $this->config->defaultActionParam;
+        $package->priority = $this->config->defaultPackagePriority;
+        $package->maxFragmentSize = $this->config->defaultMaxFragmentSize;
+        $package->warn = $this->config->defaultWarn;
+        $package->warnMessage = $this->config->defaultWarnMessage;
+        $package->warnCountdown = $this->config->defaultWarnCountdown;
+        $package->warnAllowAbort = $this->config->defaultWarnAllowAbort;
+        $package->warnAllowDelay = $this->config->defaultWarnAllowDelay;
+        $package->postInstMessage = $this->config->defaultPostInstMessage;
 
-        $this->packageManager->buildPackage(
-            [
-                'Name' => $name,
-                'Comment' => null,
-                'FileName' => basename($file),
-                'FileLocation' => $file,
-                'Priority' => $this->config->defaultPackagePriority,
-                'Platform' => $this->config->defaultPlatform,
-                'DeployAction' => $this->config->defaultAction,
-                'ActionParam' => $this->config->defaultActionParam,
-                'Warn' => $this->config->defaultWarn,
-                'WarnMessage' => $this->config->defaultWarnMessage,
-                'WarnCountdown' => $this->config->defaultWarnCountdown,
-                'WarnAllowAbort' => $this->config->defaultWarnAllowAbort,
-                'WarnAllowDelay' => $this->config->defaultWarnAllowDelay,
-                'PostInstMessage' => $this->config->defaultPostInstMessage,
-                'MaxFragmentSize' => $this->config->defaultMaxFragmentSize,
-            ],
-            false
-        );
+        $file = $input->getArgument('file');
+        $sourceFile = $this->sourceFileFactory->fromPath($file);
+
+        $this->builder->build($package, $sourceFile, false);
         $output->writeln('Package successfully built.');
 
         return Command::SUCCESS;

@@ -24,6 +24,7 @@ final class BuildHandler implements RequestHandlerInterface
 {
     public function __construct(
         private ResponseInterface $response,
+        private SourceFileFactory $sourceFileFactory,
         private DataProcessor $dataProcessor,
         private TranslatorInterface $translator,
         private Builder $builder,
@@ -35,10 +36,11 @@ final class BuildHandler implements RequestHandlerInterface
     #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $file = $request->getUploadedFiles()['file'] ?? null;
-        if (! $file instanceof UploadedFileInterface) {
+        $uploadedFile = $request->getUploadedFiles()['file'] ?? null;
+        if (! $uploadedFile instanceof UploadedFileInterface) {
             throw new HttpBadRequestException($request, 'Bad file');
         }
+        $sourceFile = $this->sourceFileFactory->fromUploadedFile($uploadedFile);
 
         /** @var ?string */
         $updateFrom = $request->getQueryParams()['updateFrom'] ?? null;
@@ -61,9 +63,9 @@ final class BuildHandler implements RequestHandlerInterface
         }
 
         if ($updateFrom) {
-            $this->update($package, $file, $updateFrom);
+            $this->update($package, $sourceFile, $updateFrom);
         } else {
-            $this->build($package, $file);
+            $this->build($package, $sourceFile);
         }
 
         return $this->response->withStatus(302)->withHeader(
@@ -72,10 +74,10 @@ final class BuildHandler implements RequestHandlerInterface
         );
     }
 
-    private function build(Package $package, UploadedFileInterface $file): void
+    private function build(Package $package, ?SourceFile $sourceFile): void
     {
         try {
-            $this->builder->build($package, $file);
+            $this->builder->build($package, $sourceFile, true);
             $this->flashMessenger->addSuccessMessage(
                 sprintf(
                     $this->translator->translate("Package '%s' was successfully created."),
@@ -87,10 +89,10 @@ final class BuildHandler implements RequestHandlerInterface
         }
     }
 
-    private function update(PackageUpdate $package, UploadedFileInterface $file, string $updateFrom)
+    private function update(PackageUpdate $package, ?SourceFile $sourceFile, string $updateFrom)
     {
         try {
-            $this->builder->update($package, $file, $updateFrom);
+            $this->builder->update($package, $sourceFile, $updateFrom);
             $this->flashMessenger->addSuccessMessage(
                 sprintf(
                     $this->translator->translate("Package '%1\$s' was successfully changed to '%2\$s'."),
