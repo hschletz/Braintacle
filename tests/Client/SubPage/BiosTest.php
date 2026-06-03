@@ -26,7 +26,7 @@ class BiosTest extends TestCase
     use HttpHandlerTestTrait;
     use TemplateTestTrait;
 
-    private function getResponseXpath(client $client): DOMXPath
+    private function getResponseXpath(Client $client): DOMXPath
     {
         $routeArguments = ['id' => '42'];
 

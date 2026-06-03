@@ -6,7 +6,7 @@
     beStrictAboutCoverageMetadata="true"
     failOnAllIssues="true"
     displayDetailsOnAllIssues="true"
-    bootstrap="development/phpunit-bootstrap.php"
+    bootstrap="vendor/dg/bypass-finals/src/bootstrap.php"
 >
   <coverage>
     <report>

@@ -32,7 +32,7 @@ class SoftwarePageHandlerTest extends TestCase
     use HttpHandlerTestTrait;
     use TemplateTestTrait;
 
-    private function getResponseXpath(client $client, int $displayBlacklistedSoftware): DOMXPath
+    private function getResponseXpath(Client $client, int $displayBlacklistedSoftware): DOMXPath
     {
         $client->id = 42;
         $client->name = 'test';
