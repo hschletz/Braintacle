@@ -17,6 +17,7 @@ use Throwable;
  */
 final class Builder
 {
+    /** @psalm-suppress PossiblyUnusedMethod */
     public function __construct(
         private PackageManager $packageManager,
         private PackageBuilder $packageBuilder,
