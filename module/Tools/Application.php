@@ -48,7 +48,6 @@ class Application extends \Symfony\Component\Console\Application
         $dispatcher->addListener(ConsoleEvents::COMMAND, $controllerInjectionListener);
         $this->setDispatcher($dispatcher);
 
-        $this->add(new Command\Apidoc());
         $this->add(new Command\Build());
         $this->add(new Command\Database());
         $this->add(new Command\Decode());

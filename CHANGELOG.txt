@@ -15,6 +15,10 @@ Server:
 
 - The server can now be configured to log to STDERR.
 
+Misc:
+
+- The "apidoc" CLI command has been removed.
+
 
 CHANGES IN VERSION 2.0
 =======================
