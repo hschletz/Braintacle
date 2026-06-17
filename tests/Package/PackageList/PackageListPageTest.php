@@ -116,6 +116,17 @@ final class PackageListPageTest extends TestCase
         $this->assertNotXpathMatches($xPath, '//ul[@class="success"]');
     }
 
+    public function testNoPackages()
+    {
+        $xPath = $this->getXpath();
+
+        $this->assertNotXpathMatches($xPath, '//table');
+
+        // No flash messages
+        $this->assertNotXpathMatches($xPath, '//ul[@class="error"]');
+        $this->assertNotXpathMatches($xPath, '//ul[@class="success"]');
+    }
+
     public function testFlashMessages()
     {
         $flashMessenger = $this->createStub(FlashMessenger::class);

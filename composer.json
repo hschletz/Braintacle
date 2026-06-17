@@ -51,7 +51,7 @@
         "laminas/laminas-uri": "^2.9",
         "laminas/laminas-validator": "^2.24",
         "laminas/laminas-view": "^2.22",
-        "latte/latte": "^3.0",
+        "latte/latte": "^3.1.4",
         "monolog/monolog": "^3.8",
         "php-di/php-di": "^7.1.1",
         "psr/clock": "^1.0",

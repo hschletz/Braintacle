@@ -9,6 +9,7 @@ use Braintacle\Template\Function\PathForRouteFunction;
 use Braintacle\Template\Function\TranslateFunction;
 use ErrorException;
 use Latte\Engine;
+use Latte\Feature;
 
 /**
  * Template rendering engine.
@@ -27,6 +28,7 @@ class TemplateEngine
     ) {
         $this->engine->setLocale($locale);
         $this->engine->setLoader($templateLoader);
+        $this->engine->setFeature(Feature::ScopedLoopVariables);
 
         $engine->addFunction('assetUrl', $assetUrlFunction);
         $engine->addFunction('csrfToken', $csrfTokenFunction);

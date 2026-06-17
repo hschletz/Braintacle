@@ -12,6 +12,7 @@ use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\ErrorHandlerTestTrait;
 use ErrorException;
 use Latte\Engine;
+use Latte\Feature;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\Mock;
@@ -51,6 +52,7 @@ class TemplateEngineTest extends TestCase
         $engine = Mockery::mock(Engine::class);
         $engine->shouldReceive('setLocale')->once()->with('locale');
         $engine->shouldReceive('setLoader')->once()->with($templateLoader);
+        $engine->shouldReceive('setFeature')->once()->with(Feature::ScopedLoopVariables);
         $engine->shouldReceive('addFunction')->once()->with('assetUrl', $assetUrlFunction);
         $engine->shouldReceive('addFunction')->once()->with('csrfToken', $csrfTokenFunction);
         $engine->shouldReceive('addFunction')->once()->with('option', $optionFunction);
@@ -70,6 +72,7 @@ class TemplateEngineTest extends TestCase
             $translateFunction,
         );
     }
+
     private function createInstance(Engine $engine)
     {
         return new TemplateEngine(

@@ -29,20 +29,22 @@
     <li n:foreach="$successMessages as $message">{$message}</li>
 </ul>
 
-{if}
-    <table class="alternating">
+<table n:ifcontent class="alternating">
+    {foreach $packages as $package}
+        {first}
+            <tr>
+                <th>{include sortableHeader, 'Name', translate('Name')}</th>
+                <th>{include sortableHeader, 'Timestamp', translate('Date')}</th>
+                <th class="textright">{include sortableHeader, 'Size', translate('Size')}</th>
+                <th>{include sortableHeader, 'Platform', translate('Platform')}</th>
+                <th class="textright">{include sortableHeader, 'NumPending', translate('Pending')}</th>
+                <th class="textright">{include sortableHeader, 'NumRunning', translate('Running')}</th>
+                <th class="textright">{include sortableHeader, 'NumSuccess', translate('Success')}</th>
+                <th class="textright">{include sortableHeader, 'NumError', translate('Error')}</th>
+                <th></th>
+            </tr>
+        {/first}
         <tr>
-            <th>{include sortableHeader, 'Name', translate('Name')}</th>
-            <th>{include sortableHeader, 'Timestamp', translate('Date')}</th>
-            <th class="textright">{include sortableHeader, 'Size', translate('Size')}</th>
-            <th>{include sortableHeader, 'Platform', translate('Platform')}</th>
-            <th class="textright">{include sortableHeader, 'NumPending', translate('Pending')}</th>
-            <th class="textright">{include sortableHeader, 'NumRunning', translate('Running')}</th>
-            <th class="textright">{include sortableHeader, 'NumSuccess', translate('Success')}</th>
-            <th class="textright">{include sortableHeader, 'NumError', translate('Error')}</th>
-            <th></th>
-        </tr>
-        <tr n:foreach={$packages as $package}>
             <td>
                 <a href={pathForRoute(packageBuildPage, queryParams: [updateFrom: $package->name])} title={$package->comment}>
                     {$package->name}
@@ -61,5 +63,5 @@
                 </a>
             </td>
         </tr>
-    </table>
-{/if isset($package)}
+    {/foreach}
+</table>
