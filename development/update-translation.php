@@ -48,6 +48,8 @@ error_reporting(-1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+define('Domain', 'default');
+
 $rootPath = InstalledVersions::getRootPackage()['install_path'];
 $translationPath = $rootPath . '/i18n';
 $potFileName = $translationPath . '/Braintacle.pot';
@@ -151,14 +153,15 @@ function parsePhpFile(string $file): Translations
         'setMessage' => 'gettext',
     ];
 
-    $scanner = new PhpScanner(Translations::create());
+    $scanner = new PhpScanner(Translations::create(Domain));
+    $scanner->setDefaultDomain(Domain);
     $scanner->setFunctions($functions);
     $scanner->ignoreInvalidFunctions(); // Required for function calls with non-literal arguments
     $scanner->scanFile($file);
 
     $translations = Translations::create();
     /** @var Translation */
-    foreach ($scanner->getTranslations()[''] as $scannedTranslation) {
+    foreach ($scanner->getTranslations()[Domain] as $scannedTranslation) {
         // Remove line numbers which would generate too much noise. Because they
         // cannot be removed from a Translation object, all relevant data is
         // copied to a new instance.

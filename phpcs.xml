@@ -22,6 +22,7 @@
         declare constants uppercase.
         -->
         <exclude name="Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase" />
+        <exclude name="Generic.NamingConventions.UpperCaseConstantName.ConstantNotUpperCase" />
 
         <!-- New standard does not use space before anonymous class constructor arguments. -->
         <exclude name="PSR12.Classes.AnonClassDeclaration.SpaceAfterKeyword" />
