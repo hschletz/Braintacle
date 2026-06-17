@@ -108,7 +108,6 @@ class Run
             'Model',
             'Console',
             'Protocol',
-            'Tools',
         ];
 
         $modules = [];

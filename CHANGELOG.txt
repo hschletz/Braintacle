@@ -15,9 +15,16 @@ Server:
 
 - The server can now be configured to log to STDERR.
 
-Misc:
+CLI:
 
-- The "apidoc" CLI command has been removed.
+- The "apidoc" command has been removed.
+
+- The "database" command no longer recognizes the --loglevel|-l option.
+  Use the standard options --silent|-q|-v|-vv|-vvv instead,
+
+- The --config|-c option is no longer available with PHP versions before 8.4.
+  The BRAINTACLE_CONFIG environment variable can be used instead with all PHP
+  versions.
 
 
 CHANGES IN VERSION 2.0

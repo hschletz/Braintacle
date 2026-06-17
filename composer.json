@@ -53,7 +53,7 @@
         "laminas/laminas-view": "^2.22",
         "latte/latte": "^3.0",
         "monolog/monolog": "^3.8",
-        "php-di/php-di": "^7.0",
+        "php-di/php-di": "^7.1.1",
         "psr/clock": "^1.0",
         "slim/slim": "^4.13",
         "symfony/console": "^7.3",

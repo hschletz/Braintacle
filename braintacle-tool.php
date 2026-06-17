@@ -4,12 +4,16 @@
  * Braintacle command line tools collection
  */
 
-use Braintacle\Container;
-use Tools\Application;
+use Braintacle\Cli\Container;
+use Braintacle\Cli\ToolsApplication;
 
 error_reporting(E_ALL);
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 $container = new Container();
-$container->get(Application::class)->run();
+/** @var ToolsApplication */
+$application = $container->get(ToolsApplication::class);
+$exitCode = $application->run();
+
+exit($exitCode);

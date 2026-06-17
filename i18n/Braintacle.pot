@@ -1204,10 +1204,6 @@ msgstr ""
 msgid "'%value%' does not contain a valid mask"
 msgstr ""
 
-#: module/Library/Validator/LogLevel.php
-msgid "'%value%' is not a valid log level"
-msgstr ""
-
 #: module/Library/Validator/NotInArray.php
 msgid "'%value%' is in the list of invalid values"
 msgstr ""

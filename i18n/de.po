@@ -1139,10 +1139,6 @@ msgstr "'%value%' enthält keine gültige Netzmaske"
 msgid "'%value%' is not a valid network address"
 msgstr "'%value%' ist keine gültige Netzwerkadresse"
 
-#: module/Library/Validator/LogLevel.php
-msgid "'%value%' is not a valid log level"
-msgstr "'%value%' ist kein gültiger Loglevel"
-
 #: module/Library/Validator/NotInArray.php
 msgid "'%value%' is in the list of invalid values"
 msgstr "'%value%' ist in der Liste ungültiger Werte"

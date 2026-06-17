@@ -1,26 +1,6 @@
 <?php
 
-/**
- * Build a package
- *
- * Copyright (C) 2011-2026 Holger Schletz <holger.schletz@web.de>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the Free
- * Software Foundation; either version 2 of the License, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
-namespace Tools\Controller;
+namespace Braintacle\Cli\Command;
 
 use Braintacle\Package\Action;
 use Braintacle\Package\Build\Builder;
@@ -28,14 +8,19 @@ use Braintacle\Package\Build\SourceFileFactory;
 use Braintacle\Package\Package;
 use Braintacle\Package\Platform;
 use Model\Config;
+use Symfony\Component\Console\Attribute\Argument;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Build a package
+ * Build a package.
  */
-class Build implements ControllerInterface
+#[AsCommand(
+    name: 'build',
+    description: 'Build a package',
+)]
+class BuildCommand
 {
     public function __construct(
         private Config $config,
@@ -43,10 +28,13 @@ class Build implements ControllerInterface
         private Builder $builder,
     ) {}
 
-    public function __invoke(InputInterface $input, OutputInterface $output)
-    {
+    public function __invoke(
+        SymfonyStyle $symfonyStyle,
+        #[Argument(description: 'package name')] string $name,
+        #[Argument(description: 'file with package content')] string $file,
+    ): int {
         $package = new Package();
-        $package->name = $input->getArgument('name');
+        $package->name = $name;
         $package->comment = null;
         $package->platform = Platform::from($this->config->defaultPlatform);
         $package->action = Action::from($this->config->defaultAction);
@@ -60,11 +48,10 @@ class Build implements ControllerInterface
         $package->warnAllowDelay = $this->config->defaultWarnAllowDelay;
         $package->postInstMessage = $this->config->defaultPostInstMessage;
 
-        $file = $input->getArgument('file');
         $sourceFile = $this->sourceFileFactory->fromPath($file);
 
         $this->builder->build($package, $sourceFile, false);
-        $output->writeln('Package successfully built.');
+        $symfonyStyle->getErrorStyle()->success('Package successfully built.');
 
         return Command::SUCCESS;
     }
