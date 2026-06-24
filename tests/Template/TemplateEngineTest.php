@@ -52,6 +52,7 @@ class TemplateEngineTest extends TestCase
         $engine = Mockery::mock(Engine::class);
         $engine->shouldReceive('setLocale')->once()->with('locale');
         $engine->shouldReceive('setLoader')->once()->with($templateLoader);
+        $engine->shouldReceive('setFeature')->once()->with(Feature::Dedent);
         $engine->shouldReceive('setFeature')->once()->with(Feature::ScopedLoopVariables);
         $engine->shouldReceive('addFunction')->once()->with('assetUrl', $assetUrlFunction);
         $engine->shouldReceive('addFunction')->once()->with('csrfToken', $csrfTokenFunction);

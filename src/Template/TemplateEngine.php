@@ -28,6 +28,7 @@ class TemplateEngine
     ) {
         $this->engine->setLocale($locale);
         $this->engine->setLoader($templateLoader);
+        $this->engine->setFeature(Feature::Dedent);
         $this->engine->setFeature(Feature::ScopedLoopVariables);
 
         $engine->addFunction('assetUrl', $assetUrlFunction);
