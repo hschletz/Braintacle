@@ -1022,23 +1022,6 @@ msgstr ""
 msgid "Port"
 msgstr ""
 
-#: module/Console/views/console/client/registry.php
-#: templates/Pages/Search/SearchForm.latte
-msgid "Value"
-msgstr ""
-
-#: module/Console/views/console/client/registry.php
-msgid "Content"
-msgstr ""
-
-#: module/Console/views/console/client/registry.php
-msgid "Registry Keys"
-msgstr ""
-
-#: module/Console/views/console/client/registry.php
-msgid "Manage inventoried values"
-msgstr ""
-
 #: module/Console/views/console/client/system.php
 msgid "Slot number"
 msgstr ""
@@ -1594,6 +1577,23 @@ msgstr ""
 
 #: templates/Pages/Client/Packages.latte
 msgid "Status of package '{}' will be reset to 'Pending'. Continue?"
+msgstr ""
+
+#: templates/Pages/Client/Registry.latte
+msgid "Registry keys"
+msgstr ""
+
+#: templates/Pages/Client/Registry.latte
+#: templates/Pages/Search/SearchForm.latte
+msgid "Value"
+msgstr ""
+
+#: templates/Pages/Client/Registry.latte
+msgid "Content"
+msgstr ""
+
+#: templates/Pages/Client/Registry.latte
+msgid "Manage inventoried values"
 msgstr ""
 
 #: templates/Pages/Client/Software.latte

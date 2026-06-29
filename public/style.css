@@ -55,6 +55,14 @@ a {
     text-decoration: none;
 }
 
+a.buttonstyle::before {
+    content: '[';
+}
+
+a.buttonstyle::after {
+    content: ']';
+}
+
 dialog {
     text-align: center;
     border: none;

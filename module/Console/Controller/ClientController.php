@@ -41,12 +41,6 @@ class ClientController extends Controller
     protected $_clientManager;
 
     /**
-     * Registry manager
-     * @var \Model\Registry\RegistryManager
-     */
-    protected $_registryManager;
-
-    /**
      * Software manager
      * @var \Model\SoftwareManager
      */
@@ -68,12 +62,10 @@ class ClientController extends Controller
         private FlashMessages $flashMessages,
         private RouteHelper $routeHelper,
         \Model\Client\ClientManager $clientManager,
-        \Model\Registry\RegistryManager $registryManager,
         \Model\SoftwareManager $softwareManager,
         \Laminas\Form\FormElementManager $formManager,
     ) {
         $this->_clientManager = $clientManager;
-        $this->_registryManager = $registryManager;
         $this->_softwareManager = $softwareManager;
         $this->_formManager = $formManager;
     }
@@ -246,20 +238,6 @@ class ClientController extends Controller
     public function msofficeAction()
     {
         return $this->getOrder('Name') + array('client' => $this->_currentClient);
-    }
-
-    /**
-     * Information about a client's registry values (Windows only)
-     *
-     * @return array client, values, order, direction
-     */
-    public function registryAction()
-    {
-        $values = array();
-        foreach ($this->_registryManager->getValueDefinitions() as $value) {
-            $values[$value['Name']] = $value;
-        }
-        return $this->getOrder('Value') + array('client' => $this->_currentClient, 'values' => $values);
     }
 
     /**

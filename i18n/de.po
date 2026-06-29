@@ -952,23 +952,6 @@ msgstr "Treiber"
 msgid "Port"
 msgstr "Port"
 
-#: module/Console/views/console/client/registry.php
-msgid "Content"
-msgstr "Inhalt"
-
-#: module/Console/views/console/client/registry.php
-msgid "Manage inventoried values"
-msgstr "Inventarisierte Werte verwalten"
-
-#: module/Console/views/console/client/registry.php
-msgid "Registry Keys"
-msgstr "Registry-Schlüssel"
-
-#: module/Console/views/console/client/registry.php
-#: templates/Pages/Search/SearchForm.latte
-msgid "Value"
-msgstr "Wert"
-
 #: module/Console/views/console/client/system.php
 msgid "Caption"
 msgstr "Titel"
@@ -1514,6 +1497,23 @@ msgstr "entfernen"
 #: templates/Pages/Client/Packages.latte
 msgid "reset"
 msgstr "zurücksetzen"
+
+#: templates/Pages/Client/Registry.latte
+msgid "Content"
+msgstr "Inhalt"
+
+#: templates/Pages/Client/Registry.latte
+msgid "Manage inventoried values"
+msgstr "Inventarisierte Werte verwalten"
+
+#: templates/Pages/Client/Registry.latte
+msgid "Registry keys"
+msgstr "Registry-Schlüssel"
+
+#: templates/Pages/Client/Registry.latte
+#: templates/Pages/Search/SearchForm.latte
+msgid "Value"
+msgstr "Wert"
 
 #: templates/Pages/Client/Software.latte
 msgid "Location"

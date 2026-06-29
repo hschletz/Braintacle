@@ -34,7 +34,6 @@ use Model\Client\Client;
 use Model\Client\ClientManager;
 use Model\Client\WindowsInstallation;
 use Model\Config;
-use Model\Registry\RegistryManager;
 use Model\SoftwareManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -49,11 +48,6 @@ class ClientControllerTest extends AbstractControllerTestCase
      * @var MockObject|ClientManager
      */
     protected $_clientManager;
-
-    /**
-     * @var MockObject|RegistryManager
-     */
-    protected $_registryManager;
 
     /**
      * @var MockObject|SoftwareManager
@@ -117,12 +111,10 @@ class ClientControllerTest extends AbstractControllerTestCase
         parent::setUp();
 
         $this->_clientManager = $this->createMock('Model\Client\ClientManager');
-        $this->_registryManager = $this->createMock('Model\Registry\RegistryManager');
         $this->_softwareManager = $this->createMock('Model\SoftwareManager');
 
         $serviceManager = $this->getApplicationServiceLocator();
         $serviceManager->setService('Model\Client\ClientManager', $this->_clientManager);
-        $serviceManager->setService('Model\Registry\RegistryManager', $this->_registryManager);
         $serviceManager->setService('Model\SoftwareManager', $this->_softwareManager);
 
         $formManager = $serviceManager->get('FormElementManager');
@@ -872,55 +864,6 @@ class ClientControllerTest extends AbstractControllerTestCase
         $this->assertResponseStatusCode(200);
         $this->assertNotXpathQuery('//tr[2]/td[1]/span');
         $this->assertXpathQueryContentContains('//tr[3]/td[1]/span[@title="GUID: guid"]', 'name2');
-    }
-
-    public function testRegistryActionNoValues()
-    {
-        $client = $this->createMock('Model\Client\Client');
-        $client->id = 1;
-        $client->name = 'test';
-        $client->expects($this->once())
-            ->method('getItems')
-            ->with('RegistryData', 'Value', 'asc')
-            ->willReturn(array());
-        $this->_clientManager->method('getClient')->willReturn($client);
-        $this->_registryManager->expects($this->once())->method('getValueDefinitions')->willReturn(array());
-        $this->dispatch('/console/client/registry/?id=1');
-        $this->assertResponseStatusCode(200);
-        $this->assertNotXpathQuery('//table');
-        $this->assertXpathQuery('//p/a[@href="/console/preferences/registryvalues/"]');
-    }
-
-    public function testRegistryActionWithValues()
-    {
-        $data = array(
-            'Value' => '<value>',
-            'Data' => 'data',
-        );
-        $values = array(
-            array(
-                'Name' => 'unused',
-                'FullPath' => null,
-            ),
-            array(
-                'Name' => '<value>',
-                'FullPath' => 'full_path',
-            )
-        );
-        $client = $this->createMock('Model\Client\Client');
-        $client->id = 1;
-        $client->name = 'test';
-        $client->expects($this->once())
-            ->method('getItems')
-            ->with('RegistryData', 'Value', 'asc')
-            ->willReturn(array($data));
-        $this->_clientManager->method('getClient')->willReturn($client);
-        $this->_registryManager->expects($this->once())->method('getValueDefinitions')->willReturn($values);
-        $this->dispatch('/console/client/registry/?id=1');
-        $this->assertResponseStatusCode(200);
-        $this->assertXpathQueryContentContains('//tr[2]/td[1]/span[@title="full_path"]', "\n<value>\n");
-        $this->assertXpathQueryContentContains('//tr[2]/td[2]', "\ndata\n");
-        $this->assertXpathQuery('//p/a[@href="/console/preferences/registryvalues/"]');
     }
 
     public function testVirtualmachinesActionNoMachines()

@@ -1,0 +1,30 @@
+{layout ClientMenuLayout.latte}
+{block content}
+
+{include Header.latte}
+
+{var $hasData = false}
+{if}
+    <h2>{translate('Registry keys')}</h2>
+
+    <table class="alternating">
+        {foreach $data as $value}
+            {first}
+                {var $hasData = true}
+                <tr>
+                    <th>{translate('Value')}</th>
+                    <th>{translate('Content')}</th>
+                </tr>
+            {/first}
+
+            <tr>
+                <td title="{$definitions[$value->value]->fullPath}">{$value->value}</td>
+                <td>{$value->data}</td>
+            </tr>
+        {/foreach}
+    </table>
+{/if $hasData}
+
+<p class="textcenter">
+    <a href="{pathForRoute(preferencesRegistryValuesPage)}" class="buttonstyle">{translate('Manage inventoried values')}</a>
+</p>
