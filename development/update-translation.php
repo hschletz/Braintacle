@@ -51,8 +51,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 define('Domain', 'default');
 
 $rootPath = InstalledVersions::getRootPackage()['install_path'];
-$translationPath = $rootPath . '/i18n';
-$potFileName = $translationPath . '/Braintacle.pot';
+$translationPath = Path::join($rootPath, 'i18n');
+$potFileName = Path::join($translationPath, 'Braintacle.pot');
 
 $translations = Translations::create();
 $translations->setDescription('Braintacle translation file');
@@ -66,7 +66,7 @@ $translations = $translations->mergeWith(parsePhpFiles([
     'module/Console/views',
 ]));
 $translations = $translations->mergeWith(
-    (new StrictPoLoader())->loadFile($rootPath . '/module/Library/data/i18n/Library.pot')
+    (new StrictPoLoader())->loadFile(Path::join($rootPath, 'module/Library/data/i18n/Library.pot'))
 );
 $translations = $translations->mergeWith(parsePhpFiles(['src']));
 $translations = $translations->mergeWith(parseTemplates());
@@ -90,7 +90,7 @@ if ($update) {
 }
 
 // Update .po files if necessary
-foreach (new GlobIterator("$translationPath/*.po", GlobIterator::CURRENT_AS_PATHNAME) as $poFileName) {
+foreach (new GlobIterator(Path::join($translationPath, '*.po'), GlobIterator::CURRENT_AS_PATHNAME) as $poFileName) {
     $cmd = [
         'msgmerge',
         '--quiet',
@@ -255,7 +255,7 @@ function parseTemplate(string $file, string $relativePath): Translations
         }
 
         $translation = Translation::create(null, $value->value);
-        $translation->getReferences()->add('templates/' . $relativePath);
+        $translation->getReferences()->add(Path::join('templates', $relativePath));
         $translations->add($translation);
     });
 
