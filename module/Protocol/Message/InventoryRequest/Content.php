@@ -24,11 +24,10 @@ namespace Protocol\Message\InventoryRequest;
 
 use Braintacle\Client\Exporter;
 use Braintacle\Dom\Element;
-use Laminas\Hydrator\HydratorInterface;
 use Model\Client\Client;
 use Model\Client\ItemManager;
-use Protocol\Hydrator;
-use Psr\Container\ContainerInterface;
+use Protocol\Hydrator\ClientsBios as ClientsBiosHydrator;
+use Protocol\Hydrator\ClientsHardware as ClientsHardwareHydrator;
 
 /**
  * CONTENT element of an InventoryRequest document
@@ -77,25 +76,13 @@ class Content extends Element
      */
     protected $client;
 
-    /**
-     * Service locator.
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    public function __construct(ContainerInterface $container)
-    {
+    public function __construct(
+        private Exporter $exporter,
+        private ClientsHardwareHydrator $clientsHardwareHydrator,
+        private ClientsBiosHydrator $clientsBiosHydrator,
+        private ItemManager $itemManager,
+    ) {
         parent::__construct('CONTENT');
-        $this->container = $container;
-    }
-
-    private function getHydrator(string $name): HydratorInterface
-    {
-        $exporter = $this->container->get(Exporter::class);
-        assert($exporter instanceof Exporter);
-        $hydrator = $exporter->getHydrator($name);
-
-        return $hydrator;
     }
 
     public function setClient(Client $client): void
@@ -123,17 +110,10 @@ class Content extends Element
      */
     public function appendSystemSection(string $section): void
     {
-        switch ($section) {
-            case self::SYSTEM_SECTION_HARDWARE:
-                $hydrator = $this->container->get(Hydrator\ClientsHardware::class);
-                break;
-            case self::SYSTEM_SECTION_BIOS:
-                $hydrator = $this->container->get(Hydrator\ClientsBios::class);
-                break;
-            default:
-                throw new \InvalidArgumentException('Invalid section name: ' . $section);
-        }
-
+        $hydrator = match ($section) {
+            self::SYSTEM_SECTION_HARDWARE => $this->clientsHardwareHydrator,
+            self::SYSTEM_SECTION_BIOS => $this->clientsBiosHydrator,
+        };
         $data = $hydrator->extract($this->client);
         ksort($data);
         $this->appendSection($section, $data);
@@ -146,7 +126,7 @@ class Content extends Element
     {
         $android = $this->client['Android'];
         if ($android) {
-            $data = $this->getHydrator('AndroidInstallations')->extract($android);
+            $data = $this->exporter->getHydrator('AndroidInstallations')->extract($android);
             $this->appendSection('JAVAINFOS', $data);
         }
     }
@@ -206,8 +186,8 @@ class Content extends Element
     {
         /** @var iterable<object> */
         $items = $this->client->getItems($itemType, 'id', 'asc');
-        $table = $this->container->get(ItemManager::class)->getTableName($itemType);
-        $hydrator = $this->getHydrator($table);
+        $table = $this->itemManager->getTableName($itemType);
+        $hydrator = $this->exporter->getHydrator($table);
         foreach ($items as $item) {
             $this->appendSection($section, $hydrator->extract($item));
         }

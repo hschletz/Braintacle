@@ -30,19 +30,49 @@ use Laminas\Db\ResultSet\ResultSet;
 use Model\Client\AndroidInstallation;
 use Model\Client\Client;
 use Model\Client\ItemManager;
-use Protocol\Hydrator;
 use Protocol\Message\InventoryRequest\Content;
 use Laminas\Hydrator\HydratorInterface;
 use Mockery;
 use Mockery\Mock;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Container\ContainerInterface;
+use Protocol\Hydrator\ClientsBios as ClientsBiosHydrator;
+use Protocol\Hydrator\ClientsHardware as ClientsHardwareHydrator;
+use UnhandledMatchError;
 
 class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 {
+    private function createContent(
+        ?ClientsHardwareHydrator $clientsHardwareHydrator = null,
+        ?ClientsBiosHydrator $clientsBiosHydrator = null,
+        ?Exporter $exporter = null,
+        ?ItemManager $itemManager = null,
+    ): Content {
+        return new Content(
+            $exporter ?? $this->createStub(Exporter::class),
+            $clientsHardwareHydrator ?? $this->createStub(ClientsHardwareHydrator::class),
+            $clientsBiosHydrator ?? $this->createStub(ClientsBiosHydrator::class),
+            $itemManager ?? $this->createStub(ItemManager::class),
+        );
+    }
+
+    private function createContentPartialMock(
+        ?Exporter $exporter = null,
+        ?ClientsHardwareHydrator $clientsHardwareHydrator = null,
+        ?ClientsBiosHydrator $clientsBiosHydrator = null,
+        ?ItemManager $itemManager = null,
+    ): Content|Mock {
+        /** @psalm-suppress InvalidArgument (Mockery bug) */
+        return Mockery::mock(Content::class, [
+            $exporter ?? $this->createStub(Exporter::class),
+            $clientsHardwareHydrator ?? $this->createStub(ClientsHardwareHydrator::class),
+            $clientsBiosHydrator ?? $this->createStub(ClientsBiosHydrator::class),
+            $itemManager ?? $this->createStub(ItemManager::class),
+        ])->makePartial();
+    }
+
     public function testConstructor()
     {
-        $content = new Content($this->createStub(ContainerInterface::class));
+        $content = $this->createContent();
         $this->assertEquals('CONTENT', $content->tagName);
     }
 
@@ -60,45 +90,55 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $content->appendSections();
     }
 
-    public static function appendSystemSectionProvider()
+    public function testAppendSystemSectionHardware()
     {
-        return [
-            [Content::SYSTEM_SECTION_HARDWARE, Hydrator\ClientsHardware::class],
-            [Content::SYSTEM_SECTION_BIOS, Hydrator\ClientsBios::class],
-        ];
-    }
-
-    /** @dataProvider appendSystemSectionProvider */
-    public function testAppendSystemSection($section, $hydratorService)
-    {
-        $data = [
-            'name4' => '',
-            'name3' => 'value3',
-            'name2' => null,
-            'name1' => 'value1',
-        ];
+        $data = ['NAME' => 'value'];
 
         $client = $this->createStub(Client::class);
 
-        $hydrator = $this->createMock(HydratorInterface::class);
-        $hydrator->method('extract')->with($client)->willReturn($data);
+        $hardwareHydrator = $this->createMock(ClientsHardwareHydrator::class);
+        $hardwareHydrator->method('extract')->with($client)->willReturn($data);
 
-        $container = $this->createMock(ContainerInterface::class);
-        $container->method('get')->with($hydratorService)->willReturn($hydrator);
+        $biosHydrator = $this->createMock(ClientsBiosHydrator::class);
+        $biosHydrator->expects($this->never())->method('extract');
 
-        /** @psalm-suppress InvalidArgument (Mockery bug) */
-        $content = Mockery::mock(Content::class, [$container])->makePartial();
-        $content->shouldReceive('appendSection')->once()->with($section, $data);
+        $content = $this->createContentPartialMock(
+            clientsHardwareHydrator: $hardwareHydrator,
+            clientsBiosHydrator: $biosHydrator,
+        );
+        $content->shouldReceive('appendSection')->once()->with(Content::SYSTEM_SECTION_HARDWARE, $data);
 
         $content->setClient($client);
-        $content->appendSystemSection($section);
+        $content->appendSystemSection(Content::SYSTEM_SECTION_HARDWARE);
+    }
+
+    public function testAppendSystemSectionBios()
+    {
+        $data = ['NAME' => 'value'];
+
+        $client = $this->createStub(Client::class);
+
+        $hardwareHydrator = $this->createMock(ClientsHardwareHydrator::class);
+        $hardwareHydrator->expects($this->never())->method('extract');
+
+        $biosHydrator = $this->createMock(ClientsBiosHydrator::class);
+        $biosHydrator->method('extract')->with($client)->willReturn($data);
+
+        $content = $this->createContentPartialMock(
+            clientsHardwareHydrator: $hardwareHydrator,
+            clientsBiosHydrator: $biosHydrator,
+        );
+        $content->shouldReceive('appendSection')->once()->with(Content::SYSTEM_SECTION_BIOS, $data);
+
+        $content->setClient($client);
+        $content->appendSystemSection(Content::SYSTEM_SECTION_BIOS);
     }
 
     public function testAppendSectionsInvalidSection()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid section name: foo');
-        $content = new Content($this->createStub(ContainerInterface::class));
+        $this->expectException(UnhandledMatchError::class);
+
+        $content = $this->createContent();
         $content->appendSystemSection('foo');
     }
 
@@ -119,11 +159,7 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $exporter = $this->createMock(Exporter::class);
         $exporter->method('getHydrator')->willReturn($hydrator);
 
-        $container = $this->createMock(ContainerInterface::class);
-        $container->method('get')->with(Exporter::class)->willReturn($exporter);
-
-        /** @psalm-suppress InvalidArgument (Mockery bug) */
-        $content = Mockery::mock(Content::class, [$container])->makePartial();
+        $content = $this->createContentPartialMock(exporter: $exporter);
         $content->shouldReceive('appendSection')->once()->with('JAVAINFOS', $data);
 
         $content->setClient($client);
@@ -135,11 +171,7 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $client = $this->createMock(Client::class);
         $client->method('offsetGet')->with('Android')->willReturn(null);
 
-        $container = $this->createMock(ContainerInterface::class);
-        $container->expects($this->never())->method('get');
-
-        /** @psalm-suppress InvalidArgument (Mockery bug) */
-        $content = Mockery::mock(Content::class, [$container])->makePartial();
+        $content = $this->createContentPartialMock();
         $content->shouldNotReceive('appendSection');
 
         $content->setClient($client);
@@ -158,8 +190,7 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $client = $this->createMock(Client::class);
         $client->method('offsetGet')->with('CustomFields')->willReturn($data);
 
-        /** @var Mock|Content */
-        $content = Mockery::mock(Content::class)->makePartial();
+        $content = $this->createContentPartialMock();
         $content->shouldReceive('appendSection')->once()->with(
             'ACCOUNTINFO',
             ['KEYNAME' => 'name1', 'KEYVALUE' => 'value1'],
@@ -215,8 +246,8 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 
     public function testAppendAllItemSections()
     {
-        /** @var Mock|Content */
-        $content = Mockery::mock(Content::class)->makePartial();
+        $content = $this->createContentPartialMock();
+
         $content->shouldReceive('appendItemSections')->once()->with('controller', 'CONTROLLERS');
         $content->shouldReceive('appendItemSections')->once()->with('cpu', 'CPUS');
         $content->shouldReceive('appendItemSections')->once()->with('filesystem', 'DRIVES');
@@ -261,12 +292,6 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $exporter = $this->createMock(Exporter::class);
         $exporter->method('getHydrator')->with('Table')->willReturn($hydrator);
 
-        $container = $this->createStub(ContainerInterface::class);
-        $container->method('get')->willReturnMap([
-            [ItemManager::class, $itemManager],
-            [Exporter::class, $exporter],
-        ]);
-
         $items = new ResultSet();
         $items->initialize([$itemHydrated1, $itemHydrated2]);
 
@@ -274,11 +299,7 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $client = $this->createMock(Client::class);
         $client->method('getItems')->with('type', 'id', 'asc')->willReturn($items);
 
-        /**
-         * @var Mock|Content
-         * @psalm-suppress InvalidArgument (Mockery bug)
-         */
-        $content = Mockery::mock(Content::class, [$container])->makePartial();
+        $content = $this->createContentPartialMock(exporter: $exporter, itemManager: $itemManager);
         $content->shouldReceive('appendSection')->once()->with('section', $itemExtracted1);
         $content->shouldReceive('appendSection')->once()->with('section', $itemExtracted2);
 
@@ -295,7 +316,7 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
             'entity' => '&',
         ];
 
-        $content = new Content($this->createStub(ContainerInterface::class));
+        $content = $this->createContent();
         $document = new DOMDocument();
         $document->appendChild($content);
 
