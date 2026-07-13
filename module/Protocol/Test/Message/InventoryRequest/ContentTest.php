@@ -22,8 +22,11 @@
 
 namespace Protocol\Test\Message\InventoryRequest;
 
+use ArrayIterator;
 use ArrayObject;
+use Braintacle\Client\ClientDetails;
 use Braintacle\Client\Exporter;
+use Braintacle\Dom\DomMapper;
 use Braintacle\Dom\Element;
 use DOMDocument;
 use Laminas\Db\ResultSet\ResultSet;
@@ -34,7 +37,7 @@ use Protocol\Message\InventoryRequest\Content;
 use Laminas\Hydrator\HydratorInterface;
 use Mockery;
 use Mockery\Mock;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\TestWith;
 use Protocol\Hydrator\ClientsBios as ClientsBiosHydrator;
 use Protocol\Hydrator\ClientsHardware as ClientsHardwareHydrator;
 use UnhandledMatchError;
@@ -42,12 +45,14 @@ use UnhandledMatchError;
 class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 {
     private function createContent(
+        ?ClientDetails $clientDetails = null,
         ?ClientsHardwareHydrator $clientsHardwareHydrator = null,
         ?ClientsBiosHydrator $clientsBiosHydrator = null,
         ?Exporter $exporter = null,
         ?ItemManager $itemManager = null,
     ): Content {
         return new Content(
+            $clientDetails ?? $this->createStub(ClientDetails::class),
             $exporter ?? $this->createStub(Exporter::class),
             $clientsHardwareHydrator ?? $this->createStub(ClientsHardwareHydrator::class),
             $clientsBiosHydrator ?? $this->createStub(ClientsBiosHydrator::class),
@@ -56,6 +61,7 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
     }
 
     private function createContentPartialMock(
+        ?ClientDetails $clientDetails = null,
         ?Exporter $exporter = null,
         ?ClientsHardwareHydrator $clientsHardwareHydrator = null,
         ?ClientsBiosHydrator $clientsBiosHydrator = null,
@@ -63,6 +69,7 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
     ): Content|Mock {
         /** @psalm-suppress InvalidArgument (Mockery bug) */
         return Mockery::mock(Content::class, [
+            $clientDetails ?? $this->createStub(ClientDetails::class),
             $exporter ?? $this->createStub(Exporter::class),
             $clientsHardwareHydrator ?? $this->createStub(ClientsHardwareHydrator::class),
             $clientsBiosHydrator ?? $this->createStub(ClientsBiosHydrator::class),
@@ -271,18 +278,38 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $content->appendAllItemSections();
     }
 
-    public function testAppendItemSections()
+    #[TestWith(['REGISTRY', 'getRegistryData'])]
+    public function testAppendItemSectionsWithDomMapper(string $section, string $method)
+    {
+        $itemExported1 = ['keyExported1' => 'valueExported1'];
+        $itemExported2 = ['keyExported2' => 'valueExported2'];
+
+        $item1 = $this->createStub(DomMapper::class);
+        $item1->method('exportToDom')->willReturn($itemExported1);
+
+        $item2 = $this->createStub(DomMapper::class);
+        $item2->method('exportToDom')->willReturn($itemExported2);
+
+        $client = $this->createStub(Client::class);
+
+        $clientDetails = $this->createMock(ClientDetails::class);
+        $clientDetails->method($method)->with($client)->willReturn(new ArrayIterator([$item1, $item2]));
+
+        $content = $this->createContentPartialMock(clientDetails: $clientDetails);
+        $content->shouldReceive('appendSection')->once()->with($section, $itemExported1);
+        $content->shouldReceive('appendSection')->once()->with($section, $itemExported2);
+
+        $content->setClient($client);
+        $content->appendItemSections('type', $section); // first argument is not used with DOM mappers.
+    }
+
+    public function testAppendItemSectionsWithLegacyItems()
     {
         $itemHydrated1 = new ArrayObject(['keyHydrated1' => 'valueHydrated1']);
         $itemHydrated2 = new ArrayObject(['keyHydrated2' => 'valueHydrated2']);
         $itemExtracted1 = ['keyExtracted1' => 'valueExtracted1'];
         $itemExtracted2 = ['keyExtracted2' => 'valueExtracted2'];
 
-        /** @var MockObject|ItemManager */
-        $itemManager = $this->createMock(ItemManager::class);
-        $itemManager->method('getTableName')->with('type')->willReturn('Table');
-
-        /** @var MockObject|HydratorInterface */
         $hydrator = $this->createMock(HydratorInterface::class);
         $hydrator->method('extract')->willReturnMap([
             [$itemHydrated1, $itemExtracted1],
@@ -292,10 +319,12 @@ class ContentTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
         $exporter = $this->createMock(Exporter::class);
         $exporter->method('getHydrator')->with('Table')->willReturn($hydrator);
 
+        $itemManager = $this->createMock(ItemManager::class);
+        $itemManager->method('getTableName')->with('type')->willReturn('Table');
+
         $items = new ResultSet();
         $items->initialize([$itemHydrated1, $itemHydrated2]);
 
-        /** @var MockObject|Client */
         $client = $this->createMock(Client::class);
         $client->method('getItems')->with('type', 'id', 'asc')->willReturn($items);
 

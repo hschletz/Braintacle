@@ -35,9 +35,6 @@ use PHPUnit\Framework\MockObject\Stub;
  */
 class RegistryManagerTest extends AbstractTestCase
 {
-    /** {@inheritdoc} */
-    protected static $_tables = array('RegistryData', 'RegistryValueDefinitions');
-
     public function testGetValueDefinitions()
     {
         $model = $this->getModel();
@@ -57,7 +54,6 @@ class RegistryManagerTest extends AbstractTestCase
         $this->assertInstanceOf('Model\Registry\Value', $value);
         $this->assertEquals(
             array(
-                'Id' => '2',
                 'Name' => 'name1',
                 'RootKey' => '1',
                 'SubKeys' => 'sub\key1',
@@ -114,7 +110,7 @@ class RegistryManagerTest extends AbstractTestCase
             $this->loadDataSet()->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
                 'regconfig',
-                'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
+                'SELECT name, regtree, regkey, regvalue FROM regconfig ORDER BY name'
             )
         );
     }
@@ -132,7 +128,7 @@ class RegistryManagerTest extends AbstractTestCase
             $this->loadDataSet()->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
                 'regconfig',
-                'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
+                'SELECT name, regtree, regkey, regvalue FROM regconfig ORDER BY name'
             )
         );
     }
@@ -150,7 +146,7 @@ class RegistryManagerTest extends AbstractTestCase
             $this->loadDataSet()->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
                 'regconfig',
-                'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
+                'SELECT name, regtree, regkey, regvalue FROM regconfig ORDER BY name'
             )
         );
     }
@@ -164,7 +160,7 @@ class RegistryManagerTest extends AbstractTestCase
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
                 'regconfig',
-                'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
+                'SELECT name, regtree, regkey, regvalue FROM regconfig ORDER BY name'
             )
         );
         $this->assertTablesEqual(
@@ -185,7 +181,7 @@ class RegistryManagerTest extends AbstractTestCase
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
                 'regconfig',
-                'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
+                'SELECT name, regtree, regkey, regvalue FROM regconfig ORDER BY name'
             )
         );
         $this->assertTablesEqual(
@@ -211,7 +207,7 @@ class RegistryManagerTest extends AbstractTestCase
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
                 'regconfig',
-                'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
+                'SELECT name, regtree, regkey, regvalue FROM regconfig ORDER BY name'
             )
         );
         $this->assertTablesEqual(
@@ -237,7 +233,7 @@ class RegistryManagerTest extends AbstractTestCase
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
                 'regconfig',
-                'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
+                'SELECT name, regtree, regkey, regvalue FROM regconfig ORDER BY name'
             )
         );
         $this->assertTablesEqual(
@@ -311,7 +307,7 @@ class RegistryManagerTest extends AbstractTestCase
             $dataSet->getTable('regconfig'),
             $this->getConnection()->createQueryTable(
                 'regconfig',
-                'SELECT id, name, regtree, regkey, regvalue FROM regconfig ORDER BY id'
+                'SELECT name, regtree, regkey, regvalue FROM regconfig ORDER BY name'
             )
         );
         $this->assertTablesEqual(

@@ -205,23 +205,6 @@ printers:
     name: "name1"
     port: "port4"
 
-registry:
-  -
-    id: 2
-    hardware_id: 2
-    name: "name2"
-    regvalue: "data2"
-  -
-    id: 1
-    hardware_id: 1
-    name: "name1"
-    regvalue: "data1a"
-  -
-    id: 3
-    hardware_id: 1
-    name: "name1"
-    regvalue: "data1b"
-
 sim:
   -
     id: 2

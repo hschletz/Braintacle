@@ -90,6 +90,7 @@ final class Clients
                 Table::CustomFields,
                 Table::GroupMemberships,
                 Table::PackageHistory,
+                Table::RegistryData,
                 Table::WindowsProductKeys,
                 'devices',
             ];

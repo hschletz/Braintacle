@@ -42,7 +42,6 @@ class RegistryValueDefinitions extends \Database\AbstractTable
         $this->_hydrator->setNamingStrategy(
             new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
                 array(
-                    'id' => 'Id',
                     'name' => 'Name',
                     'regtree' => 'RootKey',
                     'regkey' => 'SubKeys',

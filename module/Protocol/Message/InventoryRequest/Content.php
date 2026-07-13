@@ -22,8 +22,10 @@
 
 namespace Protocol\Message\InventoryRequest;
 
+use Braintacle\Client\ClientDetails;
 use Braintacle\Client\Exporter;
 use Braintacle\Dom\Element;
+use Braintacle\Dom\DomMapper;
 use Model\Client\Client;
 use Model\Client\ItemManager;
 use Protocol\Hydrator\ClientsBios as ClientsBiosHydrator;
@@ -34,6 +36,8 @@ use Protocol\Hydrator\ClientsHardware as ClientsHardwareHydrator;
  */
 class Content extends Element
 {
+    private const RegistryData = 'REGISTRY';
+
     /**
      * Name of 'HARDWARE' section
      */
@@ -60,7 +64,7 @@ class Content extends Element
         'msofficeproduct' => 'OFFICEPACK',
         'port' => 'PORTS',
         'printer' => 'PRINTERS',
-        'registrydata' => 'REGISTRY',
+        'registrydata' => self::RegistryData,
         'sim' => 'SIM',
         'extensionslot' => 'SLOTS',
         'software' => 'SOFTWARES',
@@ -72,11 +76,11 @@ class Content extends Element
 
     /**
      * Source client.
-     * @var Client
      */
-    protected $client;
+    private Client $client;
 
     public function __construct(
+        private ClientDetails $clientDetails,
         private Exporter $exporter,
         private ClientsHardwareHydrator $clientsHardwareHydrator,
         private ClientsBiosHydrator $clientsBiosHydrator,
@@ -184,12 +188,27 @@ class Content extends Element
      */
     public function appendItemSections(string $itemType, string $section): void
     {
-        /** @var iterable<object> */
-        $items = $this->client->getItems($itemType, 'id', 'asc');
-        $table = $this->itemManager->getTableName($itemType);
-        $hydrator = $this->exporter->getHydrator($table);
-        foreach ($items as $item) {
-            $this->appendSection($section, $hydrator->extract($item));
+        $isLegacyItem = false;
+        switch ($section) {
+            case self::RegistryData:
+                $items = $this->clientDetails->getRegistryData($this->client);
+                break;
+            default:
+                $items = $this->client->getItems($itemType, 'id', 'asc');
+                $table = $this->itemManager->getTableName($itemType);
+                $hydrator = $this->exporter->getHydrator($table);
+                $isLegacyItem = true;
+
+                /** @var object $item */
+                foreach ($items as $item) {
+                    $this->appendSection($section, $hydrator->extract($item));
+                }
+        }
+        if (!$isLegacyItem) {
+            /** @var DomMapper $item */
+            foreach ($items as $item) {
+                $this->appendSection($section, $item->exportToDom());
+            }
         }
     }
 

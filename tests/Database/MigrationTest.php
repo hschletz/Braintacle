@@ -5,11 +5,13 @@ namespace Braintacle\Test\Database;
 use Braintacle\Database\Migration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\ForeignKeyConstraint\ReferentialAction;
 use Doctrine\DBAL\Schema\Name\UnqualifiedName;
 use Doctrine\DBAL\Schema\PrimaryKeyConstraint;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\View;
+use Doctrine\DBAL\Types\Types;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Override;
@@ -240,6 +242,44 @@ final class MigrationTest extends TestCase
                 });
 
                 $this->setPrimaryKey($table, ['col1', 'col2']);
+            }
+        };
+
+        $schema = new Schema();
+        $migration->up($schema);
+    }
+
+    public function testAddClientForeignKey()
+    {
+        $connection = $this->createStub(Connection::class);
+        $logger = $this->createStub(LoggerInterface::class);
+        $migration = new class($connection, $logger) extends Migration
+        {
+            #[Override]
+            public function up(Schema $schema): void
+            {
+                $table = $schema->createTable('table_name');
+                $table->addColumn('hardware_id', Types::INTEGER);
+
+                $this->addClientForeignKey($table, 'constraint_name');
+
+                $constraint = $table->getForeignKey('constraint_name');
+                TestCase::assertEquals('hardware', $constraint->getReferencedTableName()->toString());
+                TestCase::assertEquals(
+                    ['id'],
+                    array_map(
+                        fn(UnqualifiedName $name) => $name->toString(),
+                        $constraint->getReferencedColumnNames(),
+                    )
+                );
+                TestCase::assertEquals(
+                    ['hardware_id'],
+                    array_map(
+                        fn(UnqualifiedName $name) => $name->toString(),
+                        $constraint->getReferencingColumnNames(),
+                    )
+                );
+                TestCase::assertEquals(ReferentialAction::CASCADE, $constraint->getOnDeleteAction());
             }
         };
 

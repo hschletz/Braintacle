@@ -61,7 +61,7 @@ class RegistryManager
     public function getValueDefinitions()
     {
         $select = $this->_registryValueDefinitions->getSql()->select();
-        $select->columns(array('id', 'name', 'regtree', 'regkey', 'regvalue'));
+        $select->columns(['name', 'regtree', 'regkey', 'regvalue']);
         $select->order('name');
         return $this->_registryValueDefinitions->selectWith($select);
     }
@@ -78,7 +78,7 @@ class RegistryManager
     public function getValueDefinition($name)
     {
         $select = $this->_registryValueDefinitions->getSql()->select();
-        $select->columns(array('id', 'name', 'regtree', 'regkey', 'regvalue'));
+        $select->columns(['name', 'regtree', 'regkey', 'regvalue']);
         $select->where(array('name' => $name));
         $value = $this->_registryValueDefinitions->selectWith($select)->current();
         if (!$value) {

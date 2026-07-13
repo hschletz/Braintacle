@@ -59,7 +59,6 @@ use ReturnTypeWillChange;
  * @property \Model\Client\Item\NetworkInterface[] $networkInterface network interfaces
  * @property \Model\Client\Item\Port[] $port ports
  * @property \Model\Client\Item\Printer[] $printer printers
- * @property \Model\Client\Item\RegistryData[] $registryData registry data
  * @property \Model\Client\Item\Sim[] $sim SIM (Android clients only)
  * @property \Model\Client\Item\Software[] $software software
  * @property \Model\Client\Item\StorageDevice[] $storageDevice storage devices

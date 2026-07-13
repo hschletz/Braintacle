@@ -37,13 +37,11 @@ class RegistryValueDefinitionsTest extends AbstractTestCase
         $map = $hydrator->getNamingStrategy();
         $this->assertInstanceOf('Database\Hydrator\NamingStrategy\MapNamingStrategy', $map);
 
-        $this->assertEquals('Id', $map->hydrate('id'));
         $this->assertEquals('Name', $map->hydrate('name'));
         $this->assertEquals('RootKey', $map->hydrate('regtree'));
         $this->assertEquals('SubKeys', $map->hydrate('regkey'));
         $this->assertEquals('Value', $map->hydrate('regvalue'));
 
-        $this->assertEquals('id', $map->extract('Id'));
         $this->assertEquals('name', $map->extract('Name'));
         $this->assertEquals('regtree', $map->extract('RootKey'));
         $this->assertEquals('regkey', $map->extract('SubKeys'));

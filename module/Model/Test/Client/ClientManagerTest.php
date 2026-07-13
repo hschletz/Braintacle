@@ -33,14 +33,12 @@ use Model\Client\ItemManager;
 use Model\Test\AbstractTestCase;
 use Nada\Column\AbstractColumn as Column;
 use Nada\Database\AbstractDatabase;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
 
 class ClientManagerTest extends AbstractTestCase
 {
     protected static $_tables = array(
         'Filesystems',
-        'RegistryData',
         'Software',
         'SoftwareDefinitions',
         'SoftwareRaw',

@@ -5,6 +5,7 @@ namespace Braintacle\Test\Client;
 use Braintacle\Client\ClientList\Client as ClientListClient;
 use Braintacle\Client\ClientList\ClientListColumn;
 use Braintacle\Client\Clients;
+use Braintacle\Client\Registry\RootKey;
 use Braintacle\Database\Migration;
 use Braintacle\Database\Migrations;
 use Braintacle\Database\Table;
@@ -162,6 +163,15 @@ final class ClientsTest extends TestCase
             [1, 20],
             [2, 20],
         ]);
+        DatabaseConnection::initializeTable(
+            Table::RegistryValueDefinitions,
+            ['name', 'regtree', 'regkey', 'regvalue'],
+            [['name', RootKey::HKEY_LOCAL_MACHINE->value, 'regkey', 'regvalue']],
+        );
+        DatabaseConnection::initializeTable(Table::RegistryData, ['hardware_id', 'name'], [
+            [1, 'name'],
+            [2, 'name'],
+        ]);
         DatabaseConnection::initializeTable(Table::WindowsProductKeys, ['hardware_id'], [
             [1],
             [2],
@@ -180,6 +190,7 @@ final class ClientsTest extends TestCase
         $this->assertEquals([1], $this->fetchColumn($connection, Table::CustomFields, 'hardware_id'));
         $this->assertEquals([1], $this->fetchColumn($connection, Table::GroupMemberships, 'hardware_id'));
         $this->assertEquals([1], $this->fetchColumn($connection, Table::PackageHistory, 'hardware_id'));
+        $this->assertEquals([1], $this->fetchColumn($connection, Table::RegistryData, 'hardware_id'));
         $this->assertEquals([1], $this->fetchColumn($connection, Table::WindowsProductKeys, 'hardware_id'));
         $this->assertEquals([1], $this->fetchColumn($connection, 'devices', 'hardware_id'));
     }
@@ -192,6 +203,7 @@ final class ClientsTest extends TestCase
         $this->assertEquals([1, 2], $this->fetchColumn($connection, Table::CustomFields, 'hardware_id'));
         $this->assertEquals([1, 2], $this->fetchColumn($connection, Table::GroupMemberships, 'hardware_id'));
         $this->assertEquals([1, 2], $this->fetchColumn($connection, Table::PackageHistory, 'hardware_id'));
+        $this->assertEquals([1, 2], $this->fetchColumn($connection, Table::RegistryData, 'hardware_id'));
         $this->assertEquals([1, 2], $this->fetchColumn($connection, Table::WindowsProductKeys, 'hardware_id'));
         $this->assertEquals([1, 2], $this->fetchColumn($connection, 'devices', 'hardware_id'));
     }

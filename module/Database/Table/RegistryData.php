@@ -22,7 +22,6 @@
 
 namespace Database\Table;
 
-use Model\Client\Item\RegistryData as RegistryDataItem;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -37,21 +36,6 @@ class RegistryData extends \Database\AbstractTable
     public function __construct(ContainerInterface $container)
     {
         $this->table = 'registry';
-
-        $this->_hydrator = new \Laminas\Hydrator\ArraySerializableHydrator();
-        $this->_hydrator->setNamingStrategy(
-            new \Database\Hydrator\NamingStrategy\MapNamingStrategy(
-                array(
-                    'name' => 'Value',
-                    'regvalue' => 'Data',
-                )
-            )
-        );
-
-        $this->resultSetPrototype = new \Laminas\Db\ResultSet\HydratingResultSet(
-            $this->_hydrator,
-            $container->get(RegistryDataItem::class)
-        );
 
         parent::__construct($container);
     }

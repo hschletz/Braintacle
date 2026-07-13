@@ -83,6 +83,10 @@ final class Table
 
     public const Packages = 'download_available';
 
+    public const RegistryData = 'registry';
+
+    public const RegistryValueDefinitions = 'regconfig';
+
     /**
      * "braintacle_windows" table.
      *

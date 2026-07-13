@@ -52,7 +52,6 @@ class ItemManager
         'networkinterface' => 'NetworkInterfaces',
         'port' => 'Ports',
         'printer' => 'Printers',
-        'registrydata' => 'RegistryData',
         'sim' => 'Sim',
         'software' => 'Software',
         'storagedevice' => 'StorageDevices',
@@ -70,7 +69,6 @@ class ItemManager
         'filesystem' => 'Filesystem',
         'msofficeproduct' => 'MsOfficeProduct',
         'networkinterface' => 'NetworkInterface',
-        'registrydata' => 'RegistryData',
         'software' => 'Software',
         'storagedevice' => 'StorageDevice',
     );

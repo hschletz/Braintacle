@@ -21,10 +21,13 @@
  */
 
 use Braintacle\Container;
+use DG\BypassFinals;
 use Laminas\ServiceManager\ServiceManager;
 
 error_reporting(-1);
 date_default_timezone_set('Europe/Berlin');
+
+BypassFinals::enable();
 
 // Discard service manager instance - once set up, the StaticFilter will be
 // operational.

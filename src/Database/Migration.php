@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Braintacle\Database;
 
+use Doctrine\DBAL\Schema\ForeignKeyConstraint\ReferentialAction;
 use Doctrine\DBAL\Schema\Name\UnquotedIdentifierFolding;
 use Doctrine\DBAL\Schema\PrimaryKeyConstraint;
 use Doctrine\DBAL\Schema\Schema;
@@ -83,6 +84,20 @@ abstract class Migration extends AbstractMigration
     {
         $table->addPrimaryKeyConstraint(
             PrimaryKeyConstraint::editor()->setUnquotedColumnNames(...$columnNames)->create()
+        );
+    }
+
+    /**
+     * Add a foreign key constraint to the 'hardware' table refererenced by 'hardware_id'
+     */
+    protected function addClientForeignKey(Table $table, string $name): void
+    {
+        $table->addForeignKeyConstraint(
+            'hardware',
+            ['hardware_id'],
+            ['id'],
+            ['onDelete' => ReferentialAction::CASCADE->value],
+            $name,
         );
     }
 }
