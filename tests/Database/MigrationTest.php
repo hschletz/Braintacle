@@ -7,13 +7,9 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\ForeignKeyConstraint\ReferentialAction;
 use Doctrine\DBAL\Schema\Name\UnqualifiedName;
-use Doctrine\DBAL\Schema\PrimaryKeyConstraint;
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\View;
 use Doctrine\DBAL\Types\Types;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Override;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\TestCase;
@@ -21,8 +17,6 @@ use Psr\Log\LoggerInterface;
 
 final class MigrationTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     #[DoesNotPerformAssertions]
     public function testDown()
     {
@@ -223,7 +217,6 @@ final class MigrationTest extends TestCase
         $migration->up($schema);
     }
 
-    #[DoesNotPerformAssertions]
     public function testSetPrimaryKey()
     {
         $connection = $this->createStub(Connection::class);
@@ -234,14 +227,20 @@ final class MigrationTest extends TestCase
             #[Override]
             public function up(Schema $schema): void
             {
-                $table = Mockery::mock(Table::class);
-                $table->shouldReceive('addPrimaryKeyConstraint')->withArgs(function (PrimaryKeyConstraint $pk) {
-                    $columns = array_map(fn(UnqualifiedName $name) => $name->toString(), $pk->getColumnNames());
-
-                    return $columns == ['col1', 'col2'];
-                });
+                $table = $schema->createTable('table_name');
+                $table->addColumn('col1', Types::INTEGER);
+                $table->addColumn('col2', Types::INTEGER);
 
                 $this->setPrimaryKey($table, ['col1', 'col2']);
+
+                $pk = $table->getPrimaryKeyConstraint();
+                TestCase::assertEquals(
+                    ['col1', 'col2'],
+                    array_map(
+                        fn(UnqualifiedName $name) => $name->toString(),
+                        $pk->getColumnNames()
+                    )
+                );
             }
         };
 
