@@ -9,6 +9,7 @@ use Braintacle\Group\Group;
 use Braintacle\Package\Assignments;
 use Braintacle\Test\DatabaseConnection;
 use Braintacle\Test\DataProcessorTestTrait;
+use Braintacle\Test\MockeryWrapper;
 use Braintacle\Transformer\DateTime as TransformerDateTime;
 use Braintacle\Transformer\DateTimeTransformer;
 use DateTime;
@@ -381,7 +382,7 @@ class AssignmentsTest extends TestCase
             $fixture = [[$targetId, 'DOWNLOAD', $packageId]];
             DatabaseConnection::initializeTable(Table::PackageAssignments, ['hardware_id', 'name', 'ivalue'], $fixture);
 
-            $connectionProxy = Mockery::mock(Connection::class);
+            $connectionProxy = MockeryWrapper::createMock(Connection::class);
             $connectionProxy
                 ->shouldReceive('beginTransaction')
                 ->once()

@@ -4,7 +4,7 @@ namespace Braintacle\Test\Software;
 
 use Braintacle\Software\SoftwareManagementHandler;
 use Braintacle\Test\HttpHandlerTestTrait;
-use Mockery;
+use Braintacle\Test\MockeryWrapper;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\SoftwareManager;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -26,7 +26,7 @@ class SoftwareManagementHandlerTest extends TestCase
     #[DataProvider('actionProvider')]
     public function testAction(string $action, bool $display)
     {
-        $softwareManager = Mockery::mock(SoftwareManager::class);
+        $softwareManager = MockeryWrapper::createMock(SoftwareManager::class);
         $softwareManager->shouldReceive('setDisplay')->with('software1', $display);
         $softwareManager->shouldReceive('setDisplay')->with('software2', $display);
 

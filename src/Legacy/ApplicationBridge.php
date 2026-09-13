@@ -28,7 +28,7 @@ class ApplicationBridge implements RequestHandlerInterface
         // Generate PSR-7 response from MVC response.
         $response = $this->response->withStatus($mvcResponse->getStatusCode());
         foreach ($mvcResponse->getHeaders() as $name => $value) {
-            $response = $response->withHeader($name, $value);
+            $response = $response->withHeader($name, (string) $value);
         }
 
         $template = $mvcEvent->getParam('template');

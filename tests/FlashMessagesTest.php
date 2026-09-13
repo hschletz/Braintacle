@@ -4,7 +4,6 @@ namespace Braintacle\Test;
 
 use Braintacle\FlashMessages;
 use Laminas\Session\Container;
-use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
@@ -32,7 +31,7 @@ class FlashMessagesTest extends TestCase
     public function testAddSetsExpirationHops()
     {
         // Order is significant: setExpirationHops() would have no effect if called before offsetSet().
-        $container = Mockery::mock(Container::class);
+        $container = MockeryWrapper::createMock(Container::class);
         $container->shouldReceive('offsetExists');
         $container->shouldReceive('offsetSet')->once()->ordered();
         $container->shouldReceive('setExpirationHops')->once()->ordered()->with(1, FlashMessages::class);

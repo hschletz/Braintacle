@@ -12,6 +12,7 @@ use Braintacle\Template\Function\PathForRouteFunction;
 use Braintacle\Template\Function\TranslateFunction;
 use Braintacle\Template\TemplateEngine;
 use Braintacle\Template\TemplateLoader;
+use Braintacle\Test\MockeryWrapper;
 use Composer\InstalledVersions;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Router\RouteMatch;
@@ -61,7 +62,7 @@ trait InjectServicesTrait
         /** @var Mock|CsrfTokenFunction */
         $csrfTokenFunction = Mockery::mock(CsrfTokenFunction::class);
 
-        $optionFunction = Mockery::mock(OptionFunction::class);
+        $optionFunction = MockeryWrapper::createMock(OptionFunction::class);
         $optionFunction->shouldReceive('__invoke')->andReturn(0); // never evaluated in this testsuite
 
         /** @var Mock|PathForRouteFunction */

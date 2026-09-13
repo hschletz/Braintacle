@@ -28,9 +28,6 @@ parameters:
             message: '#^Cannot call method (isTranslatorEnabled|setTranslator|setTranslatorEnabled)\(\) on \(callable\)\|Laminas\\View\\Helper\\HelperInterface\.$#'
             path: module/
         -
-            # https://github.com/mockery/mockery/issues/991
-            message: '#Call to an undefined method Mockery\\ExpectationInterface\|Mockery\\HigherOrderMessage::[a-zA-Z0-9_]+\(\)#'
-        -
             # Only avaliable with PHP 8.4, but older version is assumed. Code checks PHP version before using these Methods.
             identifier: method.notFound
             message: '(::isUninitializedLazyObject\(|::newLazyGhost\()'

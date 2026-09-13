@@ -15,6 +15,7 @@ use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
 #[CoversClass(Importer::class)]
@@ -25,7 +26,7 @@ final class ImporterTest extends TestCase
         $config = $this->createMock(Config::class);
         $config->method('__get')->with('communicationServerUri')->willReturn('communication_server');
 
-        /** @var array{request: RequestInterface}[] */
+        /** @var array{request: RequestInterface, response: ?ResponseInterface, error: mixed, options: mixed[]}[] */
         $history = [];
         $handlerStack = HandlerStack::create(new MockHandler([new Response(200)]));
         $handlerStack->push(Middleware::history($history));

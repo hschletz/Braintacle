@@ -126,6 +126,8 @@ class DefaultPlugin
      * - NULL: type specific default
      * - "id": item ID
      * - other: query table's hydrator for matching column name
+     *
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function order(?string $order, string $direction): void
     {

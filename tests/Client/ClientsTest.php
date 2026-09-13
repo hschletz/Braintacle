@@ -16,13 +16,13 @@ use Braintacle\Group\Membership;
 use Braintacle\Locks;
 use Braintacle\Test\DatabaseConnection;
 use Braintacle\Test\DataProcessorTestTrait;
+use Braintacle\Test\MockeryWrapper;
 use Braintacle\Transformer\DateTime;
 use Braintacle\Transformer\DateTimeTransformer;
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Exception;
 use Formotron\DataProcessor;
-use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\Client\Client;
 use Model\Client\ItemManager;
@@ -644,7 +644,7 @@ final class ClientsTest extends TestCase
 
     public function testSetGroupMembershipsMixedKeys()
     {
-        $connection = Mockery::mock(Connection::class);
+        $connection = MockeryWrapper::createMock(Connection::class);
         $connection->shouldReceive('insert')->once()->with(
             Table::GroupMemberships,
             [

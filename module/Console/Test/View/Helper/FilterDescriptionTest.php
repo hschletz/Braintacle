@@ -22,9 +22,9 @@
 
 namespace Console\Test\View\Helper;
 
+use Braintacle\Test\MockeryWrapper;
 use InvalidArgumentException;
 use Library\Test\View\Helper\AbstractTestCase;
-use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Model\Network\Subnet;
 
@@ -37,7 +37,7 @@ class FilterDescriptionTest extends AbstractTestCase
 
     public function testInterfaceInSubnet()
     {
-        $subnet = Mockery::mock(Subnet::class);
+        $subnet = MockeryWrapper::createMock(Subnet::class);
         $subnet->shouldReceive('offsetSet')->once()->with('Address', 'address1');
         $subnet->shouldReceive('offsetSet')->once()->with('Mask', 'mask1');
         $subnet->shouldReceive('offsetGet')->with('CidrAddress')->andReturn('<cidrAddress1>');

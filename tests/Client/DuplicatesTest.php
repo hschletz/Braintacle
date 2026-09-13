@@ -11,6 +11,7 @@ use Braintacle\Database\Table;
 use Braintacle\Group\Membership;
 use Braintacle\Locks;
 use Braintacle\Test\DatabaseConnection;
+use Braintacle\Test\MockeryWrapper;
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Mockery;
@@ -185,7 +186,7 @@ final class DuplicatesTest extends TestCase
         $clients = $this->createMock(Clients::class);
         $clients->expects($this->never())->method('delete');
 
-        $locks = Mockery::mock(Locks::class);
+        $locks = MockeryWrapper::createMock(Locks::class);
         $locks->shouldReceive('lock')->once()->with($client1)->andReturn(true);
         $locks->shouldReceive('lock')->once()->with($client2)->andReturn(true);
 
@@ -233,16 +234,16 @@ final class DuplicatesTest extends TestCase
         $client3 = $this->createMock(Client::class);
         $client3->lastContactDate = new DateTimeImmutable('2025-09-16T17:00:03');
 
-        $clientManager = Mockery::mock(ClientManager::class);
+        $clientManager = MockeryWrapper::createMock(ClientManager::class);
         $clientManager->shouldReceive('getClient')->once()->with(1)->andReturn($client1);
         $clientManager->shouldReceive('getClient')->once()->with(2)->andReturn($client2);
         $clientManager->shouldReceive('getClient')->once()->with(3)->andReturn($client3);
 
-        $clients = Mockery::mock(Clients::class);
+        $clients = MockeryWrapper::createMock(Clients::class);
         $clients->shouldReceive('delete')->once()->with($client1, false);
         $clients->shouldReceive('delete')->once()->with($client2, false);
 
-        $locks = Mockery::mock(Locks::class);
+        $locks = MockeryWrapper::createMock(Locks::class);
         $locks->shouldReceive('lock')->once()->with($client1)->andReturn(true);
         $locks->shouldReceive('lock')->once()->with($client2)->andReturn(true);
         $locks->shouldReceive('lock')->once()->with($client3)->andReturn(true);
@@ -292,12 +293,12 @@ final class DuplicatesTest extends TestCase
         $client3 = $this->createMock(Client::class);
         $client3->lastContactDate = new DateTimeImmutable('2025-09-16T19:12:03');
 
-        $clientManager = Mockery::mock(ClientManager::class);
+        $clientManager = MockeryWrapper::createMock(ClientManager::class);
         $clientManager->shouldReceive('getClient')->once()->with(1)->andReturn($client1);
         $clientManager->shouldReceive('getClient')->once()->with(2)->andReturn($client2);
         $clientManager->shouldReceive('getClient')->once()->with(3)->andReturn($client3);
 
-        $locks = Mockery::mock(Locks::class);
+        $locks = MockeryWrapper::createMock(Locks::class);
         $locks->shouldReceive('lock')->once()->with($client1)->andReturn(true);
         $locks->shouldReceive('lock')->once()->with($client2)->andReturn(true);
         $locks->shouldReceive('lock')->once()->with($client3)->andReturn(true);
@@ -345,7 +346,7 @@ final class DuplicatesTest extends TestCase
         $middle = $this->createStub(Client::class);
         $oldest = $this->createStub(Client::class);
 
-        $clientConfig = Mockery::mock(ClientConfig::class);
+        $clientConfig = MockeryWrapper::createMock(ClientConfig::class);
         $clientConfig->shouldReceive('getExplicitConfig')->with($newest)->andReturn(
             ['option1' => 'n1', 'option3' => 'n3', 'option5' => 'n5', 'option7' => 'n7']
         );
@@ -416,7 +417,7 @@ final class DuplicatesTest extends TestCase
 
         // The resulting membership type is undefined. Just check for the
         // correct group ID and size.
-        $clients = Mockery::mock(Clients::class);
+        $clients = MockeryWrapper::createMock(Clients::class);
         $clients
             ->shouldReceive('getGroupMemberships')
             ->once()
