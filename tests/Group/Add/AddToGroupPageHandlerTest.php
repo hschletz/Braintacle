@@ -13,6 +13,7 @@ use Braintacle\Template\TemplateLoader;
 use Braintacle\Test\DomMatcherTrait;
 use Braintacle\Test\HttpHandlerTestTrait;
 use Braintacle\Test\TemplateTestTrait;
+use DOMXPath;
 use Formotron\DataProcessor;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -27,19 +28,18 @@ class AddToGroupPageHandlerTest extends TestCase
     use HttpHandlerTestTrait;
     use TemplateTestTrait;
 
-    public function testHandler()
+    private function getXPath(array $invertParam): DOMXPath
     {
-        $queryParams = [
+        $queryParams = $invertParam + [
             'filter' => '_filter',
             'search' => '_search',
             'operator' => 'eq',
-            'invert' => '1',
         ];
         $searchParams = new SearchParams();
         $searchParams->filter = '_filter';
         $searchParams->search = '_search';
         $searchParams->operator = SearchOperator::Equal;
-        $searchParams->invert = true;
+        $searchParams->invert = (bool) $invertParam;
 
         $dataProcessor = $this->createMock(DataProcessor::class);
         $dataProcessor->method('process')->with($queryParams, SearchParams::class)->willReturn($searchParams);
@@ -67,9 +67,22 @@ class AddToGroupPageHandlerTest extends TestCase
         $this->assertXpathMatches($xPath, '//form[@id="form_addtogroup"]/input[@name="filter"][@value="_filter"]');
         $this->assertXpathMatches($xPath, '//form[@id="form_addtogroup"]/input[@name="search"][@value="_search"]');
         $this->assertXpathMatches($xPath, '//form[@id="form_addtogroup"]/input[@name="operator"][@value="eq"]');
-        $this->assertXpathMatches($xPath, '//form[@id="form_addtogroup"]/input[@name="invert"][@value="1"]');
 
         $this->assertXpathMatches($xPath, '//select[@form="form_addtogroup"]/option[1][text()="group1"]');
         $this->assertXpathMatches($xPath, '//select[@form="form_addtogroup"]/option[2][text()="group2"]');
+
+        return $xPath;
+    }
+
+    public function testInvert()
+    {
+        $xPath = $this->getXPath(['invert' => 'on']);
+        $this->assertXpathMatches($xPath, '//form[@id="form_addtogroup"]/input[@type="hidden"][@name="invert"]');
+    }
+
+    public function testNoInvert()
+    {
+        $xPath = $this->getXPath([]);
+        $this->assertNotXpathMatches($xPath, '//form[@id="form_addtogroup"]/input[@type="hidden"][@name="invert"]');
     }
 }

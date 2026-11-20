@@ -17,7 +17,7 @@
         <input type="hidden" name="filter" value="{$filter}">
         <input type="hidden" name="search" value="{$search}">
         <input type="hidden" name="operator" value="{$operator}">
-        <input type="hidden" name="invert" value="{$invert}">
+        <input n:if="$invert" type="hidden" name="invert">
     </form>
 
     {* Linked to form. Kept outside because of CSS rules. *}

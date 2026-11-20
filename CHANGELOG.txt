@@ -26,6 +26,11 @@ CLI:
   The BRAINTACLE_CONFIG environment variable can be used instead with all PHP
   versions.
 
+Fixed bugs:
+
+- Fixed incorrect query stored/used in groups (results were always inverted,
+  regardless of setting).
+
 
 CHANGES IN VERSION 2.0
 =======================

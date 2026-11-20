@@ -34,7 +34,7 @@ class AddToGroupPageHandler implements RequestHandlerInterface
             'filter' => $searchParams->filter,
             'search' => $searchParams->search,
             'operator' => $searchParams->operator->value,
-            'invert' => $searchParams->invert ? '1' : '0',
+            'invert' => $searchParams->invert,
         ]));
 
         return $this->response;
