@@ -39,7 +39,7 @@ this program; if not, write to the Free Software Foundation, Inc.,
     </testsuite>
   </testsuites>
   <logging/>
-  <source>
+  <source ignoreSuppressionOfDeprecations="true">
     <include>
       <directory suffix=".php">.</directory>
     </include>
@@ -47,4 +47,8 @@ this program; if not, write to the Free Software Foundation, Inc.,
       <directory>Test</directory>
     </exclude>
   </source>
+  <php>
+    <ini name = "zend.assertions" value="1" />
+    <server name="DOCTRINE_DEPRECATIONS" value="trigger" />
+  </php>
 </phpunit>

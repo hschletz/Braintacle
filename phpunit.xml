@@ -19,12 +19,13 @@
     </testsuite>
   </testsuites>
   <logging/>
-  <source>
+  <source ignoreSuppressionOfDeprecations="true">
     <include>
       <directory suffix=".php">src</directory>
     </include>
   </source>
   <php>
     <ini name = "zend.assertions" value="1" />
+    <server name="DOCTRINE_DEPRECATIONS" value="trigger" />
   </php>
 </phpunit>

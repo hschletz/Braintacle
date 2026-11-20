@@ -61,7 +61,7 @@ final class Version20250912184313 extends Migration
                 Table::NetworkDevicesIdentified,
                 'Identified network devices',
             );
-            $table->addColumn('macaddr', types::STRING)->setLength(17)->setNotnull(false);
+            $table->addColumn('macaddr', types::STRING)->setLength(17)->setNotnull(true);
             $table->addColumn('description', types::STRING)->setLength(255)->setNotnull(false);
             $table
                 ->addColumn('type', types::STRING)

@@ -31,7 +31,7 @@ final class Migrations
         $config = new JsonFile($configFile);
         $dependencyFactory = DependencyFactory::fromConnection($config, new ExistingConnection($this->connection));
 
-        $this->application->add(new MigrateCommand($dependencyFactory));
+        $this->application->addCommand(new MigrateCommand($dependencyFactory));
 
         $input = new ArrayInput([
             'command' => 'migrations:migrate',

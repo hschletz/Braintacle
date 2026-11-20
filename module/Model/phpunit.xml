@@ -42,8 +42,9 @@ this program; if not, write to the Free Software Foundation, Inc.,
   <logging/>
   <php>
     <env name="BRAINTACLE_TEST_DATABASE" value="pdo-sqlite:///:memory:" />
+    <server name="DOCTRINE_DEPRECATIONS" value="trigger" />
   </php>
-  <source>
+  <source ignoreSuppressionOfDeprecations="true">
     <include>
       <directory suffix=".php">.</directory>
     </include>
