@@ -28,7 +28,7 @@
         "ext-mbstring": "*",
         "ext-pdo": "*",
         "ext-zip": "*",
-        "doctrine/dbal": "^4.6",
+        "doctrine/dbal": "~4.6.0",
         "doctrine/migrations": "^3.10",
         "gettext/gettext": "^5.7",
         "guzzlehttp/guzzle": "^8.1.0",
