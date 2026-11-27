@@ -19,7 +19,7 @@ allowing centralized software updates, remote configuration and more.
   [mod_perl](https://perl.apache.org) or any web server capabale of executing
   CGI scripts, for the main server component.
 
-- A web server with 64-bit [PHP](https://php.net) 8.2 or later for the
+- A web server with 64-bit [PHP](https://php.net) 8.3 or later for the
   administration console. PHP is also required for most of the command line
   tools. The following PHP extensions are required:
 

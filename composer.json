@@ -22,7 +22,7 @@
         }
     },
     "require": {
-        "php-64bit": "8.2 - 8.5",
+        "php-64bit": "8.3 - 8.5",
         "ext-dom": "*",
         "ext-intl": "*",
         "ext-mbstring": "*",
@@ -37,17 +37,17 @@
         "hschletz/nada": "^1.3",
         "laminas/laminas-authentication": "^2.5",
         "laminas/laminas-di": "^3.9",
-        "laminas/laminas-escaper": "^2.13",
-        "laminas/laminas-filter": "^2.18",
-        "laminas/laminas-form": "^3.4",
+        "laminas/laminas-escaper": "^2.19",
+        "laminas/laminas-filter": "^2.43",
+        "laminas/laminas-form": "^3.25",
         "laminas/laminas-hydrator": "^4.5",
         "laminas/laminas-i18n": "^2.17",
-        "laminas/laminas-i18n-resources": "^2.5",
-        "laminas/laminas-inputfilter": "^2.19",
+        "laminas/laminas-i18n-resources": "^2.14.1",
+        "laminas/laminas-inputfilter": "^2.36",
         "laminas/laminas-router": "^3.9",
-        "laminas/laminas-servicemanager": "^3.16",
+        "laminas/laminas-servicemanager": "^3.25",
         "laminas/laminas-session": "^2.13",
-        "laminas/laminas-stdlib": "^3.13",
+        "laminas/laminas-stdlib": "^3.22",
         "laminas/laminas-uri": "^2.9",
         "laminas/laminas-validator": "^2.24",
         "laminas/laminas-view": "^2.22",
@@ -88,7 +88,7 @@
             "bamarni/composer-bin-plugin": true
         },
         "platform": {
-            "php": "8.2.29"
+            "php": "8.3.37"
         },
         "sort-packages": true
     },

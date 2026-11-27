@@ -70,11 +70,7 @@ final class DateTimeTest extends TestCase
             public DateTimeInterface $value;
         };
 
-        $this->expectException(
-            class_exists(DateInvalidTimeZoneException::class) ?
-                DateInvalidTimeZoneException::class : // PHP 8.3+
-                Exception::class // PHP 8.2
-        );
+        $this->expectException(DateInvalidTimeZoneException::class);
         $this->processData(['value' => 'datetime value'], get_class($dataObject));
     }
 
