@@ -5,7 +5,12 @@ declare(strict_types=1);
 namespace Braintacle\Database\Migrations;
 
 use Braintacle\Database\Migration;
+use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\Index;
+use Doctrine\DBAL\Schema\PrimaryKeyConstraint;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Schema\UniqueConstraint;
 use Doctrine\DBAL\Types\Types;
 use Override;
 
@@ -25,113 +30,336 @@ final class Version20250315111256 extends Migration
             return;
         }
 
-        $table = $this->createTable($schema, 'hardware', 'Clients and groups');
+        $tableEditor = Table::editor()
+            ->setUnquotedName('hardware')
+            ->setOptions(['engine' => self::EngineInnoDb])
+            ->setComment('Clients and groups');
 
-        $table->addColumn('id', Types::INTEGER)->setNotnull(true)->setAutoincrement(true);
-        $table->addColumn('deviceid', Types::STRING)->setLength(255)->setNotnull(true)->setComment(
-            'Client-generated uniqe ID. Groups have special value _SYSTEMGROUP_.'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('id')
+                ->setTypeName(Types::INTEGER)
+                ->setNotNull(true)
+                ->setAutoincrement(true)
+                ->create()
         );
-        $table->addColumn('uuid', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'System UUID reported by agent'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('deviceid')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(true)
+                ->setComment(
+                    'Client-generated uniqe ID. Groups have special values __SYSTEMGROUP__ and __DOWNLOADGROUP__.'
+                )
+                ->create()
         );
-        $table->addColumn('name', Types::STRING)->setLength(255)->setNotnull(true)->setComment(
-            'Client or group name'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('uuid')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('System UUID reported by agent')
+                ->create()
         );
-        $table->addColumn('workgroup', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Windows workgroup/domain'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('name')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(true)
+                ->setComment('Client or group name')
+                ->create()
         );
-        $table->addColumn('userid', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Name of active user'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('workgroup')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('Windows workgroup/domain')
+                ->create()
         );
-        $table->addColumn('userdomain', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Windows domain of active user (computer name for local account)'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('userid')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('Name of active user')
+                ->create()
         );
-        $table->addColumn('osname', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'OS name reported by agent'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('userdomain')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('Windows domain of active user (computer name for local account)')
+                ->create()
         );
-        $table->addColumn('osversion', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'OS version number'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('osname')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('OS name reported by agent')
+                ->create()
         );
-        $table->addColumn('oscomments', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'OS specific version string: service pack (Windows), kernel version (Linux)...'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('osversion')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('OS version number')
+                ->create()
         );
-        $table->addColumn('description', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'OS comment for clients, description for groups'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('oscomments')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('OS specific version string: service pack (Windows), kernel version (Linux)...')
+                ->create()
         );
-        $table->addColumn('wincompany', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Company name entered at Windows setup'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('description')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('OS comment for clients, description for groups')
+                ->create()
         );
-        $table->addColumn('winowner', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Owner name entered at Windows setup'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('wincompany')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('Company name entered at Windows setup')
+                ->create()
         );
-        $table->addColumn('winprodid', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Windows Product ID'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('winowner')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('Owner name entered at Windows setup')
+                ->create()
         );
-        $table->addColumn('winprodkey', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Windows product key (reported by agent)'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('winprodid')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('Windows Product ID')
+                ->create()
         );
-        $table->addColumn('arch', Types::STRING)->setLength(30)->setNotnull(false)->setComment(
-            'Windows CPU architecture'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('winprodkey')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('Windows product key (reported by agent)')
+                ->create()
         );
-        $table->addColumn('processort', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'CPU type'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('arch')
+                ->setTypeName(Types::STRING)
+                ->setLength(30)
+                ->setNotNull(false)
+                ->setComment('Windows CPU architecture')
+                ->create()
         );
-        $table->addColumn('processors', Types::INTEGER)->setNotnull(false)->setComment(
-            'CPU clock in MHz'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('processort')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('CPU type')
+                ->create()
         );
-        $table->addColumn('processorn', Types::SMALLINT)->setNotnull(false)->setComment(
-            'Amount of CPU cores'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('processors')
+                ->setTypeName(Types::INTEGER)
+                ->setNotNull(false)
+                ->setComment('CPU clock in MHz')
+                ->create()
         );
-        $table->addColumn('memory', Types::INTEGER)->setNotnull(false)->setComment(
-            'Maximum amount of RAM avalilable to OS (in MB). May be lower than physical RAM.'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('processorn')
+                ->setTypeName(Types::SMALLINT)
+                ->setNotNull(false)
+                ->setComment('Amount of CPU cores')
+                ->create()
         );
-        $table->addColumn('swap', Types::INTEGER)->setNotnull(false)->setComment(
-            'Amount of swap space (in MB)'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('memory')
+                ->setTypeName(Types::INTEGER)
+                ->setNotNull(false)
+                ->setComment('Maximum amount of RAM avalilable to OS (in MB). May be lower than physical RAM.')
+                ->create()
         );
-        $table->addColumn('ipaddr', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'deprecated'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('swap')
+                ->setTypeName(Types::INTEGER)
+                ->setNotNull(false)
+                ->setComment('Amount of swap space (in MB)')
+                ->create()
         );
-        $table->addColumn('ipsrc', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'deprecated'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('ipaddr')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('deprecated')
+                ->create()
         );
-        $table->addColumn('dns', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'IPv4 address of primary DNS server (UNIX agent only)'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('ipsrc')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('deprecated')
+                ->create()
         );
-        $table->addColumn('defaultgateway', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'IPv4 address of default gateway (UNIX agent only)'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('dns')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('IPv4 address of primary DNS server (UNIX agent only)')
+                ->create()
         );
-        $table->addColumn('etime', Types::INTEGER)->setNotnull(false)->setComment(
-            'deprecated'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('defaultgateway')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('IPv4 address of default gateway (UNIX agent only)')
+                ->create()
         );
-        $table->addColumn('lastdate', Types::DATETIME_IMMUTABLE)->setNotnull(false)->setComment(
-            'Timestamp of last inventory'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('etime')
+                ->setTypeName(Types::INTEGER)
+                ->setNotNull(false)
+                ->setComment('deprecated')
+                ->create()
         );
-        $table->addColumn('lastcome', Types::DATETIME_IMMUTABLE)->setNotnull(false)->setComment(
-            'Timestamp of last agent contact'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('lastdate')
+                ->setTypeName(Types::DATETIME_IMMUTABLE)
+                ->setNotNull(false)
+                ->setComment('Timestamp of last inventory')
+                ->create()
         );
-        $table->addColumn('useragent', Types::STRING)->setLength(50)->setNotnull(false)->setComment(
-            'Agent ID sting'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('lastcome')
+                ->setTypeName(Types::DATETIME_IMMUTABLE)
+                ->setNotNull(false)
+                ->setComment('Timestamp of last agent contact')
+                ->create()
         );
-        $table->addColumn('quality', Types::DECIMAL)->setPrecision(7)->setScale(4)->setNotnull(false)->setComment(
-            'deprecated'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('useragent')
+                ->setTypeName(Types::STRING)
+                ->setLength(50)
+                ->setNotNull(false)
+                ->setComment('Agent ID sting')
+                ->create()
         );
-        $table->addColumn('fidelity', Types::BIGINT)->setNotnull(false)->setDefault(1)->setComment(
-            'deprecated'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('quality')
+                ->setTypeName(Types::DECIMAL)
+                ->setPrecision(7)
+                ->setScale(4)
+                ->setNotNull(false)
+                ->setComment('deprecated')
+                ->create()
         );
-        $table->addColumn('type', Types::INTEGER)->setNotnull(false)->setComment(
-            'deprecated'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('fidelity')
+                ->setTypeName(Types::BIGINT)
+                ->setNotNull(false)
+                ->setDefaultValue(1)
+                ->setComment('deprecated')
+                ->create()
         );
-        $table->addColumn('checksum', Types::BIGINT)->setNotnull(false)->setDefault(262143);
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('type')
+                ->setTypeName(Types::INTEGER)
+                ->setNotNull(false)
+                ->setComment('deprecated')
+                ->create()
+        );
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('checksum')
+                ->setTypeName(Types::BIGINT)
+                ->setNotNull(false)
+                ->setDefaultValue(262143)
+                ->create()
+        );
 
-        $this->setPrimaryKey($table, ['id']);
+        $tableEditor->addPrimaryKeyConstraint(
+            PrimaryKeyConstraint::editor()->setUnquotedColumnNames('id')->create()
+        );
 
-        $table->addIndex(['deviceid'], 'hardware_deviceid_idx');
-        $table->addIndex(['name'], 'hardware_name_idx');
-        $table->addIndex(['memory'], 'hardware_memory_idx');
-        $table->addIndex(['osname'], 'hardware_osname_idx');
-        $table->addIndex(['userid'], 'hardware_userid_idx');
-        $table->addIndex(['workgroup'], 'hardware_workgroup_idx');
-        $table->addIndex(['checksum'], 'hardware_checksum_idx');
-        $table->addUniqueConstraint(['name', 'deviceid'], 'hardware_name_clientid_unique_idx');
+        $tableEditor->addIndex(
+            Index::editor()->setUnquotedColumnNames('deviceid')->setUnquotedName('hardware_deviceid_idx')->create()
+        );
+        $tableEditor->addIndex(
+            Index::editor()->setUnquotedColumnNames('name')->setUnquotedName('hardware_name_idx')->create()
+        );
+        $tableEditor->addIndex(
+            Index::editor()->setUnquotedColumnNames('memory')->setUnquotedName('hardware_memory_idx')->create()
+        );
+        $tableEditor->addIndex(
+            Index::editor()->setUnquotedColumnNames('osname')->setUnquotedName('hardware_osname_idx')->create()
+        );
+        $tableEditor->addIndex(
+            Index::editor()->setUnquotedColumnNames('userid')->setUnquotedName('hardware_userid_idx')->create()
+        );
+        $tableEditor->addIndex(
+            Index::editor()->setUnquotedColumnNames('workgroup')->setUnquotedName('hardware_workgroup_idx')->create()
+        );
+        $tableEditor->addIndex(
+            Index::editor()->setUnquotedColumnNames('checksum')->setUnquotedName('hardware_checksum_idx')->create()
+        );
+        $tableEditor->addUniqueConstraint(
+            UniqueConstraint::editor()
+                ->setUnquotedColumnNames('name', 'deviceid')
+                ->setUnquotedName('hardware_name_clientid_unique_idx')
+                ->create()
+        );
+
+        foreach ($this->platform->getCreateTableSQL($tableEditor->create()) as $sql) {
+            $this->addSql($sql);
+        }
     }
 }

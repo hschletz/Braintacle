@@ -68,7 +68,6 @@ final class Version20250315135545 extends Migration
                 'hardware_id = id'
             )->where("deviceid != '_SYSTEMGROUP_'");
 
-        $view = $this->createView(Table::Clients, $queryBuilder->getSQL());
-        $this->sm->createView($view);
+        $this->addSql($this->platform->getCreateViewSQL(Table::Clients, $queryBuilder->getSQL()));
     }
 }

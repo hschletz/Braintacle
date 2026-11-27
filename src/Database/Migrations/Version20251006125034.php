@@ -21,7 +21,7 @@ final class Version20251006125034 extends Migration
     #[Override]
     public function up(Schema $schema): void
     {
-        $view = $this->createView(Table::Groups, '
+        $sql = '
             SELECT
                 id,
                 name,
@@ -32,13 +32,14 @@ final class Version20251006125034 extends Migration
                 request AS dynamic_members_sql
             FROM groups
             JOIN hardware ON hardware.id = groups.hardware_id
-        ');
-        $this->sm->createView($view);
+        ';
+
+        $this->addSql($this->platform->getCreateViewSQL(Table::Groups, $sql));
     }
 
     #[Override]
     public function down(Schema $schema): void
     {
-        $this->sm->dropView(Table::Groups);
+        $this->addSql($this->platform->getDropViewSQL(Table::Groups));
     }
 }

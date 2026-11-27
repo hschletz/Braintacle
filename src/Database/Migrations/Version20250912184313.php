@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace Braintacle\Database\Migrations;
 
 use Braintacle\Database\Migration;
-use Braintacle\Database\Table;
+use Braintacle\Database\Table as TableName;
+use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\Index;
+use Doctrine\DBAL\Schema\PrimaryKeyConstraint;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\Types;
 use Override;
 
@@ -22,166 +26,404 @@ final class Version20250912184313 extends Migration
     #[Override]
     public function up(Schema $schema): void
     {
-        if (!$this->tableExists(Table::AndroidEnvironments)) {
-            $table = $this->createTable(
-                $schema,
-                Table::AndroidEnvironments,
-                'Android environment',
+        if (!$this->tableExists(TableName::AndroidEnvironments)) {
+            $tableEditor = Table::editor()
+                ->setUnquotedName(TableName::AndroidEnvironments)
+                ->setOptions(['engine' => self::EngineInnoDb])
+                ->setComment('Android environment');
+
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('hardware_id')
+                    ->setTypeName(Types::INTEGER)
+                    ->setNotNull(true)
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('javaname')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('javacountry')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('javaclasspath')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('javahome')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->create()
             );
 
-            $table->addColumn('hardware_id', Types::INTEGER)->setNotnull(true);
-            $table->addColumn('javaname', types::STRING)->setLength(255)->setNotnull(false);
-            $table->addColumn('javacountry', types::STRING)->setLength(255)->setNotnull(false);
-            $table->addColumn('javaclasspath', types::STRING)->setLength(255)->setNotnull(false);
-            $table->addColumn('javahome', types::STRING)->setLength(255)->setNotnull(false);
+            $tableEditor->addPrimaryKeyConstraint(
+                PrimaryKeyConstraint::editor()->setUnquotedColumnNames('hardware_id')->create()
+            );
 
-            $this->setPrimaryKey($table, ['hardware_id']);
+            foreach ($this->platform->getCreateTableSQL($tableEditor->create()) as $sql) {
+                $this->addSql($sql);
+            }
         }
 
-        if (!$this->tableExists(Table::CustomFields)) {
-            $table = $this->createTable(
-                $schema,
-                Table::CustomFields,
-                'Userdefined fields. Additional columns may be added by the user.',
+        if (!$this->tableExists(TableName::CustomFields)) {
+            $tableEditor = Table::editor()
+                ->setUnquotedName(TableName::CustomFields)
+                ->setOptions(['engine' => self::EngineInnoDb])
+                ->setComment('Userdefined fields. Additional columns may be added by the user.');
+
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('hardware_id')
+                    ->setTypeName(Types::INTEGER)
+                    ->setNotNull(true)
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('tag')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->setComment('Default field with some special treatment')
+                    ->create()
             );
 
-            $table->addColumn('hardware_id', Types::INTEGER)->setNotnull(true);
-            $table
-                ->addColumn('tag', types::STRING)
-                ->setLength(255)
-                ->setNotnull(false)
-                ->setComment('Default field with some special treatment');
+            $tableEditor->addPrimaryKeyConstraint(
+                PrimaryKeyConstraint::editor()->setUnquotedColumnNames('hardware_id')->create()
+            );
 
-            $this->setPrimaryKey($table, ['hardware_id']);
+            foreach ($this->platform->getCreateTableSQL($tableEditor->create()) as $sql) {
+                $this->addSql($sql);
+            }
         }
 
-        if (!$this->tableExists(Table::NetworkDevicesIdentified)) {
-            $table = $this->createTable(
-                $schema,
-                Table::NetworkDevicesIdentified,
-                'Identified network devices',
-            );
-            $table->addColumn('macaddr', types::STRING)->setLength(17)->setNotnull(true);
-            $table->addColumn('description', types::STRING)->setLength(255)->setNotnull(false);
-            $table
-                ->addColumn('type', types::STRING)
-                ->setLength(255)
-                ->setNotnull(false)
-                ->setComment('references NetworkDeviceTypes table');
+        if (!$this->tableExists(TableName::NetworkDevicesIdentified)) {
+            $tableEditor = Table::editor()
+                ->setUnquotedName(TableName::NetworkDevicesIdentified)
+                ->setOptions(['engine' => self::EngineInnoDb])
+                ->setComment('Identified network devices');
 
-            $this->setPrimaryKey($table, ['macaddr']);
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('macaddr')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(17)
+                    ->setNotNull(true)
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('description')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('type')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->setComment('references NetworkDeviceTypes table')
+                    ->create()
+            );
+
+            $tableEditor->addPrimaryKeyConstraint(
+                PrimaryKeyConstraint::editor()->setUnquotedColumnNames('macaddr')->create()
+            );
+
+            foreach ($this->platform->getCreateTableSQL($tableEditor->create()) as $sql) {
+                $this->addSql($sql);
+            }
         }
 
-        if (!$this->tableExists(Table::NetworkDevicesScanned)) {
-            $table = $this->createTable(
-                $schema,
-                Table::NetworkDevicesScanned,
-                'Scanned MAC/IP addresses',
+        if (!$this->tableExists(TableName::NetworkDevicesScanned)) {
+            $tableEditor = Table::editor()
+                ->setUnquotedName(TableName::NetworkDevicesScanned)
+                ->setOptions(['engine' => self::EngineInnoDb])
+                ->setComment('Scanned MAC/IP addresses');
+
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('mac')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(17)
+                    ->setNotNull(true)
+                    ->create()
             );
-            $table->addColumn('mac', types::STRING)->setLength(17)->setNotnull(true);
-            $table->addColumn('ip', types::STRING)->setLength(15)->setNotnull(true);
-            $table->addColumn('netid', types::STRING)->setLength(15)->setNotnull(true)->setComment('Network address');
-            $table->addColumn('mask', types::STRING)->setLength(15)->setNotnull(true);
-            $table
-                ->addColumn('name', types::STRING)
-                ->setLength(255)
-                ->setNotnull(false)
-                ->setComment('DNS name (IP address if it does not resolve)');
-            $table->addColumn('date', types::DATETIME_IMMUTABLE)->setNotnull(true);
-            $table->addColumn('tag', types::STRING)->setLength(255)->setNotnull(false);
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('ip')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(15)
+                    ->setNotNull(true)
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('netid')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(15)
+                    ->setNotNull(true)
+                    ->setComment('Network address')
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('mask')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(15)
+                    ->setNotNull(true)
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('name')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->setComment('DNS name (IP address if it does not resolve)')
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('date')
+                    ->setTypeName(Types::DATETIME_IMMUTABLE)
+                    ->setNotNull(true)
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('tag')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->create()
+            );
 
-            $this->setPrimaryKey($table, ['mac']);
+            $tableEditor->addPrimaryKeyConstraint(
+                PrimaryKeyConstraint::editor()->setUnquotedColumnNames('mac')->create()
+            );
 
-            $table->addIndex(['netid', 'mask'], 'netmap_netid_mask_idx');
+            $tableEditor->addIndex(
+                Index::editor()
+                    ->setUnquotedColumnNames('netid', 'mask')
+                    ->setUnquotedName('netmap_netid_mask_idx')
+                    ->create()
+            );
+
+            foreach ($this->platform->getCreateTableSQL($tableEditor->create()) as $sql) {
+                $this->addSql($sql);
+            }
         }
 
-        if (!$this->tableExists(Table::NetworkInterfaces)) {
-            $table = $this->createTable(
-                $schema,
-                Table::NetworkInterfaces,
-                "Client's network interfaces",
+        if (!$this->tableExists(TableName::NetworkInterfaces)) {
+            $tableEditor = Table::editor()
+                ->setUnquotedName(TableName::NetworkInterfaces)
+                ->setOptions(['engine' => self::EngineInnoDb])
+                ->setComment("Client's network interfaces");
+
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('id')
+                    ->setTypeName(Types::INTEGER)
+                    ->setNotNull(true)
+                    ->setAutoincrement(true)
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('hardware_id')
+                    ->setTypeName(Types::INTEGER)
+                    ->setNotNull(true)
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('description')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(true)
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('type')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->setComment('Part of type description (Ethernet, Wireless) - see also typemib')
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('typemib')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->setComment('Part of type description (Ethernet, Wireless) - see also type')
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('speed')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->setComment("Textual representation of data rate, including unit. Example: '100 Mb/s', '1 Gb/s'")
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('macaddr')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->setComment('MAC address, lowercase, colon-separated')
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('status')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->setComment('One of Up/Down')
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('ipaddress')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->setComment('IPv4 address, dot syntax')
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('ipmask')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->setComment('IPv4 netmask, dot syntax')
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('ipgateway')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->setComment('IPv4 gateway, dot syntax')
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('ipsubnet')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->setComment('IPv4 network address, dot syntax')
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('ipdhcp')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->setComment('IPv4 address of DHCP server for current subnet')
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('mtu')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(255)
+                    ->setNotNull(false)
+                    ->setComment('Link MTU')
+                    ->create()
             );
 
-            $table->addColumn('id', Types::INTEGER)->setNotnull(true)->setAutoincrement(true);
-            $table->addColumn('hardware_id', Types::INTEGER)->setNotnull(true);
-            $table->addColumn('description', types::STRING)->setLength(255)->setNotnull(true);
-            $table
-                ->addColumn('type', types::STRING)
-                ->setLength(255)
-                ->setNotnull(false)
-                ->setComment('Part of type description (Ethernet, Wireless) - see also typemib');
-            $table
-                ->addColumn('typemib', types::STRING)
-                ->setLength(255)
-                ->setNotnull(false)
-                ->setComment('Part of type description (Ethernet, Wireless) - see also type');
-            $table
-                ->addColumn('speed', types::STRING)
-                ->setLength(255)
-                ->setNotnull(false)
-                ->setComment("Textual representation of data rate, including unit. Example: '100 Mb/s', '1 Gb/s'");
-            $table
-                ->addColumn('macaddr', types::STRING)
-                ->setLength(255)
-                ->setNotnull(false)
-                ->setComment('MAC address, lowercase, colon-separated');
-            $table
-                ->addColumn('status', types::STRING)
-                ->setLength(255)
-                ->setNotnull(false)
-                ->setComment('One of Up/Down');
-            $table
-                ->addColumn('ipaddress', types::STRING)
-                ->setLength(255)
-                ->setNotnull(false);
-            $table
-                ->addColumn('ipmask', types::STRING)
-                ->setLength(255)
-                ->setNotnull(false);
-            $table
-                ->addColumn('ipgateway', types::STRING)
-                ->setLength(255)
-                ->setNotnull(false);
-            $table
-                ->addColumn('ipsubnet', types::STRING)
-                ->setLength(255)
-                ->setNotnull(false)
-                ->setComment('Network address');
-            $table
-                ->addColumn('ipdhcp', types::STRING)
-                ->setLength(255)
-                ->setNotnull(false)
-                ->setComment('IP address of DHCP server for current subnet');
-            $table
-                ->addColumn('mtu', types::STRING)
-                ->setLength(255)
-                ->setNotnull(false)
-                ->setComment('Link MTU');
+            $tableEditor->addPrimaryKeyConstraint(
+                PrimaryKeyConstraint::editor()->setUnquotedColumnNames('id')->create()
+            );
 
-            $this->setPrimaryKey($table, ['id']);
+            $tableEditor->addIndex(
+                Index::editor()
+                    ->setUnquotedColumnNames('hardware_id')
+                    ->setUnquotedName('networks_hardware_id_idx')
+                    ->create()
+            );
+            $tableEditor->addIndex(
+                Index::editor()->setUnquotedColumnNames('macaddr')->setUnquotedName('networks_macaddr_idx')->create()
+            );
+            $tableEditor->addIndex(
+                Index::editor()
+                    ->setUnquotedColumnNames('ipaddress')
+                    ->setUnquotedName('networks_ipaddress_idx')
+                    ->create()
+            );
+            $tableEditor->addIndex(
+                Index::editor()->setUnquotedColumnNames('ipmask')->setUnquotedName('networks_ipmask_idx')->create()
+            );
+            $tableEditor->addIndex(
+                Index::editor()->setUnquotedColumnNames('ipsubnet')->setUnquotedName('networks_ipsubnet_idx')->create()
+            );
 
-            $table->addIndex(['hardware_id'], 'networks_hardware_id_idx');
-            $table->addIndex(['macaddr'], 'networks_macaddr_idx');
-            $table->addIndex(['ipaddress'], 'networks_ipaddress_idx');
-            $table->addIndex(['ipmask'], 'networks_ipmask_idx');
-            $table->addIndex(['ipsubnet'], 'networks_ipsubnet_idx');
+            foreach ($this->platform->getCreateTableSQL($tableEditor->create()) as $sql) {
+                $this->addSql($sql);
+            }
         }
 
-        if (!$this->tableExists(Table::WindowsProductKeys)) {
-            $table = $this->createTable(
-                $schema,
-                Table::WindowsProductKeys,
-                'Windows-specific client information',
+        if (!$this->tableExists(TableName::WindowsProductKeys)) {
+            $tableEditor = Table::editor()
+                ->setUnquotedName('braintacle_windows')
+                ->setOptions(['engine' => self::EngineInnoDb])
+                ->setComment('Windows-specific client information');
+
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('hardware_id')
+                    ->setTypeName(Types::INTEGER)
+                    ->setNotNull(true)
+                    ->create()
+            );
+            $tableEditor->addColumn(
+                Column::editor()
+                    ->setUnquotedName('manual_product_key')
+                    ->setTypeName(Types::STRING)
+                    ->setLength(29)
+                    ->setNotNull(false)
+                    ->setComment('Product key manually entered in the console if detected key is incorrect')
+                    ->create()
             );
 
-            $table->addColumn('hardware_id', Types::INTEGER)->setNotnull(true);
-            $table
-                ->addColumn('manual_product_key', types::STRING)
-                ->setLength(29)
-                ->setNotnull(false)
-                ->setComment('Product key manually entered in the console if detected key is incorrect');
+            $tableEditor->addPrimaryKeyConstraint(
+                PrimaryKeyConstraint::editor()->setUnquotedColumnNames('hardware_id')->create()
+            );
 
-            $this->setPrimaryKey($table, ['hardware_id']);
+            foreach ($this->platform->getCreateTableSQL($tableEditor->create()) as $sql) {
+                $this->addSql($sql);
+            }
         }
     }
 }

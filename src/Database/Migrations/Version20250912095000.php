@@ -20,8 +20,11 @@ final class Version20250912095000 extends Migration
     #[Override]
     public function up(Schema $schema): void
     {
-        if ($this->sm->tableExists('itmgmt_comments')) {
-            $schema->dropTable('itmgmt_comments');
+        if (! $this->sm->tableExists('temp_files')) {
+            $this->write('Skipping because table does not exist: itmgmt_comments');
+            return;
         }
+
+        $this->addSql($this->platform->getDropTableSQL('itmgmt_comments'));
     }
 }

@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace Braintacle\Database\Migrations;
 
 use Braintacle\Database\Migration;
-use Braintacle\Database\Table;
+use Braintacle\Database\Table as TableName;
+use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\PrimaryKeyConstraint;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Schema\UniqueConstraint;
 use Doctrine\DBAL\Types\Types;
 use Override;
 
@@ -16,30 +20,88 @@ final class Version20250308180102 extends Migration
     #[Override]
     public function getDescription(): string
     {
-        return sprintf(self::TemplateTable, Table::Packages);
+        return sprintf(self::TemplateTable, TableName::Packages);
     }
 
     #[Override]
     public function up(Schema $schema): void
     {
-        if ($this->tableExists(Table::Packages)) {
+        if ($this->tableExists(TableName::Packages)) {
             return;
         }
 
-        $table = $this->createTable($schema, Table::Packages, 'Packages');
+        $tableEditor = Table::editor()
+            ->setUnquotedName(TableName::Packages)
+            ->setOptions(['engine' => self::EngineInnoDb])
+            ->setComment('Packages');
 
-        $table->addColumn('fileid', Types::INTEGER)->setNotnull(true)->setComment(
-            'Unix timestamp of package creation, also used as PK'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('fileid')
+                ->setTypeName(Types::INTEGER)
+                ->setNotNull(true)
+                ->setComment('Unix timestamp of package creation, also used as PK')
+                ->create()
         );
-        $table->addColumn('name', Types::STRING)->setLength(255)->setNotnull(true);
-        $table->addColumn('priority', Types::INTEGER)->setNotnull(true);
-        $table->addColumn('fragments', Types::INTEGER)->setNotnull(true);
-        $table->addColumn('size', Types::INTEGER)->setNotnull(true);
-        $table->addColumn('osname', Types::STRING)->setLength(7)->setNotnull(true)->setComment('WINDOWS|LINUX|MacOSX');
-        $table->addColumn('comment', Types::TEXT)->setNotnull(false);
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('name')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(true)
+                ->create()
+        );
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('priority')
+                ->setTypeName(Types::INTEGER)
+                ->setNotNull(true)
+                ->create()
+        );
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('fragments')
+                ->setTypeName(Types::INTEGER)
+                ->setNotNull(true)
+                ->create()
+        );
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('size')
+                ->setTypeName(Types::INTEGER)
+                ->setNotNull(true)
+                ->create()
+        );
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('osname')
+                ->setTypeName(Types::STRING)
+                ->setLength(7)
+                ->setNotNull(true)
+                ->setComment('WINDOWS|LINUX|MacOSX')
+                ->create()
+        );
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('comment')
+                ->setTypeName(Types::TEXT)
+                ->setNotNull(false)
+                ->create()
+        );
 
-        $this->setPrimaryKey($table, ['fileid']);
+        $tableEditor->addPrimaryKeyConstraint(
+            PrimaryKeyConstraint::editor()->setUnquotedColumnNames('fileid')->create()
+        );
 
-        $table->addIndex(['name'], 'download_available_name_unique_idx');
+        $tableEditor->addUniqueConstraint(
+            UniqueConstraint::editor()
+                ->setUnquotedColumnNames('name')
+                ->setUnquotedName('download_available_name_unique_idx')
+                ->create()
+        );
+
+        foreach ($this->platform->getCreateTableSQL($tableEditor->create()) as $sql) {
+            $this->addSql($sql);
+        }
     }
 }

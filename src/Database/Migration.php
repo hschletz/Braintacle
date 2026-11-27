@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Braintacle\Database;
 
+use Doctrine\DBAL\Schema\Comparator;
+use Doctrine\DBAL\Schema\ComparatorConfig;
+use Doctrine\DBAL\Schema\ForeignKeyConstraint;
 use Doctrine\DBAL\Schema\ForeignKeyConstraint\ReferentialAction;
+use Doctrine\DBAL\Schema\Name\OptionallyQualifiedName;
+use Doctrine\DBAL\Schema\Name\UnqualifiedName;
 use Doctrine\DBAL\Schema\Name\UnquotedIdentifierFolding;
-use Doctrine\DBAL\Schema\PrimaryKeyConstraint;
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Schema\Table;
-use Doctrine\DBAL\Schema\View;
 use Doctrine\Migrations\AbstractMigration;
 use Override;
 
@@ -35,7 +37,7 @@ abstract class Migration extends AbstractMigration
     {
         $exists = $this->sm->tableExists($name);
         if ($exists) {
-            $this->write('Table exists: ' . $name);
+            $this->write('Skipping because table exists: ' . $name);
         }
 
         return $exists;
@@ -52,7 +54,7 @@ abstract class Migration extends AbstractMigration
                 ->getUnqualifiedName()
                 ->toNormalizedValue(UnquotedIdentifierFolding::LOWER);
             if ($normalizedName == strtolower($name)) {
-                $this->write('View exists: ' . $name);
+                $this->write('Skipping because view exists: ' . $name);
                 return true;
             }
         }
@@ -60,44 +62,27 @@ abstract class Migration extends AbstractMigration
         return false;
     }
 
-    protected function createView(string $name, string $sql): View
+    /**
+     * Create a foreign key constraint to the 'hardware' table refererenced by 'hardware_id'
+     */
+    protected function createForeignKeyOnClient(string $constraintName): ForeignKeyConstraint
     {
-        return View::editor()->setUnquotedName($name)->setSQL($sql)->create();
+        return ForeignKeyConstraint::editor()
+            ->setUnquotedName($constraintName)
+            ->setReferencedTableName(OptionallyQualifiedName::unquoted('hardware'))
+            ->setReferencedColumnNames(UnqualifiedName::unquoted('id'))
+            ->setReferencingColumnNames(UnqualifiedName::unquoted('hardware_id'))
+            ->setOnDeleteAction(ReferentialAction::CASCADE)
+            ->create();
     }
 
     /**
-     * Create table with standard options.
+     * Create Comparator with deprecated features disabled.
+     *
+     * @codeCoverageIgnore
      */
-    protected function createTable(
-        Schema $schema,
-        string $name,
-        string $comment,
-        string $engine = self::EngineInnoDb,
-    ): Table {
-        return $schema->createTable($name)->addOption('engine', $engine)->setComment($comment);
-    }
-
-    /**
-     * @param string[] $columnNames
-     */
-    protected function setPrimaryKey(Table $table, array $columnNames): void
+    protected function createComparator(): Comparator
     {
-        $table->addPrimaryKeyConstraint(
-            PrimaryKeyConstraint::editor()->setUnquotedColumnNames(...$columnNames)->create()
-        );
-    }
-
-    /**
-     * Add a foreign key constraint to the 'hardware' table refererenced by 'hardware_id'
-     */
-    protected function addClientForeignKey(Table $table, string $name): void
-    {
-        $table->addForeignKeyConstraint(
-            'hardware',
-            ['hardware_id'],
-            ['id'],
-            ['onDelete' => ReferentialAction::CASCADE->value],
-            $name,
-        );
+        return $this->sm->createComparator(new ComparatorConfig(reportModifiedIndexes: false));
     }
 }

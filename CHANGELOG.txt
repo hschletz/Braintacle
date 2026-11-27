@@ -9,6 +9,11 @@ without any warranty.
 CHANGES IN VERSION 2.1
 =======================
 
+Upgrading from previous versions:
+
+- Required: Run "composer install" from the Braintacle root directory to
+  update dependencies.
+
 Server:
 
 - The server can now run on any webserver through a CGI interface.

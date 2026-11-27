@@ -20,8 +20,11 @@ final class Version20250910085513 extends Migration
     #[Override]
     public function up(Schema $schema): void
     {
-        if ($this->sm->tableExists('temp_files')) {
-            $schema->dropTable('temp_files');
+        if (! $this->sm->tableExists('temp_files')) {
+            $this->write('Skipping because table does not exist: temp_files');
+            return;
         }
+
+        $this->addSql($this->platform->getDropTableSQL('temp_files'));
     }
 }

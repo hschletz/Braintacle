@@ -83,7 +83,7 @@ final class MigrationTest extends TestCase
             #[Override]
             public function write(string $message): void
             {
-                TestCase::assertEquals('Table exists: tableName', $message);
+                TestCase::assertEquals('Skipping because table exists: tableName', $message);
             }
         };
 
@@ -144,7 +144,7 @@ final class MigrationTest extends TestCase
             #[Override]
             public function write(string $message): void
             {
-                TestCase::assertEquals('View exists: view2', $message);
+                TestCase::assertEquals('Skipping because view exists: view2', $message);
             }
         };
 
@@ -152,103 +152,7 @@ final class MigrationTest extends TestCase
         $migration->up($schema);
     }
 
-    public function testCreateView()
-    {
-        $connection = $this->createStub(Connection::class);
-        $logger = $this->createStub(LoggerInterface::class);
-
-        $migration = new class($connection, $logger) extends Migration
-        {
-            #[Override]
-            public function up(Schema $schema): void
-            {
-                $view = $this->createView('viewName', 'SQL');
-
-                TestCase::assertEquals('viewName', $view->getObjectName()->toString());
-                TestCase::assertEquals('SQL', $view->getSql());
-            }
-        };
-
-        $schema = new Schema();
-        $migration->up($schema);
-    }
-
-    public function testCreateTableDefaultEngine()
-    {
-        $connection = $this->createStub(Connection::class);
-        $logger = $this->createStub(LoggerInterface::class);
-
-        $migration = new class($connection, $logger) extends Migration
-        {
-            #[Override]
-            public function up(Schema $schema): void
-            {
-                $table = $this->createTable($schema, 'tableName', 'a comment');
-
-                TestCase::assertEquals('tableName', $table->getObjectName()->toString());
-                TestCase::assertEquals('a comment', $table->getComment());
-                TestCase::assertEquals('InnoDB', $table->getOption('engine'));
-            }
-        };
-
-        $schema = new Schema();
-        $migration->up($schema);
-    }
-
-    public function testCreateTableExplicitEngine()
-    {
-        $connection = $this->createStub(Connection::class);
-        $logger = $this->createStub(LoggerInterface::class);
-
-        $migration = new class($connection, $logger) extends Migration
-        {
-            #[Override]
-            public function up(Schema $schema): void
-            {
-                $table = $this->createTable($schema, 'tableName', 'a comment', 'otherEngine');
-
-                TestCase::assertEquals('tableName', $table->getObjectName()->toString());
-                TestCase::assertEquals('a comment', $table->getComment());
-                TestCase::assertEquals('otherEngine', $table->getOption('engine'));
-            }
-        };
-
-        $schema = new Schema();
-        $migration->up($schema);
-    }
-
-    public function testSetPrimaryKey()
-    {
-        $connection = $this->createStub(Connection::class);
-        $logger = $this->createStub(LoggerInterface::class);
-
-        $migration = new class($connection, $logger) extends Migration
-        {
-            #[Override]
-            public function up(Schema $schema): void
-            {
-                $table = $schema->createTable('table_name');
-                $table->addColumn('col1', Types::INTEGER);
-                $table->addColumn('col2', Types::INTEGER);
-
-                $this->setPrimaryKey($table, ['col1', 'col2']);
-
-                $pk = $table->getPrimaryKeyConstraint();
-                TestCase::assertEquals(
-                    ['col1', 'col2'],
-                    array_map(
-                        fn(UnqualifiedName $name) => $name->toString(),
-                        $pk->getColumnNames()
-                    )
-                );
-            }
-        };
-
-        $schema = new Schema();
-        $migration->up($schema);
-    }
-
-    public function testAddClientForeignKey()
+    public function testCreateForeignKeyOnClient()
     {
         $connection = $this->createStub(Connection::class);
         $logger = $this->createStub(LoggerInterface::class);
@@ -257,12 +161,9 @@ final class MigrationTest extends TestCase
             #[Override]
             public function up(Schema $schema): void
             {
-                $table = $schema->createTable('table_name');
-                $table->addColumn('hardware_id', Types::INTEGER);
+                $constraint = $this->createForeignKeyOnClient('constraint_name');
 
-                $this->addClientForeignKey($table, 'constraint_name');
-
-                $constraint = $table->getForeignKey('constraint_name');
+                TestCase::assertEquals('constraint_name', $constraint->getObjectName()->toString());
                 TestCase::assertEquals('hardware', $constraint->getReferencedTableName()->toString());
                 TestCase::assertEquals(
                     ['id'],
@@ -282,7 +183,7 @@ final class MigrationTest extends TestCase
             }
         };
 
-        $schema = new Schema();
+        $schema = Schema::editor()->create();
         $migration->up($schema);
     }
 }

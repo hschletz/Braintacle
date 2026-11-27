@@ -5,7 +5,12 @@ declare(strict_types=1);
 namespace Braintacle\Database\Migrations;
 
 use Braintacle\Database\Migration;
+use Braintacle\Database\Table as TableName;
+use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\Index;
+use Doctrine\DBAL\Schema\PrimaryKeyConstraint;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\Types;
 use Override;
 
@@ -15,56 +20,141 @@ final class Version20250315135000 extends Migration
     #[Override]
     public function getDescription(): string
     {
-        return sprintf(self::TemplateTable, 'bios');
+        return sprintf(self::TemplateTable, TableName::ClientSystemInfo);
     }
 
     #[Override]
     public function up(Schema $schema): void
     {
-        if ($this->tableExists('bios')) {
+        if ($this->tableExists(TableName::ClientSystemInfo)) {
             return;
         }
 
-        $table = $this->createTable($schema, 'bios', "A client's system information provided by Firmware");
+        $tableEditor = Table::editor()
+            ->setUnquotedName(TableName::ClientSystemInfo)
+            ->setOptions(['engine' => self::EngineInnoDb])
+            ->setComment("A client's system information provided by BIOS/UEFI");
 
-        $table->addColumn('hardware_id', Types::INTEGER)->setNotnull(true);
-        $table->addColumn('smanufacturer', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'System manufacturer name'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('hardware_id')
+                ->setTypeName(Types::INTEGER)
+                ->setNotNull(true)
+                ->create()
         );
-        $table->addColumn('smodel', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Product name'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('smanufacturer')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('System manufacturer name')
+                ->create()
         );
-        $table->addColumn('ssn', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Serial'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('smodel')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('Product name')
+                ->create()
         );
-        $table->addColumn('assettag', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Asset tag'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('ssn')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('Serial')
+                ->create()
         );
-        $table->addColumn('type', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Type (provided by manufacturer)'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('assettag')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('Asset tag')
+                ->create()
         );
-        $table->addColumn('bmanufacturer', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Firmware manufacturer name'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('type')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('Type (provided by manufacturer)')
+                ->create()
         );
-        $table->addColumn('bversion', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Firmware version'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('bmanufacturer')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('BIOS/UEFI manufacturer name')
+                ->create()
         );
-        $table->addColumn('bdate', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Firmware date (no guarantee on format)'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('bversion')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('BIOS/UEFI version')
+                ->create()
         );
-        $table->addColumn('mmanufacturer', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Mainboard manufacturer name'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('bdate')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('BIOS/UEFI date (no guarantee on format)')
+                ->create()
         );
-        $table->addColumn('mmodel', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Mainboard product name'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('mmanufacturer')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('Mainboard manufacturer name')
+                ->create()
         );
-        $table->addColumn('msn', Types::STRING)->setLength(255)->setNotnull(false)->setComment(
-            'Mainboard serial number'
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('mmodel')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('Mainboard product name')
+                ->create()
+        );
+        $tableEditor->addColumn(
+            Column::editor()
+                ->setUnquotedName('msn')
+                ->setTypeName(Types::STRING)
+                ->setLength(255)
+                ->setNotNull(false)
+                ->setComment('Mainboard serial number')
+                ->create()
         );
 
-        $this->setPrimaryKey($table, ['hardware_id']);
+        $tableEditor->addPrimaryKeyConstraint(
+            PrimaryKeyConstraint::editor()->setUnquotedColumnNames('hardware_id')->create()
+        );
 
-        $table->addIndex(['ssn'], 'bios_ssn_idx');
-        $table->addIndex(['assettag'], 'bios_assettag_idx');
+        $tableEditor->addIndex(
+            Index::editor()->setUnquotedColumnNames('ssn')->setUnquotedName('bios_ssn_idx')->create()
+        );
+        $tableEditor->addIndex(
+            Index::editor()->setUnquotedColumnNames('assettag')->setUnquotedName('bios_assettag_idx')->create()
+        );
+
+        foreach ($this->platform->getCreateTableSQL($tableEditor->create()) as $sql) {
+            $this->addSql($sql);
+        }
     }
 }

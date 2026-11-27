@@ -51,9 +51,13 @@ class Time implements ClockInterface
         $timestamp = $this->connection->fetchOne('SELECT CURRENT_TIMESTAMP');
 
         // Parse the timestamp with the database platform's format
-        return Type::getType(Types::DATETIME_IMMUTABLE)->convertToPHPValue(
-            $timestamp,
-            $this->connection->getDatabasePlatform(),
-        );
+        return $this->connection
+            ->getConfiguration()
+            ->getTypeProvider()
+            ->get(Types::DATETIME_IMMUTABLE)
+            ->convertToPHPValue(
+                $timestamp,
+                $this->connection->getDatabasePlatform(),
+            );
     }
 }
